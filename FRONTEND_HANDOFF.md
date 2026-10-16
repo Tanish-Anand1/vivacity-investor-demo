@@ -1,0 +1,453 @@
+# Mathematical discovery update — 2026-10-14
+
+The factory now exposes `GET /v1/factory/runs/{run_id}/discovery`, returning
+persisted measured-series fits, chronological held-out metrics, validation
+status, Desmos-ready expressions, predicted curves and a joint-torque
+association when supported. It uses the same `X-Workspace-Token` as the run.
+Each new fit also includes `display_latex`: a conventional, typeset form of
+the same equation for the discovery panel. `equation_latex` and
+`editable_latex` remain the Desmos forms. The frontend renders the display
+with KaTeX/MathML, copies that LaTeX source, and keeps horizontal scrolling
+inside the equation card on mobile.
+The verified backend source is `5e481e9` (Render deploy
+`dep-db7c6le7bikc73ab2gqg`); Vercel deployment
+`dpl_2DKas6D8YaLo4PdvL4UAKjGVkjpt` is live at
+https://demo.tryvivacity.com/. A public one-carton conveyor run exercised the
+25-frame provisional fit and final 43-frame/eight-series result. Its piecewise
+model rendered as LaTeX `cases` with MathML, model switching and copying worked,
+and the browser logged zero errors. The full Linux gate passed 297 backend and
+four hard-512 MiB tests with no failures.
+See [FACTORY_DISCOVERY.md](docs/FACTORY_DISCOVERY.md) for exact polling,
+provenance, exports, comparison and optional Desmos setup. The React entry is
+[FactoryDiscovery.tsx](frontend/src/FactoryDiscovery.tsx), mounted in the
+existing analysis. Without an authorized Desmos browser key the local graph,
+equations and exports work, while the embedded calculator is explicitly
+unavailable. The Graphing Calculator integration is unverified without a key.
+
+# Autonomous factory contract update — 2026-10-14
+
+The new factory is implemented in individually verified stages. Current release
+acceptance is tracked in [FACTORY_STAGE_GATES.md](docs/FACTORY_STAGE_GATES.md);
+do not infer deployment status from the older release notes below.
+
+[FACTORY_RUNTIME_HANDOFF.md](docs/FACTORY_RUNTIME_HANDOFF.md) is the current
+factory contract: exact HTTP endpoints, request examples, measured transforms,
+sample/replay formats, ownership, controls, import/export and setup commands.
+[FACTORY_CAPABILITIES.md](docs/FACTORY_CAPABILITIES.md) separates tested behavior
+from limitations. OpenAPI now contains 77 paths; regenerate TypeScript with
+`npm --prefix frontend run generate:api` after changing the contract.
+
+Claude Code should start with `frontend/src/FactoryWorkspace.tsx`,
+`FactoryView.tsx`, `FactoryAnalysis.tsx`, `factoryAnalysisData.ts`,
+`FactoryObservation.tsx`, `FactoryBenchmark.tsx`, `FactoryProjects.tsx`,
+`FactoryExchange.tsx`, `factoryApi.ts` and `factory.css`. Preserve the existing
+workcell and world-library contracts. Factory telemetry uses paged HTTP polling;
+legacy workcell WebSockets remain available. Only explicit Start/Run comparison
+actions may begin physics. Reset and import must leave the cell idle.
+
+Run the actual HTTP acceptance journey with:
+
+```powershell
+.venv\Scripts\python.exe -m scripts.demo_factory --base http://127.0.0.1:8010 --output artifacts/factory-live --benchmark
+node --experimental-strip-types --test scripts/test-api-responses.mjs scripts/test-api-transport.mjs scripts/test-spatial-quality.mjs scripts/test-factory-analysis.mjs scripts/test-template-selection.mjs
+npm --prefix frontend run build
+```
+
+The script invokes the selected server, including camera, actual successful and
+failed contact manipulation, pause/replay, six benchmark trials, strict idle
+import and PDF/ZIP. It does not simulate locally on behalf of a remote deployment.
+
+# Spatial pipeline contract update — 2026-10-13
+
+The current application is deployed at https://demo.tryvivacity.com/ with backend https://vivacity-runtime.onrender.com. All 55 OpenAPI paths are exported in `openapi.json` and `docs/openapi.json`; generated TypeScript contracts remain in `frontend/src/generated/api.d.ts`.
+
+[SPATIAL_PIPELINE_RELEASE.md](docs/SPATIAL_PIPELINE_RELEASE.md) contains exact capture/generation/asset/measurement routes, request examples, coordinates/transforms, representation readiness, quality/streaming behavior and tested/incomplete capability status. Existing experiment REST/WebSocket/replay formats below remain valid. New saved configuration field `variation` controls independent physical conditions and preassigned held-out seeds; use `GET /v1/sessions/{id}` to renew the session lease. Native trials run on the server; the browser decodes and renders actual assets/recorded MuJoCo transforms.
+
+For Claude Code, work in `P:\VIVACITY\DEMO-`. Important frontend files are `WorldLibrary.tsx`, `WorldPreview.tsx`, `EnvironmentAppearance.tsx`, `QualityControl.tsx`, `renderQuality.ts`, `WorldEvidence.tsx`, `ExperimentSetup.tsx`, `VariationControls.tsx`, `RobustnessReport.tsx`, `workspaceApi.ts`, `useRuntime.ts`, `RobotView.tsx` and `engineering.css` under `frontend/src`. Preserve the owned worker barriers, version-based collection signature, API capability handling and independent physics/rendering contract. Imported/generated appearance must never replace measured collision/dynamics results.
+
+```powershell
+# Separate terminals, from the repository root:
+.venv\Scripts\python.exe -m scripts.run_workspace_server
+$env:VITE_API_BASE_URL='http://127.0.0.1:8010'
+npm --prefix frontend run dev
+# Verification/build:
+node --experimental-strip-types --test scripts/test-api-responses.mjs scripts/test-api-transport.mjs scripts/test-spatial-quality.mjs scripts/test-template-selection.mjs
+npm --prefix frontend run build
+```
+
+Provider keys are server-only. Do not read secrets into frontend configuration. Do not restore Scientific Discovery or the removed credits footer. Keep generation an explicit user action and world loading idle. A real `--generate` verification command spends provider credits; `--resume` retrieves its existing operation.
+
+# Physical inspection contract update — 2026-10-13
+
+See [PHYSICAL_PLATFORM_RELEASE.md](docs/PHYSICAL_PLATFORM_RELEASE.md) for the deployed
+capabilities, exact verification and remaining limitations. The existing HTTP/WSS
+contracts below remain valid. New `RoboticsConfig` and `ExperimentConfiguration`
+fields are `object_material` and typed `physics` (`PhysicsSettings` in OpenAPI).
+Defaults preserve the prior rigid-body controller; cloth rejects unsupported
+physical overrides. Snapshot/replay/export retain the complete applied inputs.
+
+New endpoints on `/v1/workspace`:
+
+- `GET /materials`: eight illustrative presets and their scope.
+- `POST /physics-validations`: execute bounded native benchmarks, save an owned
+  report, return `vivacity.physics-validation/1.0` (201).
+- `GET /physics-validations/{id}`: retrieve the capability-owned report.
+- `GET /imports/{id}/preview`: validate ownership of the staged upload and return
+  actual triangles before `POST /imports/{id}/map` saves a collision mapping.
+
+Use `X-Workspace-Token` for owned operations. No secret is embedded in the UI.
+Benchmarks are globally capped at 50 calls/day; long robot tasks use existing jobs.
+
+Example saved configuration request (other fields retain their defaults):
+
+```json
+{"name":"Rubber in air","environment_id":"warehouse","robot_id":"panda","gripper_id":"panda_parallel","operation_id":"pick_place","object_material":"rubber","physics":{"gravity_m_s2":9.81,"air_density_kg_m3":1.225,"wind_velocity_m_s":[0,0,0],"gripper_force_scale":1},"trial_mode":"fixed","validation_trials":3}
+```
+
+Native pickup frames now contain `inspection` (`vivacity.inspection/1.0`): object
+position/COM/mass/principal inertia, velocities, contact parameters, applied force
+and torque, mechanical energy, joints/actuation, engine settings and contact
+positions/force vectors. Existing `body_transforms` remain the render source.
+Force vectors act on `geoms[1]`; `force_solution_time_s` is the conservative lower bound of the sample interval
+ending at `state_time_s` (one timestep). Treat it as a bound, not an exact
+substep timestamp across scalar and native execution. No electrical energy or real-world calibration.
+Contact samples are capped at 48 with a truncation flag. Optional overlays scale
+vectors for visibility and display actual recorded trajectories.
+
+`PhysicsControls.tsx`, `EngineeringPanel.tsx`, `EngineeringOverlay.tsx`,
+`CurrentExperiment.tsx` and `WorldThumbnail.tsx` are the new frontend surfaces.
+`frontend/src/generated/api.d.ts` and both `openapi.json` files are updated.
+`python -m scripts.export_openapi` works from the root (direct script invocation
+without installing the package may omit the root from Python's import path).
+
+# Current world and experimentation workspace
+
+Current connection/parallel-execution release:
+[RUNTIME_STABILITY_RELEASE.md](docs/RUNTIME_STABILITY_RELEASE.md).
+Deployed HTTP uses the same-origin `/runtime` prefix; native WSS uses Render.
+Import URL/socket helpers from `frontend/src/api.ts`. Each experiment may run two
+independent native trials concurrently; separate experiments share one job queue.
+Start remains explicit. Missing run IDs recover to an idle world, not a resumed run.
+
+The current visual release and binary appearance API are documented in
+[VISUAL_RELEASE.md](docs/VISUAL_RELEASE.md), including coordinates, supported
+formats, renderer lifetime, executed checks and remaining physical limits.
+
+The current implementation supersedes the older Panda-only availability below.
+See [WORLD_WORKSPACE_HANDOFF.md](docs/WORLD_WORKSPACE_HANDOFF.md) for seven
+implemented arm models, thirteen workcells, ten bounded physical operations,
+real provider integration, owned libraries/configurations, exact endpoint and
+socket contracts, transforms, geometry asset paths, run/replay examples and
+frontend commands. All old world/session/experiment endpoints remain compatible.
+Scientific Discovery stays retired. Historical release evidence follows.
+
+# Robotics template frontend handoff
+
+Verified release: backend source `2bf89e7`, Render deploy
+`dep-db6me8e7bikc73ai2g50`, Vercel production
+`dpl_8NukzFtw5CvbBjm6rtGPgXN6CWgV` (frontend source `12ee3aa`).
+The latest frontend correction disables unsupported choices and pairs compatible
+worlds/tasks automatically. Five selection tests passed (135 interactions), two
+backend catalog tests passed, and build/live desktop/mobile loading checks
+passed. Public mass customization persisted and was restored; HTTP/WSS replay
+was verified with a genuine timeout diagnostic. Backend code is unchanged.
+Its prior 156 Linux tests passed in 930.151 s; the 512 MB check passed in 52.580 s.
+Each UI Start uses one cycle and retains the chosen conditions. Public pickup,
+pause/resume, capability gating, idle loading, REST/WSS and OpenAPI matching were
+exercised; final cloth and responsive results are in IMPLEMENTATION_STATUS.md.
+
+The public workspace now has five arm, five world and five task choices.
+Scientific Discovery is removed from the active UI and API. Read
+`docs/ROBOTICS_TEMPLATES.md` for exact availability and compatibility.
+`vivacity/templates.py` owns presets; regenerate
+`frontend/src/generated/templates.json` with
+`python scripts/update-robotics-catalog.py`. GET `/v1/templates` returns the
+versioned catalog; POST `/v1/templates/resolve` returns a validated CreateWorld
+request without starting an experiment.
+
+Example selection: `{"arm":"panda","world":"warehouse","task":"pick_place","seed":7}`.
+Pass the response to POST `/v1/worlds`, or its backend/config to POST
+`/v1/sessions` on explicit Start. Unsupported adapters/tasks return 422.
+Do not silently substitute Panda for another robot. Reference arms/tasks stay
+visible but disabled. Choosing textile or cloth folding pairs both; leaving
+textile selects a compatible rigid handling configuration. Regression command:
+`npm --prefix frontend run test:templates` (Node 22.6+ with type stripping).
+
+Frontend: `https://demo.tryvivacity.com/`; backend:
+`https://vivacity-runtime.onrender.com`. Release proof and hosting limitations
+are in `IMPLEMENTATION_STATUS.md` and `docs/HOSTING_STATUS.md`.
+
+Use the regenerated `openapi.json` and `frontend/src/generated/api.d.ts`.
+The additive request flag `adaptive_trials: true` replaces the UI's exact
+trial count; send `physics_trials: 0`, `search_candidates: 256` and a
+`physics_budget` within the host's advertised limit. Inspect
+`result.search.stopping_reason`, `fully_simulated`, `physics_attempts` and
+`verified_feasible`. Fixed-count audit requests remain supported.
+
+Robot config accepts optional independent `cube_half_sizes: [x,y,z]`
+(0.02..0.03 m each), `cube_mass` (0.02..0.15 kg), and `cube_friction`
+(0.05..1.5). Null dimensions use legacy `cube_half_size`. Cube/placement Z
+must match half-height plus 1 mm. The actual table spans X -0.30..1.10 m,
+Y -0.65..0.65 m; centers are inset by half-width/depth plus 1 mm. Drag uses
+those dimensions and adjusts an overlapping placement destination. World
+edits still use the existing PATCH endpoint and invalidate earlier results.
+
+Keep all visible labels, loading/errors, sensor readings and controls outside
+the robotics viewport. Its canvas renders measured physical geometry;
+keyboard orbit/zoom/reset remains available through the region. Depth sensing
+uses simulator geom labels, not real camera vision. Details and a runnable
+REST request: `docs/ADAPTIVE_PICKUP.md`. The earlier examples below remain
+historical reference and do not define the current drag bounds or trial policy.
+
+## Earlier master runtime handoff — 2026-10-12
+
+The bounded cube-drag release is deployed at `https://demo.tryvivacity.com/`
+and `https://vivacity-investor-demo.vercel.app/` (Vercel
+`dpl_E7CdpcAXC29sJyiMBNAg5E5wdnzD`). Its backend is Render deployment
+`dep-db6fie2jnfac73djg6ag`, commit `8cfa7fcd60e5acd01f1075d59eec5de2e2a03212`.
+The backend Docker suite passed **139 tests**; the 512 MB lab check passed.
+The public site accepted the exact 10 cm pickup/placement configuration from
+the reported 422, accepted a pointer drag, and showed a short inline validation
+message when the two points were too close. The current live experiment result
+and release caveats are recorded in `docs/HOSTING_STATUS.md`.
+
+## Bounded workcell interaction
+
+The normal Object Pickup workcell supports pointer dragging of the rendered
+blue cube. During a drag, Three.js intersects the pointer ray with the table
+plane and previews the cube within **X 0.35–0.65 m, Y -0.30–0.30 m**. This
+preview is explicitly uncommitted. On release, the frontend calls the existing
+`PATCH /v1/worlds/{id}/environment` path with the new cube center and current
+full configuration; MuJoCo then builds the revised world. Applying a position
+never starts an experiment. The old experiment becomes stale, and the status
+prompts the user to run again. The same pickup coordinates remain available
+through keyboard-accessible sliders in Change conditions. The imported Orbital
+scene retains its fixed cargo geometry and does not offer this drag control.
+
+Pickup and placement must remain at least 0.10 m apart. Both sliders and the
+drag control enforce that rule before sending a request; an invalid drag
+reverts with a short message. The backend accepts the exact 0.10 m boundary
+with a numerical tolerance and continues to reject smaller distances. The
+scene editor stays open if the server rejects an edit, and HTTP validation
+errors are summarized rather than displaying the entire union-schema payload.
+The object is repositioned between simulations; a user drag is not presented
+as simulated robot motion.
+
+Earlier native-import release proof: `docs/FINAL_VERIFICATION.md`. **135 Linux tests passed**;
+Windows with bounded numerical threads: **134 passed, one Linux-only skip**.
+Orbital API/geometry/readiness/export contract: `docs/ORBITAL_HANDOFF.md`.
+New endpoints are `POST /v1/imports/{id}/verify` (202 background capability probe)
+and `POST /v1/imports/{id}/configure-task` (200 explicit trusted adaptation).
+OpenAPI exports are current and match the live server's 26 REST paths exactly.
+
+React integration files: `frontend/src/ImportWorld.tsx` handles explicit probe
+and configured readiness; `OrbitalTask.tsx` streams measured states, manages
+bounded native trials/Stop/settings/downloads; `RobotView.tsx` renders actual
+world-space imported primitives beside Panda meshes. `domain.ts` adds the
+measured geometry format; generated REST types are `src/generated/api.d.ts`.
+Existing styles/assets are retained. No new frontend scaffold is necessary.
+Main controls now use Start/Stop without pause/play/timeline/speed controls.
+Backend native Pause/Resume remains available for API users.
+
+**Hosting update:** the frontend uses `https://vivacity-runtime.onrender.com`.
+Render Free is the fallback after the required payment method was declined.
+The public pickup budget is eight real physics trials (`/health` host limit);
+the server rejects larger requests before allocating a job. Local/default paid
+configuration retains 5,000. No UI layout was changed. Free hosting sleeps after
+15 idle minutes and loses local SQLite data on restart, redeploy or sleep.
+Download evidence while the instance is running. Exact current release and
+executed checks: `docs/HOSTING_STATUS.md`.
+
+For a public frontend build, set `VITE_API_BASE_URL=https://vivacity-runtime.onrender.com`
+and `VITE_PHYSICS_TRIALS=5000` before `npm run build --prefix frontend`. The
+frontend clamps that requested ceiling to the actual `/health` host limit
+before each session; Render Free currently allows eight.
+The server allows exactly the two public demo origins. Never put keys in `VITE_`
+variables. Session HTTP requests require `X-Session-Token`; session WebSockets use
+the existing capability protocol documented below. HTTPS uses WSS automatically.
+
+The existing React/TypeScript/Three.js frontend now runs bounded autonomous laboratories. **Do not scaffold over it or reinstate recorded playback.** The main robot/cloth scene consumes fresh authoritative MuJoCo states after independently validating candidates. Result selection inspects evidence; it does not replay a branch in the main scene. Historical V2 release documents describe an earlier interface and are not the current contract.
+
+**Manual start:** loading, reloading, switching laboratories and applying settings never create experiment sessions. The existing main button, **Start experiments**, is the only session-creation path. Initial loading creates/restores a stationary world via the existing world API. Applying settings updates geometry/observations and invalidates old results without submitting experiments. Reloading cancels an existing active session instead of silently continuing it. Completed evidence remains inspectable. Layout, styles and simulation algorithms are unchanged.
+
+## Exact files to read
+
+| File | Purpose |
+| --- | --- |
+| `openapi.json`, `docs/openapi.json` | Exported current REST specification and both `x-websockets` schemas |
+| `docs/master-frontend-examples.json` | Measured persisted session/experiment response examples and captured WS examples when present |
+| `vivacity/schemas.py`, `api.py` | Validated versioned contracts, capability checks, CORS and errors |
+| `vivacity/runtime.py`, `supervisor.py`, `pick_place.py` | Branch evaluation, fresh selected execution, bounded sessions and contact pickup |
+| `frontend/src/api.ts`, `useRuntime.ts`, `domain.ts` | Existing transport, session lifecycle, cancellation, recovery and measured frame types |
+| `frontend/src/App.tsx`, `ResultCard.tsx`, `TechnicalInspector.tsx` | Clean lab navigation, actual top-three exports and one inspector |
+| `frontend/src/RobotView.tsx`, `ClothView.tsx` | Actual geometry, body/vertex states |
+| `frontend/src/Settings.tsx`, `ClothSettings.tsx`, `ImportWorld.tsx`, `ImportScene.tsx` | Bounded condition edits and data-only previews |
+| `frontend/src/generated/api.d.ts` | Generated REST types; regenerate from OpenAPI |
+| `frontend/public/vivacity/robot-geometry.json`, `robot-meshes.bin` | Compiled Panda visual geometry and little-endian vertex/index buffer |
+| `ARCHITECTURE.md`, `DEMO_STATUS.md`, validation reports | Verified scope, limitations and actual results |
+
+Input-only sample requests: `fixtures/pick_place.json`, `pick_place_blocked.json`, `autonomous_pick_place.json`; these contain configuration and budgets, never prescribed solver outputs or winners.
+
+The old `usePlayback.ts` was deleted intentionally. Start/Stop controls actual simulation work; camera movement remains independent. Native Pause/Resume preserves worker state through the API, but those buttons are removed from the current UI. There is no video playback, timeline, scrubber or playback-speed control.
+
+## Setup and exact Claude Code commands
+
+From `P:\VIVACITY\DEMO-`, preserve uncommitted work first. Existing `.venv` and `frontend/node_modules` are usable. For a fresh checkout:
+
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\python -m pip install -r requirements-lock.txt
+npm ci --prefix frontend
+.\.venv\Scripts\python -m scripts.export_openapi
+npm run generate:api --prefix frontend
+npm run build --prefix frontend
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/start-demo.ps1 -NoBrowser -Dev
+```
+
+Open `http://127.0.0.1:5173/`. If script-owned old services are already running, use `scripts/stop-demo.ps1` before restarting; its identity checks preserve unrelated processes. Stop Vite before reinstalling native npm modules on Windows. If an old `frontend/dist` font is locked, a scoped fresh output build is supported: `npm run build --prefix frontend -- --outDir ../data/master-build`. Do not recursively delete unrelated output directories.
+
+To edit in separate terminals instead of using startup scripts:
+
+```powershell
+# Backend terminal, repository root
+$env:VIVACITY_DATABASE='data/vivacity.sqlite3'
+$env:VIVACITY_CORS_ORIGINS='http://127.0.0.1:5173,http://localhost:5173'
+$env:OMP_NUM_THREADS='1'; $env:OPENBLAS_NUM_THREADS='1'
+.\.venv\Scripts\python -m uvicorn vivacity.api:app --host 127.0.0.1 --port 8000
+# Frontend terminal, repository root
+$env:VITE_API_BASE_URL='http://127.0.0.1:8000'
+npm run dev --prefix frontend
+```
+
+Verification with both services running:
+
+```powershell
+.\.venv\Scripts\python -m scripts.test_backend -q
+.\.venv\Scripts\python -m scripts.benchmark_pick_place --runs 20
+.\.venv\Scripts\python -m scripts.benchmark_cloth --runs 5
+$env:UI_URL='http://127.0.0.1:5173/'
+$env:API_URL='http://127.0.0.1:8000'
+$env:PROOF_PREFIX='frontend-handoff'
+$env:CHECK_CONDITIONS='1'
+npm run test:e2e --prefix frontend
+```
+
+The current `test:e2e` runs `scripts/check-master-live.mjs`: real fresh two-cycle pickup jobs, one constrained cloth cycle, rendering checks, downloads, mobile layouts, camera, axe and imports. `CHECK_CONDITIONS=1` also exercises blocked-scene failure, stale results/replay and fresh clear-route execution. It can take several minutes on software graphics. `test:e2e:legacy` retains the preceding V2 harness for historical reference; its playback expectations are incompatible with the current UI. Fresh browser installation: `PLAYWRIGHT_BROWSERS_PATH=<repo>/data/playwright`, then `npx playwright install chromium` from `frontend`.
+
+## Exact endpoints
+
+All JSON requests reject unknown fields and non-finite numbers. IDs are always returned by the server, not hardcoded from artifacts. Standard envelopes use `schema_version:"1.0"`; session/live/import/branch exports have their explicitly named versions below.
+
+| Method / path | Status / purpose |
+| --- | --- |
+| GET `/health` | 200; actual engine versions and readiness |
+| POST `/v1/sessions` | 201; create leased autonomous session; required capability header |
+| GET `/v1/sessions/{id}` | 200; current world/job/cycle; refreshes browser lease |
+| POST `/v1/sessions/{id}/stop` | 200; request safe cancellation; poll until stopped |
+| POST `/v1/sessions/{id}/pause` | 200; request real worker pause; wait for `paused:true` |
+| POST `/v1/sessions/{id}/resume` | 200; continue from the same preserved simulator state |
+| POST `/v1/worlds` | 201; explicit standalone world creation |
+| GET `/v1/worlds/{id}` | 200; configuration, opaque states, versions, seed, history, evaluations |
+| GET `/v1/worlds/{id}/state` | 200; measured observation wrapped in world ID/revision |
+| POST `/v1/worlds/{id}/experiments` | 202; bounded asynchronous job, optional `Idempotency-Key` |
+| GET `/v1/experiments/{id}` | 200; job/result/search/performance/stale/error |
+| GET `/v1/experiments/{id}/branches` | 200; complete independent candidate evidence |
+| GET `/v1/experiments/{id}/trials?after=-1&limit=50` | 200; paginated measured exhaustive-trial catalog |
+| GET `/v1/experiments/{id}/events?after={seq}` | 200; persisted missed messages |
+| GET `/v1/experiments/{id}/live` | 200; latest live envelope or null while queued |
+| POST `/v1/experiments/{id}/cancel` | 200; cancel flag; termination is asynchronous |
+| GET `/v1/experiments/{id}/branches/{bid}/export` | 200; exact downloadable JSON evidence |
+| GET `/v1/experiments/{id}/replay` | 200; historical measured traces, original configuration, stale flag |
+| POST `/v1/worlds/{id}/commit` | 200; explicitly commit successful current-revision branch |
+| POST `/v1/worlds/{id}/reset` | 200; original state under current geometry, increments revision |
+| PATCH `/v1/worlds/{id}/environment` | 200; full validated backend configuration replacement, resets and invalidates |
+| POST `/v1/imports?filename=scene.glb` | 201; raw bytes, not multipart |
+| GET `/v1/imports/{id}` | 200; inspected metadata, always `physics_ready:false` |
+| GET `/v1/imports/{id}/preview` | 200; validated static triangles |
+| WS `/v1/experiments/{id}/events?after={seq}` | Sequenced persisted progress and terminal events |
+| WS `/v1/experiments/{id}/live` | Latest-only measured state, up to 20 Hz |
+
+Errors: 403 capability mismatch; 404 missing record; 409 stale/failed commit or conflicting retry settings; 422 invalid input; 429 bounded capacity exhausted; 503 shutting-down/unavailable worker. Capacity responses include `Retry-After:5`. A completed job can honestly have no successful candidate. Display measured failures, not a fabricated fallback.
+
+## Session requests, responses and capability transport
+
+Client generates a new random capability (32–128 ASCII alphanumeric/underscore/hyphen characters), saves it with its session ID and supplies `X-Session-Token` on every session-owned world/experiment request. Only its SHA-256 digest is persisted. Reusing the same token and same normalized create request returns the original session; changed settings with that token return 409. It is capability isolation, not account authentication. Legacy standalone worlds and imports remain explicitly public demo data.
+
+Exact contact-pickup session request body:
+
+```json
+{"backend":"mujoco","seed":7,"config":{"task":"pick_place","obstacle_enabled":false},"max_cycles":1,"realtime_execution":true,"search_candidates":5000,"physics_trials":5000,"physics_budget":3}
+```
+
+The frontend now checks `GET /health` before starting pickup and submits the
+smaller of its requested trial budget and `limits.max_physics_trials`, with
+matching `search_candidates`. The live counter displays completed backend
+physics trials, not generated proposals. A 5,000-trial request is possible only
+on a host reporting a 5,000-trial limit; Render Free currently reports eight.
+The separate hosted [5,000-trial audit](docs/PHYSICS_5000_VARIED_AUDIT.md)
+cannot be substituted for a visitor's newly configured experiment.
+
+For workcell pickup, the full robotics configuration supports
+`cube_half_size` from `0.020` to `0.030` metres, corresponding to a 40–60 mm
+cube. A 60 mm example sets `"cube_half_size":0.030`,
+`"cube_position":[0.5,-0.15,0.031]` and
+`"placement_position":[0.5,0.18,0.031]`; the vertical center must track the
+half-size plus 1 mm table clearance. Pickup and placement X/Y sliders choose
+the positions. Applying a size or position change recompiles actual MuJoCo
+geometry and invalidates older results. The adapted Orbital cargo fixture keeps
+its original 50 mm cube; arbitrary cargo resizing is unsupported there.
+
+For cloth use `{"backend":"cloth","seed":7,"max_cycles":1,"search_candidates":5000,"physics_budget":3}`. API robotics default without `task` remains legacy reaching; the current frontend explicitly requests pickup. Omitted config fields receive validated defaults, not frontend guesses.
+
+Session response version is `vivacity.session/1.0`, with `id`, `backend`, `status`, `world_id`, nullable `experiment_id`, `cycle`, `max_cycles`, `experiments`, `world_ids`, `conditions`, `error`, `started_unix_s`, `last_heartbeat_unix_s`, plus `pause_requested`, `paused` and `paused_seconds`. Earlier real response examples are in `docs/master-frontend-examples.json`; the additive pause fields and trial records are specified in `PAUSE_TRIALS_VALIDATION.md`. Each next cycle changes world ID and recorded seed/conditions; reconnect to that experiment's sockets. Sessions run at most eight cycles (cloth at most two), expire after a 180 s heartbeat lapse, and have a 30 min wall bound (two hours for exhaustive pickup). GET heartbeat every second, including while paused. The current frontend requests one exhaustive pickup cycle.
+
+Standalone pickup: POST `/v1/worlds` with `{"backend":"mujoco","seed":7,"config":{"task":"pick_place","obstacle_enabled":false}}`. Submit `{"candidates":3,"search_candidates":5000,"physics_trials":5000,"physics_budget":3,"max_simulation_seconds":40,"execute_selected":true,"realtime_execution":true,"policy":"deterministic"}` to its experiments endpoint. `execute_selected:false` keeps experiments observational: independent validation without committing a fresh execution. Omitting `physics_trials` retains the legacy screening/shortlist mode. Request keys are scoped to world ID; reuse the same key for network retry, a new key for deliberate recomputation.
+
+Environment edits must stop the session first. PATCH body is `{"config":{...full current config...,"obstacle_enabled":true,"obstacle_position":[0.75,-0.4,0.2]}}`; construct actual full JSON from the returned configuration, not literal ellipses. A new configuration increments revision and makes older results/replays stale; create a fresh session with a fresh token for the new conditions. Never change rendering geometry without sending the physics configuration.
+
+Explicit commit JSON is `{"experiment_id":"<returned experiment id>","branch_id":"<returned successful branch id>"}`; substitute actual IDs. It is for a completed successful current-revision validation when no fresh execution already committed it. Reset and cancel/stop use POST with no JSON body. Branch export is a GET returning the versioned evidence, not a frontend reconstruction of an action.
+
+## WebSocket formats and reconnect
+
+Browser capability transport:
+
+```typescript
+const socket = new WebSocket(
+  `${API.replace(/^http/, 'ws')}/v1/experiments/${experimentId}/live`,
+  ['vivacity.live', `vivacity.token.${capability}`]
+);
+socket.onmessage = event => consumeMeasuredState(JSON.parse(event.data));
+```
+
+The server accepts `vivacity.live`. Tokens never belong in URLs or exported evidence. HTTP and WebSocket browser Origin must exactly match `VIVACITY_CORS_ORIGINS`; HTTPS frontend uses HTTPS API and WSS. Terminal sockets close 1000; forbidden/missing records close 1008 before acceptance. Reconnect events with last `seq`, recover through REST on interruption, and keep a single latest live frame. Slow clients skip intermediate physics frames; never accumulate an unbounded queue.
+
+Persisted event format: `{schema_version:"1.0",seq:number,kind,details:object}`. Kinds: queued, running, planned, progress, branch_completed, completed, failed, cancelled. `details.timestamp_unix_s` is the recorded timestamp; progress includes an actual stage/message and available generated/screened/rejected/physics counts. Sequence is database-wide, not necessarily starting at one per experiment.
+
+Live format: `{schema_version:"vivacity.live/1.0",experiment_id,world_id,sequence:number,timestamp_unix_s:number,stage:string,frame:object}`. `sequence` increases within the experiment. Frames come from actual MuJoCo integration, not exported replay. Captured complete messages are retained in public browser proof `live_message_example` and `event_message_examples`, and in the current example export. Exact schemas are embedded in OpenAPI `x-websockets`.
+
+During independent validation the main scene remains at its initialized physical state. Only fresh selected execution drives its motion. Physical outcome is validated again before a successful final state is committed; failure does not commit a validation prediction. Cancelled/failed partial traces remain evidence. After completion, fetching the world supplies its persisted successful state. Archived evidence does not replace that scene.
+
+## Physical geometry and measured transforms
+
+- MuJoCo: right-handed **Z-up**, XYZ meters, joint radians, seconds. `body_transforms` are **world poses**. Build flat groups, not nested FK transforms. Reorder WXYZ to Three.js XYZW: `new Quaternion(q[1],q[2],q[3],q[0])`.
+- Panda body bindings/mesh-local poses are in the compiled geometry manifest. Its binary buffer contains compiled centered/rotated mesh vertices; applying raw XML mesh transforms again would double-transform them. Static visual bindings remain valid across supported workcell variants; the model hash describes the source export, not a new dynamic-world hash. Live snapshots carry the actual world hash.
+- Pickup has 16 qpos / 15 qvel / eight controls: first seven arm joints, two fingers, then the cube's free joint. Cube free qpos holds XYZ then WXYZ. Render using measured `target` body pose; **never parent the cube to the hand**. The cube is 50 mm per side, 0.06 kg by default, friction coefficient 1.0, with actual finger/contact forces and gravity.
+- Gripper actuator `ctrl[7]`: 0 closed, 255 open. Hand-local pregrasp site offset `[0,0,0.103]` m, downward orientation `diag(1,-1,-1)`. Finger-cube frictional retention is measured; there is no object weld or mocap attachment.
+- Table center `[0.4,0,-0.04]`, half-size `[0.7,0.65,0.04]`; tabletop Z=0, ground Z=-0.8. Obstacle configuration uses **half-sizes**, so render dimensions are twice those values. If obstacle disabled, collision masks are also disabled and renderer hides it. The default opening pickup explicitly has it disabled; controls can enable/reposition it.
+- Robot frames include `time`, `qpos`, `qvel`, `ctrl`, `body_transforms`, `end_effector`, `contacts`, `cube_position`, `cube_quaternion_wxyz`, `placement_position`, `grasp`, and physical `phase` during execution. `grasp` includes bilateral finger contacts, summed actual normal force and table support. Contacts/limits are checked every 2 ms, streamed frames approximately every 50 ms. Sampling is not a collision-proof interpolation guarantee.
+- Cloth frames add 49 actual world-space `vertices`, compiled `triangles`, folding-bar pose and `grasp_active`. Robot body poses come from the same physics engine. Its pre-attached edge constraints/fixed hinge are explicit experimental limitations; disable them only through a tested backend model change.
+- Uploaded glTF preview is **Y-up**; preserve its documented coordinate convention. Camera/grid/light controls never mutate simulator state.
+
+## Ranking, replay and export formats
+
+Use `result.top_feasible_branch_ids` for the three measured feasible physical candidates. Fewer than three is valid, zero must be shown honestly. `result.execution_branch_id` identifies the separate fresh selected execution; it is not a fourth ranked validation candidate. `execution_evaluation` records its measured outcome.
+
+`result.search.generated/distinct_generated/screened/rejected/screening_passed` are genuine proposal counts. In exhaustive pickup mode, `fully_simulated` and `performance.trial_count` count actual integrated, evaluated native MuJoCo trials; `trial_simulation_steps` is their measured step sum. Every trial has its own MjData restored from the same complete integration snapshot. `performance.candidate_count` counts retained ranked branches plus fresh execution, not the entire trial catalog. `performance.simulation_steps` includes all trials and fresh execution. Never label screening counts as physics counts. Cloth retains geometric screening followed by actual validation rollouts.
+
+Replay response: `{schema_version:"1.0",experiment_id,backend,config,stale,branches:[{branch_id,source,frames,evaluation}]}`. Sources identify measured MuJoCo, measured robot-cloth or failed adapter execution. It is available for evidence inspection, not current live execution. Branches additionally retain opaque complete initial/final integration snapshots, parent reference, action, trace, evaluation and performance. Old geometry remains reproducible through its original configuration/hash; stale results cannot be committed.
+
+Download version `vivacity.branch/1.0` includes experiment/branch IDs, world type, actual backend/version, initial configuration, parent reference, state encoding, initial/final snapshots, command, **recorded_frames**, evaluation/violations/success, seed, configuration SHA-256, model hash, timestamps and performance. `Content-Disposition` suggests a JSON filename. The existing client verifies schema and matching branch ID before downloading. Real examples: `artifacts/master-live-pickup-1.json` through `-3.json`, and equivalent public release exports. IDs in evidence belong to verification databases; always use fresh returned IDs.
+
+## Remaining limitations
+
+Pickup uses pose DLS and joint-space RRT with measured contact validation in the supported workcells; general robot robustness is not established. All-paths-fail remains honest. Cloth uses a fixed hinge and pre-attached folding fixture without autonomous grasp acquisition. Scientific Discovery is retired. Imports support visual inspection, explicitly requested bounded native probes and the trusted Orbital adaptation; generic imported task control is incomplete. Public standalone worlds/imports have no account authentication or retention quota. Render Free limits and measured evidence are in `docs/HOSTING_STATUS.md`: eight pickup trials maximum, constrained CPU, ephemeral SQLite and possible cold starts.

@@ -1,0 +1,9 @@
+import {useState} from 'react';
+import {api,errorMessage} from './api';
+import {format,type Experiment,type Dict} from './domain';
+
+export default function CurrentExperiment({experiment,config,friction}:{experiment:Experiment;config:Dict;friction?:number}){
+ const [error,setError]=useState('');
+ const evaluation=experiment.result.execution_evaluation as Dict|undefined;
+ return <section className="current-experiment" aria-labelledby="current-experiment-heading"><h2 id="current-experiment-heading">Current workspace experiment</h2><p className="small">This is the actual runtime record, including runs started directly from the preloaded workcell.</p><dl className="spec-list"><div><dt>Experiment</dt><dd>{experiment.id}</dd></div><div><dt>State / revision</dt><dd>{experiment.status} · {experiment.revision}{experiment.stale?' · stale':''}</dd></div><div><dt>Object conditions</dt><dd>{String(config.object_material??'custom')} · {format(config.cube_mass)} kg · measured sliding μ {format(friction)}</dd></div><div><dt>Fresh execution</dt><dd>{evaluation?evaluation.success?'Verified placement':String(evaluation.status??'Failed'):'Not measured yet'}</dd></div><div><dt>Physics trials</dt><dd>{Number(experiment.performance.trial_count??0)}</dd></div><div><dt>Native steps</dt><dd>{Number(experiment.performance.simulation_steps??0).toLocaleString()}</dd></div><div><dt>Placement error</dt><dd>{format(evaluation?.goal_error_m)} m</dd></div><div><dt>Wall time</dt><dd>{format(experiment.performance.job_wall_seconds,2)} s</dd></div></dl><p className="small">{String(experiment.result.conclusion??experiment.error??'Waiting for a measured result.')}</p><button className="secondary" disabled={!experiment.selected_branch_id} onClick={()=>{if(experiment.selected_branch_id)api.download(experiment.id,experiment.selected_branch_id).catch(e=>setError(errorMessage(e)));}}>Export verified branch</button>{error&&<p className="negative" role="alert">{error}</p>}</section>;
+}

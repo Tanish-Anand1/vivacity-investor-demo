@@ -1,0 +1,14 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "vite",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "headers": [{"source":"/runtime/:path*","headers":[
+    {"key":"Cache-Control","value":"private, no-store"},
+    {"key":"x-vercel-enable-rewrite-caching","value":"0"}
+  ]}],
+  "rewrites": [
+    {"source":"/runtime/:path*","destination":"https://vivacity-runtime.onrender.com/:path*"},
+    {"source":"/((?!vivacity/|runtime/).*)","destination":"/index.html"}
+  ]
+}

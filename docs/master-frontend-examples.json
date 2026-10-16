@@ -1,0 +1,1731 @@
+{
+  "source": "persisted measured response fields and captured browser WebSocket messages",
+  "proof": "artifacts/master-public-verification.json",
+  "responses": [
+    {
+      "method": "GET",
+      "path": "/v1/sessions/9226db6a-6742-48b2-8f93-cc03861cd781",
+      "body": {
+        "schema_version": "vivacity.session/1.0",
+        "id": "9226db6a-6742-48b2-8f93-cc03861cd781",
+        "backend": "mujoco",
+        "status": "completed",
+        "world_id": "47b81d14-5da7-41a8-a951-fb70493106b2",
+        "experiment_id": "62154644-519e-4454-889b-455e653f92e8",
+        "cycle": 2,
+        "max_cycles": 2,
+        "experiments": [
+          "f8f938ba-00e4-4d14-a769-a30fc76ee811",
+          "62154644-519e-4454-889b-455e653f92e8"
+        ],
+        "world_ids": [
+          "9e1d28b9-feaa-4e21-9040-b4e28edddcf5",
+          "47b81d14-5da7-41a8-a951-fb70493106b2"
+        ],
+        "error": null,
+        "started_unix_s": 1791664492.2813277,
+        "last_heartbeat_unix_s": 1791664706.7409735,
+        "conditions": [
+          {
+            "cycle": 1,
+            "seed": 7,
+            "world_id": "9e1d28b9-feaa-4e21-9040-b4e28edddcf5",
+            "configuration_sha256": "97e003b44330a80fb342fc2e2fe8b1cc6662d16a3c4828be38c3cffd6a03c610"
+          },
+          {
+            "cycle": 2,
+            "seed": 8,
+            "world_id": "47b81d14-5da7-41a8-a951-fb70493106b2",
+            "configuration_sha256": "2bf00585d8aba63f7349d5741c7a0c1eb652565c557a287025b124f459a31727"
+          }
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/v1/experiments/f8f938ba-00e4-4d14-a769-a30fc76ee811",
+      "body": {
+        "schema_version": "1.0",
+        "id": "f8f938ba-00e4-4d14-a769-a30fc76ee811",
+        "world_id": "9e1d28b9-feaa-4e21-9040-b4e28edddcf5",
+        "revision": 0,
+        "status": "completed",
+        "request": {
+          "execute_selected": true,
+          "realtime_execution": true,
+          "candidates": 3,
+          "planner_iterations": 1500,
+          "max_simulation_seconds": 40.0,
+          "policy": "deterministic",
+          "search_candidates": 5000,
+          "physics_budget": 3
+        },
+        "selected_branch_id": "a1f3d09c-d998-4aee-bd80-bc40827e0e14",
+        "result": {
+          "conclusion": "Measured physical pickup and placement found.",
+          "milestone": "physical_pick_and_place",
+          "ranked_branch_ids": [
+            "a1f3d09c-d998-4aee-bd80-bc40827e0e14",
+            "e32c9396-e56c-41ae-8da1-1ab587a8d1e7",
+            "fe3f4a22-1077-4d82-a654-bd77107ceaca"
+          ],
+          "top_feasible_branch_ids": [
+            "a1f3d09c-d998-4aee-bd80-bc40827e0e14",
+            "e32c9396-e56c-41ae-8da1-1ab587a8d1e7",
+            "fe3f4a22-1077-4d82-a654-bd77107ceaca"
+          ],
+          "policy": {
+            "policy": "deterministic_planning_policy",
+            "llm_used": false,
+            "steps": [
+              "Inspect structured observation and valid action schema.",
+              "Generate candidate interventions through backend tools.",
+              "Fork the same persisted state for each candidate.",
+              "Rank measured outcomes; retain failures."
+            ]
+          },
+          "executed_settings": {
+            "execute_selected": true,
+            "realtime_execution": true,
+            "candidates": 3,
+            "planner_iterations": 1500,
+            "max_simulation_seconds": 40.0,
+            "policy": "deterministic",
+            "search_candidates": 5000,
+            "physics_budget": 3
+          },
+          "followup_settings": null,
+          "search": {
+            "generated": 5000,
+            "distinct_generated": 5000,
+            "screened": 5000,
+            "rejected": 0,
+            "screening_passed": 5000,
+            "promoted_to_physics": 3,
+            "candidate_catalog_sha256": "6c61ac58b40e96a78a131b62d7994441679cd64d4fa7e3823a49084c4c67ee74",
+            "rejection_reasons": {
+              "kinematic_collision": 0,
+              "ik_failure": 0,
+              "simulation_horizon": 0
+            },
+            "kinematic_templates_checked": 8,
+            "diagnostic_rollouts": 0,
+            "sampling": "seeded lift-height templates and distinct speed/close-dwell/release-dwell commands",
+            "screening_scope": "actual template IK/kinematic contacts plus per-candidate timing/horizon checks; no dynamic success claim",
+            "ranking_objective": "successful execution, measured duration, placement error, candidate index",
+            "fully_simulated": 3,
+            "physics_attempts": 3,
+            "planning_failed": 0,
+            "verified_feasible": 3,
+            "physics_rejected": 0
+          },
+          "execution_branch_id": "c63e4511-71dd-4472-8d54-561e4e46047e",
+          "execution_evaluation": {
+            "success": true,
+            "status": "execution_success",
+            "milestone": "physical_pick_and_place",
+            "planning_feasible": true,
+            "goal_error_m": 0.0016582817994905328,
+            "final_cube_position": [
+              0.5012909826132809,
+              0.1799436952400361,
+              0.024960725160155663
+            ],
+            "grasp_established": true,
+            "lifted": true,
+            "retained_during_transport": true,
+            "released": true,
+            "table_supported": true,
+            "max_cube_height_m": 0.15715788694989152,
+            "max_tracking_error_rad": 0.052895480356762586,
+            "contact_violations": [],
+            "phase_evidence": [
+              {
+                "phase": "approach",
+                "time": 3.7959999999998035,
+                "cube_position": [
+                  0.5,
+                  -0.15,
+                  0.024960725160728718
+                ],
+                "finger_contacts": [],
+                "bilateral_grasp": false,
+                "cube_contact_normal_force_n": 0.5885999998431172,
+                "table_support": true
+              },
+              {
+                "phase": "descend",
+                "time": 4.975999999999674,
+                "cube_position": [
+                  0.5,
+                  -0.15,
+                  0.02496072516074728
+                ],
+                "finger_contacts": [],
+                "bilateral_grasp": false,
+                "cube_contact_normal_force_n": 0.588599999523179,
+                "table_support": true
+              },
+              {
+                "phase": "close",
+                "time": 5.5979999999996055,
+                "cube_position": [
+                  0.5000408332050565,
+                  -0.15001217876766684,
+                  0.024919177917224925
+                ],
+                "finger_contacts": [
+                  "left_finger",
+                  "right_finger"
+                ],
+                "bilateral_grasp": true,
+                "cube_contact_normal_force_n": 3.7056405746619046,
+                "table_support": true
+              },
+              {
+                "phase": "lift",
+                "time": 6.7779999999994756,
+                "cube_position": [
+                  0.5003771458135906,
+                  -0.15000071123273143,
+                  0.15695583860577483
+                ],
+                "finger_contacts": [
+                  "left_finger",
+                  "right_finger"
+                ],
+                "bilateral_grasp": true,
+                "cube_contact_normal_force_n": 2.4975214959841443,
+                "table_support": false
+              },
+              {
+                "phase": "transport",
+                "time": 8.995999999999674,
+                "cube_position": [
+                  0.5010510541207381,
+                  0.17982302342676584,
+                  0.1570515113043307
+                ],
+                "finger_contacts": [
+                  "left_finger",
+                  "right_finger"
+                ],
+                "bilateral_grasp": true,
+                "cube_contact_normal_force_n": 2.4957106246866143,
+                "table_support": false
+              },
+              {
+                "phase": "lower",
+                "time": 10.158000000000062,
+                "cube_position": [
+                  0.501359952065819,
+                  0.17995757886416053,
+                  0.02493522940791617
+                ],
+                "finger_contacts": [
+                  "left_finger",
+                  "right_finger"
+                ],
+                "bilateral_grasp": true,
+                "cube_contact_normal_force_n": 4.160896924410858,
+                "table_support": true
+              },
+              {
+                "phase": "release",
+                "time": 10.768000000000265,
+                "cube_position": [
+                  0.5012909825621856,
+                  0.17994369523880316,
+                  0.024960725160155663
+                ],
+                "finger_contacts": [],
+                "bilateral_grasp": false,
+                "cube_contact_normal_force_n": 0.5886,
+                "table_support": true
+              },
+              {
+                "phase": "retract",
+                "time": 12.328000000000786,
+                "cube_position": [
+                  0.5012909826132809,
+                  0.1799436952400361,
+                  0.024960725160155663
+                ],
+                "finger_contacts": [],
+                "bilateral_grasp": false,
+                "cube_contact_normal_force_n": 0.5886,
+                "table_support": true
+              }
+            ],
+            "execution_duration_s": 12.328000000000786
+          },
+          "executed_world_revision": 1
+        },
+        "performance": {
+          "job_wall_seconds": 103.57530059999772,
+          "process_cpu_seconds": 40.34375,
+          "queue_wait_seconds": 0.4143339347865549,
+          "planning_wall_seconds": 3.0767933999995876,
+          "physics_wall_seconds": 96.20405640000536,
+          "candidate_count": 4,
+          "simulation_steps": 24667,
+          "integration_calls": 0,
+          "replay_payload_bytes": 3459596,
+          "branch_failure_rate": 0.0,
+          "adapter_error_count": 0,
+          "measurement_complete": true,
+          "job_error_rate": 0.0,
+          "compute": "local CPU; one worker; process CPU time includes concurrent API activity; no billed model calls under deterministic policy"
+        },
+        "error": null,
+        "stale": false
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/v1/experiments/62154644-519e-4454-889b-455e653f92e8",
+      "body": {
+        "schema_version": "1.0",
+        "id": "62154644-519e-4454-889b-455e653f92e8",
+        "world_id": "47b81d14-5da7-41a8-a951-fb70493106b2",
+        "revision": 0,
+        "status": "completed",
+        "request": {
+          "execute_selected": true,
+          "realtime_execution": true,
+          "candidates": 3,
+          "planner_iterations": 1500,
+          "max_simulation_seconds": 40.0,
+          "policy": "deterministic",
+          "search_candidates": 5000,
+          "physics_budget": 3
+        },
+        "selected_branch_id": "4920db2d-a1aa-43d6-a7be-74562ca96952",
+        "result": {
+          "conclusion": "Measured physical pickup and placement found.",
+          "milestone": "physical_pick_and_place",
+          "ranked_branch_ids": [
+            "4920db2d-a1aa-43d6-a7be-74562ca96952",
+            "d86cb05f-e025-47d4-8220-ebb8796f2e46",
+            "fb74251f-7c38-4230-a006-8e3a22b5ea8a"
+          ],
+          "top_feasible_branch_ids": [
+            "4920db2d-a1aa-43d6-a7be-74562ca96952",
+            "d86cb05f-e025-47d4-8220-ebb8796f2e46",
+            "fb74251f-7c38-4230-a006-8e3a22b5ea8a"
+          ],
+          "policy": {
+            "policy": "deterministic_planning_policy",
+            "llm_used": false,
+            "steps": [
+              "Inspect structured observation and valid action schema.",
+              "Generate candidate interventions through backend tools.",
+              "Fork the same persisted state for each candidate.",
+              "Rank measured outcomes; retain failures."
+            ]
+          },
+          "executed_settings": {
+            "execute_selected": true,
+            "realtime_execution": true,
+            "candidates": 3,
+            "planner_iterations": 1500,
+            "max_simulation_seconds": 40.0,
+            "policy": "deterministic",
+            "search_candidates": 5000,
+            "physics_budget": 3
+          },
+          "followup_settings": null,
+          "search": {
+            "generated": 5000,
+            "distinct_generated": 5000,
+            "screened": 5000,
+            "rejected": 0,
+            "screening_passed": 5000,
+            "promoted_to_physics": 3,
+            "candidate_catalog_sha256": "4f4bfe4eccbd3e451032196dd24e6265b8a702b6ad0aa05bc4b4582dedbe27a7",
+            "rejection_reasons": {
+              "kinematic_collision": 0,
+              "ik_failure": 0,
+              "simulation_horizon": 0
+            },
+            "kinematic_templates_checked": 8,
+            "diagnostic_rollouts": 0,
+            "sampling": "seeded lift-height templates and distinct speed/close-dwell/release-dwell commands",
+            "screening_scope": "actual template IK/kinematic contacts plus per-candidate timing/horizon checks; no dynamic success claim",
+            "ranking_objective": "successful execution, measured duration, placement error, candidate index",
+            "fully_simulated": 3,
+            "physics_attempts": 3,
+            "planning_failed": 0,
+            "verified_feasible": 3,
+            "physics_rejected": 0
+          },
+          "execution_branch_id": "29fb8932-43f3-47b6-a4c4-7f2e7b2581dd",
+          "execution_evaluation": {
+            "success": true,
+            "status": "execution_success",
+            "milestone": "physical_pick_and_place",
+            "planning_feasible": true,
+            "goal_error_m": 0.00167547269724754,
+            "final_cube_position": [
+              0.4868031104982394,
+              0.20659600601764327,
+              0.024960725160155652
+            ],
+            "grasp_established": true,
+            "lifted": true,
+            "retained_during_transport": true,
+            "released": true,
+            "table_supported": true,
+            "max_cube_height_m": 0.16530394181415364,
+            "max_tracking_error_rad": 0.05240292396399357,
+            "contact_violations": [],
+            "phase_evidence": [
+              {
+                "phase": "approach",
+                "time": 4.121999999999768,
+                "cube_position": [
+                  0.4861577167214137,
+                  -0.10127231566682815,
+                  0.024960725160155652
+                ],
+                "finger_contacts": [],
+                "bilateral_grasp": false,
+                "cube_contact_normal_force_n": 0.5886,
+                "table_support": true
+              },
+              {
+                "phase": "descend",
+                "time": 5.411999999999626,
+                "cube_position": [
+                  0.4861577167640803,
+                  -0.10127231566704724,
+                  0.024960725160155652
+                ],
+                "finger_contacts": [],
+                "bilateral_grasp": false,
+                "cube_contact_normal_force_n": 0.5886,
+                "table_support": true
+              },
+              {
+                "phase": "close",
+                "time": 6.053999999999555,
+                "cube_position": [
+                  0.486192642408753,
+                  -0.10128057713206859,
+                  0.02492347609411767
+                ],
+                "finger_contacts": [
+                  "left_finger",
+                  "right_finger"
+                ],
+                "bilateral_grasp": true,
+                "cube_contact_normal_force_n": 3.640838125527253,
+                "table_support": true
+              },
+              {
+                "phase": "lift",
+                "time": 7.343999999999413,
+                "cube_position": [
+                  0.4865592599157686,
+                  -0.10127755898357893,
+                  0.1651182876127451
+                ],
+                "finger_contacts": [
+                  "left_finger",
+                  "right_finger"
+                ],
+                "bilateral_grasp": true,
+                "cube_contact_normal_force_n": 2.4975331805504806,
+                "table_support": false
+              },
+              {
+                "phase": "transport",
+                "time": 9.473999999999833,
+                "cube_position": [
+                  0.4865789598458776,
+                  0.20655844049277403,
+                  0.16519455521988788
+                ],
+                "finger_contacts": [
+                  "left_finger",
+                  "right_finger"
+                ],
+                "bilateral_grasp": true,
+                "cube_contact_normal_force_n": 2.4957211640407073,
+                "table_support": false
+              },
+              {
+                "phase": "lower",
+                "time": 10.700000000000243,
+                "cube_position": [
+                  0.48686423090076536,
+                  0.20661908954061445,
+                  0.024876710849980287
+                ],
+                "finger_contacts": [
+                  "left_finger",
+                  "right_finger"
+                ],
+                "bilateral_grasp": true,
+                "cube_contact_normal_force_n": 5.02856155036378,
+                "table_support": true
+              },
+              {
+                "phase": "release",
+                "time": 11.208000000000412,
+                "cube_position": [
+                  0.48680311044782837,
+                  0.20659600599836367,
+                  0.024960725160155704
+                ],
+                "finger_contacts": [],
+                "bilateral_grasp": false,
+                "cube_contact_normal_force_n": 0.5886000000000204,
+                "table_support": true
+              },
+              {
+                "phase": "retract",
+                "time": 12.834000000000955,
+                "cube_position": [
+                  0.4868031104982394,
+                  0.20659600601764327,
+                  0.024960725160155652
+                ],
+                "finger_contacts": [],
+                "bilateral_grasp": false,
+                "cube_contact_normal_force_n": 0.5886000000000002,
+                "table_support": true
+              }
+            ],
+            "execution_duration_s": 12.834000000000955
+          },
+          "executed_world_revision": 1
+        },
+        "performance": {
+          "job_wall_seconds": 102.346300899997,
+          "process_cpu_seconds": 40.0625,
+          "queue_wait_seconds": 0.3667308823823987,
+          "planning_wall_seconds": 3.379387700002553,
+          "physics_wall_seconds": 92.23396689999936,
+          "candidate_count": 4,
+          "simulation_steps": 25688,
+          "integration_calls": 0,
+          "replay_payload_bytes": 3804431,
+          "branch_failure_rate": 0.0,
+          "adapter_error_count": 0,
+          "measurement_complete": true,
+          "job_error_rate": 0.0,
+          "compute": "local CPU; one worker; process CPU time includes concurrent API activity; no billed model calls under deterministic policy"
+        },
+        "error": null,
+        "stale": true
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/v1/sessions/564caea7-5601-4900-8ccc-cb90c2ed5f82",
+      "body": {
+        "schema_version": "vivacity.session/1.0",
+        "id": "564caea7-5601-4900-8ccc-cb90c2ed5f82",
+        "backend": "mujoco",
+        "status": "completed",
+        "world_id": "7991668e-4f23-47b3-8c5b-e407f81ba1b1",
+        "experiment_id": "845fa2e4-d415-4696-8fa9-fbd192e71e8b",
+        "cycle": 1,
+        "max_cycles": 1,
+        "experiments": [
+          "845fa2e4-d415-4696-8fa9-fbd192e71e8b"
+        ],
+        "world_ids": [
+          "7991668e-4f23-47b3-8c5b-e407f81ba1b1"
+        ],
+        "error": null,
+        "started_unix_s": 1791664728.289579,
+        "last_heartbeat_unix_s": 1791664733.9762797,
+        "conditions": [
+          {
+            "cycle": 1,
+            "seed": 7,
+            "world_id": "7991668e-4f23-47b3-8c5b-e407f81ba1b1",
+            "configuration_sha256": "8a19dbddcfae76cb5cdd85cf9790a1c98c72bbfdd4c440e746a1a59e029946fe"
+          }
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/v1/experiments/845fa2e4-d415-4696-8fa9-fbd192e71e8b",
+      "body": {
+        "schema_version": "1.0",
+        "id": "845fa2e4-d415-4696-8fa9-fbd192e71e8b",
+        "world_id": "7991668e-4f23-47b3-8c5b-e407f81ba1b1",
+        "revision": 0,
+        "status": "completed",
+        "request": {
+          "execute_selected": true,
+          "realtime_execution": true,
+          "candidates": 3,
+          "planner_iterations": 1500,
+          "max_simulation_seconds": 40.0,
+          "policy": "deterministic",
+          "search_candidates": 5000,
+          "physics_budget": 3
+        },
+        "selected_branch_id": null,
+        "result": {
+          "conclusion": "No candidate completed physical pickup and placement.",
+          "milestone": "physical_pick_and_place",
+          "ranked_branch_ids": [
+            "8bfeba93-000f-4f58-b430-d512b5fb2095"
+          ],
+          "top_feasible_branch_ids": [],
+          "policy": {
+            "policy": "deterministic_planning_policy",
+            "llm_used": false,
+            "steps": [
+              "Inspect structured observation and valid action schema.",
+              "Generate candidate interventions through backend tools.",
+              "Fork the same persisted state for each candidate.",
+              "Rank measured outcomes; retain failures."
+            ]
+          },
+          "executed_settings": {
+            "execute_selected": true,
+            "realtime_execution": true,
+            "candidates": 3,
+            "planner_iterations": 1500,
+            "max_simulation_seconds": 40.0,
+            "policy": "deterministic",
+            "search_candidates": 5000,
+            "physics_budget": 3
+          },
+          "followup_settings": null,
+          "search": {
+            "generated": 5000,
+            "distinct_generated": 5000,
+            "screened": 5000,
+            "rejected": 5000,
+            "screening_passed": 0,
+            "promoted_to_physics": 1,
+            "candidate_catalog_sha256": "5ec4bb8e6cb6e33f0c91b625bbdbda93f606d9c59b57099ec0c36011ae8f4c04",
+            "rejection_reasons": {
+              "kinematic_collision": 5000,
+              "ik_failure": 0,
+              "simulation_horizon": 0
+            },
+            "kinematic_templates_checked": 8,
+            "diagnostic_rollouts": 1,
+            "sampling": "seeded lift-height templates and distinct speed/close-dwell/release-dwell commands",
+            "screening_scope": "actual template IK/kinematic contacts plus per-candidate timing/horizon checks; no dynamic success claim",
+            "ranking_objective": "successful execution, measured duration, placement error, candidate index",
+            "fully_simulated": 0,
+            "physics_attempts": 1,
+            "planning_failed": 1,
+            "verified_feasible": 0,
+            "physics_rejected": 0
+          }
+        },
+        "performance": {
+          "job_wall_seconds": 3.8748816000006627,
+          "process_cpu_seconds": 2.34375,
+          "queue_wait_seconds": 0.08195686769249733,
+          "planning_wall_seconds": 3.4897055000001274,
+          "physics_wall_seconds": 0.0026794000004883856,
+          "candidate_count": 1,
+          "simulation_steps": 0,
+          "integration_calls": 0,
+          "replay_payload_bytes": 21609,
+          "branch_failure_rate": 1.0,
+          "adapter_error_count": 0,
+          "measurement_complete": true,
+          "job_error_rate": 0.0,
+          "compute": "local CPU; one worker; process CPU time includes concurrent API activity; no billed model calls under deterministic policy"
+        },
+        "error": null,
+        "stale": true
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/v1/sessions/18b84dc9-5fee-4a98-ba55-090b07dadcb9",
+      "body": {
+        "schema_version": "vivacity.session/1.0",
+        "id": "18b84dc9-5fee-4a98-ba55-090b07dadcb9",
+        "backend": "mujoco",
+        "status": "completed",
+        "world_id": "654c8226-63b8-4ed1-94bd-71d40a24bec8",
+        "experiment_id": "f2a00d59-dee9-48eb-ac2d-c5508867fa05",
+        "cycle": 1,
+        "max_cycles": 1,
+        "experiments": [
+          "f2a00d59-dee9-48eb-ac2d-c5508867fa05"
+        ],
+        "world_ids": [
+          "654c8226-63b8-4ed1-94bd-71d40a24bec8"
+        ],
+        "error": null,
+        "started_unix_s": 1791664738.6301768,
+        "last_heartbeat_unix_s": 1791664849.647875,
+        "conditions": [
+          {
+            "cycle": 1,
+            "seed": 7,
+            "world_id": "654c8226-63b8-4ed1-94bd-71d40a24bec8",
+            "configuration_sha256": "ee4ed4c9c3bbc5eaab5a4970207573b5a2e957ea0d1ff620a3a93104e9cc673c"
+          }
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/v1/experiments/f2a00d59-dee9-48eb-ac2d-c5508867fa05",
+      "body": {
+        "schema_version": "1.0",
+        "id": "f2a00d59-dee9-48eb-ac2d-c5508867fa05",
+        "world_id": "654c8226-63b8-4ed1-94bd-71d40a24bec8",
+        "revision": 0,
+        "status": "completed",
+        "request": {
+          "execute_selected": true,
+          "realtime_execution": true,
+          "candidates": 3,
+          "planner_iterations": 1500,
+          "max_simulation_seconds": 40.0,
+          "policy": "deterministic",
+          "search_candidates": 5000,
+          "physics_budget": 3
+        },
+        "selected_branch_id": "3f108742-cc97-483c-8638-df465fb2c3c4",
+        "result": {
+          "conclusion": "Measured physical pickup and placement found.",
+          "milestone": "physical_pick_and_place",
+          "ranked_branch_ids": [
+            "3f108742-cc97-483c-8638-df465fb2c3c4",
+            "53e56448-3230-44f2-9a97-eb06bf2127fe",
+            "74e959e7-d75d-49d7-bd66-b6f7f333fc29"
+          ],
+          "top_feasible_branch_ids": [
+            "3f108742-cc97-483c-8638-df465fb2c3c4",
+            "53e56448-3230-44f2-9a97-eb06bf2127fe",
+            "74e959e7-d75d-49d7-bd66-b6f7f333fc29"
+          ],
+          "policy": {
+            "policy": "deterministic_planning_policy",
+            "llm_used": false,
+            "steps": [
+              "Inspect structured observation and valid action schema.",
+              "Generate candidate interventions through backend tools.",
+              "Fork the same persisted state for each candidate.",
+              "Rank measured outcomes; retain failures."
+            ]
+          },
+          "executed_settings": {
+            "execute_selected": true,
+            "realtime_execution": true,
+            "candidates": 3,
+            "planner_iterations": 1500,
+            "max_simulation_seconds": 40.0,
+            "policy": "deterministic",
+            "search_candidates": 5000,
+            "physics_budget": 3
+          },
+          "followup_settings": null,
+          "search": {
+            "generated": 5000,
+            "distinct_generated": 5000,
+            "screened": 5000,
+            "rejected": 0,
+            "screening_passed": 5000,
+            "promoted_to_physics": 3,
+            "candidate_catalog_sha256": "5ec4bb8e6cb6e33f0c91b625bbdbda93f606d9c59b57099ec0c36011ae8f4c04",
+            "rejection_reasons": {
+              "kinematic_collision": 0,
+              "ik_failure": 0,
+              "simulation_horizon": 0
+            },
+            "kinematic_templates_checked": 8,
+            "diagnostic_rollouts": 0,
+            "sampling": "seeded lift-height templates and distinct speed/close-dwell/release-dwell commands",
+            "screening_scope": "actual template IK/kinematic contacts plus per-candidate timing/horizon checks; no dynamic success claim",
+            "ranking_objective": "successful execution, measured duration, placement error, candidate index",
+            "fully_simulated": 3,
+            "physics_attempts": 3,
+            "planning_failed": 0,
+            "verified_feasible": 3,
+            "physics_rejected": 0
+          },
+          "execution_branch_id": "661c8948-7919-46ff-836c-e4f1d1881f46",
+          "execution_evaluation": {
+            "success": true,
+            "status": "execution_success",
+            "milestone": "physical_pick_and_place",
+            "planning_feasible": true,
+            "goal_error_m": 0.0016995917230931427,
+            "final_cube_position": [
+              0.48683956248685467,
+              0.20666495831707968,
+              0.024960725160155694
+            ],
+            "grasp_established": true,
+            "lifted": true,
+            "retained_during_transport": true,
+            "released": true,
+            "table_supported": true,
+            "max_cube_height_m": 0.15723889223723533,
+            "max_tracking_error_rad": 0.05291995016197408,
+            "contact_violations": [],
+            "phase_evidence": [
+              {
+                "phase": "approach",
+                "time": 4.077999999999773,
+                "cube_position": [
+                  0.4861577167199684,
+                  -0.10127231566682068,
+                  0.024960725160155652
+                ],
+                "finger_contacts": [],
+                "bilateral_grasp": false,
+                "cube_contact_normal_force_n": 0.5886,
+                "table_support": true
+              },
+              {
+                "phase": "descend",
+                "time": 5.309999999999637,
+                "cube_position": [
+                  0.4861577167607424,
+                  -0.10127231566703009,
+                  0.024960725160155652
+                ],
+                "finger_contacts": [],
+                "bilateral_grasp": false,
+                "cube_contact_normal_force_n": 0.5885999999999996,
+                "table_support": true
+              },
+              {
+                "phase": "close",
+                "time": 5.931999999999569,
+                "cube_position": [
+                  0.48619513446045803,
+                  -0.10127046483268003,
+                  0.024921027309006128
+                ],
+                "finger_contacts": [
+                  "left_finger",
+                  "right_finger"
+                ],
+                "bilateral_grasp": true,
+                "cube_contact_normal_force_n": 3.6775693058177037,
+                "table_support": true
+              },
+              {
+                "phase": "lift",
+                "time": 7.163999999999433,
+                "cube_position": [
+                  0.48651024160854495,
+                  -0.10126787523663092,
+                  0.15704520772863104
+                ],
+                "finger_contacts": [
+                  "left_finger",
+                  "right_finger"
+                ],
+                "bilateral_grasp": true,
+                "cube_contact_normal_force_n": 2.4975328465155076,
+                "table_support": false
+              },
+              {
+                "phase": "transport",
+                "time": 9.287999999999771,
+                "cube_position": [
+                  0.48657527677987567,
+                  0.20655843407296362,
+                  0.15709366543438189
+                ],
+                "finger_contacts": [
+                  "left_finger",
+                  "right_finger"
+                ],
+                "bilateral_grasp": true,
+                "cube_contact_normal_force_n": 2.4957352498653744,
+                "table_support": false
+              },
+              {
+                "phase": "lower",
+                "time": 10.460000000000163,
+                "cube_position": [
+                  0.48690773837175655,
+                  0.20668215647647578,
+                  0.024965435476803643
+                ],
+                "finger_contacts": [
+                  "left_finger",
+                  "right_finger"
+                ],
+                "bilateral_grasp": true,
+                "cube_contact_normal_force_n": 3.6809166061787795,
+                "table_support": true
+              },
+              {
+                "phase": "release",
+                "time": 11.070000000000366,
+                "cube_position": [
+                  0.48683956244446897,
+                  0.20666495828662257,
+                  0.024960725160155694
+                ],
+                "finger_contacts": [],
+                "bilateral_grasp": false,
+                "cube_contact_normal_force_n": 0.5886,
+                "table_support": true
+              },
+              {
+                "phase": "retract",
+                "time": 12.64000000000089,
+                "cube_position": [
+                  0.48683956248685467,
+                  0.20666495831707968,
+                  0.024960725160155694
+                ],
+                "finger_contacts": [],
+                "bilateral_grasp": false,
+                "cube_contact_normal_force_n": 0.5886,
+                "table_support": true
+              }
+            ],
+            "execution_duration_s": 12.64000000000089
+          },
+          "executed_world_revision": 1
+        },
+        "performance": {
+          "job_wall_seconds": 110.88167140000223,
+          "process_cpu_seconds": 42.625,
+          "queue_wait_seconds": 0.08117985318676801,
+          "planning_wall_seconds": 4.210993599997892,
+          "physics_wall_seconds": 103.45539840000129,
+          "candidate_count": 4,
+          "simulation_steps": 25295,
+          "integration_calls": 0,
+          "replay_payload_bytes": 3748945,
+          "branch_failure_rate": 0.0,
+          "adapter_error_count": 0,
+          "measurement_complete": true,
+          "job_error_rate": 0.0,
+          "compute": "local CPU; one worker; process CPU time includes concurrent API activity; no billed model calls under deterministic policy"
+        },
+        "error": null,
+        "stale": false
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/v1/sessions/7a1db733-c7a3-4a00-bdbc-e2e1359549a1",
+      "body": {
+        "schema_version": "vivacity.session/1.0",
+        "id": "7a1db733-c7a3-4a00-bdbc-e2e1359549a1",
+        "backend": "scipy",
+        "status": "completed",
+        "world_id": "8b3055ec-bab8-4ac9-acd1-69ff8ce8cc6a",
+        "experiment_id": "2a2f5406-fce9-4269-8730-aefd1b90cfd3",
+        "cycle": 2,
+        "max_cycles": 2,
+        "experiments": [
+          "f94f1770-09bb-44c3-94f7-b2105ae0d707",
+          "2a2f5406-fce9-4269-8730-aefd1b90cfd3"
+        ],
+        "world_ids": [
+          "e0ac0f35-1a90-41f1-b8d1-6a8e448f000f",
+          "8b3055ec-bab8-4ac9-acd1-69ff8ce8cc6a"
+        ],
+        "error": null,
+        "started_unix_s": 1791664855.6895144,
+        "last_heartbeat_unix_s": 1791664861.517695,
+        "conditions": [
+          {
+            "cycle": 1,
+            "seed": 7,
+            "world_id": "e0ac0f35-1a90-41f1-b8d1-6a8e448f000f",
+            "configuration_sha256": "e926b72659cc590e4f1eca439acd845beae95729bfc8252c0940bc37504f6e68"
+          },
+          {
+            "cycle": 2,
+            "seed": 8,
+            "world_id": "8b3055ec-bab8-4ac9-acd1-69ff8ce8cc6a",
+            "configuration_sha256": "c463082b75f14fca85db64a6226d75d67b1cfe7237d31d6304b4ea4bc5290932"
+          }
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/v1/experiments/f94f1770-09bb-44c3-94f7-b2105ae0d707",
+      "body": {
+        "schema_version": "1.0",
+        "id": "f94f1770-09bb-44c3-94f7-b2105ae0d707",
+        "world_id": "e0ac0f35-1a90-41f1-b8d1-6a8e448f000f",
+        "revision": 0,
+        "status": "completed",
+        "request": {
+          "execute_selected": false,
+          "realtime_execution": true,
+          "candidates": 3,
+          "planner_iterations": 1500,
+          "max_simulation_seconds": 40.0,
+          "policy": "deterministic",
+          "search_candidates": 0,
+          "physics_budget": 3
+        },
+        "selected_branch_id": "22895c91-482f-4440-b5ac-48d8f535f887",
+        "result": {
+          "conclusion": "Additional fixed gravitational influence supported by training complexity penalty and held-out predictions.",
+          "bic_improvement_for_extra_mass": 257722.53540047567,
+          "heldout_rmse_improvement": 0.3064916708701349,
+          "criterion": "extra mass requires BIC improvement > 6 and held-out RMSE improvement > 5%, with full-rank Jacobian",
+          "scope": "Comparison of two simplified models; not discovery of a new physical law.",
+          "policy": {
+            "policy": "deterministic_planning_policy",
+            "llm_used": false,
+            "steps": [
+              "Inspect structured observation and valid action schema.",
+              "Generate candidate interventions through backend tools.",
+              "Fork the same persisted state for each candidate.",
+              "Rank measured outcomes; retain failures."
+            ]
+          },
+          "executed_settings": {
+            "execute_selected": false,
+            "realtime_execution": true,
+            "candidates": 3,
+            "planner_iterations": 1500,
+            "max_simulation_seconds": 40.0,
+            "policy": "deterministic",
+            "search_candidates": 0,
+            "physics_budget": 3
+          },
+          "followup_settings": null
+        },
+        "performance": {
+          "job_wall_seconds": 0.952594999998837,
+          "process_cpu_seconds": 0.28125,
+          "queue_wait_seconds": 0.03753054598928429,
+          "planning_wall_seconds": 0.0,
+          "physics_wall_seconds": 0.1608316999991075,
+          "candidate_count": 2,
+          "simulation_steps": 0,
+          "integration_calls": 30,
+          "replay_payload_bytes": 40519,
+          "branch_failure_rate": 0.0,
+          "adapter_error_count": 0,
+          "measurement_complete": true,
+          "job_error_rate": 0.0,
+          "compute": "local CPU; one worker; process CPU time includes concurrent API activity; no billed model calls under deterministic policy"
+        },
+        "error": null,
+        "stale": false
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/v1/experiments/2a2f5406-fce9-4269-8730-aefd1b90cfd3",
+      "body": {
+        "schema_version": "1.0",
+        "id": "2a2f5406-fce9-4269-8730-aefd1b90cfd3",
+        "world_id": "8b3055ec-bab8-4ac9-acd1-69ff8ce8cc6a",
+        "revision": 0,
+        "status": "completed",
+        "request": {
+          "execute_selected": false,
+          "realtime_execution": true,
+          "candidates": 3,
+          "planner_iterations": 1500,
+          "max_simulation_seconds": 40.0,
+          "policy": "deterministic",
+          "search_candidates": 0,
+          "physics_budget": 3
+        },
+        "selected_branch_id": "129402e5-33c6-4830-87b2-dcbae6efe38d",
+        "result": {
+          "conclusion": "Additional mass is not sufficiently supported; retain the central-only model.",
+          "bic_improvement_for_extra_mass": -4.109971809284119,
+          "heldout_rmse_improvement": -0.00013730124016736044,
+          "criterion": "extra mass requires BIC improvement > 6 and held-out RMSE improvement > 5%, with full-rank Jacobian",
+          "scope": "Comparison of two simplified models; not discovery of a new physical law.",
+          "policy": {
+            "policy": "deterministic_planning_policy",
+            "llm_used": false,
+            "steps": [
+              "Inspect structured observation and valid action schema.",
+              "Generate candidate interventions through backend tools.",
+              "Fork the same persisted state for each candidate.",
+              "Rank measured outcomes; retain failures."
+            ]
+          },
+          "executed_settings": {
+            "execute_selected": false,
+            "realtime_execution": true,
+            "candidates": 3,
+            "planner_iterations": 1500,
+            "max_simulation_seconds": 40.0,
+            "policy": "deterministic",
+            "search_candidates": 0,
+            "physics_budget": 3
+          },
+          "followup_settings": null
+        },
+        "performance": {
+          "job_wall_seconds": 0.514037199998711,
+          "process_cpu_seconds": 0.421875,
+          "queue_wait_seconds": 0.053292697713914094,
+          "planning_wall_seconds": 0.0,
+          "physics_wall_seconds": 0.31674520000160555,
+          "candidate_count": 2,
+          "simulation_steps": 0,
+          "integration_calls": 51,
+          "replay_payload_bytes": 40694,
+          "branch_failure_rate": 0.0,
+          "adapter_error_count": 0,
+          "measurement_complete": true,
+          "job_error_rate": 0.0,
+          "compute": "local CPU; one worker; process CPU time includes concurrent API activity; no billed model calls under deterministic policy"
+        },
+        "error": null,
+        "stale": false
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/v1/sessions/14749861-5f06-454e-9361-baa39f03d4d4",
+      "body": {
+        "schema_version": "vivacity.session/1.0",
+        "id": "14749861-5f06-454e-9361-baa39f03d4d4",
+        "backend": "cloth",
+        "status": "completed",
+        "world_id": "453b35a4-09d9-4b1f-84ba-e9634cc2e8d7",
+        "experiment_id": "93bef14e-02a4-4691-a695-d56368b7f2bf",
+        "cycle": 1,
+        "max_cycles": 1,
+        "experiments": [
+          "93bef14e-02a4-4691-a695-d56368b7f2bf"
+        ],
+        "world_ids": [
+          "453b35a4-09d9-4b1f-84ba-e9634cc2e8d7"
+        ],
+        "error": null,
+        "started_unix_s": 1791664866.0042157,
+        "last_heartbeat_unix_s": 1791664978.8563247,
+        "conditions": [
+          {
+            "cycle": 1,
+            "seed": 7,
+            "world_id": "453b35a4-09d9-4b1f-84ba-e9634cc2e8d7",
+            "configuration_sha256": "04d6afcb0b5007dc4958b10f2ec7e0622509347bd46f34698838ddae17880102"
+          }
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/v1/experiments/93bef14e-02a4-4691-a695-d56368b7f2bf",
+      "body": {
+        "schema_version": "1.0",
+        "id": "93bef14e-02a4-4691-a695-d56368b7f2bf",
+        "world_id": "453b35a4-09d9-4b1f-84ba-e9634cc2e8d7",
+        "revision": 0,
+        "status": "completed",
+        "request": {
+          "execute_selected": true,
+          "realtime_execution": true,
+          "candidates": 3,
+          "planner_iterations": 1500,
+          "max_simulation_seconds": 40.0,
+          "policy": "deterministic",
+          "search_candidates": 5000,
+          "physics_budget": 3
+        },
+        "selected_branch_id": "30b593e2-ccd1-45fe-9124-410a1dfcb2c6",
+        "result": {
+          "conclusion": "Measured constrained cloth fold verified.",
+          "ranked_branch_ids": [
+            "30b593e2-ccd1-45fe-9124-410a1dfcb2c6",
+            "c04cc718-0826-42c0-ae97-a1ccc3c8c2ff",
+            "86d7d282-8243-4304-84a7-fa3b767b8053"
+          ],
+          "top_feasible_branch_ids": [
+            "30b593e2-ccd1-45fe-9124-410a1dfcb2c6",
+            "c04cc718-0826-42c0-ae97-a1ccc3c8c2ff",
+            "86d7d282-8243-4304-84a7-fa3b767b8053"
+          ],
+          "milestone": "constrained_single_fold",
+          "policy": {
+            "policy": "deterministic_planning_policy",
+            "llm_used": false,
+            "steps": [
+              "Inspect structured observation and valid action schema.",
+              "Generate candidate interventions through backend tools.",
+              "Fork the same persisted state for each candidate.",
+              "Rank measured outcomes; retain failures."
+            ]
+          },
+          "executed_settings": {
+            "execute_selected": true,
+            "realtime_execution": true,
+            "candidates": 3,
+            "planner_iterations": 1500,
+            "max_simulation_seconds": 40.0,
+            "policy": "deterministic",
+            "search_candidates": 5000,
+            "physics_budget": 3
+          },
+          "followup_settings": null,
+          "search": {
+            "generated": 5000,
+            "distinct_generated": 5000,
+            "screened": 5000,
+            "rejected": 2984,
+            "screening_passed": 2016,
+            "promoted_to_physics": 3,
+            "candidate_catalog_sha256": "bcea1cecc0469ae287645fe1f36a9974d9eaf84394339b772e01caa6d9ab2fb3",
+            "sampling": "seeded clamp height, lateral travel and duration; Panda joint IK before physics",
+            "screening_scope": "geometric stretch/travel bounds only; grasp constraints, contacts and fold quality require MuJoCo",
+            "ranking_objective": "feasible first, alignment RMSE, descending vertex coverage, executed duration",
+            "fully_simulated": 3,
+            "physics_attempts": 3,
+            "planning_failed": 0,
+            "verified_feasible": 3,
+            "physics_rejected": 0
+          },
+          "execution_branch_id": "b0bfb0f7-f765-4d0d-b627-d26ddde814a6",
+          "execution_evaluation": {
+            "success": true,
+            "status": "fold_success",
+            "alignment_error_m": 0.0009233650520320607,
+            "vertex_coverage": 1.0,
+            "grasp_valid": true,
+            "grasp_constraint_error_m": 0.0006735515760709481,
+            "maximum_contact_penetration_m": 0.0019814808604523178,
+            "contact_violations": [],
+            "execution_duration_s": 5.5159999999996145,
+            "fold_quality": 0.9692211649322646,
+            "milestone": "constrained_single_fold",
+            "scope": "Actuated Franka Panda carries a folding bar with seven pre-attached constraints; 7x7 MuJoCo flex, fixed hinge/opposite edge, release and settling; no autonomous grasp acquisition.",
+            "robot_joint_displacement_rad": 2.0245857497736317,
+            "maximum_joint_tracking_error_rad": 0.08619985526401663,
+            "manipulator": "Franka Panda joint actuators"
+          },
+          "executed_world_revision": 1
+        },
+        "performance": {
+          "job_wall_seconds": 109.1831863999978,
+          "process_cpu_seconds": 54.0625,
+          "queue_wait_seconds": 0.03160098153966828,
+          "planning_wall_seconds": 2.118751300004078,
+          "physics_wall_seconds": 104.06948660000126,
+          "candidate_count": 4,
+          "simulation_steps": 11032,
+          "integration_calls": 0,
+          "replay_payload_bytes": 2914786,
+          "branch_failure_rate": 0.0,
+          "adapter_error_count": 0,
+          "measurement_complete": true,
+          "job_error_rate": 0.0,
+          "compute": "local CPU; one worker; process CPU time includes concurrent API activity; no billed model calls under deterministic policy"
+        },
+        "error": null,
+        "stale": false
+      }
+    }
+  ],
+  "websocket_live": {
+    "schema_version": "vivacity.live/1.0",
+    "experiment_id": "f8f938ba-00e4-4d14-a769-a30fc76ee811",
+    "world_id": "9e1d28b9-feaa-4e21-9040-b4e28edddcf5",
+    "sequence": 2,
+    "timestamp_unix_s": 1791664513.0516388,
+    "stage": "executing",
+    "frame": {
+      "time": 0.10000000000000007,
+      "qpos": [
+        -9.504219940700766e-05,
+        7.223270471622999e-05,
+        -7.065158986444712e-05,
+        -1.5712515945690462,
+        2.5079662663221955e-05,
+        1.5713851869508546,
+        -0.7844807439427433,
+        0.04000028115653342,
+        0.03999972035470776,
+        0.5,
+        -0.15,
+        0.024949770745625887,
+        1,
+        0,
+        0,
+        0
+      ],
+      "qvel": [
+        -0.0026975515176175025,
+        0.0023547934851201563,
+        -0.0020760546048624044,
+        -0.012789702210392915,
+        0.0006417692143536368,
+        0.0160606460456074,
+        0.02217548996195155,
+        1.8812003522128963e-06,
+        -1.8079554180511347e-06,
+        0,
+        0,
+        0.0006184043850471179,
+        0,
+        0,
+        0
+      ],
+      "ctrl": [
+        -0.0003889103373308379,
+        0.00039146386718360025,
+        -0.00031106033812171286,
+        -1.572583582663028,
+        8.118592833466775e-05,
+        1.5729711743648165,
+        -0.7822760304381337,
+        255
+      ],
+      "end_effector": [
+        0.55457916930794,
+        -8.662393510897555e-05,
+        0.5212968684379172
+      ],
+      "body_transforms": [
+        {
+          "name": "link0",
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "quaternion_wxyz": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "link1",
+          "position": [
+            0,
+            0,
+            0.333
+          ],
+          "quaternion_wxyz": [
+            0.9999999988708725,
+            0,
+            0,
+            -4.752109968561804e-05
+          ]
+        },
+        {
+          "name": "link2",
+          "position": [
+            0,
+            0,
+            0.333
+          ],
+          "quaternion_wxyz": [
+            0.7071067811405615,
+            -0.7071067787133626,
+            5.914060944498516e-05,
+            -8.064374185468908e-06
+          ]
+        },
+        {
+          "name": "link3",
+          "position": [
+            2.2825534567387977e-05,
+            -2.169389032317276e-09,
+            0.648999999175625
+          ],
+          "quaternion_wxyz": [
+            0.9999999959160005,
+            4.4044992157413744e-10,
+            3.6116352347577626e-05,
+            -8.284689448692358e-05
+          ]
+        },
+        {
+          "name": "link4",
+          "position": [
+            0.08252282418684759,
+            -1.3671906920922779e-05,
+            0.6489940399775059
+          ],
+          "quaternion_wxyz": [
+            0.4998266726795301,
+            0.4999095388709806,
+            0.5000904422143315,
+            -0.5001732698073613
+          ]
+        },
+        {
+          "name": "link5",
+          "position": [
+            0.46656628427724717,
+            -7.730510358669449e-05,
+            0.7312914683249938
+          ],
+          "quaternion_wxyz": [
+            0.7069202552639666,
+            6.746458400484865e-05,
+            0.7072932529549825,
+            -4.970329193899164e-05
+          ]
+        },
+        {
+          "name": "link6",
+          "position": [
+            0.46656628427724717,
+            -7.730510358669449e-05,
+            0.7312914683249938
+          ],
+          "quaternion_wxyz": [
+            0.707097914974355,
+            0.7071156417679046,
+            -8.028120648156944e-05,
+            -3.6891893842205814e-05
+          ]
+        },
+        {
+          "name": "link7",
+          "position": [
+            0.5545662829033764,
+            -9.188745652497212e-05,
+            0.7312968679765741
+          ],
+          "quaternion_wxyz": [
+            1.4527472712309636e-07,
+            0.9240866439362312,
+            0.3821830365155378,
+            3.314234037734912e-05
+          ]
+        },
+        {
+          "name": "hand",
+          "position": [
+            0.5545728488333207,
+            -8.920556704158339e-05,
+            0.6242968682116394
+          ],
+          "quaternion_wxyz": [
+            1.281724038555257e-05,
+            0.7074896327335862,
+            0.7067237214612647,
+            3.05639359267318e-05
+          ]
+        },
+        {
+          "name": "left_finger",
+          "position": [
+            0.5945766900973538,
+            -0.00013106862011116744,
+            0.5658993218230407
+          ],
+          "quaternion_wxyz": [
+            1.281724038555257e-05,
+            0.7074896327335862,
+            0.7067237214612647,
+            3.05639359267318e-05
+          ]
+        },
+        {
+          "name": "right_finger",
+          "position": [
+            0.5145767356662738,
+            -4.4415600928810145e-05,
+            0.5658944148912306
+          ],
+          "quaternion_wxyz": [
+            -3.05639359267318e-05,
+            0.7067237214612647,
+            -0.7074896327335862,
+            1.281724038555257e-05
+          ]
+        },
+        {
+          "name": "target",
+          "position": [
+            0.5,
+            -0.15,
+            0.024949770745625887
+          ],
+          "quaternion_wxyz": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "obstacle",
+          "position": [
+            0.75,
+            -0.4,
+            0.22
+          ],
+          "quaternion_wxyz": [
+            1,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "target_pose": {
+        "position": [
+          0.55,
+          0.28,
+          0.22
+        ],
+        "rotation_matrix": [
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            -1,
+            0
+          ],
+          [
+            0,
+            0,
+            -1
+          ]
+        ]
+      },
+      "contacts": [],
+      "cube_position": [
+        0.5,
+        -0.15,
+        0.024949770745625887
+      ],
+      "cube_quaternion_wxyz": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "placement_position": [
+        0.5,
+        0.18,
+        0.026
+      ],
+      "grasp": {
+        "finger_contacts": [],
+        "bilateral_grasp": false,
+        "cube_contact_normal_force_n": 0.5867152411715584,
+        "table_support": true
+      },
+      "source": "live_mujoco_state",
+      "phase": "approach"
+    }
+  },
+  "websocket_events": {
+    "queued": {
+      "schema_version": "1.0",
+      "seq": 565,
+      "kind": "queued",
+      "details": {
+        "timestamp_unix_s": 1791664492.4706864
+      }
+    },
+    "progress": {
+      "schema_version": "1.0",
+      "seq": 566,
+      "kind": "progress",
+      "details": {
+        "timestamp_unix_s": 1791664493.0171735,
+        "stage": "next_experiment_started",
+        "cycle": 1,
+        "seed": 7,
+        "message": "Fresh autonomous experiment 1; recorded seed 7."
+      }
+    },
+    "running": {
+      "schema_version": "1.0",
+      "seq": 567,
+      "kind": "running",
+      "details": {
+        "timestamp_unix_s": 1791664493.2103975
+      }
+    },
+    "planned": {
+      "schema_version": "1.0",
+      "seq": 574,
+      "kind": "planned",
+      "details": {
+        "timestamp_unix_s": 1791664496.6177845,
+        "candidate_count": 3,
+        "planning_wall_seconds": 3.0767933999995876
+      }
+    },
+    "branch_completed": {
+      "schema_version": "1.0",
+      "seq": 575,
+      "kind": "branch_completed",
+      "details": {
+        "timestamp_unix_s": 1791664502.697767,
+        "branch_id": "a1f3d09c-d998-4aee-bd80-bc40827e0e14",
+        "evaluation": {
+          "success": true,
+          "status": "execution_success",
+          "milestone": "physical_pick_and_place",
+          "planning_feasible": true,
+          "goal_error_m": 0.0016582817994905328,
+          "final_cube_position": [
+            0.5012909826132809,
+            0.1799436952400361,
+            0.024960725160155663
+          ],
+          "grasp_established": true,
+          "lifted": true,
+          "retained_during_transport": true,
+          "released": true,
+          "table_supported": true,
+          "max_cube_height_m": 0.15715788694989152,
+          "max_tracking_error_rad": 0.052895480356762586,
+          "contact_violations": [],
+          "phase_evidence": [
+            {
+              "phase": "approach",
+              "time": 3.7959999999998035,
+              "cube_position": [
+                0.5,
+                -0.15,
+                0.024960725160728718
+              ],
+              "finger_contacts": [],
+              "bilateral_grasp": false,
+              "cube_contact_normal_force_n": 0.5885999998431172,
+              "table_support": true
+            },
+            {
+              "phase": "descend",
+              "time": 4.975999999999674,
+              "cube_position": [
+                0.5,
+                -0.15,
+                0.02496072516074728
+              ],
+              "finger_contacts": [],
+              "bilateral_grasp": false,
+              "cube_contact_normal_force_n": 0.588599999523179,
+              "table_support": true
+            },
+            {
+              "phase": "close",
+              "time": 5.5979999999996055,
+              "cube_position": [
+                0.5000408332050565,
+                -0.15001217876766684,
+                0.024919177917224925
+              ],
+              "finger_contacts": [
+                "left_finger",
+                "right_finger"
+              ],
+              "bilateral_grasp": true,
+              "cube_contact_normal_force_n": 3.7056405746619046,
+              "table_support": true
+            },
+            {
+              "phase": "lift",
+              "time": 6.7779999999994756,
+              "cube_position": [
+                0.5003771458135906,
+                -0.15000071123273143,
+                0.15695583860577483
+              ],
+              "finger_contacts": [
+                "left_finger",
+                "right_finger"
+              ],
+              "bilateral_grasp": true,
+              "cube_contact_normal_force_n": 2.4975214959841443,
+              "table_support": false
+            },
+            {
+              "phase": "transport",
+              "time": 8.995999999999674,
+              "cube_position": [
+                0.5010510541207381,
+                0.17982302342676584,
+                0.1570515113043307
+              ],
+              "finger_contacts": [
+                "left_finger",
+                "right_finger"
+              ],
+              "bilateral_grasp": true,
+              "cube_contact_normal_force_n": 2.4957106246866143,
+              "table_support": false
+            },
+            {
+              "phase": "lower",
+              "time": 10.158000000000062,
+              "cube_position": [
+                0.501359952065819,
+                0.17995757886416053,
+                0.02493522940791617
+              ],
+              "finger_contacts": [
+                "left_finger",
+                "right_finger"
+              ],
+              "bilateral_grasp": true,
+              "cube_contact_normal_force_n": 4.160896924410858,
+              "table_support": true
+            },
+            {
+              "phase": "release",
+              "time": 10.768000000000265,
+              "cube_position": [
+                0.5012909825621856,
+                0.17994369523880316,
+                0.024960725160155663
+              ],
+              "finger_contacts": [],
+              "bilateral_grasp": false,
+              "cube_contact_normal_force_n": 0.5886,
+              "table_support": true
+            },
+            {
+              "phase": "retract",
+              "time": 12.328000000000786,
+              "cube_position": [
+                0.5012909826132809,
+                0.1799436952400361,
+                0.024960725160155663
+              ],
+              "finger_contacts": [],
+              "bilateral_grasp": false,
+              "cube_contact_normal_force_n": 0.5886,
+              "table_support": true
+            }
+          ],
+          "execution_duration_s": 12.328000000000786
+        }
+      }
+    },
+    "completed": {
+      "schema_version": "1.0",
+      "seq": 584,
+      "kind": "completed",
+      "details": {
+        "timestamp_unix_s": 1791664597.3819609,
+        "selected_branch_id": "a1f3d09c-d998-4aee-bd80-bc40827e0e14",
+        "stale": false,
+        "adapter_error_count": 0,
+        "error": null
+      }
+    }
+  }
+}

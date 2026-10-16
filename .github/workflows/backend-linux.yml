@@ -1,0 +1,56 @@
+name: Backend Linux verification
+on:
+  push:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  backend:
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2]
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify exported source manifest
+        if: hashFiles('SOURCE_MANIFEST.json') != ''
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib, json
+          for name, expected in json.loads(Path('SOURCE_MANIFEST.json').read_text()).items():
+              assert hashlib.sha256(Path(name).read_bytes()).hexdigest() == expected, name
+          PY
+      - name: Build the deployment image
+        run: docker build --tag vivacity-runtime:verification .
+      - name: Run the full suite in the deployment image
+        run: |
+          mkdir -p artifacts
+          TEST_FILES=$(python3 - <<'PY'
+          from pathlib import Path
+          files=sorted(Path('tests').glob('test_*.py'))
+          shard=${{ matrix.shard }}
+          selected=[f'/app/{path.as_posix()}' for index,path in enumerate(files) if index%3==shard]
+          assert selected
+          print(' '.join(selected))
+          PY
+          )
+          docker run --rm -v "$PWD/tests:/app/tests:ro" -v "$PWD/artifacts:/verification" vivacity-runtime:verification python -m pytest $TEST_FILES -q --junitxml=/verification/backend-linux-${{ matrix.shard }}.xml
+      - name: Upload executed test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-linux-verification-${{ matrix.shard }}
+          path: artifacts/backend-linux-${{ matrix.shard }}.xml
+      - name: Execute all labs within the free host memory limit
+        if: matrix.shard == 0
+        run: |
+          docker run --rm --memory=512m --memory-swap=512m -v "$PWD/tests:/app/tests:ro" -v "$PWD/artifacts:/verification" vivacity-runtime:verification python -m pytest /app/tests/test_host_capacity.py /app/tests/test_factory_host_capacity.py -s -vv --junitxml=/verification/host-memory.xml
+      - name: Upload memory-limit evidence
+        if: always() && matrix.shard == 0
+        uses: actions/upload-artifact@v4
+        with:
+          name: host-memory-verification
+          path: artifacts/host-memory.xml

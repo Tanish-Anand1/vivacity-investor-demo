@@ -1,0 +1,28 @@
+# Paid compute is required: free Render services sleep and cannot attach a disk.
+# Review the account's price before creating this service.
+services:
+  - type: web
+    name: vivacity-runtime
+    runtime: docker
+    plan: 1c-2g
+    region: singapore
+    numInstances: 1
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    autoDeployTrigger: off
+    healthCheckPath: /health
+    disk:
+      name: vivacity-state
+      mountPath: /data
+      sizeGB: 5
+    envVars:
+      - key: VIVACITY_DATABASE
+        value: /data/vivacity.sqlite3
+      - key: VIVACITY_CORS_ORIGINS
+        value: https://demo.tryvivacity.com,https://vivacity-investor-demo.vercel.app
+      - key: OMP_NUM_THREADS
+        value: "1"
+      - key: OPENBLAS_NUM_THREADS
+        value: "1"
+      - key: MKL_NUM_THREADS
+        value: "1"

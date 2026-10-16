@@ -1,0 +1,12 @@
+{
+  "backend": "mujoco",
+  "seed": 7,
+  "config": {
+    "task": "pick_place",
+    "obstacle_enabled": false,
+    "cube_position": [0.5, -0.15, 0.026],
+    "placement_position": [0.5, 0.18, 0.026],
+    "cube_mass": 0.06,
+    "cube_friction": 1.0
+  }
+}

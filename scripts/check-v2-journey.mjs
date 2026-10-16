@@ -1,0 +1,47 @@
+import fs from 'node:fs';import path from 'node:path';import assert from 'node:assert/strict';
+process.env.PLAYWRIGHT_BROWSERS_PATH=path.resolve('data/playwright');process.env.TEMP=process.env.TMP=path.resolve('data/browser-temp');
+const {chromium}=await import('../frontend/node_modules/playwright-core/index.mjs');
+const browser=await chromium.launch({headless:true,args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']});
+const evidence={};
+try{
+ const page=await browser.newPage({viewport:{width:1440,height:960},acceptDownloads:true});const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ const reuse=process.argv.includes('--reuse')?JSON.parse(fs.readFileSync('artifacts/v2-journey.json','utf8')).experiment:null;
+ if(reuse)await page.addInitScript(e=>{localStorage.setItem('vivacity:mujoco:world',e.world_id);localStorage.setItem('vivacity:mujoco:experiment',e.id);},reuse);
+ await page.goto('http://127.0.0.1:5173/',{waitUntil:'domcontentloaded'});
+ await page.waitForFunction(()=>{const b=[...document.querySelectorAll('button')].find(e=>e.textContent==='Run experiment');return b&&!b.disabled;},null,{timeout:60000});
+ if(!reuse)await page.getByRole('button',{name:'Run experiment',exact:true}).click();
+ await page.getByTestId('count-generated').waitFor({timeout:120000});
+ await page.screenshot({path:'artifacts/v2-inspector-running.png',fullPage:true});
+ await page.waitForFunction(()=>document.querySelector('[data-testid="experiment-status"]')?.textContent==='Result selected',null,{timeout:240000});
+ await page.getByRole('button',{name:'Download JSON for result 1',exact:true}).waitFor();
+ assert.equal(await page.locator('.result-card').count(),3);
+ assert.equal(await page.getByTestId('count-generated').innerText(),'5,000');
+ const eid=await page.evaluate(()=>localStorage.getItem('vivacity:mujoco:experiment'));
+ const experiment=await (await fetch(`http://127.0.0.1:8000/v1/experiments/${eid}`)).json();
+ assert.equal(experiment.result.search.distinct_generated,5000);
+ assert(experiment.result.search.verified_feasible>=3);
+ await page.getByRole('button',{name:'Pause motion',exact:true}).waitFor({timeout:30000});
+ await page.waitForFunction(()=>window.__vivacityScene?.time>.1,null,{timeout:30000});
+ evidence.autoplay=true;
+ const downloading=page.waitForEvent('download');await page.getByRole('button',{name:'Download JSON for result 1',exact:true}).click();const download=await downloading;
+ await download.saveAs('artifacts/v2-selected-branch.json');
+ const data=JSON.parse(fs.readFileSync('artifacts/v2-selected-branch.json','utf8'));
+ assert.equal(data.branch_id,experiment.selected_branch_id);assert(data.success);assert(data.recorded_frames.length>50);
+ assert.equal(data.schema_version,'vivacity.branch/1.0');assert(data.initial_state.integration_state.length>20);
+ const exports=[data.branch_id];
+ for(const rank of [2,3]){const task=page.waitForEvent('download');await page.getByRole('button',{name:`Download JSON for result ${rank}`,exact:true}).click();const file=await task;await file.saveAs(`artifacts/v2-selected-${rank}.json`);const alt=JSON.parse(fs.readFileSync(`artifacts/v2-selected-${rank}.json`,'utf8'));assert(alt.success);assert.equal(alt.branch_id,experiment.result.top_feasible_branch_ids[rank-1]);exports.push(alt.branch_id);}
+ assert.equal(new Set(exports).size,3);
+ await page.getByLabel('Playback speed').selectOption('2');
+ const duration=data.recorded_frames.at(-1).time-data.recorded_frames[0].time;
+ await page.waitForFunction(d=>window.__vivacityScene?.time>d*.6,duration,{timeout:30000});
+ await page.waitForFunction(d=>window.__vivacityScene?.time<d*.2,duration,{timeout:30000});
+ evidence.loopVerified=true;
+ await page.getByRole('button',{name:'Pause motion',exact:true}).click();
+ const slider=page.getByRole('slider',{name:'Replay timeline'});await slider.focus();await slider.press('End');
+ const final=data.recorded_frames.at(-1);
+ await page.waitForFunction(p=>Math.max(...p.map((v,i)=>Math.abs(v-(window.__vivacityScene?.endEffector?.[i]??Infinity))))<1e-8,final.end_effector,{timeout:30000});
+ await page.screenshot({path:'artifacts/v2-three-results.png',fullPage:true});
+ const resultTime=experiment.performance.job_wall_seconds;
+ evidence.experiment=experiment;evidence.export={branch_id:data.branch_id,frames:data.recorded_frames.length,bytes:fs.statSync('artifacts/v2-selected-branch.json').size};evidence.exactFinalPose=true;evidence.errors=errors;
+ assert.deepEqual(errors,[]);console.log(`Real V2 journey passed: ${experiment.result.search.verified_feasible} feasible; ${resultTime.toFixed(2)} s actual job time.`);
+}finally{await browser.close();fs.writeFileSync('artifacts/v2-journey.json',JSON.stringify(evidence,null,2));}

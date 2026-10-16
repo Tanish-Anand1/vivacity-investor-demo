@@ -1,0 +1,10 @@
+{
+  "name": "Contact robustness verification",
+  "repeats": 2,
+  "held_out_repeats": 1,
+  "changes": {
+    "carton_mass_kg": 0.15,
+    "carton_friction": 0.05,
+    "gripper_force_scale": 0.005
+  }
+}

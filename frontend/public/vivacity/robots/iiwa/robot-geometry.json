@@ -1,0 +1,3212 @@
+{
+  "schema_version": "1.0",
+  "source": "compiled_mujoco_model",
+  "simulator_version": "3.15.0",
+  "model_hash": "e04bc650b95cf0358d9f802de3f93a828d8e017774c67c612fcc09399aecbac5",
+  "config": {
+    "robot_model": "iiwa",
+    "physical_operation": "pick_place",
+    "sorting_rule": null,
+    "task": "pick_place",
+    "scene_profile": "workcell",
+    "source_import_id": null,
+    "obstacle_enabled": false,
+    "cube_position": [
+      0.5,
+      -0.15,
+      0.026
+    ],
+    "placement_position": [
+      0.5,
+      0.18,
+      0.026
+    ],
+    "cube_half_size": 0.025,
+    "cube_half_sizes": null,
+    "cube_mass": 0.06,
+    "cube_friction": 1.0,
+    "obstacle_position": [
+      0.45,
+      0.04,
+      0.22
+    ],
+    "obstacle_size": [
+      0.055,
+      0.13,
+      0.22
+    ],
+    "target_position": [
+      0.55,
+      0.28,
+      0.22
+    ],
+    "scene_geometries": [],
+    "environment": null
+  },
+  "coordinates": "right-handed Z-up meters; quaternions wxyz",
+  "mesh_buffer": "robot-meshes.bin",
+  "byte_order": "little-endian",
+  "bodies": [
+    {
+      "id": 0,
+      "name": "world",
+      "parent_id": 0
+    },
+    {
+      "id": 1,
+      "name": "link0",
+      "parent_id": 0
+    },
+    {
+      "id": 2,
+      "name": "link1",
+      "parent_id": 1
+    },
+    {
+      "id": 3,
+      "name": "link2",
+      "parent_id": 2
+    },
+    {
+      "id": 4,
+      "name": "link3",
+      "parent_id": 3
+    },
+    {
+      "id": 5,
+      "name": "link4",
+      "parent_id": 4
+    },
+    {
+      "id": 6,
+      "name": "link5",
+      "parent_id": 5
+    },
+    {
+      "id": 7,
+      "name": "link6",
+      "parent_id": 6
+    },
+    {
+      "id": 8,
+      "name": "link7",
+      "parent_id": 7
+    },
+    {
+      "id": 9,
+      "name": "hand",
+      "parent_id": 8
+    },
+    {
+      "id": 10,
+      "name": "left_finger",
+      "parent_id": 9
+    },
+    {
+      "id": 11,
+      "name": "right_finger",
+      "parent_id": 9
+    },
+    {
+      "id": 12,
+      "name": "target",
+      "parent_id": 0
+    },
+    {
+      "id": 13,
+      "name": "obstacle",
+      "parent_id": 0
+    }
+  ],
+  "geoms": [
+    {
+      "id": 0,
+      "name": "ground",
+      "body_id": 0,
+      "type": "plane",
+      "group": 0,
+      "mesh_id": null,
+      "position": [
+        0.0,
+        0.0,
+        -0.8
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        2.0,
+        2.0,
+        0.1
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 1,
+      "name": "table",
+      "body_id": 0,
+      "type": "box",
+      "group": 0,
+      "mesh_id": null,
+      "position": [
+        0.4,
+        0.0,
+        -0.04
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.7,
+        0.65,
+        0.04
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 2,
+      "name": "geom_2",
+      "body_id": 1,
+      "type": "mesh",
+      "group": 2,
+      "mesh_id": 0,
+      "position": [
+        -0.012611671227004495,
+        -3.254096985673413e-07,
+        0.07039070638127487
+      ],
+      "quaternion_wxyz": [
+        -5.005183557321713e-05,
+        0.7340425355260145,
+        -7.525876715708257e-07,
+        0.6791034925052226
+      ],
+      "size": [
+        0.09446267233520315,
+        0.12138973928071752,
+        0.13860265705384966
+      ],
+      "rgba": [
+        0.4000000059604645,
+        0.4000000059604645,
+        0.4000000059604645,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
+    },
+    {
+      "id": 3,
+      "name": "geom_3",
+      "body_id": 1,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.0,
+        0.0,
+        0.03
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.12,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 4,
+      "name": "geom_4",
+      "body_id": 1,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        -0.08,
+        0.0,
+        0.103
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.08,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 5,
+      "name": "geom_5",
+      "body_id": 1,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        -0.08,
+        0.0,
+        0.04
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.08,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 6,
+      "name": "geom_6",
+      "body_id": 1,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.0,
+        0.0,
+        0.14
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.1,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 7,
+      "name": "geom_7",
+      "body_id": 2,
+      "type": "mesh",
+      "group": 2,
+      "mesh_id": 1,
+      "position": [
+        -1.9467006956065573e-06,
+        -0.03351071875139483,
+        0.12307399450484058
+      ],
+      "quaternion_wxyz": [
+        0.7029652193621866,
+        0.07586952280613835,
+        -0.0758965873933061,
+        0.7030813778633972
+      ],
+      "size": [
+        0.09218296955158094,
+        0.08550270456912326,
+        0.15798032983621124
+      ],
+      "rgba": [
+        0.4000000059604645,
+        0.4000000059604645,
+        0.4000000059604645,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
+    },
+    {
+      "id": 8,
+      "name": "geom_8",
+      "body_id": 2,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.0,
+        0.0,
+        -0.0005
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.08,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 9,
+      "name": "geom_9",
+      "body_id": 2,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.01,
+        -0.025,
+        0.0425
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.075,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 10,
+      "name": "geom_10",
+      "body_id": 2,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        -0.01,
+        -0.025,
+        0.0425
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.075,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 11,
+      "name": "geom_11",
+      "body_id": 2,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.01,
+        -0.045,
+        0.1025
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.07,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 12,
+      "name": "geom_12",
+      "body_id": 2,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        -0.01,
+        -0.045,
+        0.1025
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.07,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 13,
+      "name": "geom_13",
+      "body_id": 3,
+      "type": "mesh",
+      "group": 2,
+      "mesh_id": 2,
+      "position": [
+        5.833243496088093e-06,
+        -0.0013649111339534307,
+        0.08664810682832555
+      ],
+      "quaternion_wxyz": [
+        0.44626759624822143,
+        0.5484779697116958,
+        -0.5484436773421298,
+        0.446348162383599
+      ],
+      "size": [
+        0.046657232376361615,
+        0.08023839371658555,
+        0.13490051487937105
+      ],
+      "rgba": [
+        1.0,
+        0.4235289990901947,
+        0.03921569883823395,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
+    },
+    {
+      "id": 14,
+      "name": "geom_14",
+      "body_id": 3,
+      "type": "mesh",
+      "group": 2,
+      "mesh_id": 3,
+      "position": [
+        0.00043793493861049083,
+        0.10289616671473129,
+        0.015210239136065893
+      ],
+      "quaternion_wxyz": [
+        0.5095700216770433,
+        0.49027623729359965,
+        -0.49025540945558227,
+        0.5095264837600004
+      ],
+      "size": [
+        0.07927791935084773,
+        0.08549449971517031,
+        0.18841886166042507
+      ],
+      "rgba": [
+        0.4000000059604645,
+        0.4000000059604645,
+        0.4000000059604645,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
+    },
+    {
+      "id": 15,
+      "name": "geom_15",
+      "body_id": 3,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.0,
+        0.0,
+        -0.01
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.095,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 16,
+      "name": "geom_16",
+      "body_id": 3,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.0,
+        0.0,
+        0.045
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.09,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 17,
+      "name": "geom_17",
+      "body_id": 3,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        -0.01,
+        0.04,
+        0.054
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.07,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 18,
+      "name": "geom_18",
+      "body_id": 3,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        -0.01,
+        0.09,
+        0.04
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.065,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 19,
+      "name": "geom_19",
+      "body_id": 3,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        -0.01,
+        0.13,
+        0.02
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.065,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 20,
+      "name": "geom_20",
+      "body_id": 3,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.01,
+        0.04,
+        0.054
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.07,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 21,
+      "name": "geom_21",
+      "body_id": 3,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.01,
+        0.09,
+        0.04
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.065,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 22,
+      "name": "geom_22",
+      "body_id": 3,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.01,
+        0.13,
+        0.02
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.065,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 23,
+      "name": "geom_23",
+      "body_id": 3,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.0,
+        0.18,
+        0.0
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.075,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 24,
+      "name": "geom_24",
+      "body_id": 4,
+      "type": "mesh",
+      "group": 2,
+      "mesh_id": 4,
+      "position": [
+        1.4079955059051839e-06,
+        0.032971200728359046,
+        0.13639559733207407
+      ],
+      "quaternion_wxyz": [
+        0.6979044841323016,
+        -0.08279293791390846,
+        0.0838038480469743,
+        0.7064358254732915
+      ],
+      "size": [
+        0.07708528340317687,
+        0.0685846049989028,
+        0.15623381844872497
+      ],
+      "rgba": [
+        0.4000000059604645,
+        0.4000000059604645,
+        0.4000000059604645,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
+    },
+    {
+      "id": 25,
+      "name": "geom_25",
+      "body_id": 4,
+      "type": "mesh",
+      "group": 2,
+      "mesh_id": 5,
+      "position": [
+        -3.50527110797179e-05,
+        -1.8385851986437544e-05,
+        0.016549965935683288
+      ],
+      "quaternion_wxyz": [
+        -0.021644787653637143,
+        0.7067919010183183,
+        0.021637959759015224,
+        0.7067591601951917
+      ],
+      "size": [
+        0.01655317769567388,
+        0.06801497910132683,
+        0.06800978002548733
+      ],
+      "rgba": [
+        0.6000000238418579,
+        0.6000000238418579,
+        0.6000000238418579,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
+    },
+    {
+      "id": 26,
+      "name": "geom_26",
+      "body_id": 4,
+      "type": "mesh",
+      "group": 2,
+      "mesh_id": 6,
+      "position": [
+        1.0513736420380262e-06,
+        -2.8644597444815276e-06,
+        0.01613546649443194
+      ],
+      "quaternion_wxyz": [
+        0.4849352927213488,
+        0.5145955127805644,
+        -0.4849644905595365,
+        0.5146247788395935
+      ],
+      "size": [
+        0.008518010017899844,
+        0.045045377807764644,
+        0.06792774654849064
+      ],
+      "rgba": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
+    },
+    {
+      "id": 27,
+      "name": "geom_27",
+      "body_id": 4,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.0,
+        0.0,
+        0.0355
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.075,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 28,
+      "name": "geom_28",
+      "body_id": 4,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.01,
+        0.023,
+        0.0855
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.06,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 29,
+      "name": "geom_29",
+      "body_id": 4,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.01,
+        0.048,
+        0.1255
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.055,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 30,
+      "name": "geom_30",
+      "body_id": 4,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.01,
+        0.056,
+        0.1755
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.06,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 31,
+      "name": "geom_31",
+      "body_id": 4,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        -0.01,
+        0.023,
+        0.0855
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.06,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 32,
+      "name": "geom_32",
+      "body_id": 4,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        -0.01,
+        0.048,
+        0.1255
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.055,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 33,
+      "name": "geom_33",
+      "body_id": 4,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        -0.01,
+        0.056,
+        0.1755
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.06,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 34,
+      "name": "geom_34",
+      "body_id": 4,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.0,
+        0.045,
+        0.2155
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.075,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 35,
+      "name": "geom_35",
+      "body_id": 4,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.0,
+        0.0,
+        0.2155
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.075,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 36,
+      "name": "geom_36",
+      "body_id": 5,
+      "type": "mesh",
+      "group": 2,
+      "mesh_id": 7,
+      "position": [
+        4.824980418423577e-06,
+        0.007968855271483551,
+        0.07976153475021944
+      ],
+      "quaternion_wxyz": [
+        0.4424828542779334,
+        0.5515479396486381,
+        -0.5516470011716424,
+        0.44236792383459717
+      ],
+      "size": [
+        0.03521719819592151,
+        0.0620968676221891,
+        0.1168546741441936
+      ],
+      "rgba": [
+        1.0,
+        0.4235289990901947,
+        0.03921569883823395,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
+    },
+    {
+      "id": 37,
+      "name": "geom_37",
+      "body_id": 5,
+      "type": "mesh",
+      "group": 2,
+      "mesh_id": 8,
+      "position": [
+        -7.191555879988226e-07,
+        0.09924633872981196,
+        0.012969840121518902
+      ],
+      "quaternion_wxyz": [
+        0.515679219903167,
+        0.48389121646976696,
+        -0.4838296379247804,
+        0.5155900641488824
+      ],
+      "size": [
+        0.07579740265106255,
+        0.06799809567672216,
+        0.1668720954855329
+      ],
+      "rgba": [
+        0.4000000059604645,
+        0.4000000059604645,
+        0.4000000059604645,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
+    },
+    {
+      "id": 38,
+      "name": "geom_38",
+      "body_id": 5,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.0,
+        0.01,
+        0.046
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.078,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 39,
+      "name": "geom_39",
+      "body_id": 5,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.01,
+        0.06,
+        0.052
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.06,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 40,
+      "name": "geom_40",
+      "body_id": 5,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.01,
+        0.12,
+        0.034
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.065,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 41,
+      "name": "geom_41",
+      "body_id": 5,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        -0.01,
+        0.06,
+        0.052
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.06,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 42,
+      "name": "geom_42",
+      "body_id": 5,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        -0.01,
+        0.12,
+        0.034
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.065,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 43,
+      "name": "geom_43",
+      "body_id": 5,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.0,
+        0.184,
+        0.0
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.075,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 44,
+      "name": "geom_44",
+      "body_id": 6,
+      "type": "mesh",
+      "group": 2,
+      "mesh_id": 9,
+      "position": [
+        0.0038119492057678704,
+        0.02870779349858075,
+        0.09361014975338319
+      ],
+      "quaternion_wxyz": [
+        0.709761901968654,
+        -0.15879823808897608,
+        0.1274558098154055,
+        0.6743709503218359
+      ],
+      "size": [
+        0.07289496639532,
+        0.07552294243092397,
+        0.17648390888823537
+      ],
+      "rgba": [
+        0.4000000059604645,
+        0.4000000059604645,
+        0.4000000059604645,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
+    },
+    {
+      "id": 45,
+      "name": "geom_45",
+      "body_id": 6,
+      "type": "mesh",
+      "group": 2,
+      "mesh_id": 5,
+      "position": [
+        -3.50527110797179e-05,
+        -1.8385851986437544e-05,
+        0.016549965935683288
+      ],
+      "quaternion_wxyz": [
+        -0.021644787653637143,
+        0.7067919010183183,
+        0.021637959759015224,
+        0.7067591601951917
+      ],
+      "size": [
+        0.01655317769567388,
+        0.06801497910132683,
+        0.06800978002548733
+      ],
+      "rgba": [
+        0.6000000238418579,
+        0.6000000238418579,
+        0.6000000238418579,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
+    },
+    {
+      "id": 46,
+      "name": "geom_46",
+      "body_id": 6,
+      "type": "mesh",
+      "group": 2,
+      "mesh_id": 6,
+      "position": [
+        1.0513736420380262e-06,
+        -2.8644597444815276e-06,
+        0.01613546649443194
+      ],
+      "quaternion_wxyz": [
+        0.4849352927213488,
+        0.5145955127805644,
+        -0.4849644905595365,
+        0.5146247788395935
+      ],
+      "size": [
+        0.008518010017899844,
+        0.045045377807764644,
+        0.06792774654849064
+      ],
+      "rgba": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
+    },
+    {
+      "id": 47,
+      "name": "geom_47",
+      "body_id": 6,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.0,
+        0.0,
+        0.0335
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.075,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 48,
+      "name": "geom_48",
+      "body_id": 6,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        -0.012,
+        0.031,
+        0.0755
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.05,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 49,
+      "name": "geom_49",
+      "body_id": 6,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.012,
+        0.031,
+        0.0755
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.05,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 50,
+      "name": "geom_50",
+      "body_id": 6,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        -0.012,
+        0.06,
+        0.1155
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.04,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 51,
+      "name": "geom_51",
+      "body_id": 6,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.012,
+        0.06,
+        0.1155
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.04,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 52,
+      "name": "geom_52",
+      "body_id": 6,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        -0.01,
+        0.065,
+        0.1655
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.04,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 53,
+      "name": "geom_53",
+      "body_id": 6,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.01,
+        0.065,
+        0.1655
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.04,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 54,
+      "name": "geom_54",
+      "body_id": 6,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        -0.012,
+        0.065,
+        0.1855
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.035,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 55,
+      "name": "geom_55",
+      "body_id": 6,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.012,
+        0.065,
+        0.1855
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.035,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 56,
+      "name": "geom_56",
+      "body_id": 7,
+      "type": "mesh",
+      "group": 2,
+      "mesh_id": 10,
+      "position": [
+        -1.1732654423958586e-06,
+        -0.03281057535697112,
+        0.025841151571891964
+      ],
+      "quaternion_wxyz": [
+        0.355293935870375,
+        0.6113311165809175,
+        -0.6118374964595422,
+        0.3545354184842318
+      ],
+      "size": [
+        0.04751572637538788,
+        0.06609808426721138,
+        0.0994212540064512
+      ],
+      "rgba": [
+        1.0,
+        0.4235289990901947,
+        0.03921569883823395,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
+    },
+    {
+      "id": 57,
+      "name": "geom_57",
+      "body_id": 7,
+      "type": "mesh",
+      "group": 2,
+      "mesh_id": 11,
+      "position": [
+        -4.166981000974423e-06,
+        0.02953027794651189,
+        -0.021364754377460885
+      ],
+      "quaternion_wxyz": [
+        0.3245398506381008,
+        0.6282565475404036,
+        -0.6282598709107363,
+        0.324433553171739
+      ],
+      "size": [
+        0.054694647457876375,
+        0.06616906312469245,
+        0.08874961719571034
+      ],
+      "rgba": [
+        0.4000000059604645,
+        0.4000000059604645,
+        0.4000000059604645,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
+    },
+    {
+      "id": 58,
+      "name": "geom_58",
+      "body_id": 7,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.0,
+        0.0,
+        -0.059
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.055,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 59,
+      "name": "geom_59",
+      "body_id": 7,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.0,
+        -0.03,
+        0.011
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.065,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 60,
+      "name": "geom_60",
+      "body_id": 7,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.08,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 61,
+      "name": "geom_61",
+      "body_id": 8,
+      "type": "mesh",
+      "group": 2,
+      "mesh_id": 12,
+      "position": [
+        -9.661076849603895e-06,
+        -9.153380335809451e-07,
+        0.01686968091357946
+      ],
+      "quaternion_wxyz": [
+        0.4999147344824846,
+        0.5002805794554304,
+        -0.49971959503449104,
+        0.5000849191943434
+      ],
+      "size": [
+        0.028142241897708434,
+        0.05187222848998088,
+        0.051942881862753455
+      ],
+      "rgba": [
+        0.4000000059604645,
+        0.4000000059604645,
+        0.4000000059604645,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
+    },
+    {
+      "id": 62,
+      "name": "geom_62",
+      "body_id": 8,
+      "type": "sphere",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.0,
+        0.0,
+        0.001
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.06,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 63,
+      "name": "geom_63",
+      "body_id": 9,
+      "type": "mesh",
+      "group": 2,
+      "mesh_id": 14,
+      "position": [
+        -2.511700272515594e-10,
+        1.0579358996111006e-05,
+        0.018807986987083136
+      ],
+      "quaternion_wxyz": [
+        0.5000037181845179,
+        0.49999628178783345,
+        -0.49999628178783345,
+        0.5000037181845179
+      ],
+      "size": [
+        0.007746001266861421,
+        0.015256000002559094,
+        0.07198364051959195
+      ],
+      "rgba": [
+        0.9019610285758972,
+        0.9215689897537231,
+        0.9294120073318481,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
+    },
+    {
+      "id": 64,
+      "name": "geom_64",
+      "body_id": 9,
+      "type": "mesh",
+      "group": 2,
+      "mesh_id": 15,
+      "position": [
+        6.841214526205148e-06,
+        -0.09552084660666603,
+        -0.0064749947997260636
+      ],
+      "quaternion_wxyz": [
+        0.9836857366373881,
+        0.17989122096186563,
+        2.6762979127501163e-05,
+        -0.0012326559741847962
+      ],
+      "size": [
+        0.0020273394123831823,
+        0.009467773917332282,
+        0.024013896647130252
+      ],
+      "rgba": [
+        0.25,
+        0.25,
+        0.25,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
+    },
+    {
+      "id": 65,
+      "name": "geom_65",
+      "body_id": 9,
+      "type": "mesh",
+      "group": 2,
+      "mesh_id": 16,
+      "position": [
+        6.350336016945527e-07,
+        -0.06609330318585943,
+        -0.020179779172793785
+      ],
+      "quaternion_wxyz": [
+        0.6986114279788506,
+        0.6980474442414591,
+        0.11098980234775079,
+        -0.1111445098064998
+      ],
+      "size": [
+        0.005794296961784883,
+        0.005767215438195848,
+        0.022692151688725782
+      ],
+      "rgba": [
+        0.25,
+        0.25,
+        0.25,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
+    },
+    {
+      "id": 66,
+      "name": "geom_66",
+      "body_id": 9,
+      "type": "mesh",
+      "group": 2,
+      "mesh_id": 17,
+      "position": [
+        3.589818403876023e-07,
+        0.0031523851637545956,
+        0.02972501161834111
+      ],
+      "quaternion_wxyz": [
+        0.7109847259497759,
+        0.7032074511541919,
+        -7.840739903921414e-06,
+        6.772845024524056e-06
+      ],
+      "size": [
+        0.028617003451026708,
+        0.045320683855220985,
+        0.10583141744735781
+      ],
+      "rgba": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
+    },
+    {
+      "id": 67,
+      "name": "geom_67",
+      "body_id": 9,
+      "type": "mesh",
+      "group": 2,
+      "mesh_id": 18,
+      "position": [
+        0.0003354762920624661,
+        0.0003980276867150254,
+        0.0031797965836624213
+      ],
+      "quaternion_wxyz": [
+        -0.02441961734921727,
+        0.7067099529628196,
+        0.02403510663037406,
+        0.7066732189074936
+      ],
+      "size": [
+        0.006949419587902852,
+        0.055948605844751406,
+        0.03186329904996515
+      ],
+      "rgba": [
+        0.9019610285758972,
+        0.9215689897537231,
+        0.9294120073318481,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
+    },
+    {
+      "id": 68,
+      "name": "geom_68",
+      "body_id": 9,
+      "type": "mesh",
+      "group": 3,
+      "mesh_id": 13,
+      "position": [
+        -2.7665657500152555e-06,
+        -0.0006154696715489709,
+        0.023929521661208913
+      ],
+      "quaternion_wxyz": [
+        0.697945088950229,
+        0.7161512318154952,
+        -0.0002424800202319227,
+        8.475167845232354e-05
+      ],
+      "size": [
+        0.03164141294671657,
+        0.0486720135388537,
+        0.10394595560976379
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 69,
+      "name": "geom_69",
+      "body_id": 10,
+      "type": "mesh",
+      "group": 2,
+      "mesh_id": 19,
+      "position": [
+        4.874233902204576e-07,
+        0.015695411594453968,
+        0.01687440937109482
+      ],
+      "quaternion_wxyz": [
+        0.7064136178036908,
+        0.02719047154582849,
+        -0.02698282842741521,
+        0.7067619159297385
+      ],
+      "size": [
+        0.0144094324512693,
+        0.01050261853475005,
+        0.037334465025340866
+      ],
+      "rgba": [
+        0.9019610285758972,
+        0.9215689897537231,
+        0.9294120073318481,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
+    },
+    {
+      "id": 70,
+      "name": "geom_70",
+      "body_id": 10,
+      "type": "mesh",
+      "group": 2,
+      "mesh_id": 20,
+      "position": [
+        -1.1254510558499409e-06,
+        0.004738647230576074,
+        0.04476995966327855
+      ],
+      "quaternion_wxyz": [
+        0.5618204342441145,
+        0.429751282616441,
+        0.4310909336665697,
+        0.5602073202536425
+      ],
+      "size": [
+        0.0061645763907391855,
+        0.010683255188314214,
+        0.010872427090037998
+      ],
+      "rgba": [
+        0.25,
+        0.25,
+        0.25,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
+    },
+    {
+      "id": 71,
+      "name": "geom_71",
+      "body_id": 10,
+      "type": "mesh",
+      "group": 3,
+      "mesh_id": 19,
+      "position": [
+        4.874233902204576e-07,
+        0.015695411594453968,
+        0.01687440937109482
+      ],
+      "quaternion_wxyz": [
+        0.7064136178036908,
+        0.02719047154582849,
+        -0.02698282842741521,
+        0.7067619159297385
+      ],
+      "size": [
+        0.0144094324512693,
+        0.01050261853475005,
+        0.037334465025340866
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 72,
+      "name": "geom_72",
+      "body_id": 10,
+      "type": "box",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.0,
+        0.0055,
+        0.0445
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.0085,
+        0.004,
+        0.0085
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 73,
+      "name": "geom_73",
+      "body_id": 10,
+      "type": "box",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.0055,
+        0.002,
+        0.05
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.003,
+        0.002,
+        0.003
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 74,
+      "name": "geom_74",
+      "body_id": 10,
+      "type": "box",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        -0.0055,
+        0.002,
+        0.05
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.003,
+        0.002,
+        0.003
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 75,
+      "name": "geom_75",
+      "body_id": 10,
+      "type": "box",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.0055,
+        0.002,
+        0.0395
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.003,
+        0.002,
+        0.0035
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 76,
+      "name": "geom_76",
+      "body_id": 10,
+      "type": "box",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        -0.0055,
+        0.002,
+        0.0395
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.003,
+        0.002,
+        0.0035
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 77,
+      "name": "geom_77",
+      "body_id": 11,
+      "type": "mesh",
+      "group": 2,
+      "mesh_id": 19,
+      "position": [
+        4.874233902204576e-07,
+        0.015695411594453968,
+        0.01687440937109482
+      ],
+      "quaternion_wxyz": [
+        0.7064136178036908,
+        0.02719047154582849,
+        -0.02698282842741521,
+        0.7067619159297385
+      ],
+      "size": [
+        0.0144094324512693,
+        0.01050261853475005,
+        0.037334465025340866
+      ],
+      "rgba": [
+        0.9019610285758972,
+        0.9215689897537231,
+        0.9294120073318481,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
+    },
+    {
+      "id": 78,
+      "name": "geom_78",
+      "body_id": 11,
+      "type": "mesh",
+      "group": 2,
+      "mesh_id": 20,
+      "position": [
+        -1.1254510558499409e-06,
+        0.004738647230576074,
+        0.04476995966327855
+      ],
+      "quaternion_wxyz": [
+        0.5618204342441145,
+        0.429751282616441,
+        0.4310909336665697,
+        0.5602073202536425
+      ],
+      "size": [
+        0.0061645763907391855,
+        0.010683255188314214,
+        0.010872427090037998
+      ],
+      "rgba": [
+        0.25,
+        0.25,
+        0.25,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
+    },
+    {
+      "id": 79,
+      "name": "geom_79",
+      "body_id": 11,
+      "type": "mesh",
+      "group": 3,
+      "mesh_id": 19,
+      "position": [
+        4.874233902204576e-07,
+        0.015695411594453968,
+        0.01687440937109482
+      ],
+      "quaternion_wxyz": [
+        0.7064136178036908,
+        0.02719047154582849,
+        -0.02698282842741521,
+        0.7067619159297385
+      ],
+      "size": [
+        0.0144094324512693,
+        0.01050261853475005,
+        0.037334465025340866
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 80,
+      "name": "geom_80",
+      "body_id": 11,
+      "type": "box",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.0,
+        0.0055,
+        0.0445
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.0085,
+        0.004,
+        0.0085
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 81,
+      "name": "geom_81",
+      "body_id": 11,
+      "type": "box",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.0055,
+        0.002,
+        0.05
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.003,
+        0.002,
+        0.003
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 82,
+      "name": "geom_82",
+      "body_id": 11,
+      "type": "box",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        -0.0055,
+        0.002,
+        0.05
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.003,
+        0.002,
+        0.003
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 83,
+      "name": "geom_83",
+      "body_id": 11,
+      "type": "box",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.0055,
+        0.002,
+        0.0395
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.003,
+        0.002,
+        0.0035
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 84,
+      "name": "geom_84",
+      "body_id": 11,
+      "type": "box",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        -0.0055,
+        0.002,
+        0.0395
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.003,
+        0.002,
+        0.0035
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 85,
+      "name": "cube",
+      "body_id": 12,
+      "type": "box",
+      "group": 0,
+      "mesh_id": null,
+      "position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.025,
+        0.025,
+        0.025
+      ],
+      "rgba": [
+        0.05000000074505806,
+        0.3499999940395355,
+        0.8999999761581421,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 86,
+      "name": "obstacle_geom",
+      "body_id": 13,
+      "type": "box",
+      "group": 0,
+      "mesh_id": null,
+      "position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.055,
+        0.13,
+        0.22
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
+    }
+  ],
+  "meshes": [
+    {
+      "id": 0,
+      "name": "link_0",
+      "positions": {
+        "byte_offset": 0,
+        "count": 14196,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 56784,
+        "count": 28452,
+        "dtype": "uint32"
+      }
+    },
+    {
+      "id": 1,
+      "name": "link_1",
+      "positions": {
+        "byte_offset": 170592,
+        "count": 14892,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 230160,
+        "count": 29772,
+        "dtype": "uint32"
+      }
+    },
+    {
+      "id": 2,
+      "name": "link_2_orange",
+      "positions": {
+        "byte_offset": 349248,
+        "count": 5922,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 372936,
+        "count": 11133,
+        "dtype": "uint32"
+      }
+    },
+    {
+      "id": 3,
+      "name": "link_2_grey",
+      "positions": {
+        "byte_offset": 417468,
+        "count": 11427,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 463176,
+        "count": 22125,
+        "dtype": "uint32"
+      }
+    },
+    {
+      "id": 4,
+      "name": "link_3",
+      "positions": {
+        "byte_offset": 551676,
+        "count": 13425,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 605376,
+        "count": 26307,
+        "dtype": "uint32"
+      }
+    },
+    {
+      "id": 5,
+      "name": "band",
+      "positions": {
+        "byte_offset": 710604,
+        "count": 1422,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 716292,
+        "count": 1908,
+        "dtype": "uint32"
+      }
+    },
+    {
+      "id": 6,
+      "name": "kuka",
+      "positions": {
+        "byte_offset": 723924,
+        "count": 618,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 726396,
+        "count": 582,
+        "dtype": "uint32"
+      }
+    },
+    {
+      "id": 7,
+      "name": "link_4_orange",
+      "positions": {
+        "byte_offset": 728724,
+        "count": 5400,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 750324,
+        "count": 9777,
+        "dtype": "uint32"
+      }
+    },
+    {
+      "id": 8,
+      "name": "link_4_grey",
+      "positions": {
+        "byte_offset": 789432,
+        "count": 11343,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 834804,
+        "count": 21663,
+        "dtype": "uint32"
+      }
+    },
+    {
+      "id": 9,
+      "name": "link_5",
+      "positions": {
+        "byte_offset": 921456,
+        "count": 6537,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 947604,
+        "count": 12690,
+        "dtype": "uint32"
+      }
+    },
+    {
+      "id": 10,
+      "name": "link_6_orange",
+      "positions": {
+        "byte_offset": 998364,
+        "count": 3936,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 1014108,
+        "count": 7275,
+        "dtype": "uint32"
+      }
+    },
+    {
+      "id": 11,
+      "name": "link_6_grey",
+      "positions": {
+        "byte_offset": 1043208,
+        "count": 8445,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 1076988,
+        "count": 16263,
+        "dtype": "uint32"
+      }
+    },
+    {
+      "id": 12,
+      "name": "link_7",
+      "positions": {
+        "byte_offset": 1142040,
+        "count": 17022,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 1210128,
+        "count": 34020,
+        "dtype": "uint32"
+      }
+    },
+    {
+      "id": 13,
+      "name": "grip_hand_c",
+      "positions": {
+        "byte_offset": 1346208,
+        "count": 306,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 1347432,
+        "count": 600,
+        "dtype": "uint32"
+      }
+    },
+    {
+      "id": 14,
+      "name": "grip_hand_0",
+      "positions": {
+        "byte_offset": 1349832,
+        "count": 330,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 1351152,
+        "count": 126,
+        "dtype": "uint32"
+      }
+    },
+    {
+      "id": 15,
+      "name": "grip_hand_1",
+      "positions": {
+        "byte_offset": 1351656,
+        "count": 4305,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 1368876,
+        "count": 1464,
+        "dtype": "uint32"
+      }
+    },
+    {
+      "id": 16,
+      "name": "grip_hand_2",
+      "positions": {
+        "byte_offset": 1374732,
+        "count": 20697,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 1457520,
+        "count": 6930,
+        "dtype": "uint32"
+      }
+    },
+    {
+      "id": 17,
+      "name": "grip_hand_3",
+      "positions": {
+        "byte_offset": 1485240,
+        "count": 31626,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 1611744,
+        "count": 10644,
+        "dtype": "uint32"
+      }
+    },
+    {
+      "id": 18,
+      "name": "grip_hand_4",
+      "positions": {
+        "byte_offset": 1654320,
+        "count": 5316,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 1675584,
+        "count": 2070,
+        "dtype": "uint32"
+      }
+    },
+    {
+      "id": 19,
+      "name": "grip_finger_0",
+      "positions": {
+        "byte_offset": 1683864,
+        "count": 3186,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 1696608,
+        "count": 1086,
+        "dtype": "uint32"
+      }
+    },
+    {
+      "id": 20,
+      "name": "grip_finger_1",
+      "positions": {
+        "byte_offset": 1700952,
+        "count": 2358,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 1710384,
+        "count": 786,
+        "dtype": "uint32"
+      }
+    }
+  ],
+  "site": {
+    "name": "pregrasp",
+    "body": "hand",
+    "position": [
+      0,
+      0,
+      0.103
+    ]
+  }
+}

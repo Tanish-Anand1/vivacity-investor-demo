@@ -1,0 +1,449 @@
+{
+  "$defs": {
+    "BenchmarkRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "vivacity.factory-benchmark-request/1.0",
+          "default": "vivacity.factory-benchmark-request/1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "name": {
+          "default": "Contact sorting comparison",
+          "maxLength": 80,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "repeats": {
+          "default": 2,
+          "maximum": 3,
+          "minimum": 2,
+          "title": "Repeats",
+          "type": "integer"
+        },
+        "held_out_repeats": {
+          "default": 1,
+          "maximum": 2,
+          "minimum": 1,
+          "title": "Held Out Repeats",
+          "type": "integer"
+        },
+        "changes": {
+          "$ref": "#/$defs/ConditionChanges"
+        }
+      },
+      "required": [
+        "changes"
+      ],
+      "title": "BenchmarkRequest",
+      "type": "object"
+    },
+    "ConditionChanges": {
+      "additionalProperties": false,
+      "properties": {
+        "carton_mass_kg": {
+          "anyOf": [
+            {
+              "maximum": 0.15,
+              "minimum": 0.02,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Carton Mass Kg"
+        },
+        "carton_friction": {
+          "anyOf": [
+            {
+              "maximum": 1.5,
+              "minimum": 0.05,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Carton Friction"
+        },
+        "conveyor_speed_m_s": {
+          "anyOf": [
+            {
+              "maximum": 0.18,
+              "minimum": 0.02,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Conveyor Speed M S"
+        },
+        "gripper_force_scale": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0.005,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Gripper Force Scale"
+        }
+      },
+      "title": "ConditionChanges",
+      "type": "object"
+    },
+    "FactorySettings": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "vivacity.factory-settings/1.0",
+          "default": "vivacity.factory-settings/1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "name": {
+          "default": "Carton sorting baseline",
+          "maxLength": 80,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "seed": {
+          "default": 19,
+          "maximum": 4294967295,
+          "minimum": 0,
+          "title": "Seed",
+          "type": "integer"
+        },
+        "carton_count": {
+          "default": 3,
+          "maximum": 3,
+          "minimum": 1,
+          "title": "Carton Count",
+          "type": "integer"
+        },
+        "carton_mass_kg": {
+          "default": 0.06,
+          "maximum": 0.15,
+          "minimum": 0.02,
+          "title": "Carton Mass Kg",
+          "type": "number"
+        },
+        "carton_friction": {
+          "default": 0.8,
+          "maximum": 1.5,
+          "minimum": 0.05,
+          "title": "Carton Friction",
+          "type": "number"
+        },
+        "carton_half_size_m": {
+          "default": 0.025,
+          "maximum": 0.03,
+          "minimum": 0.02,
+          "title": "Carton Half Size M",
+          "type": "number"
+        },
+        "carton_start_x_m": {
+          "default": 0.5,
+          "maximum": 0.535,
+          "minimum": 0.465,
+          "title": "Carton Start X M",
+          "type": "number"
+        },
+        "carton_start_y_m": {
+          "default": -0.94,
+          "maximum": -0.35,
+          "minimum": -1.28,
+          "title": "Carton Start Y M",
+          "type": "number"
+        },
+        "conveyor_speed_m_s": {
+          "default": 0.09,
+          "maximum": 0.18,
+          "minimum": 0.02,
+          "title": "Conveyor Speed M S",
+          "type": "number"
+        },
+        "arrival_interval_s": {
+          "default": 18.0,
+          "maximum": 60.0,
+          "minimum": 1.0,
+          "title": "Arrival Interval S",
+          "type": "number"
+        },
+        "realtime_speed": {
+          "default": 2.0,
+          "maximum": 8.0,
+          "minimum": 0.25,
+          "title": "Realtime Speed",
+          "type": "number"
+        },
+        "sort_threshold_kg": {
+          "default": 0.07,
+          "maximum": 0.15,
+          "minimum": 0.02,
+          "title": "Sort Threshold Kg",
+          "type": "number"
+        },
+        "gripper_force_scale": {
+          "default": 1.0,
+          "maximum": 1.0,
+          "minimum": 0.005,
+          "title": "Gripper Force Scale",
+          "type": "number"
+        }
+      },
+      "title": "FactorySettings",
+      "type": "object"
+    },
+    "Provenance": {
+      "additionalProperties": false,
+      "properties": {
+        "exported_at": {
+          "format": "date-time",
+          "title": "Exported At",
+          "type": "string"
+        },
+        "source_record_id": {
+          "maxLength": 80,
+          "minLength": 1,
+          "title": "Source Record Id",
+          "type": "string"
+        },
+        "source": {
+          "const": "vivacity_backend",
+          "default": "vivacity_backend",
+          "title": "Source",
+          "type": "string"
+        },
+        "platform": {
+          "maxLength": 120,
+          "title": "Platform",
+          "type": "string"
+        }
+      },
+      "required": [
+        "exported_at",
+        "source_record_id",
+        "platform"
+      ],
+      "title": "Provenance",
+      "type": "object"
+    },
+    "Software": {
+      "additionalProperties": false,
+      "properties": {
+        "engine": {
+          "const": "MuJoCo",
+          "default": "MuJoCo",
+          "title": "Engine",
+          "type": "string"
+        },
+        "engine_version": {
+          "title": "Engine Version",
+          "type": "string"
+        },
+        "numpy_version": {
+          "title": "Numpy Version",
+          "type": "string"
+        },
+        "scipy_version": {
+          "title": "Scipy Version",
+          "type": "string"
+        },
+        "python_version": {
+          "title": "Python Version",
+          "type": "string"
+        },
+        "controller_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Controller Sha256",
+          "type": "string"
+        },
+        "robot_assets_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Robot Assets Sha256",
+          "type": "string"
+        },
+        "world_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "World Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "engine_version",
+        "numpy_version",
+        "scipy_version",
+        "python_version",
+        "controller_sha256",
+        "robot_assets_sha256",
+        "world_sha256"
+      ],
+      "title": "Software",
+      "type": "object"
+    },
+    "Units": {
+      "additionalProperties": false,
+      "properties": {
+        "length": {
+          "const": "m",
+          "default": "m",
+          "title": "Length",
+          "type": "string"
+        },
+        "time": {
+          "const": "s",
+          "default": "s",
+          "title": "Time",
+          "type": "string"
+        },
+        "mass": {
+          "const": "kg",
+          "default": "kg",
+          "title": "Mass",
+          "type": "string"
+        },
+        "angle": {
+          "const": "rad",
+          "default": "rad",
+          "title": "Angle",
+          "type": "string"
+        },
+        "force": {
+          "const": "N",
+          "default": "N",
+          "title": "Force",
+          "type": "string"
+        },
+        "torque": {
+          "const": "N m",
+          "default": "N m",
+          "title": "Torque",
+          "type": "string"
+        },
+        "energy": {
+          "const": "J",
+          "default": "J",
+          "title": "Energy",
+          "type": "string"
+        },
+        "power": {
+          "const": "W",
+          "default": "W",
+          "title": "Power",
+          "type": "string"
+        }
+      },
+      "title": "Units",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "vivacity.factory-exchange/1.0",
+      "default": "vivacity.factory-exchange/1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "kind": {
+      "enum": [
+        "configuration",
+        "benchmark"
+      ],
+      "title": "Kind",
+      "type": "string"
+    },
+    "units": {
+      "$ref": "#/$defs/Units"
+    },
+    "coordinates": {
+      "const": "right-handed Z-up; XY horizontal; quaternion wxyz",
+      "default": "right-handed Z-up; XY horizontal; quaternion wxyz",
+      "title": "Coordinates",
+      "type": "string"
+    },
+    "software": {
+      "$ref": "#/$defs/Software"
+    },
+    "world_version": {
+      "title": "World Version",
+      "type": "string"
+    },
+    "robot": {
+      "const": "MuJoCo Menagerie Franka Panda",
+      "default": "MuJoCo Menagerie Franka Panda",
+      "title": "Robot",
+      "type": "string"
+    },
+    "provenance": {
+      "$ref": "#/$defs/Provenance"
+    },
+    "configuration": {
+      "$ref": "#/$defs/FactorySettings"
+    },
+    "initial_state_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Initial State Sha256",
+      "type": "string"
+    },
+    "model_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Model Sha256",
+      "type": "string"
+    },
+    "benchmark_request": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/BenchmarkRequest"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "benchmark_definition_sha256": {
+      "anyOf": [
+        {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Benchmark Definition Sha256"
+    },
+    "content_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Content Sha256",
+      "type": "string"
+    }
+  },
+  "required": [
+    "kind",
+    "software",
+    "world_version",
+    "provenance",
+    "configuration",
+    "initial_state_sha256",
+    "model_sha256",
+    "content_sha256"
+  ],
+  "title": "Exchange",
+  "type": "object"
+}

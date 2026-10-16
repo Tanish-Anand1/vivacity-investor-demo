@@ -1,0 +1,22 @@
+{
+  "provider_world_id": "1eec9556-2690-44db-aaf5-08cc57e31997",
+  "appearance": {
+    "format": "spz",
+    "quality": "500k",
+    "semantics": {
+      "metric_scale_factor": 1.7335340976715088,
+      "ground_plane_offset": 1.0082917213439941
+    },
+    "coordinate_system": "marble_raw_opencv",
+    "metric_scale_verified": true
+  },
+  "sha256": "202be5b14baa2ad79d41b20ea050c4f53d43b3f23c4e10d7a937fef6805ece39",
+  "generation_prompt": "A compact industrial warehouse with realistic steel pallet racks and cardboard cartons along the back wall, concrete flooring, steel ceiling beams and overhead lighting. Keep the central floor empty for a robotic workbench. No people.",
+  "cost_credits": 1580,
+  "low_detail": {
+    "format": "spz",
+    "quality": "100k",
+    "bytes": 1208312,
+    "sha256": "9e9c45309ba9700bd29bb8abb1f61ad122a56dbb302cbeb5241dec1ff4ed3dc1"
+  }
+}

@@ -1,0 +1,139 @@
+{
+  "schema_version": "vivacity.templates/1.0",
+  "arms": [
+    {
+      "id": "panda",
+      "name": "Franka Panda",
+      "status": "available",
+      "technical": "7 joint actuators + parallel fingers",
+      "business": "Flexible manipulation for automation integrators.",
+      "scope": "Actuated MuJoCo model, modeled parallel gripper, independent state and measured dynamics. Dual Panda uses its primary arm; SCARA is an analytical educational model."
+    },
+    {
+      "id": "ur5e",
+      "name": "UR5e collaborative arm",
+      "status": "available",
+      "technical": "6-axis arm",
+      "business": "Shared workstations and machine loading.",
+      "scope": "Actuated MuJoCo model, modeled parallel gripper, independent state and measured dynamics. Dual Panda uses its primary arm; SCARA is an analytical educational model."
+    },
+    {
+      "id": "iiwa",
+      "name": "KUKA iiwa",
+      "status": "available",
+      "technical": "7-axis industrial arm",
+      "business": "Flexible industrial cells and assembly research.",
+      "scope": "Actuated MuJoCo model, modeled parallel gripper, independent state and measured dynamics. Dual Panda uses its primary arm; SCARA is an analytical educational model."
+    },
+    {
+      "id": "scara",
+      "name": "SCARA arm",
+      "status": "available",
+      "technical": "Planar assembly arm",
+      "business": "Repeated handling on electronics production lines.",
+      "scope": "Actuated MuJoCo model, modeled parallel gripper, independent state and measured dynamics. Dual Panda uses its primary arm; SCARA is an analytical educational model."
+    },
+    {
+      "id": "dual_arm",
+      "name": "Dual-arm system",
+      "status": "available",
+      "technical": "Two coordinated manipulators",
+      "business": "Two-handed handling and garment automation.",
+      "scope": "Actuated MuJoCo model, modeled parallel gripper, independent state and measured dynamics. Dual Panda uses its primary arm; SCARA is an analytical educational model."
+    }
+  ],
+  "worlds": [
+    {
+      "id": "manufacturing",
+      "name": "Industrial workstation",
+      "status": "available",
+      "technical": "Rigid table, dynamic part, gravity and friction",
+      "business": "Evaluate part transfer before a physical cell trial.",
+      "scope": "Simplified workbench, not a complete factory digital twin."
+    },
+    {
+      "id": "warehouse",
+      "name": "Warehouse packing station",
+      "status": "available",
+      "technical": "Light parcel surrogate on a fixed packing bench",
+      "business": "Compare handling alternatives for fulfillment automation.",
+      "scope": "Fixed bench; no moving conveyor, bins or warehouse traffic."
+    },
+    {
+      "id": "inspection",
+      "name": "Inspection bench",
+      "status": "available",
+      "technical": "Small, light component with measured final placement",
+      "business": "Test part presentation for inspection integrators.",
+      "scope": "Physical handling only; no camera inspection or defect detection."
+    },
+    {
+      "id": "cluttered",
+      "name": "Constrained industrial cell",
+      "status": "available",
+      "technical": "Fixed collision fixture beside the handling area",
+      "business": "Test path feasibility around existing equipment.",
+      "scope": "A rectangular equipment surrogate; real collision geometry."
+    },
+    {
+      "id": "textile",
+      "name": "Textile folding station",
+      "status": "experimental",
+      "technical": "Panda folding fixture, 7\u00d77 MuJoCo flex sheet",
+      "business": "Explore fixture-based folding for textile automation.",
+      "scope": "Pre-attached bar and fixed hinge; no autonomous garment grasp."
+    }
+  ],
+  "tasks": [
+    {
+      "id": "pick_place",
+      "name": "Pick & place",
+      "status": "available",
+      "technical": "Grasp \u2192 lift \u2192 transport \u2192 release \u2192 settle",
+      "business": "Measure placement feasibility and execution duration.",
+      "scope": "Success requires actual finger contacts, retention and supported placement."
+    },
+    {
+      "id": "obstacle_transfer",
+      "name": "Obstacle-aware transfer",
+      "status": "available",
+      "technical": "Pose IK, joint-space RRT and contact validation",
+      "business": "Compare routes around equipment before moving hardware.",
+      "scope": "Uses the same physical pickup controller with an enabled collision fixture."
+    },
+    {
+      "id": "cloth_fold",
+      "name": "Cloth folding",
+      "status": "experimental",
+      "technical": "Joint-actuated fixture motion, flex contact and release",
+      "business": "Evaluate folding-fixture alternatives.",
+      "scope": "Constrained single fold; autonomous cloth pickup is not implemented."
+    },
+    {
+      "id": "machine_tending",
+      "name": "Machine tending",
+      "status": "available",
+      "technical": "Load, unload and synchronize with a machine",
+      "business": "Potential application for production automation.",
+      "scope": "Single-part fixture seating or loading a modeled bay with an actuated door. No fastening, production machining or hardware interlocks."
+    },
+    {
+      "id": "assembly",
+      "name": "Precision assembly",
+      "status": "available",
+      "technical": "Contact-guided alignment and insertion",
+      "business": "Potential application for assembly integrators.",
+      "scope": "Single-part fixture seating or loading a modeled bay with an actuated door. No fastening, production machining or hardware interlocks."
+    }
+  ],
+  "contract": [
+    "Observe",
+    "Snapshot",
+    "Fork",
+    "Apply action",
+    "Simulate",
+    "Evaluate",
+    "Commit",
+    "Replay"
+  ]
+}

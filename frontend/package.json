@@ -1,0 +1,42 @@
+{
+  "name": "vivacity-investor-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 5173 --strictPort",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 5173 --strictPort",
+    "generate:api": "openapi-typescript ../openapi.json -o src/generated/api.d.ts",
+    "generate:factory": "node ../scripts/generate-factory-layout.mjs",
+    "test:templates": "node --experimental-strip-types ../scripts/test-template-selection.mjs",
+    "test:factory-settings": "node --experimental-strip-types ../scripts/test-factory-settings.mjs",
+    "test:factory-e2e": "npm run build && playwright test --config playwright.factory.config.ts",
+    "test:e2e": "node ../scripts/check-master-live.mjs",
+    "test:e2e:legacy": "node scripts/run-e2e.mjs",
+    "test:api": "node --experimental-strip-types --test ../scripts/test-api-responses.mjs ../scripts/test-api-transport.mjs"
+  },
+  "dependencies": {
+    "@phosphor-icons/react": "^2.1.10",
+    "@react-three/drei": "10.7.9",
+    "@react-three/fiber": "9.8.1",
+    "@sparkjsdev/spark": "^2.3.1",
+    "katex": "^0.19.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "three": "^0.185.0"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.11.1",
+    "@playwright/test": "^1.58.0",
+    "@tailwindcss/vite": "^4.3.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@types/three": "^0.185.0",
+    "@vitejs/plugin-react": "^6.0.0",
+    "openapi-typescript": "^7.13.0",
+    "tailwindcss": "^4.3.0",
+    "typescript": "5.9.3",
+    "vite": "8.3.4"
+  }
+}

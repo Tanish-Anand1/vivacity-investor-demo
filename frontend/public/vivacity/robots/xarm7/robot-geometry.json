@@ -1,0 +1,1460 @@
+{
+  "schema_version": "1.0",
+  "source": "compiled_mujoco_model",
+  "simulator_version": "3.15.0",
+  "model_hash": "378a5ff750ec6a89e0fcf63478317fb3dab0b4667f823173fb85a56a69602738",
+  "config": {
+    "robot_model": "xarm7",
+    "physical_operation": "pick_place",
+    "sorting_rule": null,
+    "task": "pick_place",
+    "scene_profile": "workcell",
+    "source_import_id": null,
+    "obstacle_enabled": false,
+    "cube_position": [
+      0.5,
+      -0.15,
+      0.026
+    ],
+    "placement_position": [
+      0.5,
+      0.18,
+      0.026
+    ],
+    "cube_half_size": 0.025,
+    "cube_half_sizes": null,
+    "cube_mass": 0.06,
+    "cube_friction": 1.0,
+    "obstacle_position": [
+      0.45,
+      0.04,
+      0.22
+    ],
+    "obstacle_size": [
+      0.055,
+      0.13,
+      0.22
+    ],
+    "target_position": [
+      0.55,
+      0.28,
+      0.22
+    ],
+    "scene_geometries": [],
+    "environment": null
+  },
+  "coordinates": "right-handed Z-up meters; quaternions wxyz",
+  "mesh_buffer": "robot-meshes.bin",
+  "byte_order": "little-endian",
+  "bodies": [
+    {
+      "id": 0,
+      "name": "world",
+      "parent_id": 0
+    },
+    {
+      "id": 1,
+      "name": "link0",
+      "parent_id": 0
+    },
+    {
+      "id": 2,
+      "name": "link1",
+      "parent_id": 1
+    },
+    {
+      "id": 3,
+      "name": "link2",
+      "parent_id": 2
+    },
+    {
+      "id": 4,
+      "name": "link3",
+      "parent_id": 3
+    },
+    {
+      "id": 5,
+      "name": "link4",
+      "parent_id": 4
+    },
+    {
+      "id": 6,
+      "name": "link5",
+      "parent_id": 5
+    },
+    {
+      "id": 7,
+      "name": "link6",
+      "parent_id": 6
+    },
+    {
+      "id": 8,
+      "name": "link7",
+      "parent_id": 7
+    },
+    {
+      "id": 9,
+      "name": "hand",
+      "parent_id": 8
+    },
+    {
+      "id": 10,
+      "name": "left_finger",
+      "parent_id": 9
+    },
+    {
+      "id": 11,
+      "name": "right_finger",
+      "parent_id": 9
+    },
+    {
+      "id": 12,
+      "name": "target",
+      "parent_id": 0
+    },
+    {
+      "id": 13,
+      "name": "obstacle",
+      "parent_id": 0
+    }
+  ],
+  "geoms": [
+    {
+      "id": 0,
+      "name": "ground",
+      "body_id": 0,
+      "type": "plane",
+      "group": 0,
+      "mesh_id": null,
+      "position": [
+        0.0,
+        0.0,
+        -0.8
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        2.0,
+        2.0,
+        0.1
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 1,
+      "name": "table",
+      "body_id": 0,
+      "type": "box",
+      "group": 0,
+      "mesh_id": null,
+      "position": [
+        0.4,
+        0.0,
+        -0.04
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.7,
+        0.65,
+        0.04
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 2,
+      "name": "geom_2",
+      "body_id": 1,
+      "type": "mesh",
+      "group": 0,
+      "mesh_id": 0,
+      "position": [
+        -0.002330920659259287,
+        7.635029826604813e-05,
+        0.06466085765451927
+      ],
+      "quaternion_wxyz": [
+        0.7246046052437065,
+        0.01893595760364894,
+        0.017714355710020627,
+        0.6886768452409484
+      ],
+      "size": [
+        0.0629574181674849,
+        0.08893749928562447,
+        0.09259557785289513
+      ],
+      "rgba": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 3,
+      "name": "geom_3",
+      "body_id": 2,
+      "type": "mesh",
+      "group": 0,
+      "mesh_id": 1,
+      "position": [
+        -0.0001418553332473717,
+        0.0074638475848720935,
+        -0.02711420915765274
+      ],
+      "quaternion_wxyz": [
+        0.986119056423177,
+        -0.16602441735678528,
+        0.0022356170082898337,
+        -0.0003184603514531484
+      ],
+      "size": [
+        0.048461527928834194,
+        0.07496450237210796,
+        0.09820355048070717
+      ],
+      "rgba": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 4,
+      "name": "geom_4",
+      "body_id": 3,
+      "type": "mesh",
+      "group": 0,
+      "mesh_id": 2,
+      "position": [
+        -8.518079249929592e-05,
+        -0.09124548913785831,
+        0.04845536801044918
+      ],
+      "quaternion_wxyz": [
+        0.4695845815665558,
+        0.8828865046045384,
+        -0.0012075725572434197,
+        0.0005315173216329178
+      ],
+      "size": [
+        0.04760582974078086,
+        0.07949266060474289,
+        0.14342571565969264
+      ],
+      "rgba": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 5,
+      "name": "geom_5",
+      "body_id": 4,
+      "type": "mesh",
+      "group": 0,
+      "mesh_id": 3,
+      "position": [
+        0.03116049140567881,
+        0.0020180908913441306,
+        -0.022566212798909326
+      ],
+      "quaternion_wxyz": [
+        0.9348523986099498,
+        0.15439168733634234,
+        0.31362577048333284,
+        0.062073148650578225
+      ],
+      "size": [
+        0.054148342622926185,
+        0.0763081480062763,
+        0.10553295563539429
+      ],
+      "rgba": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 6,
+      "name": "geom_6",
+      "body_id": 5,
+      "type": "mesh",
+      "group": 0,
+      "mesh_id": 4,
+      "position": [
+        0.05894856993202059,
+        -0.07610492940771568,
+        0.04029048800181529
+      ],
+      "quaternion_wxyz": [
+        0.4776985795576886,
+        0.8121449756381055,
+        0.3242692974185171,
+        0.08410724336257146
+      ],
+      "size": [
+        0.06847020191121302,
+        0.07511477253173578,
+        0.1423868270569981
+      ],
+      "rgba": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 7,
+      "name": "geom_7",
+      "body_id": 6,
+      "type": "mesh",
+      "group": 0,
+      "mesh_id": 5,
+      "position": [
+        -0.0001655187184941466,
+        0.0317918270067044,
+        -0.07229184425357928
+      ],
+      "quaternion_wxyz": [
+        0.9894816276609918,
+        -0.14442320345631646,
+        0.0006865242892665212,
+        0.008220432419890934
+      ],
+      "size": [
+        0.042502159940363306,
+        0.057223843061052514,
+        0.11766296120687647
+      ],
+      "rgba": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 8,
+      "name": "geom_8",
+      "body_id": 7,
+      "type": "mesh",
+      "group": 0,
+      "mesh_id": 6,
+      "position": [
+        0.04899680629282065,
+        0.011248594145888224,
+        0.009047722000570012
+      ],
+      "quaternion_wxyz": [
+        -0.11064781588812711,
+        0.7942664880759756,
+        0.09746310797835328,
+        0.5894054201836352
+      ],
+      "size": [
+        0.038994400193499354,
+        0.059104624298161615,
+        0.0920709056426908
+      ],
+      "rgba": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 9,
+      "name": "geom_9",
+      "body_id": 8,
+      "type": "mesh",
+      "group": 0,
+      "mesh_id": 8,
+      "position": [
+        3.414990570124057e-08,
+        -0.0014353044722618057,
+        -0.013516014737403683
+      ],
+      "quaternion_wxyz": [
+        0.499495438724895,
+        0.5005040526239783,
+        -0.5004958221033706,
+        0.4995036857292172
+      ],
+      "size": [
+        0.013588537751233276,
+        0.03773073963728319,
+        0.05058426938169946
+      ],
+      "rgba": [
+        0.753000020980835,
+        0.753000020980835,
+        0.753000020980835,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 10,
+      "name": "geom_10",
+      "body_id": 9,
+      "type": "mesh",
+      "group": 2,
+      "mesh_id": 10,
+      "position": [
+        -2.511700272515594e-10,
+        1.0579358996111006e-05,
+        0.018807986987083136
+      ],
+      "quaternion_wxyz": [
+        0.5000037181845179,
+        0.49999628178783345,
+        -0.49999628178783345,
+        0.5000037181845179
+      ],
+      "size": [
+        0.007746001266861421,
+        0.015256000002559094,
+        0.07198364051959195
+      ],
+      "rgba": [
+        0.9019610285758972,
+        0.9215689897537231,
+        0.9294120073318481,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
+    },
+    {
+      "id": 11,
+      "name": "geom_11",
+      "body_id": 9,
+      "type": "mesh",
+      "group": 2,
+      "mesh_id": 11,
+      "position": [
+        6.841214526205148e-06,
+        -0.09552084660666603,
+        -0.0064749947997260636
+      ],
+      "quaternion_wxyz": [
+        0.9836857366373881,
+        0.17989122096186563,
+        2.6762979127501163e-05,
+        -0.0012326559741847962
+      ],
+      "size": [
+        0.0020273394123831823,
+        0.009467773917332282,
+        0.024013896647130252
+      ],
+      "rgba": [
+        0.25,
+        0.25,
+        0.25,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
+    },
+    {
+      "id": 12,
+      "name": "geom_12",
+      "body_id": 9,
+      "type": "mesh",
+      "group": 2,
+      "mesh_id": 12,
+      "position": [
+        6.350336016945527e-07,
+        -0.06609330318585943,
+        -0.020179779172793785
+      ],
+      "quaternion_wxyz": [
+        0.6986114279788506,
+        0.6980474442414591,
+        0.11098980234775079,
+        -0.1111445098064998
+      ],
+      "size": [
+        0.005794296961784883,
+        0.005767215438195848,
+        0.022692151688725782
+      ],
+      "rgba": [
+        0.25,
+        0.25,
+        0.25,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
+    },
+    {
+      "id": 13,
+      "name": "geom_13",
+      "body_id": 9,
+      "type": "mesh",
+      "group": 2,
+      "mesh_id": 13,
+      "position": [
+        3.589818403876023e-07,
+        0.0031523851637545956,
+        0.02972501161834111
+      ],
+      "quaternion_wxyz": [
+        0.7109847259497759,
+        0.7032074511541919,
+        -7.840739903921414e-06,
+        6.772845024524056e-06
+      ],
+      "size": [
+        0.028617003451026708,
+        0.045320683855220985,
+        0.10583141744735781
+      ],
+      "rgba": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
+    },
+    {
+      "id": 14,
+      "name": "geom_14",
+      "body_id": 9,
+      "type": "mesh",
+      "group": 2,
+      "mesh_id": 14,
+      "position": [
+        0.0003354762920624661,
+        0.0003980276867150254,
+        0.0031797965836624213
+      ],
+      "quaternion_wxyz": [
+        -0.02441961734921727,
+        0.7067099529628196,
+        0.02403510663037406,
+        0.7066732189074936
+      ],
+      "size": [
+        0.006949419587902852,
+        0.055948605844751406,
+        0.03186329904996515
+      ],
+      "rgba": [
+        0.9019610285758972,
+        0.9215689897537231,
+        0.9294120073318481,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
+    },
+    {
+      "id": 15,
+      "name": "geom_15",
+      "body_id": 9,
+      "type": "mesh",
+      "group": 3,
+      "mesh_id": 9,
+      "position": [
+        -2.7665657500152555e-06,
+        -0.0006154696715489709,
+        0.023929521661208913
+      ],
+      "quaternion_wxyz": [
+        0.697945088950229,
+        0.7161512318154952,
+        -0.0002424800202319227,
+        8.475167845232354e-05
+      ],
+      "size": [
+        0.03164141294671657,
+        0.0486720135388537,
+        0.10394595560976379
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 16,
+      "name": "geom_16",
+      "body_id": 10,
+      "type": "mesh",
+      "group": 2,
+      "mesh_id": 15,
+      "position": [
+        4.874233902204576e-07,
+        0.015695411594453968,
+        0.01687440937109482
+      ],
+      "quaternion_wxyz": [
+        0.7064136178036908,
+        0.02719047154582849,
+        -0.02698282842741521,
+        0.7067619159297385
+      ],
+      "size": [
+        0.0144094324512693,
+        0.01050261853475005,
+        0.037334465025340866
+      ],
+      "rgba": [
+        0.9019610285758972,
+        0.9215689897537231,
+        0.9294120073318481,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
+    },
+    {
+      "id": 17,
+      "name": "geom_17",
+      "body_id": 10,
+      "type": "mesh",
+      "group": 2,
+      "mesh_id": 16,
+      "position": [
+        -1.1254510558499409e-06,
+        0.004738647230576074,
+        0.04476995966327855
+      ],
+      "quaternion_wxyz": [
+        0.5618204342441145,
+        0.429751282616441,
+        0.4310909336665697,
+        0.5602073202536425
+      ],
+      "size": [
+        0.0061645763907391855,
+        0.010683255188314214,
+        0.010872427090037998
+      ],
+      "rgba": [
+        0.25,
+        0.25,
+        0.25,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
+    },
+    {
+      "id": 18,
+      "name": "geom_18",
+      "body_id": 10,
+      "type": "mesh",
+      "group": 3,
+      "mesh_id": 15,
+      "position": [
+        4.874233902204576e-07,
+        0.015695411594453968,
+        0.01687440937109482
+      ],
+      "quaternion_wxyz": [
+        0.7064136178036908,
+        0.02719047154582849,
+        -0.02698282842741521,
+        0.7067619159297385
+      ],
+      "size": [
+        0.0144094324512693,
+        0.01050261853475005,
+        0.037334465025340866
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 19,
+      "name": "geom_19",
+      "body_id": 10,
+      "type": "box",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.0,
+        0.0055,
+        0.0445
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.0085,
+        0.004,
+        0.0085
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 20,
+      "name": "geom_20",
+      "body_id": 10,
+      "type": "box",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.0055,
+        0.002,
+        0.05
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.003,
+        0.002,
+        0.003
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 21,
+      "name": "geom_21",
+      "body_id": 10,
+      "type": "box",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        -0.0055,
+        0.002,
+        0.05
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.003,
+        0.002,
+        0.003
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 22,
+      "name": "geom_22",
+      "body_id": 10,
+      "type": "box",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.0055,
+        0.002,
+        0.0395
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.003,
+        0.002,
+        0.0035
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 23,
+      "name": "geom_23",
+      "body_id": 10,
+      "type": "box",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        -0.0055,
+        0.002,
+        0.0395
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.003,
+        0.002,
+        0.0035
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 24,
+      "name": "geom_24",
+      "body_id": 11,
+      "type": "mesh",
+      "group": 2,
+      "mesh_id": 15,
+      "position": [
+        4.874233902204576e-07,
+        0.015695411594453968,
+        0.01687440937109482
+      ],
+      "quaternion_wxyz": [
+        0.7064136178036908,
+        0.02719047154582849,
+        -0.02698282842741521,
+        0.7067619159297385
+      ],
+      "size": [
+        0.0144094324512693,
+        0.01050261853475005,
+        0.037334465025340866
+      ],
+      "rgba": [
+        0.9019610285758972,
+        0.9215689897537231,
+        0.9294120073318481,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
+    },
+    {
+      "id": 25,
+      "name": "geom_25",
+      "body_id": 11,
+      "type": "mesh",
+      "group": 2,
+      "mesh_id": 16,
+      "position": [
+        -1.1254510558499409e-06,
+        0.004738647230576074,
+        0.04476995966327855
+      ],
+      "quaternion_wxyz": [
+        0.5618204342441145,
+        0.429751282616441,
+        0.4310909336665697,
+        0.5602073202536425
+      ],
+      "size": [
+        0.0061645763907391855,
+        0.010683255188314214,
+        0.010872427090037998
+      ],
+      "rgba": [
+        0.25,
+        0.25,
+        0.25,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
+    },
+    {
+      "id": 26,
+      "name": "geom_26",
+      "body_id": 11,
+      "type": "mesh",
+      "group": 3,
+      "mesh_id": 15,
+      "position": [
+        4.874233902204576e-07,
+        0.015695411594453968,
+        0.01687440937109482
+      ],
+      "quaternion_wxyz": [
+        0.7064136178036908,
+        0.02719047154582849,
+        -0.02698282842741521,
+        0.7067619159297385
+      ],
+      "size": [
+        0.0144094324512693,
+        0.01050261853475005,
+        0.037334465025340866
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 27,
+      "name": "geom_27",
+      "body_id": 11,
+      "type": "box",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.0,
+        0.0055,
+        0.0445
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.0085,
+        0.004,
+        0.0085
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 28,
+      "name": "geom_28",
+      "body_id": 11,
+      "type": "box",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.0055,
+        0.002,
+        0.05
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.003,
+        0.002,
+        0.003
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 29,
+      "name": "geom_29",
+      "body_id": 11,
+      "type": "box",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        -0.0055,
+        0.002,
+        0.05
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.003,
+        0.002,
+        0.003
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 30,
+      "name": "geom_30",
+      "body_id": 11,
+      "type": "box",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        0.0055,
+        0.002,
+        0.0395
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.003,
+        0.002,
+        0.0035
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 31,
+      "name": "geom_31",
+      "body_id": 11,
+      "type": "box",
+      "group": 3,
+      "mesh_id": null,
+      "position": [
+        -0.0055,
+        0.002,
+        0.0395
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.003,
+        0.002,
+        0.0035
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 32,
+      "name": "cube",
+      "body_id": 12,
+      "type": "box",
+      "group": 0,
+      "mesh_id": null,
+      "position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.025,
+        0.025,
+        0.025
+      ],
+      "rgba": [
+        0.05000000074505806,
+        0.3499999940395355,
+        0.8999999761581421,
+        1.0
+      ],
+      "contype": 1,
+      "conaffinity": 1
+    },
+    {
+      "id": 33,
+      "name": "obstacle_geom",
+      "body_id": 13,
+      "type": "box",
+      "group": 0,
+      "mesh_id": null,
+      "position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.055,
+        0.13,
+        0.22
+      ],
+      "rgba": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
+    }
+  ],
+  "meshes": [
+    {
+      "id": 0,
+      "name": "link_base",
+      "positions": {
+        "byte_offset": 0,
+        "count": 9063,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 36252,
+        "count": 18282,
+        "dtype": "uint32"
+      }
+    },
+    {
+      "id": 1,
+      "name": "link1",
+      "positions": {
+        "byte_offset": 109380,
+        "count": 5529,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 131496,
+        "count": 11046,
+        "dtype": "uint32"
+      }
+    },
+    {
+      "id": 2,
+      "name": "link2",
+      "positions": {
+        "byte_offset": 175680,
+        "count": 6771,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 202764,
+        "count": 13530,
+        "dtype": "uint32"
+      }
+    },
+    {
+      "id": 3,
+      "name": "link3",
+      "positions": {
+        "byte_offset": 256884,
+        "count": 7116,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 285348,
+        "count": 14220,
+        "dtype": "uint32"
+      }
+    },
+    {
+      "id": 4,
+      "name": "link4",
+      "positions": {
+        "byte_offset": 342228,
+        "count": 7314,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 371484,
+        "count": 14616,
+        "dtype": "uint32"
+      }
+    },
+    {
+      "id": 5,
+      "name": "link5",
+      "positions": {
+        "byte_offset": 429948,
+        "count": 6876,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 457452,
+        "count": 13740,
+        "dtype": "uint32"
+      }
+    },
+    {
+      "id": 6,
+      "name": "link6",
+      "positions": {
+        "byte_offset": 512412,
+        "count": 11994,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 560388,
+        "count": 23958,
+        "dtype": "uint32"
+      }
+    },
+    {
+      "id": 7,
+      "name": "link7",
+      "positions": {
+        "byte_offset": 656220,
+        "count": 6912,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 683868,
+        "count": 13896,
+        "dtype": "uint32"
+      }
+    },
+    {
+      "id": 8,
+      "name": "end_tool",
+      "positions": {
+        "byte_offset": 739452,
+        "count": 396,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 741036,
+        "count": 780,
+        "dtype": "uint32"
+      }
+    },
+    {
+      "id": 9,
+      "name": "grip_hand_c",
+      "positions": {
+        "byte_offset": 744156,
+        "count": 306,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 745380,
+        "count": 600,
+        "dtype": "uint32"
+      }
+    },
+    {
+      "id": 10,
+      "name": "grip_hand_0",
+      "positions": {
+        "byte_offset": 747780,
+        "count": 330,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 749100,
+        "count": 126,
+        "dtype": "uint32"
+      }
+    },
+    {
+      "id": 11,
+      "name": "grip_hand_1",
+      "positions": {
+        "byte_offset": 749604,
+        "count": 4305,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 766824,
+        "count": 1464,
+        "dtype": "uint32"
+      }
+    },
+    {
+      "id": 12,
+      "name": "grip_hand_2",
+      "positions": {
+        "byte_offset": 772680,
+        "count": 20697,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 855468,
+        "count": 6930,
+        "dtype": "uint32"
+      }
+    },
+    {
+      "id": 13,
+      "name": "grip_hand_3",
+      "positions": {
+        "byte_offset": 883188,
+        "count": 31626,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 1009692,
+        "count": 10644,
+        "dtype": "uint32"
+      }
+    },
+    {
+      "id": 14,
+      "name": "grip_hand_4",
+      "positions": {
+        "byte_offset": 1052268,
+        "count": 5316,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 1073532,
+        "count": 2070,
+        "dtype": "uint32"
+      }
+    },
+    {
+      "id": 15,
+      "name": "grip_finger_0",
+      "positions": {
+        "byte_offset": 1081812,
+        "count": 3186,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 1094556,
+        "count": 1086,
+        "dtype": "uint32"
+      }
+    },
+    {
+      "id": 16,
+      "name": "grip_finger_1",
+      "positions": {
+        "byte_offset": 1098900,
+        "count": 2358,
+        "dtype": "float32"
+      },
+      "indices": {
+        "byte_offset": 1108332,
+        "count": 786,
+        "dtype": "uint32"
+      }
+    }
+  ],
+  "site": {
+    "name": "pregrasp",
+    "body": "hand",
+    "position": [
+      0,
+      0,
+      0.103
+    ]
+  }
+}

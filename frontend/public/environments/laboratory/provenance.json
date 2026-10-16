@@ -1,0 +1,15 @@
+{
+  "provider_world_id": "0a542a9a-3270-475d-83c3-e6d9dd61de77",
+  "appearance": {
+    "format": "spz",
+    "url": "/environments/laboratory/world.spz",
+    "quality": "500k",
+    "semantics": null,
+    "metric_scale_verified": false,
+    "coordinate_system": "marble_export_y_up",
+    "visual_scale": 2.5,
+    "visual_ground_y": -0.756103516
+  },
+  "sha256": "a5fec0653de4cd747c41985282fc3626b81bb3ecffb0d014a65784ec15dd0d20",
+  "scope": "Curated World Labs laboratory appearance. Manual visual calibration; physics geometry remains independently specified."
+}

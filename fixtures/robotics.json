@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0",
+  "backend": "mujoco",
+  "seed": 7,
+  "config": {
+    "obstacle_position": [0.45, 0.04, 0.22],
+    "obstacle_size": [0.055, 0.13, 0.22],
+    "target_position": [0.55, 0.28, 0.22]
+  }
+}

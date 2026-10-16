@@ -1,0 +1,21 @@
+name: Backend host memory verification
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  memory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t vivacity-memory .
+      - name: Execute every model under the host memory limit
+        run: |
+          mkdir -p artifacts
+          docker run --rm --memory=512m --memory-swap=512m -v "$PWD/tests:/app/tests:ro" -v "$PWD/artifacts:/verification" vivacity-memory python -m pytest /app/tests/test_host_capacity.py /app/tests/test_factory_host_capacity.py -s -vv --junitxml=/verification/host-memory.xml
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: host-memory-verification
+          path: artifacts/host-memory.xml

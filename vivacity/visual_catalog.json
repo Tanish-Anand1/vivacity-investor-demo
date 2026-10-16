@@ -1,0 +1,34 @@
+{
+  "robotics_lab": {
+    "provider_world_id": "0a542a9a-3270-475d-83c3-e6d9dd61de77",
+    "appearance": {
+      "format": "spz",
+      "url": "/environments/laboratory/world.spz",
+      "quality": "500k",
+      "semantics": null,
+      "metric_scale_verified": false,
+      "coordinate_system": "marble_export_y_up",
+      "visual_scale": 2.5,
+      "visual_ground_y": -0.756103516
+    },
+    "sha256": "a5fec0653de4cd747c41985282fc3626b81bb3ecffb0d014a65784ec15dd0d20",
+    "scope": "Curated World Labs laboratory appearance. Manual visual calibration; physics geometry remains independently specified."
+  },
+  "warehouse": {
+    "provider_world_id": "1eec9556-2690-44db-aaf5-08cc57e31997",
+    "appearance": {
+      "format": "spz",
+      "quality": "500k",
+      "semantics": {
+        "metric_scale_factor": 1.7335340976715088,
+        "ground_plane_offset": 1.0082917213439941
+      },
+      "coordinate_system": "marble_raw_opencv",
+      "metric_scale_verified": true,
+      "url": "/environments/warehouse/world.spz"
+    },
+    "sha256": "202be5b14baa2ad79d41b20ea050c4f53d43b3f23c4e10d7a937fef6805ece39",
+    "generation_prompt": "A compact industrial warehouse with realistic steel pallet racks and cardboard cartons along the back wall, concrete flooring, steel ceiling beams and overhead lighting. Keep the central floor empty for a robotic workbench. No people.",
+    "cost_credits": 1580
+  }
+}

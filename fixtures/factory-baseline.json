@@ -1,0 +1,15 @@
+{
+  "name": "Contact sorting baseline",
+  "seed": 19,
+  "carton_count": 1,
+  "carton_mass_kg": 0.06,
+  "carton_friction": 0.8,
+  "carton_half_size_m": 0.025,
+  "carton_start_x_m": 0.5,
+  "carton_start_y_m": -0.4,
+  "conveyor_speed_m_s": 0.09,
+  "arrival_interval_s": 18,
+  "realtime_speed": 8,
+  "sort_threshold_kg": 0.07,
+  "gripper_force_scale": 1
+}

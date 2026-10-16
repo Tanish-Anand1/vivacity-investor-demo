@@ -1,0 +1,199 @@
+{
+  "robot_model": "panda",
+  "physical_operation": "pick_place",
+  "sorting_rule": null,
+  "task": "pick_place",
+  "scene_profile": "workcell",
+  "source_import_id": null,
+  "obstacle_enabled": false,
+  "cube_position": [
+    0.5,
+    -0.15,
+    0.026000000000000002
+  ],
+  "placement_position": [
+    0.5,
+    0.18,
+    0.026000000000000002
+  ],
+  "cube_half_size": 0.025,
+  "cube_half_sizes": [
+    0.025,
+    0.025,
+    0.025
+  ],
+  "cube_mass": 0.06,
+  "cube_friction": 1.0,
+  "obstacle_position": [
+    0.45,
+    0.04,
+    0.22
+  ],
+  "obstacle_size": [
+    0.055,
+    0.13,
+    0.22
+  ],
+  "target_position": [
+    0.55,
+    0.28,
+    0.22
+  ],
+  "scene_geometries": [
+    {
+      "name": "floor",
+      "type": "box",
+      "position": [
+        0.0,
+        0.0,
+        -0.84
+      ],
+      "size": [
+        3.0,
+        3.0,
+        0.04
+      ],
+      "rgba": [
+        0.32,
+        0.34,
+        0.35,
+        1.0
+      ],
+      "friction": 0.8
+    },
+    {
+      "name": "back_wall",
+      "type": "box",
+      "position": [
+        0.0,
+        3.0,
+        0.7
+      ],
+      "size": [
+        3.0,
+        0.05,
+        1.5
+      ],
+      "rgba": [
+        0.52,
+        0.54,
+        0.53,
+        1.0
+      ],
+      "friction": 0.8
+    },
+    {
+      "name": "rack_left",
+      "type": "box",
+      "position": [
+        -2.2,
+        1.8,
+        0.2
+      ],
+      "size": [
+        0.05,
+        0.25,
+        1.0
+      ],
+      "rgba": [
+        0.35,
+        0.4,
+        0.43,
+        1.0
+      ],
+      "friction": 0.8
+    },
+    {
+      "name": "rack_right",
+      "type": "box",
+      "position": [
+        -1.0,
+        1.8,
+        0.2
+      ],
+      "size": [
+        0.05,
+        0.25,
+        1.0
+      ],
+      "rgba": [
+        0.35,
+        0.4,
+        0.43,
+        1.0
+      ],
+      "friction": 0.8
+    },
+    {
+      "name": "rack_level0",
+      "type": "box",
+      "position": [
+        -1.6,
+        1.8,
+        -0.4
+      ],
+      "size": [
+        0.6,
+        0.3,
+        0.04
+      ],
+      "rgba": [
+        0.35,
+        0.4,
+        0.43,
+        1.0
+      ],
+      "friction": 0.8
+    },
+    {
+      "name": "rack_level1",
+      "type": "box",
+      "position": [
+        -1.6,
+        1.8,
+        0.15000000000000002
+      ],
+      "size": [
+        0.6,
+        0.3,
+        0.04
+      ],
+      "rgba": [
+        0.35,
+        0.4,
+        0.43,
+        1.0
+      ],
+      "friction": 0.8
+    },
+    {
+      "name": "rack_level2",
+      "type": "box",
+      "position": [
+        -1.6,
+        1.8,
+        0.7000000000000001
+      ],
+      "size": [
+        0.6,
+        0.3,
+        0.04
+      ],
+      "rgba": [
+        0.35,
+        0.4,
+        0.43,
+        1.0
+      ],
+      "friction": 0.8
+    }
+  ],
+  "environment": {
+    "id": "warehouse",
+    "name": "Industrial warehouse",
+    "version": 1,
+    "source": "prebuilt",
+    "source_sha256": "d50d38b2627a4cd0545760c4e38b93e26cb7fadd5a7a8f795c78a0f4c4492560",
+    "collision_scope": "Static MuJoCo collision primitives around a standardized Panda workbench. Simplified task workcell, not a complete facility twin."
+  }
+}

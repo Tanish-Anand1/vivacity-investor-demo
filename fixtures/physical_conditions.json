@@ -1,0 +1,36 @@
+{
+  "schema_version": "vivacity.configuration-fixtures/1.0",
+  "scope": "Input configurations only. These are not stored or fabricated outcomes.",
+  "configurations": [
+    {
+      "name": "Baseline pickup",
+      "environment_id": "warehouse",
+      "robot_id": "panda",
+      "gripper_id": "panda_parallel",
+      "operation_id": "pick_place",
+      "trial_mode": "fixed",
+      "validation_trials": 3,
+      "seed": 7
+    },
+    {
+      "name": "Rubber contact in air",
+      "environment_id": "warehouse",
+      "object_material": "rubber",
+      "physics": {"air_density_kg_m3": 1.225},
+      "trial_mode": "fixed",
+      "validation_trials": 3,
+      "seed": 7
+    },
+    {
+      "name": "Weak-grip investigation",
+      "environment_id": "warehouse",
+      "object_mass_kg": 0.15,
+      "object_friction": 0.05,
+      "object_material": "custom",
+      "physics": {"gripper_force_scale": 0.05, "air_density_kg_m3": 1.225},
+      "trial_mode": "fixed",
+      "validation_trials": 3,
+      "seed": 7
+    }
+  ]
+}

@@ -1,0 +1,2 @@
+.cube-drag-error{position:absolute;z-index:2;left:20px;right:20px;top:52px;max-width:400px;padding:9px 12px;background:#301814;color:#ffe4dd;border:1px solid #ff8874;font-size:11px;line-height:1.5;pointer-events:none}
+.setting-error{color:#ffb5a5;font-size:11px;line-height:1.5;margin:10px 0}

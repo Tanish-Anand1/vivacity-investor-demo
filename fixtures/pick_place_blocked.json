@@ -1,0 +1,10 @@
+{
+  "backend": "mujoco",
+  "seed": 7,
+  "config": {
+    "task": "pick_place",
+    "obstacle_enabled": true,
+    "obstacle_position": [0.5, 0.1, 0.3],
+    "obstacle_size": [0.35, 0.35, 0.3]
+  }
+}

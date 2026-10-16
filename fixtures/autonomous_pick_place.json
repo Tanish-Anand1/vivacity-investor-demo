@@ -1,0 +1,9 @@
+{
+  "backend": "mujoco",
+  "seed": 7,
+  "config": {"task": "pick_place", "obstacle_enabled": false},
+  "max_cycles": 2,
+  "realtime_execution": true,
+  "search_candidates": 5000,
+  "physics_budget": 3
+}

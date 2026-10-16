@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+.pytest_cache/
+data/
+*.sqlite3*
+.env
+.env.*
+assets/menagerie/.git/
+assets/menagerie/*
+!assets/menagerie/franka_emika_panda/
+artifacts/live-demo.json
+artifacts/pytest.xml
+artifacts/api-tests.xml
+artifacts/reliability-tests.xml
+artifacts/package-demo.json
+artifacts/v2-baseline-live.json
+frontend/*.tsbuildinfo

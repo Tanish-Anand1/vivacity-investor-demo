@@ -1,0 +1,7 @@
+import { useState } from 'react';
+import { ArrowRight,X } from '@phosphor-icons/react';
+import { format,type Dict } from './domain';
+export default function ClothSettings({config,disabled,apply,close}:{config:Dict;disabled:boolean;apply:(d:Dict)=>Promise<boolean>;close:()=>void}){
+ const [side,setSide]=useState(Number(config.side_length)),[mass,setMass]=useState(Number(config.mass)),[friction,setFriction]=useState(Number(config.friction));
+ return <section className="environment-editor"><div className="section-heading"><h2>Cloth settings</h2><button className="icon-button" onClick={close} aria-label="Close settings"><X size={18}/></button></div><p>A 7 × 7 inextensible sheet with a fixed hinge and pre-attached clamps. The moving edge releases after folding. Autonomous grasp acquisition is not implemented.</p>{[['Side length',side,setSide,.3,.5,.01,'m'],['Mass',mass,setMass,.03,.2,.01,'kg'],['Friction',friction,setFriction,.1,1.5,.1,'']].map(([name,value,set,min,max,step,unit])=><label className="range-field" key={String(name)}><span>{String(name)} <output>{format(value,2)} {String(unit)}</output></span><input aria-label={String(name)} type="range" min={Number(min)} max={Number(max)} step={Number(step)} value={Number(value)} onChange={e=>(set as (v:number)=>void)(Number(e.target.value))}/></label>)}<button className="primary full" disabled={disabled} onClick={async()=>{if(await apply({side_length:side,mass,friction}))close();}}>Apply settings <ArrowRight size={17}/></button></section>;
+}

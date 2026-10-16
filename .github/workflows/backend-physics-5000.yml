@@ -1,0 +1,79 @@
+name: Backend 5000 MuJoCo trials
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: backend-physics-5000
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify exported backend source
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib
+          import json
+          for name, expected in json.loads(Path('SOURCE_MANIFEST.json').read_text()).items():
+              assert hashlib.sha256(Path(name).read_bytes()).hexdigest() == expected, name
+          PY
+      - name: Build the deployed backend image
+        run: docker build --tag vivacity-runtime:physics-audit .
+      - name: Run 5000 real MuJoCo trials with live logs
+        run: |
+          mkdir -p artifacts data/run
+          docker run --rm --memory=2g --memory-swap=2g \
+            -e VIVACITY_AUDIT_ENVIRONMENT=github_actions_backend_container \
+            -e VIVACITY_MAX_PHYSICS_TRIALS=5000 \
+            -e VIVACITY_IMMUTABLE_MODEL_FORKS=1 \
+            -e OMP_NUM_THREADS=1 -e OPENBLAS_NUM_THREADS=1 -e MKL_NUM_THREADS=1 \
+            -v "$PWD/scripts:/app/scripts:ro" \
+            -v "$PWD/artifacts:/app/artifacts" \
+            -v "$PWD/data/run:/app/data/run" \
+            vivacity-runtime:physics-audit python -u /app/scripts/audit-varied-physics.py \
+            --trials 5000 --scenarios 50 --seed 20261011 \
+            --output artifacts/backend-physics-5000.json \
+            --database data/run/backend-physics-5000.sqlite3
+      - name: Verify the persisted cloud results
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib
+          import json
+          import sqlite3
+          proof = json.loads(Path('artifacts/backend-physics-5000.json').read_text())
+          catalog = Path('artifacts/backend-physics-5000-trials.jsonl')
+          assert proof['status'] == 'passed', proof.get('error')
+          assert proof['execution_environment'] == 'github_actions_backend_container'
+          assert proof['requested_trials'] == proof['actual_trials'] == 5000
+          assert proof['distinct_commands'] == proof['distinct_interventions'] == 5000
+          assert proof['distinct_configurations'] == len(proof['scenarios']) == 50
+          assert proof['successful_trials'] + proof['failed_trials'] == 5000
+          assert proof['trial_simulation_steps'] > 0
+          assert hashlib.sha256(catalog.read_bytes()).hexdigest() == proof['trial_catalog_sha256']
+          assert sum(1 for _ in catalog.open()) == 5000
+          with sqlite3.connect('data/run/backend-physics-5000.sqlite3') as db:
+              assert db.execute('SELECT COUNT(*) FROM trials').fetchone()[0] == 5000
+              assert db.execute('SELECT COUNT(*) FROM experiments').fetchone()[0] == 50
+          print(json.dumps({k: proof[k] for k in ('status', 'execution_environment', 'actual_trials', 'distinct_commands', 'distinct_configurations', 'successful_trials', 'failed_trials', 'trial_simulation_steps', 'total_simulation_steps', 'elapsed_wall_seconds', 'repeat_verification')}, indent=2))
+          PY
+      - name: Upload log-backed trial evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-physics-5000
+          path: |
+            artifacts/backend-physics-5000.json
+            artifacts/backend-physics-5000-trials.jsonl
+            artifacts/backend-physics-5000-top-*.json
+            data/run/backend-physics-5000.sqlite3
+          if-no-files-found: warn
+          retention-days: 30
