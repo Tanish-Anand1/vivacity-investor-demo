@@ -12,12 +12,12 @@ if(process.platform==='win32'){
 }
 
 export default defineConfig({
- testDir:'./e2e',testMatch:'factory-configurator.spec.ts',fullyParallel:false,workers:1,
+ testDir:'./e2e',testMatch:['factory-configurator.spec.ts','lab-journey.spec.ts','isabella-accessibility.spec.ts'],fullyParallel:false,workers:1,
  timeout:900_000,expect:{timeout:120_000},retries:0,
  reporter:[['list'],['json',{outputFile:'test-results/factory-configurator/report.json'}]],
  outputDir:'test-results/factory-configurator',
  use:{baseURL,channel:process.platform==='win32'?'chrome':undefined,viewport:{width:1440,height:1000},headless:true,
-  launchOptions:{args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']},
+  launchOptions:{args:process.platform==='win32'?[]:['--use-angle=swiftshader','--enable-unsafe-swiftshader']},
   screenshot:'only-on-failure',trace:'retain-on-failure'},
  webServer:external?[]:[
   {command:'powershell -NoProfile -ExecutionPolicy Bypass -File scripts\\start-factory-e2e.ps1 backend',cwd:path.resolve('..'),url:'http://127.0.0.1:8002/health',reuseExistingServer:true,timeout:600_000},

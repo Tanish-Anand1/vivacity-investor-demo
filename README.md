@@ -8,6 +8,20 @@ The investor demo is robotics-only. Choose or generate a world, select a real
 robot and a bounded operation, save its conditions, then explicitly Start.
 Loading stays idle. Scientific Discovery remains retired.
 
+The public `/` route opens **Isabella Labs by Vivacity**. A deterministic 7.5-second
+opening gives way to a homepage with a recorded MuJoCo world preview. The opening
+is skippable, omitted for reduced-motion visitors, and does not start physics.
+`ENTER THE LAB` opens the idle robotics laboratory; `WATCH AN EXPERIMENT` starts
+a fresh backend baseline after the click. Explore then offers a user-controlled
+six-trial matched-seed comparison. Research exposes the same saved trials, state
+provenance, measured plots, replay and exports. The recorded homepage preview is
+never used as a live experiment result.
+Regenerate the opening evidence after changing the model or controller with
+`.\.venv\Scripts\python scripts\generate_lab_opening.py`; the generator asserts
+the measured failure and success before writing the fixture. The audit and
+current acceptance evidence are in [docs/DEMO_AUDIT.md](docs/DEMO_AUDIT.md)
+and [docs/ISABELLA_LABS_REPORT.md](docs/ISABELLA_LABS_REPORT.md).
+
 Public UI: [demo.tryvivacity.com](https://demo.tryvivacity.com/).
 Backend: [API reference](https://vivacity-runtime.onrender.com/docs).
 

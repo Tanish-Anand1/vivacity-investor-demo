@@ -7,8 +7,10 @@ const apiBase=process.env.FACTORY_E2E_API_BASE_URL??'http://127.0.0.1:8002';
 fs.mkdirSync(report,{recursive:true});
 
 async function ready(page:Page){
- await page.goto('/',{waitUntil:'domcontentloaded',timeout:60_000});
- await expect(page.getByRole('heading',{name:'Carton sorting'})).toBeVisible();
+ await page.emulateMedia({reducedMotion:'reduce'});
+ await page.goto('/lab',{waitUntil:'domcontentloaded',timeout:60_000});
+ await expect(page.getByRole('heading',{name:'Build a world. Test what could happen.'})).toBeVisible();
+ await page.getByRole('button',{name:'Research',exact:true}).click();
  const start=page.getByRole('button',{name:'Start production'});
  const reconnect=page.getByRole('button',{name:'Reconnect'});
  for(let attempt=0;attempt<3;attempt++){
@@ -34,6 +36,7 @@ test('configuration changes replace historical frames and high-fidelity view sta
  const count=page.getByLabel('Cartons');
  const initialY=page.getByLabel('Initial carton Y (m)');
  const speed=page.getByLabel('Simulation speed');
+ const grip=page.getByLabel('Gripper force scale',{exact:true});
 
  await name.fill('Configurator regression');
  await count.fill('1');
@@ -41,6 +44,7 @@ test('configuration changes replace historical frames and high-fidelity view sta
  await speed.fill('8');
  await mass.fill('0.09');
  await friction.fill('1.2');
+ await grip.fill('1');
  const apply=page.getByRole('button',{name:'Apply conditions'});
  await expect(apply).toBeEnabled();
  await apply.click();
@@ -56,7 +60,7 @@ test('configuration changes replace historical frames and high-fidelity view sta
 
  await page.getByRole('combobox',{name:'View',exact:true}).selectOption('performance');
  await page.getByRole('button',{name:'Start production'}).click();
- await expect(page.getByRole('status').filter({hasText:/completed/})).toBeVisible({timeout:600_000});
+ await expect(page.locator('.factory-control-bar strong[role="status"]')).toContainText('completed',{timeout:120_000});
  await expect(page.getByRole('slider',{name:'Recorded sample'})).toBeVisible({timeout:60_000});
  const timeline=page.getByRole('slider',{name:'Recorded sample'});
  await timeline.focus();

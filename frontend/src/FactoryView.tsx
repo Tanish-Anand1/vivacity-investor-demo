@@ -86,15 +86,21 @@ function Camera({command}:{command:{name:string;seq:number}}){
 }
 function Refresh({revision}:{revision:unknown}){const invalidate=useThree(s=>s.invalidate);useEffect(()=>invalidate(),[revision,invalidate]);return null;}
 
-export default function FactoryView({frame,mode='fidelity',status='idle',geometry=[],trajectory=[]}:{frame:FactoryVisualState|null;mode?:FactoryViewMode;status?:string;geometry?:FactoryGeometry[];trajectory?:Vec3[]}){
+export default function FactoryView({frame,mode='fidelity',status='idle',geometry=[],trajectory=[],onVisualReady,onVisualError}:{frame:FactoryVisualState|null;mode?:FactoryViewMode;status?:string;geometry?:FactoryGeometry[];trajectory?:Vec3[];onVisualReady?:()=>void;onVisualError?:(message:string)=>void}){
  const [assets,setAssets]=useState<Assets|null>(null),[error,setError]=useState<string|null>(null),[camera,setCamera]=useState({name:'overview',seq:0});
- useEffect(()=>{let active=true;loadAssets().then(v=>active&&setAssets(v)).catch(e=>active&&setError(String(e)));return()=>{active=false;};},[]);
+ const [sceneCreated,setSceneCreated]=useState(false);
+ useEffect(()=>{if(error)onVisualError?.(error);},[error,onVisualError]);
+ useEffect(()=>{if(!assets||!sceneCreated||!onVisualReady)return;let second=0;const first=requestAnimationFrame(()=>{second=requestAnimationFrame(onVisualReady);});return()=>{cancelAnimationFrame(first);cancelAnimationFrame(second);};},[assets,sceneCreated,onVisualReady]);
+ useEffect(()=>{let active=true,attempt=0,timer:ReturnType<typeof setTimeout>;
+  function load(){loadAssets().then(value=>{if(active){setAssets(value);setError(null);}}).catch(error=>{if(!active)return;if(++attempt<3)timer=setTimeout(load,750*attempt);else setError(String(error));});}
+  load();return()=>{active=false;clearTimeout(timer);};
+ },[]);
  const detailed=mode==='fidelity';
  const poses=new Map(frame?.body_transforms.map(p=>[p.name,p])??[]);
  const cartons=[...poses.values()].filter(p=>p.name==='target'||/^carton_\d+$/.test(p.name));
  const rollerAngles=(prefix:string)=>frame?.conveyors?.[prefix.replace('_roller_','')]?.roller_angles_rad;
  return <section className="factory-scene" aria-label="Factory simulation">
-  <div className="factory-canvas"><SceneBoundary><Canvas frameloop="demand" shadows={detailed?{type:PCFShadowMap}:false} dpr={detailed?1.5:1} camera={{position:[2.6,-3.3,2.05],fov:42,near:.01,far:80}} gl={{antialias:detailed,toneMapping:ACESFilmicToneMapping}} onCreated={({camera,gl})=>{camera.up.set(0,0,1);gl.setClearColor(detailed?'#a5aca5':'#1a2328');gl.toneMappingExposure=1.05;}}>
+  <div className="factory-canvas"><SceneBoundary><Canvas frameloop="demand" shadows={detailed?{type:PCFShadowMap}:false} dpr={detailed?1.5:1} camera={{position:[2.6,-3.3,2.05],fov:42,near:.01,far:80}} gl={{antialias:detailed,toneMapping:ACESFilmicToneMapping}} onCreated={({camera,gl})=>{camera.up.set(0,0,1);gl.setClearColor(detailed?'#a5aca5':'#1a2328');gl.toneMappingExposure=1.05;setSceneCreated(true);}}>
    <hemisphereLight args={['#f5f3e9','#6d776c',2]}/><directionalLight position={[1.5,-2,4]} intensity={4} castShadow={detailed} shadow-mapSize={[2048,2048]} shadow-camera-left={-3} shadow-camera-right={3} shadow-camera-top={3} shadow-camera-bottom={-3} shadow-normalBias={.004}/><directionalLight position={[-2,2,2]} intensity={1.5}/>
    {detailed?<><Room/><Guarding/></>:<mesh position={[0,0,-.8]}><planeGeometry args={[8,8]}/><meshStandardMaterial color="#303c41"/></mesh>}
    {mode!=='engineering'&&<><Plate position={[0,0,-.4]} size={[.32,.32,.8]} color={colors.dark}/><Plate position={[0,0,-.02]} size={[.37,.37,.04]}/>

@@ -1,0 +1,60 @@
+.lab-workspace{--factory-accent:#d6a96d;--factory-ink:#f0eee6;max-width:1680px}
+.lab-heading{align-items:flex-end;padding:38px 0 26px;border-bottom:1px solid #424946}
+.lab-heading>div:first-child{max-width:780px}
+.lab-heading h1{font-size:clamp(32px,3.55vw,55px);line-height:1.04;letter-spacing:-.055em;font-weight:440;margin:13px 0 15px}
+.lab-heading p{font-size:14px;line-height:1.6;color:#b8c0b9;max-width:62ch}
+.lab-heading-controls{display:flex;align-items:end;gap:18px;flex-wrap:wrap;justify-content:flex-end}
+.lab-mode-switch{display:flex;border:1px solid #626b64;padding:3px;background:#14191a}
+.lab-mode-switch button{border:0;background:transparent;color:#b9c4bb;padding:10px 17px;min-height:44px;font-size:12px;letter-spacing:.015em}
+.lab-mode-switch button[aria-pressed=true]{background:#d6a96d;color:#151410;font-weight:650}
+.lab-mode-switch button:hover:not(:disabled){background:#343a35}
+.lab-mode-switch button[aria-pressed=true]:hover{background:#e7bc80}
+.lab-stage{display:grid;grid-template-columns:minmax(0,1fr) minmax(315px,350px);grid-template-areas:'world guide';border-bottom:1px solid #48514a}
+.lab-world{grid-area:world;min-width:0;position:sticky;top:12px;align-self:start}
+.lab-stage .factory-canvas{height:clamp(500px,69vh,770px)}
+.lab-stage .factory-view-tools{padding:10px 18px;background:#121819;border-bottom:0}
+.lab-world-status{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:13px 18px;background:#19201e;border-top:1px solid #4a584d;font-size:12px}
+.lab-world-status strong{font-weight:550;text-transform:capitalize}
+.lab-world-status span{font-family:GeistMono,monospace;color:#c5cbbf;font-size:11px}
+.lab-guide{grid-area:guide;padding:26px 23px 18px;border-left:1px solid #48514a;background:#101414;min-width:0}
+.lab-guide-intro h2{font-size:28px;line-height:1.11;letter-spacing:-.04em;font-weight:460;margin:13px 0 11px}
+.lab-guide-intro p,.lab-steps p,.lab-guide-recovery p{font-size:13px;line-height:1.55;color:#b9c3b9}
+.lab-guide-recovery{border-left:2px solid #d6a96d;padding:10px 12px;margin:18px 0;background:#29251e}
+.lab-guide-recovery button{margin-top:12px}
+.lab-steps{list-style:none;padding:0;margin:21px 0 0}
+.lab-steps li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:12px;border-top:1px solid #37423e;padding:15px 0}
+.lab-step-number{font:12px GeistMono,monospace;color:#d6a96d;padding-top:3px}
+.lab-steps h3{font-size:15px;font-weight:540;letter-spacing:-.015em;margin:0 0 6px}
+.lab-steps button,.lab-guide-recovery button{background:#212b29;border:1px solid #53625a;color:#f1efe7;min-height:44px;padding:9px 12px;font-size:12px;margin-top:11px;text-align:left}
+.lab-steps button.primary{background:#d6a96d!important;color:#151410!important;border-color:#d6a96d!important;border-radius:0!important;font-weight:650}
+.lab-steps button:hover:not(:disabled),.lab-guide-recovery button:hover:not(:disabled){border-color:#d6a96d;background:#37413a}
+.lab-steps button.primary:hover:not(:disabled){background:#e6bc82}
+.lab-steps button:disabled{opacity:.5}
+.lab-force{display:grid;grid-template-columns:1fr auto;gap:7px 10px;font-size:12px;margin-top:13px;color:#e3e5d9}
+.lab-force output{font-family:GeistMono,monospace;color:#e6bd80}
+.lab-force input{grid-column:1/-1;width:100%;accent-color:#d6a96d;min-height:27px}
+.lab-steps .lab-outcome{color:#e9d0a3;font-family:GeistMono,monospace;font-size:11px;margin-top:9px;overflow-wrap:anywhere}
+.lab-steps .lab-hint{font-size:11px;margin-top:9px;color:#aebbb1}
+.lab-benchmark-actions{display:flex;gap:8px;flex-wrap:wrap}
+.lab-comparison{width:100%;margin-top:12px;border-collapse:collapse;border-top:1px solid #536158;font-size:11px;line-height:1.45;text-align:left}
+.lab-comparison th,.lab-comparison td{padding:7px 4px;border-bottom:1px solid #39443d;vertical-align:top}
+.lab-comparison th:first-child{padding-left:0;width:36%}
+.lab-comparison thead th{font-family:GeistMono,monospace;color:#b7c3b9;font-size:10px;font-weight:400}
+.lab-comparison tbody th{font-weight:500}
+.lab-comparison td{font-family:GeistMono,monospace;font-size:10px}
+.lab-steps .lab-result{color:#b7d6ba;margin-top:12px;font-size:12px}
+.lab-guide-foot{border-top:1px solid #37423e;padding-top:13px;color:#aebbb1;font:11px GeistMono,monospace;line-height:1.5}
+.lab-run-controls{display:flex;gap:8px;margin:14px 0}
+.lab-run-controls button{min-height:44px;padding:10px 14px;background:#212b29;border:1px solid #53625a;font-size:12px}
+.lab-research .lab-stage{display:block}
+.lab-research .lab-world{position:static}
+.lab-research .factory-canvas{height:clamp(450px,62vh,730px)}
+.lab-research .lab-world-status{border-bottom:1px solid #48514a}
+.lab-workspace .factory-eyebrow{color:#d0b990;font-size:10px}
+.lab-workspace .factory-stage-note{color:#b9c5b9}
+.lab-workspace .factory-view-tools button{min-height:38px}
+.lab-provenance p{font-size:12px;line-height:1.65;color:#b9c5b9;max-width:85ch;margin:13px 0}
+.lab-provenance dd{overflow-wrap:anywhere}
+@media(max-width:1150px){.lab-stage{grid-template-columns:minmax(0,1fr) minmax(290px,320px)}.lab-guide{padding:20px 17px}.lab-guide-intro h2{font-size:25px}.lab-heading{align-items:flex-start;flex-direction:column}.lab-heading-controls{width:100%;justify-content:space-between}}
+@media(max-width:840px){.lab-stage{display:flex;flex-direction:column}.lab-guide{order:0;border-left:0;border-bottom:1px solid #48514a}.lab-world{order:1;position:static;width:100%}.lab-guide-intro{max-width:620px}.lab-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.lab-steps li{grid-template-columns:24px minmax(0,1fr)}.lab-stage .factory-canvas{height:470px}}
+@media(max-width:640px){.lab-heading{padding:25px 0 18px}.lab-heading h1{font-size:34px}.lab-heading p{font-size:12px}.lab-heading-controls{align-items:stretch}.lab-mode-switch{width:100%}.lab-mode-switch button{flex:1}.lab-heading-controls label{align-items:start}.lab-guide{padding:19px 15px}.lab-guide-intro h2{font-size:25px}.lab-steps{display:block}.lab-steps li{padding:14px 0}.lab-stage .factory-canvas{height:365px}.lab-world-status{align-items:flex-start;flex-direction:column;gap:5px}}

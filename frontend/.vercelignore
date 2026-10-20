@@ -1,0 +1,6 @@
+test-results/
+playwright-report/
+e2e/
+e2e-baseline/
+dist/
+*.tsbuildinfo
