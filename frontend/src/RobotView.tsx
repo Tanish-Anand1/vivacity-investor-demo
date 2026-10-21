@@ -131,6 +131,7 @@ class SceneBoundary extends Component<{children: ReactNode;onError:()=>void}, { 
 
 function RobotView({ frames, cursor, config, playing, renderTime, canMoveCube=false, onMoveCube=async()=>false,visualWorld,overlays,trace=[],onSelect=()=>{} }: { frames: RobotFrame[]; cursor: RefObject<number>; config: Dict; replaying: boolean; playing:boolean; renderTime:number; canMoveCube?:boolean; onMoveCube?:(point:Vec3)=>Promise<boolean>;visualWorld?:LibraryWorld;overlays?:OverlayOptions;trace?:RobotFrame[];onSelect?:(s:'object'|'robot')=>void }) {
   const [assets,setAssets] = useState<Assets | null>(null), [error,setError] = useState<string | null>(null);
+  const [assetRetry,setAssetRetry]=useState(0);
   const [appearanceStatus,setAppearanceStatus]=useState(''),[appearanceError,setAppearanceError]=useState(false);
   const appearance=appearanceFor(visualWorld);
   const quality=useRenderQuality();
@@ -140,7 +141,7 @@ function RobotView({ frames, cursor, config, playing, renderTime, canMoveCube=fa
   useEffect(()=>{let active=true;setImported(null);setAppearanceError(false);if(visualWorld?.preview_available&&!appearance)workspaceApi.preview(visualWorld.id).then(p=>active&&setImported(p)).catch(()=>active&&setDragError('Imported appearance could not load. Physical collision geometry remains available.'));return()=>{active=false;};},[visualWorld?.id]);
   const resetCamera=()=>setCameraCommand(c=>({key:'',seq:c.seq+1}));
   const robot=String(config.robot_model??'panda');
-  useEffect(() => { let active = true;setAssets(null);setError(null);loadAssets(robot).then(a=>active&&setAssets(a)).catch(e=>active&&setError(String(e))); return ()=>{ active=false; }; },[robot]);
+  useEffect(() => { let active = true;setAssets(null);setError(null);loadAssets(robot).then(a=>active&&setAssets(a)).catch(()=>active&&setError('Robot geometry could not load. Physics results remain available.')); return ()=>{ active=false; }; },[robot,assetRetry]);
   return <><div className="robot-viewport" data-testid="robot-viewport" tabIndex={0} role="region" aria-label={`${robot==='panda'?'Franka Panda':robot} workcell. ${canMoveCube?'Drag the blue object on the supported table. Change conditions provides keyboard position controls. ':''}Arrow keys orbit, Shift and arrows pan, plus and minus zoom, R resets camera.`} onKeyDown={e=>{if(e.target!==e.currentTarget)return;if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','+','=','-'].includes(e.key)){e.preventDefault();setCameraCommand(c=>({key:e.shiftKey?'Shift+'+e.key:e.key,seq:c.seq+1}));}else if(e.key.toLowerCase()==='r'){e.preventDefault();resetCamera();}}}>
     {!error&&assets&&frames.length>0&&<SceneBoundary onError={()=>setError('3D rendering is unavailable. Your experiment data remains accessible in the inspector. Try a WebGL2-capable browser.')}>
       <Canvas frameloop="demand" shadows={{type:PCFShadowMap}} dpr={qualityProfiles[quality].pixelRatio} style={{cursor:canMoveCube?(dragging?'grabbing':hovering?'grab':'auto'):'auto',touchAction:'none'}} camera={{ position:[1.8,-2.1,1.35], fov: 42, near: .015, far: 100 }} gl={{ antialias: false }} onCreated={({camera,gl})=>{ camera.up.set(0,0,1); gl.setClearColor('#262a2d'); performance.mark('vivacity:robot-scene-ready'); }}>
@@ -159,6 +160,7 @@ function RobotView({ frames, cursor, config, playing, renderTime, canMoveCube=fa
     <div className="scene-quality"><RenderQualityControl worldId={visualWorld?.id}/></div>
     {appearanceStatus&&<p className={appearanceError?'negative small':'small'} role={appearanceError?'alert':'status'}>{appearanceStatus}</p>}
     {(error||dragError)&&<p className="negative" role="alert">{error??dragError}</p>}
+    {error&&<button className="secondary" type="button" onClick={()=>setAssetRetry(value=>value+1)}>Retry 3D view</button>}
     {!error&&(!assets||!frames.length)&&<p className="small" role="status">{!assets?'Loading Panda geometry…':'Waiting for a measured world state…'}</p>}
   </>;
 }

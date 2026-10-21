@@ -12,9 +12,19 @@ export function loadAssets(robot='panda') {
   if (!assetPromises.has(robot)) assetPromises.set(robot,(async () => {
     const start = performance.now();
     const prefix=robot==='panda'?'/vivacity':`/vivacity/robots/${encodeURIComponent(robot)}`;
-    const [a,b] = await Promise.all([fetch(prefix+'/robot-geometry.json'), fetch(prefix+'/robot-meshes.bin')]);
-    if (!a.ok || !b.ok) throw new Error('Robot geometry assets could not be loaded.');
-    const manifest = await a.json() as Manifest, buffer = await b.arrayBuffer();
+    let manifest:Manifest|undefined,buffer:ArrayBuffer|undefined;
+    for(let attempt=0;attempt<3;attempt++){
+      try{
+        const [a,b]=await Promise.all([fetch(prefix+'/robot-geometry.json'),fetch(prefix+'/robot-meshes.bin')]);
+        if(!a.ok||!b.ok)throw new Error('Robot geometry assets could not be loaded.');
+        [manifest,buffer]=await Promise.all([a.json() as Promise<Manifest>,b.arrayBuffer()]);
+        break;
+      }catch(error){
+        if(attempt===2)throw error;
+        await new Promise(resolve=>setTimeout(resolve,400*(attempt+1)));
+      }
+    }
+    if(!manifest||!buffer)throw new Error('Robot geometry assets could not be loaded.');
     const geometry = new Map<number,BufferGeometry>();
     for (const mesh of manifest.meshes) {
       const g = new BufferGeometry();
