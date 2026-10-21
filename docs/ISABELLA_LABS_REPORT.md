@@ -27,7 +27,25 @@ tests passed in 1.1 minutes. A separate two-route copy audit passed. The
 robotic comparison measured 76.1197 s and 4,148/17,083/4,148/17,083/4,148/
 17,088 native physics steps. These are case-specific simulated results, not a
 hardware reliability claim. The backend itself was not modified in this
-release; its prior full Pytest result remains in the historical report below.
+release.
+
+The final Vercel production deployment `dpl_FYSpFqYsbyUyrfpwN4Jy2HnqbUGQ`
+was READY and aliased to <https://demo.tryvivacity.com/>. The final homepage
+and same-origin runtime health returned HTTP 200, and the deployed JavaScript
+bundle hash matched the local production build. Direct requests to six UI
+routes and runtime health returned HTTP 200 after the first promotion. The
+public Chromium suite finished 11/12 in 15.9 minutes. Its only failed check
+was a Playwright artifact-directory collision with a simultaneous local run:
+the six physical trials finished and produced metrics, but trace cleanup
+raised `ENOENT`. With isolated artifacts, that entire live comparison test
+passed on the final deployment in 11.3 minutes, including a failed baseline,
+six independently restored trials, saved replay and export. It measured
+620.3996 s backend wall time, 0/2 versus 2/2 training and 0/1 versus 1/1
+held-out deliveries; step counts were 4,147/17,080/4,147/17,080/4,149/
+17,088. The final production opening and contrast/accessibility smoke passed
+2/2 in 16.6 seconds. The Playwright config now separates local and public
+trace directories. GitHub Actions run `39559877403` passed 311 backend tests
+and four host-memory checks on the public source commit `06943ae`.
 
 Known limits: the humanoid opening is illustration, not an executable
 humanoid model; the homepage condition results are saved evidence, not a new

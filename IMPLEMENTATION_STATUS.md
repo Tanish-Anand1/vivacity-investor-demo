@@ -29,9 +29,26 @@ Two additional route checks for visible engine-brand copy passed. The local
 physics benchmark measured **76.1197 s wall time** with 0/2 weak-grip versus
 2/2 full-grip training deliveries and 0/1 versus 1/1 held-out deliveries;
 its six native step counts were 4,148, 17,083, 4,148, 17,083, 4,148 and
-17,088. These results describe this fixed simulated case only. The prior
-full backend Pytest result below is historical; it was not rerun because this
-release made no backend changes.
+17,088. These results describe this fixed simulated case only.
+
+Production release: Vercel deployment `dpl_FYSpFqYsbyUyrfpwN4Jy2HnqbUGQ`
+reported READY and was aliased to `https://demo.tryvivacity.com/`. The final
+alias returned HTTP 200 for `/` and `/runtime/health`, and its bundle hash
+matched the local production build. The earlier production promotion returned
+HTTP 200 on `/`, `/laboratory`, `/lab`, `/worlds`, `/discovery`, `/workspace`
+and `/runtime/health`. The public Chromium suite finished **11/12 in 15.9
+minutes**: the six-trial case completed its physics and printed its measured
+result, but its Playwright trace cleanup failed with `ENOENT` because a
+simultaneous local check reused the same artifact directory. The full case
+was rerun alone against the final deployment with isolated artifacts and
+**passed in 11.3 minutes**. Its six trials measured **620.3996 s** backend
+wall time, training 0/2 versus 2/2 and held-out 0/1 versus 1/1 deliveries,
+with 4,147, 17,080, 4,147, 17,080, 4,149 and 17,088 physics steps. The
+final production opening/hover/accessibility smoke passed **2/2 in 16.6 s**.
+The test configuration now uses separate local and public artifact directories.
+GitHub Actions run `39559877403` passed **311 backend tests** across three
+Linux shards and **4 host-memory checks** with no OOM kill. The prior local
+backend Pytest result below is historical; backend code was not changed here.
 
 Remaining risks: the opening artwork is a stylized SVG sequence, not a rendered
 humanoid physics simulation. The homepage evidence is recorded, clearly

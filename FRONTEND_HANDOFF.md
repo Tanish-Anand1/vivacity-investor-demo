@@ -17,6 +17,11 @@ experiments` control opens `/discovery`. The intro is bypassed under reduced
 motion and can be skipped by button or Escape; subsequent visits in the same
 session do not replay it. The opening SVG is brand illustration, not physics
 output. Google Fonts load Instrument Sans, Manrope and IBM Plex Mono.
+The final frontend was deployed as Vercel `dpl_FYSpFqYsbyUyrfpwN4Jy2HnqbUGQ`
+at `https://demo.tryvivacity.com/`. Its live robotic comparison, replay,
+scientific route, mobile and opening were browser-verified on 2026-10-21;
+exact results and the one repaired Playwright artifact collision are recorded
+in `IMPLEMENTATION_STATUS.md`.
 The verified deployed backend for this release is
 `https://isabella-labs-runtime.onrender.com`. Production HTTP requests use the
 same-origin `/runtime` Vercel rewrite; WebSockets connect directly to that
