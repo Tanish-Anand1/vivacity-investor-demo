@@ -1,0 +1,112 @@
+{
+  "schema_version": "vivacity.v-robotics.verification/1.0",
+  "source": "fresh MuJoCo runs executed by scripts.verify_v_robotics",
+  "elapsed_wall_s": 8.951239899994107,
+  "matrix": {
+    "precision_assembly": {
+      "model_loaded": "PASS",
+      "kinematics_verified": "PASS",
+      "dynamics_verified": "PASS",
+      "controller_verified": "PASS",
+      "task_baseline_passed": "PASS",
+      "failure_case_passed": "PASS",
+      "parameter_variation_passed": "PASS",
+      "experiment_replay_passed": "PASS",
+      "ui_end_to_end_passed": "NOT TESTED"
+    },
+    "heavy_payload": {
+      "model_loaded": "NOT TESTED",
+      "kinematics_verified": "NOT TESTED",
+      "dynamics_verified": "NOT TESTED",
+      "controller_verified": "NOT TESTED",
+      "task_baseline_passed": "NOT TESTED",
+      "failure_case_passed": "NOT TESTED",
+      "parameter_variation_passed": "NOT TESTED",
+      "experiment_replay_passed": "NOT TESTED",
+      "ui_end_to_end_passed": "NOT TESTED"
+    },
+    "high_speed_sorting": {
+      "model_loaded": "NOT TESTED",
+      "kinematics_verified": "NOT TESTED",
+      "dynamics_verified": "NOT TESTED",
+      "controller_verified": "NOT TESTED",
+      "task_baseline_passed": "NOT TESTED",
+      "failure_case_passed": "NOT TESTED",
+      "parameter_variation_passed": "NOT TESTED",
+      "experiment_replay_passed": "NOT TESTED",
+      "ui_end_to_end_passed": "NOT TESTED"
+    },
+    "collaborative_manipulation": {
+      "model_loaded": "NOT TESTED",
+      "kinematics_verified": "NOT TESTED",
+      "dynamics_verified": "NOT TESTED",
+      "controller_verified": "NOT TESTED",
+      "task_baseline_passed": "NOT TESTED",
+      "failure_case_passed": "NOT TESTED",
+      "parameter_variation_passed": "NOT TESTED",
+      "experiment_replay_passed": "NOT TESTED",
+      "ui_end_to_end_passed": "NOT TESTED"
+    },
+    "humanoid_maintenance": {
+      "model_loaded": "NOT TESTED",
+      "kinematics_verified": "NOT TESTED",
+      "dynamics_verified": "NOT TESTED",
+      "controller_verified": "NOT TESTED",
+      "task_baseline_passed": "NOT TESTED",
+      "failure_case_passed": "NOT TESTED",
+      "parameter_variation_passed": "NOT TESTED",
+      "experiment_replay_passed": "NOT TESTED",
+      "ui_end_to_end_passed": "NOT TESTED"
+    },
+    "humanoid_terrain": {
+      "model_loaded": "NOT TESTED",
+      "kinematics_verified": "NOT TESTED",
+      "dynamics_verified": "NOT TESTED",
+      "controller_verified": "NOT TESTED",
+      "task_baseline_passed": "NOT TESTED",
+      "failure_case_passed": "NOT TESTED",
+      "parameter_variation_passed": "NOT TESTED",
+      "experiment_replay_passed": "NOT TESTED",
+      "ui_end_to_end_passed": "NOT TESTED"
+    },
+    "humanoid_logistics": {
+      "model_loaded": "NOT TESTED",
+      "kinematics_verified": "NOT TESTED",
+      "dynamics_verified": "NOT TESTED",
+      "controller_verified": "NOT TESTED",
+      "task_baseline_passed": "NOT TESTED",
+      "failure_case_passed": "NOT TESTED",
+      "parameter_variation_passed": "NOT TESTED",
+      "experiment_replay_passed": "NOT TESTED",
+      "ui_end_to_end_passed": "NOT TESTED"
+    }
+  },
+  "precision_assembly": {
+    "model_source": "MuJoCo Menagerie UR5e with modeled Panda parallel-jaw flange",
+    "solver_version": "3.15.0",
+    "timestep_s": 0.002,
+    "baseline_experiment_id": "91b4986a-f307-4a0c-bdd3-a50ed30facf7",
+    "baseline_branch_count": 3,
+    "baseline_selected_status": "execution_success",
+    "baseline_placement_error_m": 0.0012146042219279038,
+    "baseline_physics_steps": 41118,
+    "weak_grip_statuses": [
+      "dropped_object",
+      "dropped_object",
+      "dropped_object"
+    ],
+    "heavy_mass_kg": 0.3,
+    "heavy_experiment_id": "ea3023f0-10f7-4244-8007-1f83fa4619cc",
+    "heavy_branch_statuses": [
+      "grasp_failure",
+      "execution_success",
+      "grasp_failure"
+    ],
+    "report_validation_status": "verified",
+    "scope": "Reproducible local simulator evidence, not hardware validation or cross-version bitwise determinism."
+  },
+  "limitations": [
+    "UI end-to-end is verified separately with a browser test.",
+    "Other six programs have no executable task controller and remain NOT TESTED."
+  ]
+}

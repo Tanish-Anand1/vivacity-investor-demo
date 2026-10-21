@@ -3,6 +3,7 @@ import { ArrowRight, X } from '@phosphor-icons/react';
 import { format, type Dict } from './domain';
 import { clampPickupPosition, objectHalfSizes, pickupBounds, pickupSeparationValid } from './pickupWorkspace';
 import PhysicsControls,{defaultPhysics,type Physics,type Material} from './PhysicsControls';
+import type {components} from './generated/api';
 export default function Settings({ config, disabled, apply, close }: { config: Dict; disabled: boolean; apply:(d:Dict)=>Promise<boolean|void>; close:()=>void }) {
   const [position,setPosition] = useState<number[]>(config.obstacle_position as number[] ?? [.45,.04,.22]);
   const [size,setSize] = useState<number[]>(config.obstacle_size as number[] ?? [.055,.13,.22]);
@@ -17,6 +18,8 @@ export default function Settings({ config, disabled, apply, close }: { config: D
   const [obstacleEnabled,setObstacleEnabled]=useState(config.obstacle_enabled!==false);
   const [physics,setPhysics]=useState<Physics>({...defaultPhysics,...config.physics as Partial<Physics>});
   const [material,setMaterial]=useState<Material>(config.object_material as Material??'custom');
+  const precision=config.program_id==='precision_assembly';
+  const [assembly,setAssembly]=useState<components['schemas']['AssemblySettings']>((config.assembly as components['schemas']['AssemblySettings'])??{arm_speed_rad_s:.2,grasp_yaw_rad:0,placement_tolerance_m:.006,orientation_tolerance_rad:.12});
   const bounds=pickupBounds(cubeHalfSizes);
   const separationValid=!pickup||pickupSeparationValid(cube,placement);
   const submit = async () => {
@@ -25,7 +28,8 @@ export default function Settings({ config, disabled, apply, close }: { config: D
     if(config.physical_operation==='stacking')nextPlacement[2]=3*cubeHalfSizes[2]+.001;
     const applied=await apply( {...config, obstacle_enabled:obstacleEnabled,obstacle_position:position, obstacle_size:size,target_position:target,
       cube_half_size:cubeHalfSizes[2],cube_half_sizes:pickup&&!orbital?cubeHalfSizes:null,cube_mass:cubeMass,cube_friction:cubeFriction,
-      cube_position:pickup?nextCube:cube,placement_position:pickup?nextPlacement:placement,physics,object_material:material}); if(applied!==false)close();
+      cube_position:pickup?nextCube:cube,placement_position:pickup?nextPlacement:placement,physics,object_material:material,
+      ...(precision?{assembly}:{})}); if(applied!==false)close();
   };
   return <section className="environment-editor" aria-labelledby="environment-heading">
     <div className="section-heading"><h2 id="environment-heading">Change the scene</h2><button className="icon-button" onClick={close} aria-label="Close settings"><X size={18} /></button></div>
@@ -39,12 +43,16 @@ export default function Settings({ config, disabled, apply, close }: { config: D
       {pickup&&!separationValid&&<p className="setting-error" role="alert">Move the pickup or placement point so they are at least 10 cm apart.</p>}
       {pickup&&!orbital&&<>
         {['Width','Depth','Height'].map((name,i)=><label className="range-field" key={name}><span>Object {name.toLowerCase()} <output>{Math.round(cubeHalfSizes[i]*2000)} mm</output></span><input aria-label={`Object ${name.toLowerCase()}`} type="range" min=".02" max=".03" step=".001" value={cubeHalfSizes[i]} onChange={e=>setCubeHalfSizes(s=>s.map((v,j)=>j===i?Number(e.target.value):v) as typeof s)}/></label>)}
-        <label className="range-field"><span>Object mass / weight <output>{Math.round(cubeMass*1000)} g · {format(cubeMass*physics.gravity_m_s2,2)} N</output></span><input aria-label="Object mass" type="range" min=".02" max=".15" step=".005" value={cubeMass} onChange={e=>setCubeMass(Number(e.target.value))}/></label>
+        <label className="range-field"><span>Object mass / weight <output>{Math.round(cubeMass*1000)} g · {format(cubeMass*physics.gravity_m_s2,2)} N</output></span><input aria-label="Object mass" type="range" min=".02" max={precision?'.30':'.15'} step=".005" value={cubeMass} onChange={e=>setCubeMass(Number(e.target.value))}/></label>
         <label className="range-field"><span>Object friction coefficient <output>{format(cubeFriction,2)}</output></span><input aria-label="Object friction" type="range" min=".05" max="1.5" step=".05" value={cubeFriction} onChange={e=>{setCubeFriction(Number(e.target.value));setMaterial('custom');}}/></label>
       </>}
       <p className="small">Obstacle half-sizes: {size.map(v=>format(v,3)).join(' × ')} m. Applying a change first stops the worker safely, then initializes new physical conditions. {pickup?'The cube is a dynamic free body held by finger friction.':'This legacy world verifies reaching only.'}</p>
     </>
     {pickup&&!orbital&&<PhysicsControls value={physics} material={material} onChange={setPhysics} onMaterial={(m,f)=>{setMaterial(m);if(f!==undefined)setCubeFriction(f);}}/>}
+    {precision&&<details className="configuration-details"><summary>Precision assembly tolerances and motion</summary><div className="config-fields">{([
+      ['arm_speed_rad_s','Arm speed (rad/s)',.12,.5,.01],['grasp_yaw_rad','Grasp yaw (rad)',-3.141593,3.141593,.01],
+      ['placement_tolerance_m','Placement tolerance (m)',.001,.02,.001],['orientation_tolerance_rad','Orientation tolerance (rad)',.01,.4,.01]
+    ] as const).map(([key,label,min,max,step])=><label key={key}>{label}<input type="number" min={min} max={max} step={step} value={assembly[key]} onChange={e=>setAssembly(value=>({...value,[key]:Number(e.target.value)}))}/></label>)}</div><p className="small">These values change the physical motion or the measured pass/fail rule when you apply the scene and run again.</p></details>}
     <button className="primary full" disabled={disabled||!separationValid} onClick={submit}>Apply settings <ArrowRight size={17} /></button>
   </section>;
 }

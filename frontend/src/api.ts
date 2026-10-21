@@ -60,6 +60,7 @@ export const api = {
     const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`vivacity-${bid}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
   },
   replay: (id: string) => request<Replay>(`/v1/experiments/${encodeURIComponent(id)}/replay`),
+  roboticsReport: (id: string) => request<components['schemas']['RoboticsExperimentReport']>(`/v1/robotics/experiments/${encodeURIComponent(id)}/report`),
   environment: (id: string, config: Dict) => request<World>(`/v1/worlds/${id}/environment`, json('PATCH', { config })),
   reset: (id: string) => request<World>(`/v1/worlds/${id}/reset`, json('POST')),
   commit: (id: string, experiment_id: string, branch_id: string) => request<World>(`/v1/worlds/${id}/commit`, json('POST', { experiment_id, branch_id })),

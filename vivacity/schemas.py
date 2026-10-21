@@ -66,11 +66,21 @@ class PhysicsSettings(Schema):
         return self
 
 
+class AssemblySettings(Schema):
+    """Bounded single-part fixture seating, expressed in SI units."""
+    arm_speed_rad_s: float = Field(.2, ge=.12, le=.5)
+    grasp_yaw_rad: float = Field(0., ge=-3.141593, le=3.141593)
+    placement_tolerance_m: float = Field(.006, ge=.001, le=.02)
+    orientation_tolerance_rad: float = Field(.12, ge=.01, le=.4)
+
+
 class RoboticsConfig(Schema):
     physics: PhysicsSettings = PhysicsSettings()
     object_material: MaterialId = 'custom'
     robot_model: Literal['panda','ur5e','iiwa','gen3','xarm7','scara','dual_arm'] = 'panda'
     physical_operation: Literal['pick_place','sorting','assembly','stacking','insertion','machine_tending'] = 'pick_place'
+    program_id: Literal['precision_assembly'] | None = None
+    assembly: AssemblySettings | None = None
     sorting_rule: SortingRule | None = None
     task: Literal['reach', 'pick_place'] = 'reach'
     scene_profile: Literal['workcell', 'orbital_salvage'] = 'workcell'
@@ -80,7 +90,7 @@ class RoboticsConfig(Schema):
     placement_position: Vec3 = [0.5, 0.18, 0.026]
     cube_half_size: float = Field(0.025, ge=0.02, le=0.03)
     cube_half_sizes: Vec3 | None = None
-    cube_mass: float = Field(0.06, ge=0.02, le=0.15)
+    cube_mass: float = Field(0.06, ge=0.02, le=0.30)
     cube_friction: float = Field(1.0, ge=0.05, le=1.5)
     obstacle_position: Vec3 = [0.45, 0.04, 0.22]
     obstacle_size: Vec3 = [0.055, 0.13, 0.22]
@@ -90,6 +100,15 @@ class RoboticsConfig(Schema):
 
     @model_validator(mode='after')
     def bounds(self):
+        if self.program_id == 'precision_assembly':
+            if self.robot_model != 'ur5e' or self.task != 'pick_place' or self.physical_operation != 'assembly' or self.scene_profile != 'workcell':
+                raise ValueError('precision assembly requires the six-axis UR5e workcell and assembly task')
+            if self.assembly is None:
+                raise ValueError('precision assembly settings are required')
+        if self.assembly is not None and self.physical_operation != 'assembly':
+            raise ValueError('assembly settings require the assembly operation')
+        if self.cube_mass > .15 and self.physical_operation != 'assembly':
+            raise ValueError('masses above 0.15 kg are supported only in assembly experiments')
         if self.physical_operation=='sorting' and self.sorting_rule is None:
             raise ValueError('sorting requires a bounded physical-property classification rule')
         if len({g.name for g in self.scene_geometries}) != len(self.scene_geometries):

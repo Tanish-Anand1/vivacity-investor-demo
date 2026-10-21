@@ -12,6 +12,8 @@ import IsabellaHome from './IsabellaHome';
 import LabOpening from './LabOpening';
 import { DEFAULT_SELECTION, selectionKey, type Selection } from './TemplatePicker';
 import ExperimentSetup from './ExperimentSetup';
+import VRoboticsPrograms from './VRoboticsPrograms';
+import PrecisionAssemblyResult from './PrecisionAssemblyResult';
 import {workspaceApi,defaultConfiguration,type Configuration,type SavedConfiguration,type LibraryWorld} from './workspaceApi';
 import './studio.css';
 import defaultWorkcell from './generated/defaultWorkcell.json';
@@ -70,12 +72,45 @@ export default function App(){
       .sort((a,b)=>Number(b.id===rt.experiment?.selected_branch_id)-Number(a.id===rt.experiment?.selected_branch_id)).slice(0,3);
   },[branches,rt.experiment]);
   const selected=branches.find(b=>b.id===branchId)??ranked[0];
-  const currentFrame=compatible?(cloth?clothFrame(rt.observation):robotFrame(rt.observation)):null;
-  const frames=useMemo(()=>currentFrame?[currentFrame]:[],[currentFrame]);
-  const cursor=useRef(0);cursor.current=0;
+  const [replay,setReplay]=useState<{branchId:string;frames:RobotFrame[];playing:boolean}|null>(null);
+  const [replayPosition,setReplayPosition]=useState(0);
+  const [replayLoading,setReplayLoading]=useState(false);
+  const [replayError,setReplayError]=useState<string|null>(null);
+  const cursor=useRef(0);
+  const replayDuration=replay?Math.max(0,replay.frames.at(-1)!.time-replay.frames[0].time):0;
+  useEffect(()=>{setReplay(null);setReplayPosition(0);setReplayError(null);cursor.current=0;},[rt.experiment?.id,rt.experiment?.stale]);
+  useEffect(()=>{
+    if(!replay?.playing)return;
+    let raf=0,lastDisplay=0;
+    const origin=performance.now(),offset=cursor.current;
+    const tick=(now:number)=>{
+      const next=Math.min(replayDuration,offset+(now-origin)/1000*4);
+      cursor.current=next;
+      if(now-lastDisplay>=100||next>=replayDuration){setReplayPosition(next);lastDisplay=now;}
+      if(next>=replayDuration){setReplay(current=>current?{...current,playing:false}:null);return;}
+      raf=requestAnimationFrame(tick);
+    };
+    raf=requestAnimationFrame(tick);
+    return()=>cancelAnimationFrame(raf);
+  },[replay?.playing,replay?.branchId,replayDuration]);
+  const openReplay=async()=>{
+    if(!rt.experiment||!selected)return;
+    setReplayLoading(true);setReplayError(null);
+    try{
+      const saved=await api.replay(rt.experiment.id);
+      const branch=saved.branches.find(item=>item.branch_id===selected.id);
+      const measured=branch?.frames.map(frame=>robotFrame(frame)).filter((frame):frame is RobotFrame=>frame!==null)??[];
+      if(measured.length<2)throw new Error('The selected branch has no replayable physics trace.');
+      cursor.current=0;setReplayPosition(0);setReplay({branchId:selected.id,frames:measured,playing:true});
+    }catch(error){setReplayError(errorMessage(error));}finally{setReplayLoading(false);}
+  };
+  const liveFrame=compatible?(cloth?clothFrame(rt.observation):robotFrame(rt.observation)):null;
+  const replayFrame=replay?.frames.find(frame=>frame.time>=replay.frames[0].time+replayPosition)??replay?.frames.at(-1);
+  const currentFrame=replayFrame??liveFrame;
+  const frames=useMemo(()=>replay?.frames??(liveFrame?[liveFrame]:[]),[replay?.frames,liveFrame]);
   const config=compatible?rt.world?.config??{}:{};
   const terminal=compatible&&rt.experiment&&!isBusy(rt.experiment);
-  const status=!rt.loaded?'Initializing':!rt.online?'Connection lost':rt.mutating?'Applying change':
+  const status=replay?(replay.playing?'Replaying measured trajectory':'Replay paused'):!rt.loaded?'Initializing':!rt.online?'Connection lost':rt.mutating?'Applying change':
     rt.session?.status==='stopping'?'Stopping safely':rt.session?.paused?'Simulation paused':
     rt.session?.pause_requested?'Pausing safely':isBusy(rt.experiment)&&rt.liveState?.stage==='testing_candidates'?'Testing real physics':
     isBusy(rt.experiment)&&rt.liveState?.stage==='executing'?'Live physics execution':
@@ -86,7 +121,7 @@ export default function App(){
     terminal&&rt.experiment?.selected_branch_id?'Task verified':terminal?'No feasible result':'Ready to start';
   const counters=Object.assign({},...rt.events.filter(e=>e.kind==='progress').map(e=>e.details),rt.experiment?.result.search??{}) as Record<string,unknown>;
   const disabled=preparing||rt.mutating||!compatible||!rt.online;
-  const canMoveCube=backend==='mujoco'&&!disabled&&!rt.active&&!isBusy(rt.experiment)&&config.scene_profile!=='orbital_salvage';
+  const canMoveCube=backend==='mujoco'&&!replay&&!disabled&&!rt.active&&!isBusy(rt.experiment)&&config.scene_profile!=='orbital_salvage';
   const moveCube=async(point:Vec3)=>{
     const sizes=objectHalfSizes(config),destination=placementAwayFrom(point,config.placement_position as Vec3,sizes);
     if(config.physical_operation==='stacking')destination[2]=3*sizes[2]+.001;
@@ -102,9 +137,9 @@ export default function App(){
     setInspecting(false);setSetupOpen(false);if(window.location.pathname!=='/workspace')navigate('workspace','/workspace');else setPage('workspace');setupSummary.current?.focus();
   };
   const prepare=async(configuration:Configuration,step:number)=>{
-    if(preparing)return;setPreparing(true);setDownloadError(null);setInspecting(false);if(window.location.pathname!=='/workspace')navigate('workspace','/workspace');else setPage('workspace');setDraft(configuration);
-    try{const [saved,world]=await Promise.all([workspaceApi.save(configuration),workspaceApi.world(configuration.environment_id)]);await loadConfiguration(saved,world);setSetupStep(step);setSetupOpen(true);}
-    catch(e){setDownloadError(errorMessage(e));}finally{setPreparing(false);}
+    if(preparing)return false;setPreparing(true);setDownloadError(null);setInspecting(false);if(window.location.pathname!=='/workspace')navigate('workspace','/workspace');else setPage('workspace');setDraft(configuration);
+    try{const [saved,world]=await Promise.all([workspaceApi.save(configuration),workspaceApi.world(configuration.environment_id)]);await loadConfiguration(saved,world);setSetupStep(step);setSetupOpen(true);return true;}
+    catch(e){setDownloadError(errorMessage(e));return false;}finally{setPreparing(false);}
   };
   const chooseWorld=(world:LibraryWorld)=>prepare({...draft,environment_id:world.id,...(world.id==='textile_fixture'?{operation_id:'cloth_fold' as const,gripper_id:'fold_fixture' as const,robot_id:'panda' as const}:draft.operation_id==='cloth_fold'?{operation_id:'pick_place' as const,gripper_id:'panda_parallel' as const}:{})},0);
 
@@ -129,6 +164,7 @@ export default function App(){
        page==='settings'?<section className="library-area"><h1>Runtime settings</h1><p>API: {API}</p><p className="small">Provider keys stay in backend environment variables. Robotics world generation availability is shown in Worlds. Discovery runs bounded SciPy computations. This demo uses shared compute and browser capabilities; it does not provide production user accounts or guaranteed uptime.</p><a href={`${BACKEND}/docs`} target="_blank" rel="noreferrer">API and schema reference</a></section>:
        page==='import'?<><button className="secondary" onClick={()=>navigate('worlds','/worlds')}>Back to world library</button><Suspense fallback={<div className="viewport-loading">Loading import tools…</div>}><ImportWorld/></Suspense></>:<>
         <div className="workspace-heading"><div><h1>Physical experiments</h1><p>Configure a task. Test alternatives. Inspect measured results.</p></div><span className="connection" role="status">{rt.online?'Physics connected':'Connecting to runtime…'}</span></div>
+        <VRoboticsPrograms busy={preparing||rt.active||rt.mutating} onOpen={configuration=>prepare(configuration,3)}/>
         {preparing&&<p role="status" className="small">Loading the selected physical configuration…</p>}
         {rt.recoveryNotice&&<p role="status" className="small">{rt.recoveryNotice}</p>}
         <nav className="journey" aria-label="Experiment stages">{['Environment','Robot','Operation','Experiment'].map((label,i)=><button key={label} aria-pressed={setupOpen&&setupStep===i} disabled={rt.active} onClick={()=>{setInspecting(false);setSetupStep(i);setSetupOpen(true);setEditing(false);}}><span>0{i+1}</span>{label}</button>)}</nav>
@@ -138,16 +174,25 @@ export default function App(){
         <div className="workbench">
           <section className="visual-area" aria-label="Live simulation">
             {cloth?<Suspense fallback={<div className="viewport-loading">Loading cloth…</div>}><ClothView frames={frames as ClothFrame[]} cursor={cursor} time={currentFrame?.time??0} playing={false} config={config}/></Suspense>:
-              <Suspense fallback={<div className="viewport-loading">Loading workcell…</div>}><RobotView frames={frames as RobotFrame[]} cursor={cursor} config={config} replaying={false} playing={false} renderTime={currentFrame?.time??0} canMoveCube={canMoveCube} onMoveCube={moveCube} visualWorld={visualWorld} overlays={inspecting?overlays:undefined} trace={rt.experiment?.stale?[]:(selected?.trace??[]).filter((f):f is RobotFrame=>!!robotFrame(f))} onSelect={s=>{setInspectSelection(s);setInspecting(true);setSetupOpen(false);}}/></Suspense>}
-            <div className="simulation-strip"><div><span>Simulation time</span><strong>{format(currentFrame?.time??0)} s</strong><small>{status}</small></div>{!cloth&&<button className="secondary" aria-pressed={inspecting} onClick={()=>{setInspecting(v=>!v);setSetupOpen(false);}}>Engineering inspection</button>}</div>
+              <Suspense fallback={<div className="viewport-loading">Loading workcell…</div>}><RobotView frames={frames as RobotFrame[]} cursor={cursor} config={config} replaying={Boolean(replay)} playing={Boolean(replay?.playing)} renderTime={currentFrame?.time??0} canMoveCube={canMoveCube} onMoveCube={moveCube} visualWorld={visualWorld} overlays={inspecting?overlays:undefined} trace={rt.experiment?.stale?[]:(selected?.trace??[]).filter((f):f is RobotFrame=>!!robotFrame(f))} onSelect={s=>{setInspectSelection(s);setInspecting(true);setSetupOpen(false);}}/></Suspense>}
+            <div className="simulation-strip"><div><span>Simulation time</span><strong>{format(replay?replay.frames[0].time+replayPosition:currentFrame?.time??0)} s</strong><small>{status}</small></div>{!cloth&&<button className="secondary" aria-pressed={inspecting} onClick={()=>{setInspecting(v=>!v);setSetupOpen(false);}}>Engineering inspection</button>}</div>
             {inspecting&&!cloth&&<details className="overlay-controls"><summary>Inspection overlays & legend</summary><div>{Object.entries(overlays).map(([id,on])=><label key={id}><input type="checkbox" checked={on} onChange={e=>setOverlays(o=>({...o,[id]:e.target.checked}))}/>{({forces:'Contact / applied forces',velocity:'Linear / angular velocity',center:'Center of mass',trajectory:'Recorded object trajectory',collision:'Robot collision geometry'} as Record<string,string>)[id]}</label>)}</div><p className="small">Amber: contact forces. Coral: applied force. Purple: torque. Teal: velocity / path. Blue: angular velocity. Vector lengths are scaled and capped for visibility. Trajectories use recorded samples from this experiment; this is not a video.</p></details>}
             <div className="experiment-actions">
-              <button className="primary run-button" disabled={disabled||rt.active} onClick={rt.run}>Start experiments<ArrowRight size={18}/></button>
+              <button className="primary run-button" disabled={disabled||rt.active} onClick={()=>{setSetupOpen(false);void rt.run();}}>Start experiments<ArrowRight size={18}/></button>
               {rt.active&&<button className="secondary" disabled={disabled||rt.session?.status==='stopping'} onClick={rt.togglePause}>{rt.session?.pause_requested?'Resume simulation':'Pause simulation'}</button>}
               {rt.active&&<button className="secondary" disabled={disabled||rt.session?.status==='stopping'} onClick={async()=>{try{await rt.stop();}catch(e){setDownloadError(errorMessage(e));}}}>Stop experiments</button>}
               <button className="secondary" disabled={disabled} onClick={()=>{setInspecting(false);setSetupOpen(false);setEditing(e=>!e);}}><SlidersHorizontal size={18}/>{cloth?'Cloth settings':'Change conditions'}</button>
               <button className="secondary" disabled={disabled} onClick={rt.reset}><ArrowsClockwise size={18}/>Reset world</button>
             </div>
+            {backend==='mujoco'&&terminal&&!rt.active&&!rt.experiment?.stale&&selected&&<div className="workspace-replay">
+              {!replay?<button className="secondary" disabled={replayLoading} onClick={()=>void openReplay()}>{replayLoading?'Loading measured trace…':'Replay selected trajectory'}</button>:<>
+                <button className="secondary" onClick={()=>setReplay(current=>current?{...current,playing:!current.playing}:null)}>{replay.playing?'Pause replay':'Resume replay'}</button>
+                <label>Recorded physics time <input type="range" aria-label="Replay time" min="0" max={replayDuration} step="any" value={replayPosition} onChange={event=>{const next=Number(event.target.value);cursor.current=next;setReplayPosition(next);}}/></label>
+                <span>{format(replayPosition,1)} / {format(replayDuration,1)} s · 4× playback</span>
+                <button className="secondary" onClick={()=>setReplay(null)}>Exit replay</button>
+              </>}
+            </div>}
+            {replayError&&<p className="negative" role="alert">{replayError}</p>}
             {backend==='mujoco'&&<p className="small" role="status">The search tests physical alternatives until measured improvement levels off or this host reaches its compute budget. Progress below counts completed backend simulations.</p>}
           </section>
           <aside className="results" aria-label="Verified results">
@@ -160,6 +205,7 @@ export default function App(){
                 ranked.map((b,i)=><ResultCard key={b.id} branch={b} rank={i} selected={b.id===selected?.id} choose={()=>setBranchId(b.id)} download={()=>{setDownloadError(null);api.download(b.experiment_id,b.id).catch(e=>setDownloadError(errorMessage(e)));}}/>)}
               {downloadError&&<p role="alert" className="negative">{downloadError}</p>}
               <p className="decision" data-testid="decision">{compatible?String(rt.experiment?.error??rt.experiment?.result.conclusion??''):''}</p>
+              {config.program_id==='precision_assembly'&&terminal&&rt.experiment&&<PrecisionAssemblyResult experimentId={rt.experiment.id} stale={Boolean(rt.experiment.stale)}/>}
               {rt.experiment?.stale&&<p className="stale-warning" data-testid="stale-warning">The world changed. These results describe its previous configuration.</p>}
             </>}
             </>}

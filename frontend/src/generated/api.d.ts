@@ -914,6 +914,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/robotics/programs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Robotics Programs */
+        get: operations["robotics_programs_v1_robotics_programs_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/robotics/experiments/{experiment_id}/report": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Robotics Experiment Report */
+        get: operations["robotics_experiment_report_v1_robotics_experiments__experiment_id__report_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/sessions": {
         parameters: {
             query?: never;
@@ -1343,6 +1377,32 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /**
+         * AssemblySettings
+         * @description Bounded single-part fixture seating, expressed in SI units.
+         */
+        AssemblySettings: {
+            /**
+             * Arm Speed Rad S
+             * @default 0.2
+             */
+            arm_speed_rad_s: number;
+            /**
+             * Grasp Yaw Rad
+             * @default 0
+             */
+            grasp_yaw_rad: number;
+            /**
+             * Placement Tolerance M
+             * @default 0.006
+             */
+            placement_tolerance_m: number;
+            /**
+             * Orientation Tolerance Rad
+             * @default 0.12
+             */
+            orientation_tolerance_rad: number;
+        };
         /** AttachmentRequest */
         AttachmentRequest: {
             /** Expected Revision */
@@ -1943,6 +2003,9 @@ export interface components {
              * @enum {string}
              */
             operation_id: "pick_place" | "object_transfer" | "reach" | "randomized_manipulation" | "cloth_fold" | "sorting" | "assembly" | "stacking" | "insertion" | "machine_tending";
+            /** Program Id */
+            program_id?: "precision_assembly" | null;
+            assembly?: components["schemas"]["AssemblySettings"] | null;
             /**
              * Seed
              * @default 7
@@ -3017,6 +3080,9 @@ export interface components {
              * @enum {string}
              */
             physical_operation: "pick_place" | "sorting" | "assembly" | "stacking" | "insertion" | "machine_tending";
+            /** Program Id */
+            program_id?: "precision_assembly" | null;
+            assembly?: components["schemas"]["AssemblySettings"] | null;
             sorting_rule?: components["schemas"]["SortingRule"] | null;
             /**
              * Task
@@ -3105,6 +3171,134 @@ export interface components {
              */
             scene_geometries: components["schemas"]["StaticGeometry"][];
             environment?: components["schemas"]["EnvironmentProvenance"] | null;
+        };
+        /** RoboticsExperimentReport */
+        RoboticsExperimentReport: {
+            /**
+             * Schema Version
+             * @default vivacity.v-robotics.report/1.0
+             * @constant
+             */
+            schema_version: "vivacity.v-robotics.report/1.0";
+            /** Experiment Id */
+            experiment_id: string;
+            /**
+             * Program Id
+             * @constant
+             */
+            program_id: "precision_assembly";
+            /** Robot Id */
+            robot_id: string;
+            /** Environment Id */
+            environment_id: string;
+            /** Task Id */
+            task_id: string;
+            /** World Id */
+            world_id: string;
+            /** World Revision */
+            world_revision: number;
+            /** Controller Version */
+            controller_version: string;
+            /** Solver Configuration */
+            solver_configuration: {
+                [key: string]: unknown;
+            };
+            /** Random Seed */
+            random_seed: number;
+            /** Parameters */
+            parameters: {
+                [key: string]: unknown;
+            };
+            /** Initial State */
+            initial_state: {
+                [key: string]: unknown;
+            };
+            /** Terminal State */
+            terminal_state: {
+                [key: string]: unknown;
+            } | null;
+            /** Termination Reason */
+            termination_reason: string | null;
+            /** Measurements */
+            measurements: {
+                [key: string]: unknown;
+            };
+            /** Constraint Violations */
+            constraint_violations: {
+                [key: string]: unknown;
+            }[];
+            /** Events */
+            events: {
+                [key: string]: unknown;
+            }[];
+            /** Branch Ids */
+            branch_ids: string[];
+            /** Selected Branch Id */
+            selected_branch_id: string | null;
+            /** Replay Path */
+            replay_path: string;
+            /** Export Path */
+            export_path: string | null;
+            /**
+             * Validation Status
+             * @enum {string}
+             */
+            validation_status: "verified" | "failed" | "incomplete";
+            /** Stale */
+            stale: boolean;
+            /** Error */
+            error?: string | null;
+        };
+        /** RoboticsProgram */
+        RoboticsProgram: {
+            /** Id */
+            id: string;
+            /**
+             * Category
+             * @enum {string}
+             */
+            category: "robotic_arms" | "humanoids";
+            /** Name */
+            name: string;
+            /** Robot Type */
+            robot_type: string;
+            /** Environment Id */
+            environment_id: string;
+            /** Task Id */
+            task_id: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "executable" | "not_implemented";
+            /** Scope */
+            scope: string;
+            /** Missing Capability */
+            missing_capability?: string | null;
+            default_configuration?: components["schemas"]["ExperimentConfiguration"] | null;
+        };
+        /** RoboticsProgramCatalog */
+        RoboticsProgramCatalog: {
+            /**
+             * Schema Version
+             * @default vivacity.v-robotics.catalog/1.0
+             * @constant
+             */
+            schema_version: "vivacity.v-robotics.catalog/1.0";
+            /**
+             * Coordinate System
+             * @default right_handed_z_up
+             * @constant
+             */
+            coordinate_system: "right_handed_z_up";
+            /**
+             * Units
+             * @default SI
+             * @constant
+             */
+            units: "SI";
+            /** Programs */
+            programs: components["schemas"]["RoboticsProgram"][];
         };
         /** RunOverrides */
         RunOverrides: {
@@ -5845,6 +6039,59 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CreateWorld"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    robotics_programs_v1_robotics_programs_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoboticsProgramCatalog"];
+                };
+            };
+        };
+    };
+    robotics_experiment_report_v1_robotics_experiments__experiment_id__report_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-session-token"?: string | null;
+            };
+            path: {
+                experiment_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoboticsExperimentReport"];
                 };
             };
             /** @description Validation Error */

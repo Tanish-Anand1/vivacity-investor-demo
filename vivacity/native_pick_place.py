@@ -39,6 +39,8 @@ class NativePickup:
         user=np.empty(mj.mj_stateSize(m,mj.mjtState.mjSTATE_USER))
         sensor=lambda name: int(m.sensor_adr[m.sensor(name).id])
         ids={name:sensor(name) for name in ('robot_contacts','mount_contacts','left_grasp','right_grasp','table_support','object_obstacle','object_ground')}
+        effort_ids={m.actuator(i).name:sensor(f'v_actuator_effort_{i}') for i in range(m.nu)} if w.config.get('program_id')=='precision_assembly' else {}
+        peak_effort={name:0. for name in effort_ids}
         environment_ids=[int(m.sensor_adr[i]) for i in range(m.nsensor) if m.sensor(i).name.startswith('object_environment_')]
         secondary=[sensor(name) for name in ('secondary_robot_contacts','secondary_mount_contacts')] if b.arm_dof==7 and w.config.get('robot_model')=='dual_arm' else []
         with Rollout() as rollout:
@@ -62,6 +64,9 @@ class NativePickup:
                     states,sensors=states[0],sensors[0]
                     # Rollout fills stalled output after a native numerical warning.
                     advanced=int(np.count_nonzero(np.diff(np.r_[state[0],states[:,0]])>0));steps+=advanced
+                    for name,address in effort_ids.items():
+                        if advanced:
+                            peak_effort[name]=max(peak_effort[name],float(np.max(np.abs(sensors[:advanced,address]))))
                     q=states[:,1:1+m.nq];height=q[:,cube_z];max_height=max(max_height,float(height.max()))
                     angular,linear=b.tracking_errors(w,q,commands)
                     tracking=max(tracking,angular);linear_tracking=max(linear_tracking,linear)
@@ -103,6 +108,7 @@ class NativePickup:
         trace.append(b.observe(w)|{'phase':'evaluating'})
         result={'trace':trace,'failure':failure,'contact_violations':violations,'milestones':milestones,'lifted':lifted,
                 'retained_during_transport':retention and lifted,'max_cube_height_m':max_height,'max_tracking_error_rad':tracking,'max_tracking_error_m':linear_tracking,
+                'peak_actuator_scalar':peak_effort,
                 'simulation_steps':steps,'integration_calls':integration_calls,'execution_duration_s':float(d.time-start),'physics_wall_seconds':time.perf_counter()-tic,
                 'engine':self.engine,'contact_measurement':'native per-step force sensors; forces precede integration by one timestep'}
         return result,b.evaluate(w,result),b.snapshot(w)

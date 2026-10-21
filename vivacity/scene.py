@@ -12,6 +12,18 @@ def append_scene(worldbody, config, root=None):
                       friction=f"{item['friction']} .005 .0001")
     operation=config.get('physical_operation','pick_place')
     destination=config['placement_position'];sizes=config.get('cube_half_sizes') or [config.get('cube_half_size',.025)]*3
+    if config.get('program_id') == 'precision_assembly':
+        # Four rigid tray rails around the source; the part remains a free body.
+        # Their poses use the same world-Z-up frame and metre units as the table.
+        source=config['cube_position']
+        for axis in range(2):
+            for sign in (-1,1):
+                position=[source[0],source[1],.012]
+                position[axis]+=sign*.09
+                size=[.09,.09,.012];size[axis]=.004
+                ET.SubElement(worldbody,'geom',name=f'task_fixture_source_tray_{axis}_{sign+1}',type='box',
+                              pos=' '.join(map(str,position)),size=' '.join(map(str,size)),
+                              rgba='.34 .39 .41 1',friction='.8 .005 .0001')
     if operation=='stacking':
         support=ET.SubElement(worldbody,'body',name='stack_base',pos=f'{destination[0]} {destination[1]} {sizes[2]+.001}')
         ET.SubElement(support,'freejoint',name='stack_base_free')
@@ -37,7 +49,7 @@ def append_scene(worldbody, config, root=None):
 def append_object_environment_sensors(root,sensors):
     for geom in root.findall('.//geom'):
         name=geom.get('name','')
-        if name.startswith('environment_'):
+        if name.startswith(('environment_','task_fixture_source_tray_')):
             ET.SubElement(sensors,'contact',name='object_environment_'+name,geom1='cube',geom2=name,data='found force',reduce='maxforce')
 
 

@@ -206,6 +206,8 @@ class WorkspaceService:
                                            source_sha256=scene['sha256'],collision_scope=scene['physics_scope'])
             config=dict(task='reach' if reach else 'pick_place',robot_model=configuration.robot_id,
                         physical_operation=configuration.operation_id if configuration.operation_id in ('sorting','assembly','stacking','insertion','machine_tending') else 'pick_place',obstacle_enabled=False,
+                        program_id=configuration.program_id,
+                        assembly=configuration.assembly.model_dump() if configuration.assembly else None,
                         cube_position=[*configuration.target_position[:2],configuration.object_half_sizes[2]+.001],placement_position=[*configuration.destination_position[:2],configuration.object_half_sizes[2]+.001],
                         cube_half_sizes=configuration.object_half_sizes,cube_mass=configuration.object_mass_kg,cube_friction=configuration.object_friction,
                         physics=configuration.physics.model_dump(),object_material=configuration.object_material,

@@ -1,7 +1,7 @@
 """Versioned library/configuration contracts, independent of simulator state."""
 from typing import Literal, Annotated
 from pydantic import Field, model_validator
-from .schemas import Schema, Vec3, StaticGeometry, CreateWorld, SessionRequest, PhysicsSettings, MaterialId, VariationSettings
+from .schemas import Schema, Vec3, StaticGeometry, CreateWorld, SessionRequest, PhysicsSettings, MaterialId, VariationSettings, AssemblySettings
 
 
 class Lighting(Schema):
@@ -135,11 +135,13 @@ class ExperimentConfiguration(Schema):
     robot_id: Literal['panda','ur5e','iiwa','gen3','xarm7','scara','dual_arm'] = 'panda'
     gripper_id: Literal['panda_parallel','fold_fixture'] = 'panda_parallel'
     operation_id: Literal['pick_place', 'object_transfer', 'reach', 'randomized_manipulation', 'cloth_fold','sorting','assembly','stacking','insertion','machine_tending'] = 'pick_place'
+    program_id: Literal['precision_assembly'] | None = None
+    assembly: AssemblySettings | None = None
     seed: int = Field(7, ge=0, le=2**32-1)
     target_position: Vec3 = [.5, -.15, .026]
     destination_position: Vec3 = [.5, .18, .026]
     object_half_sizes: Vec3 = [.025, .025, .025]
-    object_mass_kg: float = Field(.06, ge=.02, le=.15)
+    object_mass_kg: float = Field(.06, ge=.02, le=.30)
     object_friction: float = Field(1., ge=.05, le=1.5)
     sort_property: Literal['mass','width'] = 'mass'
     sort_threshold: float = Field(.08,ge=.01,le=.2)
@@ -148,6 +150,19 @@ class ExperimentConfiguration(Schema):
     validation_trials: int = Field(3, ge=3, le=24)
     randomization_cycles: int = Field(1, ge=1, le=8)
     realtime_speed: float = Field(1., ge=.25, le=4.)
+
+    @model_validator(mode='after')
+    def program_constraints(self):
+        if self.program_id == 'precision_assembly':
+            if self.robot_id != 'ur5e' or self.operation_id != 'assembly' or self.gripper_id != 'panda_parallel' or self.environment_id != 'desktop':
+                raise ValueError('precision assembly requires UR5e, the modeled parallel gripper and desktop fixture')
+            if self.assembly is None:
+                raise ValueError('precision assembly settings are required')
+        if self.assembly is not None and self.operation_id != 'assembly':
+            raise ValueError('assembly settings require the assembly operation')
+        if self.object_mass_kg > .15 and self.operation_id != 'assembly':
+            raise ValueError('masses above 0.15 kg are supported only in assembly experiments')
+        return self
 
 
 class ConfigurationResponse(Schema):

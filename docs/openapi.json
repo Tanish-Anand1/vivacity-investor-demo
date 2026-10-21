@@ -3566,6 +3566,79 @@
         }
       }
     },
+    "/v1/robotics/programs": {
+      "get": {
+        "summary": "Robotics Programs",
+        "operationId": "robotics_programs_v1_robotics_programs_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoboticsProgramCatalog"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/robotics/experiments/{experiment_id}/report": {
+      "get": {
+        "summary": "Robotics Experiment Report",
+        "operationId": "robotics_experiment_report_v1_robotics_experiments__experiment_id__report_get",
+        "parameters": [
+          {
+            "name": "experiment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Experiment Id"
+            }
+          },
+          {
+            "name": "x-session-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Session-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoboticsExperimentReport"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/sessions": {
       "post": {
         "summary": "Create Session",
@@ -4714,6 +4787,42 @@
   },
   "components": {
     "schemas": {
+      "AssemblySettings": {
+        "properties": {
+          "arm_speed_rad_s": {
+            "type": "number",
+            "maximum": 0.5,
+            "minimum": 0.12,
+            "title": "Arm Speed Rad S",
+            "default": 0.2
+          },
+          "grasp_yaw_rad": {
+            "type": "number",
+            "maximum": 3.141593,
+            "minimum": -3.141593,
+            "title": "Grasp Yaw Rad",
+            "default": 0.0
+          },
+          "placement_tolerance_m": {
+            "type": "number",
+            "maximum": 0.02,
+            "minimum": 0.001,
+            "title": "Placement Tolerance M",
+            "default": 0.006
+          },
+          "orientation_tolerance_rad": {
+            "type": "number",
+            "maximum": 0.4,
+            "minimum": 0.01,
+            "title": "Orientation Tolerance Rad",
+            "default": 0.12
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "AssemblySettings",
+        "description": "Bounded single-part fixture seating, expressed in SI units."
+      },
       "AttachmentRequest": {
         "properties": {
           "expected_revision": {
@@ -6156,6 +6265,28 @@
             "title": "Operation Id",
             "default": "pick_place"
           },
+          "program_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "precision_assembly"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Program Id"
+          },
+          "assembly": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AssemblySettings"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "seed": {
             "type": "integer",
             "maximum": 4294967295.0,
@@ -6207,7 +6338,7 @@
           },
           "object_mass_kg": {
             "type": "number",
-            "maximum": 0.15,
+            "maximum": 0.3,
             "minimum": 0.02,
             "title": "Object Mass Kg",
             "default": 0.06
@@ -8342,6 +8473,28 @@
             "title": "Physical Operation",
             "default": "pick_place"
           },
+          "program_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "precision_assembly"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Program Id"
+          },
+          "assembly": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AssemblySettings"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "sorting_rule": {
             "anyOf": [
               {
@@ -8439,7 +8592,7 @@
           },
           "cube_mass": {
             "type": "number",
-            "maximum": 0.15,
+            "maximum": 0.3,
             "minimum": 0.02,
             "title": "Cube Mass",
             "default": 0.06
@@ -8516,6 +8669,310 @@
         "additionalProperties": false,
         "type": "object",
         "title": "RoboticsConfig"
+      },
+      "RoboticsExperimentReport": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "const": "vivacity.v-robotics.report/1.0",
+            "title": "Schema Version",
+            "default": "vivacity.v-robotics.report/1.0"
+          },
+          "experiment_id": {
+            "type": "string",
+            "title": "Experiment Id"
+          },
+          "program_id": {
+            "type": "string",
+            "const": "precision_assembly",
+            "title": "Program Id"
+          },
+          "robot_id": {
+            "type": "string",
+            "title": "Robot Id"
+          },
+          "environment_id": {
+            "type": "string",
+            "title": "Environment Id"
+          },
+          "task_id": {
+            "type": "string",
+            "title": "Task Id"
+          },
+          "world_id": {
+            "type": "string",
+            "title": "World Id"
+          },
+          "world_revision": {
+            "type": "integer",
+            "title": "World Revision"
+          },
+          "controller_version": {
+            "type": "string",
+            "title": "Controller Version"
+          },
+          "solver_configuration": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Solver Configuration"
+          },
+          "random_seed": {
+            "type": "integer",
+            "title": "Random Seed"
+          },
+          "parameters": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Parameters"
+          },
+          "initial_state": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Initial State"
+          },
+          "terminal_state": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Terminal State"
+          },
+          "termination_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Termination Reason"
+          },
+          "measurements": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Measurements"
+          },
+          "constraint_violations": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Constraint Violations"
+          },
+          "events": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Events"
+          },
+          "branch_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Branch Ids"
+          },
+          "selected_branch_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Selected Branch Id"
+          },
+          "replay_path": {
+            "type": "string",
+            "title": "Replay Path"
+          },
+          "export_path": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Export Path"
+          },
+          "validation_status": {
+            "type": "string",
+            "enum": [
+              "verified",
+              "failed",
+              "incomplete"
+            ],
+            "title": "Validation Status"
+          },
+          "stale": {
+            "type": "boolean",
+            "title": "Stale"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "experiment_id",
+          "program_id",
+          "robot_id",
+          "environment_id",
+          "task_id",
+          "world_id",
+          "world_revision",
+          "controller_version",
+          "solver_configuration",
+          "random_seed",
+          "parameters",
+          "initial_state",
+          "terminal_state",
+          "termination_reason",
+          "measurements",
+          "constraint_violations",
+          "events",
+          "branch_ids",
+          "selected_branch_id",
+          "replay_path",
+          "export_path",
+          "validation_status",
+          "stale"
+        ],
+        "title": "RoboticsExperimentReport"
+      },
+      "RoboticsProgram": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "robotic_arms",
+              "humanoids"
+            ],
+            "title": "Category"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "robot_type": {
+            "type": "string",
+            "title": "Robot Type"
+          },
+          "environment_id": {
+            "type": "string",
+            "title": "Environment Id"
+          },
+          "task_id": {
+            "type": "string",
+            "title": "Task Id"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "executable",
+              "not_implemented"
+            ],
+            "title": "Status"
+          },
+          "scope": {
+            "type": "string",
+            "title": "Scope"
+          },
+          "missing_capability": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Missing Capability"
+          },
+          "default_configuration": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ExperimentConfiguration"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "category",
+          "name",
+          "robot_type",
+          "environment_id",
+          "task_id",
+          "status",
+          "scope"
+        ],
+        "title": "RoboticsProgram"
+      },
+      "RoboticsProgramCatalog": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "const": "vivacity.v-robotics.catalog/1.0",
+            "title": "Schema Version",
+            "default": "vivacity.v-robotics.catalog/1.0"
+          },
+          "coordinate_system": {
+            "type": "string",
+            "const": "right_handed_z_up",
+            "title": "Coordinate System",
+            "default": "right_handed_z_up"
+          },
+          "units": {
+            "type": "string",
+            "const": "SI",
+            "title": "Units",
+            "default": "SI"
+          },
+          "programs": {
+            "items": {
+              "$ref": "#/components/schemas/RoboticsProgram"
+            },
+            "type": "array",
+            "title": "Programs"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "programs"
+        ],
+        "title": "RoboticsProgramCatalog"
       },
       "RunOverrides": {
         "properties": {

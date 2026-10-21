@@ -12,6 +12,7 @@ from .imports import ImportService,MAX_UPLOAD
 from pathlib import Path
 from starlette.requests import HTTPConnection
 from .templates import TemplateSelection, TemplateCatalog, catalog, resolve
+from .v_robotics import RoboticsProgramCatalog, RoboticsExperimentReport, catalog as robotics_catalog, experiment_report as robotics_report
 
 
 def create_app(database=None):
@@ -104,6 +105,16 @@ def create_app(database=None):
     @app.post('/v1/templates/resolve', response_model=CreateWorld)
     def resolve_template(selection: TemplateSelection):
         return resolve(selection)
+
+    @app.get('/v1/robotics/programs', response_model=RoboticsProgramCatalog)
+    def robotics_programs():
+        return robotics_catalog()
+
+    @app.get('/v1/robotics/experiments/{experiment_id}/report', response_model=RoboticsExperimentReport)
+    def robotics_experiment_report(experiment_id:str, x_session_token:Annotated[str | None,Header()]=None):
+        world_id=app.state.runtime.get_experiment(experiment_id)['world_id']
+        app.state.runtime.supervisor.authorize_world(world_id,x_session_token)
+        return robotics_report(app.state.runtime,experiment_id)
 
     SessionToken=Annotated[str,Header(min_length=32,max_length=128,pattern=r'^[A-Za-z0-9_-]+$')]
 

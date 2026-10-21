@@ -162,6 +162,9 @@ class ModelPickupBackend(PickPlaceBackend):
             ET.SubElement(sensors,'contact',name=name,data='found force',reduce='maxforce',**attributes)
         from .scene import append_object_environment_sensors
         append_object_environment_sensors(root,sensors)
+        if config.get('program_id') == 'precision_assembly':
+            for index,actuator in enumerate(root.find('actuator')):
+                ET.SubElement(sensors,'actuatorfrc',name=f'v_actuator_effort_{index}',actuator=actuator.get('name'))
         if self.identifier=='dual_arm':
             ET.SubElement(sensors,'contact',name='secondary_robot_contacts',subtree1='secondary_link0',data='found force',reduce='maxforce')
             ET.SubElement(sensors,'contact',name='secondary_mount_contacts',body1='secondary_link0',geom2='table',data='found force',reduce='maxforce')
@@ -189,7 +192,8 @@ class ModelPickupBackend(PickPlaceBackend):
         actions,seconds=super().candidates(world,count,iterations)
         for action in actions:
             for stage in action.get('stages',[]):
-                stage['duration_s']=max(stage['duration_s'],stage_distance(stage)/.2)
+                speed=action.get('speed_rad_s') if world.config.get('program_id')=='precision_assembly' else .2
+                stage['duration_s']=max(stage['duration_s'],stage_distance(stage)/speed)
         return actions,seconds
 
     def contacts(self,world):
@@ -207,7 +211,7 @@ class ModelPickupBackend(PickPlaceBackend):
             names=[m.body(i).name or 'world' for i in bodies]
             if 'link0' in names and 'table' in geoms:continue
             if 'cube' in geoms and any(n in ('left_finger','right_finger') for n in names):continue
-            if 'cube' in geoms and any(n in ('obstacle_geom','ground') or n.startswith('environment_') for n in geoms):
+            if 'cube' in geoms and any(n in ('obstacle_geom','ground') or n.startswith(('environment_','task_fixture_source_tray_')) for n in geoms):
                 if 'table' not in geoms:violations.append({'bodies':names,'geoms':geoms,'penetration_m':float(-contact.dist),'category':'object_environment_collision'})
             if any(i in robot_ids for i in bodies):violations.append({'bodies':names,'geoms':geoms,'penetration_m':float(-contact.dist),
                 'category':'self_collision' if all(i in robot_ids for i in bodies) else 'environment_collision'})

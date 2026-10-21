@@ -119,7 +119,7 @@ class PickPlaceBackend(RoboticsBackend):
             if contact.dist > 0:
                 continue
             geoms = [mj.mj_id2name(m, mj.mjtObj.mjOBJ_GEOM, int(g)) for g in (contact.geom1, contact.geom2)]
-            if 'cube' in geoms and any(g in ('obstacle_geom', 'ground') or (g or '').startswith('environment_') for g in geoms):
+            if 'cube' in geoms and any(g in ('obstacle_geom', 'ground') or (g or '').startswith(('environment_','task_fixture_source_tray_')) for g in geoms):
                 bodies = [mj.mj_id2name(m, mj.mjtObj.mjOBJ_BODY, int(m.geom_bodyid[g])) or 'world'
                           for g in (contact.geom1, contact.geom2)]
                 violations.append({'bodies': bodies, 'geoms': geoms,
@@ -181,10 +181,12 @@ class PickPlaceBackend(RoboticsBackend):
                           if key != 'visible_samples_xy_m'} if sensing else None
         dest = np.asarray(world.config['placement_position'])
         rng = np.random.default_rng(world.seed)
+        assembly = world.config.get('assembly') if world.config.get('program_id') == 'precision_assembly' else None
         for index in range(count):
             height = .19 if index == 0 else float(rng.uniform(.17, .25))
-            speed = .32 if index == 0 else float(rng.uniform(.27, .36))
-            yaw = (index % 8) * np.pi / 4
+            speed = (float(assembly['arm_speed_rad_s']) if index == 0 else
+                     float(np.clip(assembly['arm_speed_rad_s'] * rng.uniform(.85, 1.15), .12, .5))) if assembly else (.32 if index == 0 else float(rng.uniform(.27, .36)))
+            yaw = (float(assembly['grasp_yaw_rad']) if assembly else 0.) + (index % 8) * np.pi / 4
             orientation = Rotation.from_euler('z', yaw).as_matrix() @ DOWN
             half_sizes = world.config.get('cube_half_sizes') or [world.config.get('cube_half_size', .025)] * 3
             grasp_z = .038 + (half_sizes[2] - .025)
@@ -284,7 +286,9 @@ class PickPlaceBackend(RoboticsBackend):
         for i in range(total):
             if settings.get('checkpoint') and not settings['checkpoint']():raise InterruptedError('cancelled while generating candidates')
             action=deepcopy(templates[i%len(templates)])
-            speed=float(rng.uniform(*getattr(self,'search_speed_bounds',(.27,.36))));action['speed_rad_s']=speed;action['candidate_index']=i
+            assembly=world.config.get('assembly') if world.config.get('program_id')=='precision_assembly' else None
+            speed_bounds=(max(.12,assembly['arm_speed_rad_s']*.85),min(.5,assembly['arm_speed_rad_s']*1.15)) if assembly else getattr(self,'search_speed_bounds',(.27,.36))
+            speed=float(rng.uniform(*speed_bounds));action['speed_rad_s']=speed;action['candidate_index']=i
             action['lift_template_index']=i%len(templates)
             for stage in action['stages']:
                 if stage['duration_s']:
@@ -342,6 +346,7 @@ class PickPlaceBackend(RoboticsBackend):
         start_time = float(d.time); trace = [self.observe(world) | {'phase': 'initializing'}]
         failure = None; violations = []; steps = 0; milestones = []; retention = True; lifted = False
         max_height = float(d.body('target').xpos[2]); max_tracking = 0.;max_linear_tracking=0.
+        peak_effort={m.actuator(i).name:0. for i in range(m.nu)} if world.config.get('program_id')=='precision_assembly' else {}
         if not world.action['planning_feasible']:
             failure = 'planning_failure'
         for stage in world.action['stages']:
@@ -356,6 +361,8 @@ class PickPlaceBackend(RoboticsBackend):
                 d.ctrl[:self.arm_dof] = stage_commands(stage,[alpha])[0]
                 d.ctrl[self.arm_dof] = stage['gripper']
                 mj.mj_step(m, d); mj.mj_forward(m, d); steps += 1
+                for index,name in enumerate(peak_effort):
+                    peak_effort[name]=max(peak_effort[name],float(abs(d.actuator_force[index])))
                 angular,linear=self.tracking_errors(world,d.qpos,d.ctrl)
                 max_tracking=max(max_tracking,angular);max_linear_tracking=max(max_linear_tracking,linear)
                 evidence = self.contact_evidence(world)
@@ -397,6 +404,7 @@ class PickPlaceBackend(RoboticsBackend):
         return {'trace': trace, 'failure': failure, 'contact_violations': violations, 'milestones': milestones,
                 'lifted': lifted, 'retained_during_transport': retention and lifted,
                 'max_cube_height_m': max_height, 'max_tracking_error_rad': max_tracking,'max_tracking_error_m':max_linear_tracking,
+                'peak_actuator_scalar': peak_effort,
                 'simulation_steps': steps, 'execution_duration_s': float(d.time-start_time),
                 'physics_wall_seconds': time.perf_counter()-tic}
 
@@ -419,6 +427,7 @@ class PickPlaceBackend(RoboticsBackend):
                 'released': bool(not evidence['bilateral_grasp'] and world.data.ctrl[self.arm_dof] >= 200),
                 'table_supported': evidence['table_support'], 'max_cube_height_m': result['max_cube_height_m'],
                 'max_tracking_error_rad': result['max_tracking_error_rad'],'max_tracking_error_m':result.get('max_tracking_error_m',0.), 'contact_violations': result['contact_violations'],
+                'peak_actuator_scalar': result.get('peak_actuator_scalar',{}),
                 'phase_evidence': result['milestones'], 'execution_duration_s': result['execution_duration_s']}
         from .operation_evaluation import evaluate_operation
         return evaluate_operation(world,evaluation)
