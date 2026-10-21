@@ -42,6 +42,44 @@ test('world library opens from the new homepage and loads a real robotics worksp
  expect(await page.locator('body').innerText()).not.toMatch(/\bMuJoCo\b/i);
 });
 
+test('the simplified lab rail reaches every retained workspace destination without mobile overflow',async({page})=>{
+ await page.emulateMedia({reducedMotion:'reduce'});
+ await page.goto('/laboratory',{waitUntil:'domcontentloaded'});
+ const nav=page.getByRole('navigation',{name:'Workspace navigation'});
+ await expect(nav.getByRole('link')).toHaveCount(3);
+ await expect(nav.getByRole('link',{name:'Lab'})).toHaveAttribute('aria-current','page');
+ await nav.getByRole('link',{name:'Worlds'}).focus();
+ await expect(nav.getByRole('link',{name:'Worlds'})).toBeFocused();
+ await page.keyboard.press('Enter');
+ await expect(page).toHaveURL('/worlds');
+ await expect(page.getByRole('heading',{name:'Environment library'})).toBeVisible({timeout:90_000});
+ await page.getByRole('button',{name:'Enter workspace'}).click();
+ await expect(page).toHaveURL('/workspace');
+ await expect(page.getByRole('heading',{name:'Configure experiment'})).toBeVisible({timeout:90_000});
+ await expect(nav.getByRole('link',{name:'Worlds'})).toHaveAttribute('aria-current','page');
+ await nav.getByRole('link',{name:'Records'}).click();
+ await expect(page).toHaveURL('/experiments');
+ await expect(page.getByRole('heading',{name:'Repeat a test. Compare what happened.'})).toBeVisible();
+ await page.getByRole('link',{name:'Runtime settings'}).click();
+ await expect(page).toHaveURL('/settings');
+ await expect(page.getByRole('heading',{name:'Runtime settings'})).toBeVisible();
+ await nav.getByRole('link',{name:'Lab'}).click();
+ await page.getByRole('button',{name:/Open scientific lab/i}).click();
+ await expect(page).toHaveURL('/discovery');
+ await page.getByRole('link',{name:'Lab',exact:true}).click();
+ await page.getByRole('button',{name:/Open robotics lab/i}).click();
+ await expect(page).toHaveURL('/lab');
+ await expect(page.getByRole('heading',{name:/Build a world/i})).toBeVisible({timeout:90_000});
+ const shots=path.resolve('test-results/lab-navigation');fs.mkdirSync(shots,{recursive:true});
+ await page.screenshot({path:path.join(shots,'desktop.png')});
+ await page.setViewportSize({width:375,height:812});
+ await expect(page.locator('.platform-nav')).toBeVisible();
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+ await page.screenshot({path:path.join(shots,'mobile.png')});
+ const audit=await new AxeBuilder({page}).include('.platform-nav').withTags(['wcag2a','wcag2aa','wcag22aa']).analyze();
+ expect(audit.violations).toEqual([]);
+});
+
 test('a missing robot asset reports the limitation and preserves recorded measurements',async({page})=>{
  await page.emulateMedia({reducedMotion:'reduce'});
  await page.route('**/vivacity/robot-geometry.json',route=>route.abort());

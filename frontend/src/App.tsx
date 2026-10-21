@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState, type MouseEvent } from 'react';
 import { ArrowRight, ArrowsClockwise, SlidersHorizontal, Warning, X } from '@phosphor-icons/react';
 import { useRuntime, isBusy } from './useRuntime';
 import { API, BACKEND, api, errorMessage } from './api';
@@ -40,6 +40,11 @@ export default function App(){
   const routePage=(path:string):Page=>path==='/laboratory'?'laboratory':path==='/discovery'?'discovery':path==='/lab'?'factory':path==='/workspace'?'workspace':path==='/worlds'?'worlds':path==='/experiments'?'experiments':path==='/settings'?'settings':path==='/import'?'import':'home';
   const [page,setPage]=useState<Page>(()=>routePage(window.location.pathname));
   const navigate=useCallback((next:Page,path:string,guided=false)=>{window.history.pushState({},'',path);setGuidedAutostart(guided);setPage(next);window.scrollTo(0,0);},[]);
+  const navigateFromLink=(event:MouseEvent<HTMLAnchorElement>,next:Page,path:string)=>{
+    if(event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
+    event.preventDefault();
+    if(!rt.mutating)navigate(next,path);
+  };
   useEffect(()=>{const back=()=>{setPage(routePage(window.location.pathname));setGuidedAutostart(new URLSearchParams(window.location.search).get('guided')==='1');};window.addEventListener('popstate',back);return()=>window.removeEventListener('popstate',back);},[]);
   const [inspecting,setInspecting]=useState(false),[inspectSelection,setInspectSelection]=useState<'object'|'robot'|'experiment'>('object');
   const [overlays,setOverlays]=useState<OverlayOptions>(defaultOverlays);
@@ -106,10 +111,15 @@ export default function App(){
 
   return <>{page==='home'?<IsabellaHome enterLab={()=>navigate('laboratory','/laboratory')} openScience={()=>navigate('discovery','/discovery')} openRobotics={()=>navigate('factory','/lab')} openWorlds={()=>navigate('worlds','/worlds')}/>:<>
     <a className="skip-link" href="#workspace">Skip to workspace</a>
-    <header className="site-header platform-nav"><a className="isabella-lab-brand" href="/" aria-label="Isabella Labs home">ISABELLA LABS <small>BY VIVACITY</small></a><nav className="main-nav" aria-label="Workspace navigation">
-      {(['laboratory','factory','worlds','discovery','workspace','experiments'] as const).map(id=><button key={id} aria-pressed={page===id} disabled={rt.mutating} onClick={()=>navigate(id,id==='factory'?'/lab':`/${id}`)}>{({laboratory:'Lab',factory:'Robotics',worlds:'Worlds',discovery:'Science',workspace:'Robot setup',experiments:'Records'} as const)[id]}</button>)}
-      <button className="nav-settings" aria-label="Runtime settings" onClick={()=>navigate('settings','/settings')}><SlidersHorizontal size={18}/></button>
-    </nav></header>
+    <header className="site-header platform-nav">
+      <a className="isabella-lab-brand" href="/" aria-label="Isabella Labs home">ISABELLA LABS <small>BY VIVACITY</small></a>
+      <nav className="main-nav" aria-label="Workspace navigation">
+        <a href="/laboratory" aria-current={['laboratory','factory','discovery'].includes(page)?'page':undefined} aria-disabled={rt.mutating} onClick={event=>navigateFromLink(event,'laboratory','/laboratory')}>Lab</a>
+        <a href="/worlds" aria-current={['worlds','workspace','import'].includes(page)?'page':undefined} aria-disabled={rt.mutating} onClick={event=>navigateFromLink(event,'worlds','/worlds')}>Worlds</a>
+        <a href="/experiments" aria-current={['experiments','results'].includes(page)?'page':undefined} aria-disabled={rt.mutating} onClick={event=>navigateFromLink(event,'experiments','/experiments')}>Records</a>
+      </nav>
+      <a className="nav-settings" href="/settings" aria-label="Runtime settings" aria-current={page==='settings'?'page':undefined} aria-disabled={rt.mutating} onClick={event=>navigateFromLink(event,'settings','/settings')}><SlidersHorizontal size={18}/></a>
+    </header>
     <main className="platform-main" id="workspace" tabIndex={-1}>
       {page==='laboratory'?<Suspense fallback={<p role="status">Opening the laboratory…</p>}><LabIndex openScience={()=>navigate('discovery','/discovery')} openRobotics={()=>navigate('factory','/lab')} openWorlds={()=>navigate('worlds','/worlds')}/></Suspense>:
        page==='discovery'?<Suspense fallback={<p role="status">Preparing numerical laboratory…</p>}><ScienceLab/></Suspense>:

@@ -22,7 +22,9 @@ test('Isabella homepage leads with robotics and opens both working disciplines',
  await expect(page).toHaveURL('/discovery');
  await expect(page.getByRole('heading',{name:/The Invisible Planet/i})).toBeVisible();
  expect(await page.locator('body').innerText()).not.toMatch(/\bMuJoCo\b/i);
- await page.getByRole('button',{name:'Robotics',exact:true}).click();
+ await page.getByRole('link',{name:'Lab',exact:true}).click();
+ await expect(page).toHaveURL('/laboratory');
+ await page.getByRole('button',{name:/Open robotics lab/i}).click();
  await expect(page).toHaveURL('/lab');
  await expect(page.getByRole('heading',{name:/Build a world/i})).toBeVisible();
  expect(await page.locator('body').innerText()).not.toMatch(/\bMuJoCo\b/i);
