@@ -10,3 +10,10 @@ It is removed from view after the interactive scene finishes loading. It is
 presentation artwork, never a live experiment frame or evidence returned by the
 runtime. The homepage's plotted positions and delivery counts come from the
 recorded fixture; the laboratory's results come from new backend runs.
+
+`isabella-impossible-landscape.mp4` and `isabella-impossible-portrait.mp4`
+are authored motion-design films. They use licensed MuJoCo Menagerie visual
+geometry and a synthesized soundtrack. Their motions and branching imagery
+are not physics experiment results. Model licenses are in `cinematic-licenses/`.
+The source revisions, rebuild process, and limits are in
+`docs/ISABELLA_CINEMATIC.md` in this repository.

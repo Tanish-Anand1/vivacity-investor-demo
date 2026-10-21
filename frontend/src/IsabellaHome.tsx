@@ -7,7 +7,7 @@ const FactoryView=lazy(()=>import('./FactoryView'));
 type RobotTrial={condition:string;status:string;failure_kind:string|null;gripper_force_scale:number;metrics:{cartons_sorted:number;simulation_steps:number};frames:FactoryVisualState[]};
 const robotics=recordedRobotics.trials as unknown as RobotTrial[];
 
-export default function IsabellaHome({enterLab,openScience,openRobotics,openWorlds}:{enterLab:()=>void;openScience:()=>void;openRobotics:()=>void;openWorlds:()=>void}){
+export default function IsabellaHome({enterLab,openScience,openRobotics,openWorlds,deferScene=false}:{enterLab:()=>void;openScience:()=>void;openRobotics:()=>void;openWorlds:()=>void;deferScene?:boolean}){
  const [condition,setCondition]=useState(1);
  const [sceneReady,setSceneReady]=useState(false);
  const [sceneError,setSceneError]=useState<string|null>(null);
@@ -28,7 +28,7 @@ export default function IsabellaHome({enterLab,openScience,openRobotics,openWorl
      <div className="isabella-hero-actions"><button className="isabella-primary" onClick={enterLab}>ENTER THE LAB <span aria-hidden="true">↗</span></button><button className="isabella-secondary" onClick={openRobotics}>OPEN ROBOTICS EXPERIMENT <span aria-hidden="true">↗</span></button></div>
     </div>
     <div className="isabella-hero-scene" aria-label="Recorded robotic handling scene">
-     <Suspense fallback={<div className="isabella-scene-fallback" role="status">Loading recorded workcell…</div>}><FactoryView frame={trial.frames.at(-1)??trial.frames[0]} mode="fidelity" status="recorded" onVisualReady={()=>setSceneReady(true)} onVisualError={setSceneError}/></Suspense>
+     {!deferScene&&<Suspense fallback={<div className="isabella-scene-fallback" role="status">Loading recorded workcell…</div>}><FactoryView frame={trial.frames.at(-1)??trial.frames[0]} mode="fidelity" status="recorded" onVisualReady={()=>setSceneReady(true)} onVisualError={setSceneError}/></Suspense>}
      <img className={`isabella-scene-poster${sceneReady?' isabella-scene-poster-ready':''}`} src="/vivacity/isabella-scene-poster.webp" alt="" aria-hidden="true" fetchPriority="high"/>
      <div className="isabella-scene-caption"><span>RECORDED SIMULATION</span><span>ROBOTIC HANDLING / WORLD 01</span></div>
     </div>

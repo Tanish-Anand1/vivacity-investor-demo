@@ -1,18 +1,34 @@
-import {test,expect,type CDPSession,type Page} from '@playwright/test';
+import {test,expect} from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
 
 const apiBase=process.env.FACTORY_E2E_API_BASE_URL??'http://127.0.0.1:8002';
 
-async function captureOpeningPhase(page:Page,cdp:CDPSession,timeMs:number,file:string){
- await page.evaluate(time=>{
-  const opening=document.querySelector('.lab-opening');
-  for(const animation of opening?.getAnimations({subtree:true})??[]){animation.pause();animation.currentTime=time;}
- },timeMs);
- await page.evaluate(()=>new Promise<void>(resolve=>requestAnimationFrame(()=>resolve())));
- const screenshot=await cdp.send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});
- fs.writeFileSync(file,Buffer.from(screenshot.data,'base64'));
-}
+test('warmed opening media plays the complete 7.5-second film',async({page})=>{
+ await page.emulateMedia({reducedMotion:'no-preference'});
+ await page.addInitScript(()=>Object.defineProperty(navigator,'connection',{configurable:true,value:{saveData:true,effectiveType:'4g'}}));
+ const media=fs.readFileSync(path.resolve('public/vivacity/isabella-impossible-landscape-lite.mp4'));
+ await page.route('**/vivacity/isabella-impossible-landscape-lite.mp4',route=>route.fulfill({body:media,contentType:'video/mp4'}));
+ await page.addInitScript(()=>{
+  let started:number|undefined;
+  const result=window as typeof window&{__uncapturedOpeningMs?:number};
+  const observer=new MutationObserver(()=>{
+   const present=Boolean(document.querySelector('.lab-opening'));
+   if(present&&started===undefined)started=performance.now();
+   if(!present&&started!==undefined){result.__uncapturedOpeningMs=performance.now()-started;observer.disconnect();}
+  });
+  observer.observe(document,{childList:true,subtree:true});
+ });
+ await page.goto('/',{waitUntil:'commit'});
+ const opening=page.getByRole('dialog',{name:'Isabella Labs introduction'});
+ await expect(opening).toBeVisible();
+ await expect(opening).toHaveCount(0,{timeout:10_000});
+ const elapsed=await page.evaluate(()=>(window as typeof window&{__uncapturedOpeningMs?:number}).__uncapturedOpeningMs);
+ console.log('ISABELLA_UNCAPTURED_DURATION_MS',elapsed);
+ expect(elapsed).toBeGreaterThanOrEqual(7300);
+ expect(elapsed).toBeLessThan(8500);
+ await expect(page.locator('#isabella-main')).toBeFocused();
+});
 
 test('the 7.5-second robotics opening reveals the homepage without starting physics',async({page})=>{
  await page.emulateMedia({reducedMotion:'no-preference'});
@@ -28,15 +44,28 @@ test('the 7.5-second robotics opening reveals the homepage without starting phys
  });
  let starts=0;
  page.on('request',request=>{if(request.method()!=='POST')return;const path=new URL(request.url()).pathname;if(/\/v1\/factory\/cells\/[^/]+\/(runs|benchmarks)$/.test(path)||/\/v1\/worlds\/[^/]+\/experiments$/.test(path)||path==='/v1/sessions')starts++;});
- await page.goto('/',{waitUntil:'domcontentloaded'});
+ await page.goto('/',{waitUntil:'commit'});
  const opening=page.getByRole('dialog',{name:'Isabella Labs introduction'});
  await expect(opening).toBeVisible();
- expect(await page.locator('.opening-arm').count()).toBe(3);
- expect(await page.locator('.opening-humanoid').count()).toBe(2);
+ const film=page.locator('.lab-opening-video');
+ await expect(film).toHaveAttribute('src',/\/vivacity\/isabella-impossible-landscape(?:-lite)?\.mp4/,{timeout:5000});
+ await expect.poll(()=>film.evaluate((element:HTMLVideoElement)=>element.readyState)).toBeGreaterThanOrEqual(3);
+ expect(await film.evaluate((element:HTMLVideoElement)=>element.duration)).toBeCloseTo(7.5,2);
+ expect(await film.evaluate((element:HTMLVideoElement)=>element.muted)).toBe(true);
  const shots=path.resolve('test-results/isabella-opening');fs.mkdirSync(shots,{recursive:true});
- await expect.poll(()=>page.locator('.lab-opening-scene img').evaluate((image:HTMLImageElement)=>image.naturalWidth)).toBeGreaterThan(0);
+ for(const [time,label] of [[1.5,'arms'],[3.5,'humanoids']] as const){
+  await expect.poll(()=>film.evaluate((element:HTMLVideoElement)=>element.currentTime)).toBeGreaterThan(time);
+  await page.screenshot({path:path.join(shots,`desktop-${label}.png`)});
+ }
+ const playback=await film.evaluate((element:HTMLVideoElement)=>{
+  const quality=element.getVideoPlaybackQuality();
+  return {time:element.currentTime,totalVideoFrames:quality.totalVideoFrames,droppedVideoFrames:quality.droppedVideoFrames};
+ });
+ expect(playback.totalVideoFrames).toBeGreaterThan(90);
+ console.log('ISABELLA_FILM_PLAYBACK',JSON.stringify(playback));
  await expect(opening).toHaveCount(0,{timeout:9000});
  const elapsed=await page.evaluate(()=>(window as typeof window&{__openingDurationMs?:number}).__openingDurationMs);
+ console.log('ISABELLA_OPENING_DURATION_MS',elapsed);
  expect(elapsed).toBeDefined();
  expect(elapsed).toBeGreaterThanOrEqual(7300);
  expect(elapsed).toBeLessThan(9000);
@@ -48,33 +77,46 @@ test('the 7.5-second robotics opening reveals the homepage without starting phys
  await page.evaluate(()=>localStorage.setItem('vivacity:isabella-intro-complete','1'));
  await page.reload({waitUntil:'commit'});
  await expect(opening).toBeVisible();
- const cdp=await page.context().newCDPSession(page);
- await expect.poll(()=>page.locator('.lab-opening-scene img').evaluate((image:HTMLImageElement)=>image.naturalWidth)).toBeGreaterThan(0);
- for(const [time,label,selector] of [[900,'world','.lab-opening-chapter-world'],[3000,'change','.lab-opening-chapter-change'],[5100,'holds','.lab-opening-chapter-holds'],[6500,'identity','.lab-opening-brand']] as const){
-  await captureOpeningPhase(page,cdp,time,path.join(shots,`desktop-${label}.png`));
-  await expect(page.locator(selector)).toHaveCSS('opacity','1');
- }
+ await expect(page.getByRole('button',{name:'Sound off'})).toBeVisible();
+ await page.getByRole('button',{name:'Sound off'}).click();
+ await expect(page.getByRole('button',{name:'Sound on'})).toHaveAttribute('aria-pressed','true');
+ await expect.poll(()=>film.evaluate((element:HTMLVideoElement)=>element.muted)).toBe(false);
  await page.keyboard.press('Tab');
  await expect(page.getByRole('button',{name:/Skip intro/i})).toBeFocused();
+ await page.keyboard.press('Tab');
+ await expect(page.getByRole('button',{name:'Sound on'})).toBeFocused();
+ await film.evaluate(async(element:HTMLVideoElement)=>{
+  element.pause();
+  const rendered=new Promise<void>((resolve,reject)=>{
+   const timeout=window.setTimeout(()=>reject(new Error('Final film frame did not decode')),5000);
+   const check:VideoFrameRequestCallback=(_,metadata)=>{
+    if(metadata.mediaTime>=7.2){window.clearTimeout(timeout);resolve();}
+    else element.requestVideoFrameCallback(check);
+   };
+   element.requestVideoFrameCallback(check);
+  });
+  element.currentTime=7.22;
+  await rendered;
+ });
+ await page.screenshot({path:path.join(shots,'desktop-transition.png')});
  await page.keyboard.press('Escape');
  await expect(opening).toHaveCount(0);
  await expect(page.locator('#isabella-main')).toBeFocused();
  expect(starts).toBe(0);
 });
 
-test('the opening stays legible on a narrow screen',async({page})=>{
+test('the opening plays on narrow screens and can be skipped',async({page})=>{
  await page.emulateMedia({reducedMotion:'no-preference'});
  await page.setViewportSize({width:390,height:844});
  await page.goto('/',{waitUntil:'commit'});
  const opening=page.getByRole('dialog',{name:'Isabella Labs introduction'});
  await expect(opening).toBeVisible();
- await expect.poll(()=>page.locator('.lab-opening-scene img').evaluate((image:HTMLImageElement)=>image.naturalWidth)).toBeGreaterThan(0);
+ const film=page.locator('.lab-opening-video');
+ await expect(film).toHaveAttribute('src',/\/vivacity\/isabella-impossible-portrait(?:-lite)?\.mp4/,{timeout:5000});
+ await expect.poll(()=>film.evaluate((element:HTMLVideoElement)=>element.readyState)).toBeGreaterThanOrEqual(3);
  const shots=path.resolve('test-results/isabella-opening');fs.mkdirSync(shots,{recursive:true});
- const cdp=await page.context().newCDPSession(page);
- for(const [time,label,selector] of [[900,'world','.lab-opening-chapter-world'],[3000,'change','.lab-opening-chapter-change'],[5100,'holds','.lab-opening-chapter-holds'],[6500,'identity','.lab-opening-brand']] as const){
-  await captureOpeningPhase(page,cdp,time,path.join(shots,`mobile-${label}.png`));
-  await expect(page.locator(selector)).toHaveCSS('opacity','1');
- }
+ await expect.poll(()=>film.evaluate((element:HTMLVideoElement)=>element.currentTime)).toBeGreaterThan(2);
+ await page.screenshot({path:path.join(shots,'mobile-film.png')});
  await expect(page.getByRole('button',{name:/Skip intro/i})).toBeVisible();
  await page.getByRole('button',{name:/Skip intro/i}).click();
  await expect(opening).toHaveCount(0);
@@ -82,11 +124,41 @@ test('the opening stays legible on a narrow screen',async({page})=>{
  await page.setViewportSize({width:320,height:740});
  await page.reload({waitUntil:'commit'});
  await expect(opening).toBeVisible();
- await captureOpeningPhase(page,cdp,6500,path.join(shots,'mobile-small-identity.png'));
- await expect(page.locator('.lab-opening-brand')).toHaveCSS('opacity','1');
- const word=await page.locator('.lab-opening-brand strong').evaluate(element=>({width:element.clientWidth,content:element.scrollWidth}));
- expect(word.content).toBeLessThanOrEqual(word.width);
+ await expect(film).toHaveAttribute('src',/\/vivacity\/isabella-impossible-portrait(?:-lite)?\.mp4/,{timeout:5000});
+ await expect.poll(()=>film.evaluate((element:HTMLVideoElement)=>element.currentTime)).toBeGreaterThan(2);
+ await page.screenshot({path:path.join(shots,'mobile-small-film.png')});
  await page.getByRole('button',{name:/Skip intro/i}).click();
+});
+
+test('intro media failure falls through to the usable homepage',async({page})=>{
+ await page.emulateMedia({reducedMotion:'no-preference'});
+ await page.route('**/vivacity/isabella-impossible-*.mp4',route=>route.abort());
+ await page.goto('/',{waitUntil:'domcontentloaded'});
+ await expect(page.getByRole('dialog',{name:'Isabella Labs introduction'})).toHaveCount(0,{timeout:5000});
+ await expect(page.getByRole('heading',{name:/Let robots fail here first/i})).toBeVisible();
+ await expect(page.locator('#isabella-main')).toBeFocused();
+});
+
+test('a stalled intro download reveals the homepage promptly',async({page})=>{
+ await page.emulateMedia({reducedMotion:'no-preference'});
+ await page.route('**/vivacity/isabella-impossible-*.mp4',async route=>{
+  await new Promise(resolve=>setTimeout(resolve,3500));
+  await route.abort().catch(()=>{});
+ });
+ await page.goto('/',{waitUntil:'commit'});
+ await expect(page.getByRole('dialog',{name:'Isabella Labs introduction'})).toHaveCount(0,{timeout:4500});
+ await expect(page.getByRole('heading',{name:/Let robots fail here first/i})).toBeVisible();
+});
+
+test('data saver receives the smaller rendition',async({page})=>{
+ await page.emulateMedia({reducedMotion:'no-preference'});
+ await page.addInitScript(()=>Object.defineProperty(navigator,'connection',{configurable:true,value:{saveData:true,effectiveType:'4g'}}));
+ await page.goto('/',{waitUntil:'commit'});
+ const film=page.locator('.lab-opening-video');
+ await expect(film).toHaveAttribute('src','/vivacity/isabella-impossible-landscape-lite.mp4',{timeout:5000});
+ await expect.poll(()=>film.evaluate((element:HTMLVideoElement)=>element.currentTime),{timeout:6000}).toBeGreaterThan(0);
+ await page.getByRole('button',{name:/Skip intro/i}).click();
+ await expect(page.locator('#isabella-main')).toBeFocused();
 });
 
 test('homepage starts a real failure and six matched MuJoCo trials, then Research replays a saved run',async({page,request})=>{
