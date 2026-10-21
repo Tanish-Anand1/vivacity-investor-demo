@@ -1,4 +1,58 @@
-# Final Factory discovery release — 2026-10-14
+# Isabella Labs scientific laboratory release — 2026-10-21
+
+The current working checkout makes Isabella Labs a science and experimentation
+lab by Vivacity. The science-led homepage shows explicitly recorded SciPy
+orbital evidence. `/laboratory` offers two executable disciplines:
+`/discovery` creates a restricted 2D gravitational observation world and fits
+two competing SciPy hypotheses; `/lab` preserves the MuJoCo Factory case.
+No experiment starts on page load. Both use the versioned world, branch,
+evaluation, replay, commit/reset and persistence contract. An environment
+change marks old results stale. The opening remains 7.5 seconds with reduced
+motion and keyboard escape paths.
+
+Actual local checks: full Pytest **310 passed, 1 skipped, 1 warning** in
+1,543.94 s; focused API/science **27 passed, 1 warning** in 91.73 s;
+frontend unit suites **5 template, 4 Factory settings, 19 API passed**;
+TypeScript/Vite production build passed; final Chromium E2E **12 passed**
+in 3.5 minutes. The browser suite executed a real six-trial MuJoCo comparison
+and both real SciPy hypothesis fits, plus stale-state, replay, export,
+commit/reset, mobile, opening and expired-storage recovery paths.
+
+The new Render Free backend at
+`https://isabella-labs-runtime.onrender.com` deployed private source
+`4b45d9e` successfully. Public health returned HTTP 200 and advertised
+MuJoCo 3.15.0, SciPy 1.18.1 and cloth 3.15.0. Live HTTP/WSS science jobs
+returned two branches and six events each; a changed world invalidated the
+old fit. A live MuJoCo diagnostic executed 50 steps, reported an honest
+timeout, and replayed the same trace. The public Factory script completed one
+physical delivery (17,080 steps) and one weak-grip failure (4,636 steps), with
+camera detection, pause/resume, replay, import/export, PDF and ZIP report
+checks. Linux backend CI run `39520415915` passed all three shards. Vercel
+deployment `dpl_HkC5AAawBkRtuo2ZcuGGnHcQ8rQZ` was READY and aliased to
+`https://demo.tryvivacity.com/`; all six direct route/API checks returned
+HTTP 200. Seven public browser tests passed in 1.1 minutes, including the
+real SciPy visitor journey. A separate public Factory Chromium suite passed
+**3/3 tests in 13.1 minutes**. Its six independently restored MuJoCo trials
+measured a **706.1039-second** backend batch, with training baseline 0/2,
+candidate 2/2, held-out baseline 0/1, candidate 1/1, and native step counts
+4,147, 17,080, 4,147, 17,080, 4,149, 17,088. Replay and export passed.
+The recorded SciPy source-label correction was redeployed as Vercel
+`dpl_iquVohZXZzFFsczTw1PUYeNf7hxC`, READY at the same alias. Six direct
+site/API checks again returned HTTP 200; a targeted public Chromium homepage
+test passed. Final live visual inspection covered homepage, lab selector,
+and idle discovery controls. The production browser console had only the
+known non-fatal Three.js Clock deprecation warning.
+
+Limits: the science case is a synthetic, nondimensional 2D Newtonian model
+with a stationary declared perturber, not a real astronomical discovery.
+Local uncertainty is a linearized estimate, not a Bayesian posterior.
+Render Free can spin down and has ephemeral SQLite; always-on service and
+durable user history are not provided. The broad robotics catalog still has
+capability-dependent entries; hardware validation and arbitrary scientific
+world generation are incomplete. A homepage recording is labelled as saved
+evidence and never substitutes for a fresh experiment.
+
+# Historical Factory discovery release — 2026-10-14
 
 The current public build is https://demo.tryvivacity.com/ (Vercel deployment
 `dpl_3NVSBD53rJK3fznForaNu8ic9Axz`). Its `/`, `/runtime/health` and

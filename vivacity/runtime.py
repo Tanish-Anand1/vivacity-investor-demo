@@ -10,6 +10,7 @@ import uuid
 from .agent import DeterministicPolicy, HostedPolicy
 from .pick_place import RobotAdapter
 from .cloth import ClothBackend
+from .science import ScienceBackend
 from .storage import Store, encode
 from .control import PauseControl
 
@@ -47,7 +48,7 @@ class Runtime:
         from pathlib import Path
         from .imports import ImportService
         self.imports = ImportService(Path(database).parent / 'imports')
-        self.backends = {'mujoco': RobotAdapter(), 'cloth':ClothBackend()}
+        self.backends = {'mujoco': RobotAdapter(), 'scipy': ScienceBackend(), 'cloth':ClothBackend()}
         self.lock = threading.RLock()
         self.executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix='vivacity-simulation')
         self.capacity = threading.BoundedSemaphore(8)
@@ -86,7 +87,7 @@ class Runtime:
     def create_world(self, request):
         tic = time.perf_counter()
         if request.backend not in self.backends:
-            raise ValueError('This simulation backend has been retired.')
+            raise ValueError('unsupported simulation backend')
         self.validate_import_config(request.config)
         backend = self.backends[request.backend]
         instance = backend.create_world(request.config.model_dump(), request.seed)
@@ -99,7 +100,7 @@ class Runtime:
     def get_world(self, identifier):
         world = self.store.get('worlds', identifier)
         if world['backend'] not in self.backends:
-            raise ValueError('This simulation backend has been retired. Create a robotics world.')
+            raise ValueError('unsupported simulation backend')
         return world
 
     def observe(self, identifier):
@@ -508,10 +509,10 @@ class Runtime:
             return w
 
     def environment(self, world_id, config):
-        from .schemas import RoboticsConfig, ClothConfig
+        from .schemas import RoboticsConfig, ScienceConfig, ClothConfig
         with self.lock, self.store.connect() as db:
             w = self.store.get('worlds', world_id, db)
-            expected = {'mujoco':RoboticsConfig,'cloth':ClothConfig}[w['backend']]
+            expected = {'mujoco':RoboticsConfig,'scipy':ScienceConfig,'cloth':ClothConfig}[w['backend']]
             if not isinstance(config, expected):
                 raise ValueError('config does not match world backend')
             self.validate_import_config(config)
@@ -536,5 +537,5 @@ class Runtime:
             raise Conflict('branch does not belong to this experiment')
         state=b['initial_state']
         completed=next((ev['details'].get('timestamp_unix_s') for ev in self.store.events(eid) if ev['kind']=='branch_completed' and ev['details'].get('branch_id')==bid),None)
-        world_type = 'physical_pick_and_place' if e['backend']=='mujoco' and e['config'].get('task')=='pick_place' else {'mujoco':'object_pregrasp','cloth':'constrained_single_fold'}[e['backend']]
+        world_type = 'physical_pick_and_place' if e['backend']=='mujoco' and e['config'].get('task')=='pick_place' else {'mujoco':'object_pregrasp','scipy':'invisible_planet','cloth':'constrained_single_fold'}[e['backend']]
         return {'schema_version':'vivacity.branch/1.0','experiment_id':eid,'branch_id':bid,'world_type':world_type,'simulation_backend':'mujoco' if e['backend']=='cloth' else e['backend'],'simulator_version':state['version'],'initial_configuration':deepcopy(e['config']),'initial_state_reference':b['parent_state_reference'],'state_encoding':'JSON serialization of mjSTATE_INTEGRATION, not a native binary .mjb file' if e['backend'] in ('mujoco','cloth') else 'JSON numerical observations and fitted-model state','initial_state':state,'final_state':b['final_state'],'action':b['action'],'recorded_frames':b['trace'],'evaluation':b['evaluation'],'constraint_violations':b['evaluation'].get('contact_violations',[]),'success':b['evaluation']['success'],'seed':state['seed'],'configuration_sha256':hashlib.sha256(encode(e['config']).encode()).hexdigest(),'model_hash':state.get('model_hash'),'timestamps':{'submitted_unix_s':e['submitted_at'],'branch_completed_unix_s':completed},'performance':b['performance']}

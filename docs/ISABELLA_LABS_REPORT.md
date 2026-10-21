@@ -1,3 +1,102 @@
+# Isabella Labs by Vivacity — scientific laboratory release
+
+Date: 2026-10-21. This section describes the deployed science-led redesign.
+The older Factory launch record follows below as historical context.
+
+Isabella Labs now opens as a science and experimentation laboratory by
+Vivacity. The homepage presents a **recorded** SciPy orbital inference result,
+lets visitors inspect both fitted hypotheses, and links to two executable
+disciplines. `/laboratory` is the discipline index, `/discovery` is the new
+scientific lab, and `/lab` remains the existing MuJoCo Factory experiment.
+No experiment starts on page load. The 7.5-second introduction and broader
+robotics routes remain available.
+
+The scientific path creates synthetic observations by integrating a bounded
+2D Newtonian model with `scipy.integrate.solve_ivp`, fits central-only and
+central-plus-stationary-perturber hypotheses with
+`scipy.optimize.least_squares`, and compares training BIC and held-out RMSE.
+Each fit has its own persisted branch, numerical trace, parameters, local
+uncertainty estimate, status, and replay. A changed observation world marks
+old results stale while preserving their history. Commit and reset use the
+same versioned world contract as robotics. Generator parameters are withheld
+from the fitting adapter and public world state. This model is nondimensional,
+synthetic, and deliberately restricted; it is not a real astronomical claim.
+
+The fixed-seed recorded homepage preview was regenerated from executable SciPy
+code in `scripts/generate-isabella-science-preview.py`. With SciPy 1.18.1,
+70 observations and 49 training samples, central-only held-out RMSE was
+0.3075121 and the additional-influence model's was 0.0010204. This is a
+preview of that saved run, not a fresh simulation triggered by page load.
+The 17,121-byte JSON carries both predictions and observations.
+
+Local verification: the full Python suite finished **310 passed, 1 skipped,
+1 warning in 25m 43s**. A subsequent focused API/science run, including the
+WebSocket assertion added during the full run, finished **27 passed,
+1 warning in 1m 32s**. Frontend unit suites finished **5 template,
+4 Factory-settings, 19 API tests passed**. TypeScript and the Vite production
+bundle passed. The final Chromium suite finished **12 passed in 3.5 minutes**,
+including a real six-trial MuJoCo benchmark, both SciPy fits, changed-world
+invalidation, commit/reset, replay/export, expired-storage recovery, mobile
+reflow, the timed opening and a homepage axe scan with no serious or critical
+violations. The benchmark recorded 0/2 versus 2/2 training deliveries and
+0/1 versus 1/1 held-out deliveries; its six physics step counts were 4,148,
+17,083, 4,148, 17,083, 4,148 and 17,088. This is one fixed-seed simulated
+case, not a hardware reliability estimate.
+
+The private runtime source commit `4b45d9e` was deployed to
+<https://isabella-labs-runtime.onrender.com/> on Render Free as service
+`srv-dbc09mbbc2fs73aqkf60`; the dashboard marked its first deploy
+`dep-dbc09mjbc2fs73aqkg20` successful. Public `/health` returned HTTP 200
+with `mujoco 3.15.0`, `scipy 1.18.1`, and `cloth 3.15.0` registered.
+The live science demonstration submitted two backend jobs, each with two
+persisted hypothesis branches and six WebSocket events. Its signal scenario
+selected the extra-influence model after measured held-out RMSEs of
+0.3075120601 versus 0.0010203884; the control scenario selected central-only
+after RMSEs of 0.0039675485 versus 0.0039675485. The prior job became stale
+after a changed observation world. A separate public MuJoCo timeout diagnostic
+recorded 50 real physics steps, eight WebSocket events, and matching replay.
+The public Factory HTTP demonstration then completed a physical delivery
+in **17,080 MuJoCo steps** and an intentionally weak-grip failure in
+**4,636 steps**. Camera detection, pause/resume, replay, export/import,
+PDF and ZIP report generation all passed on the new backend. This was a
+separate run from the six-trial browser comparison.
+
+The initial Vercel production deployment `dpl_HkC5AAawBkRtuo2ZcuGGnHcQ8rQZ`
+was marked READY and aliased to <https://demo.tryvivacity.com/>. A final
+copy correction was promoted as `dpl_iquVohZXZzFFsczTw1PUYeNf7hxC`, also
+READY and aliased to the same URL.
+Direct `/`, `/laboratory`, `/discovery`, `/lab`, `/runtime/health` and
+`/runtime/openapi.json` checks returned HTTP 200. The proxied OpenAPI
+advertises `mujoco`, `scipy`, and `cloth`. Seven public Chromium tests
+passed in 1.1 minutes, including homepage accessibility, the robotic world
+library, the complete scientific journey, mobile layout, and expired-world
+recovery. A visual inspection of the production homepage and discovery lab
+confirmed the intended content and controls. A separate public Chromium
+Factory journey then passed **3/3 tests in 13.1 minutes**. It executed a
+fresh baseline failure and six independently restored MuJoCo trials on the
+new Render host, inspected a completed trial during the run, replayed a saved
+candidate, and exported the comparison. The backend benchmark measured
+**706.1039 seconds** wall time, training baseline **0/2** versus candidate
+**2/2**, and held-out baseline **0/1** versus candidate **1/1**. Native step
+counts were **4,147, 17,080, 4,147, 17,080, 4,149, 17,088**. This verifies
+the specific simulated case; it does not establish population reliability.
+After the final promotion, six direct site/API routes again returned HTTP 200,
+and a targeted public Chromium homepage test passed. The final live homepage,
+lab selector and discovery page were visually inspected; the source label
+renders without an erroneous dollar sign, the scientific lab loads idle,
+and the browser console showed only the known non-fatal Three.js Clock
+deprecation warning.
+
+Render Free explicitly warns that the instance spins down after inactivity,
+possibly delaying a request by 50 seconds or more. SQLite is ephemeral on
+this host. The service is not always-on and does not provide durable history;
+the science UI reports expired saved worlds and permits a fresh start.
+The production homepage also emitted a non-fatal Three.js Clock deprecation
+warning from the retained 3D preview; no browser error was observed in the
+inspected route.
+
+## Historical Factory-first launch record
+
 # Isabella Labs by Vivacity — launch evidence
 
 Date: 2026-10-21. Product URL: <https://demo.tryvivacity.com/>. This report separates the recorded homepage presentation from experiments executed by the public runtime.

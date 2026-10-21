@@ -1,5 +1,5 @@
 export function runtimeEndpoints(production:boolean,configuredBackend:string|undefined,origin:string){
-  const backend=(configuredBackend??(production&&origin.startsWith('https:')?'https://vivacity-runtime.onrender.com':'http://127.0.0.1:8000')).replace(/\/$/,'');
+  const backend=(configuredBackend??(production&&origin.startsWith('https:')?'https://isabella-labs-runtime.onrender.com':'http://127.0.0.1:8000')).replace(/\/$/,'');
   return {http:production?`${origin}/runtime`:backend,backend};
 }
 

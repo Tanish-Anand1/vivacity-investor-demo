@@ -33,18 +33,17 @@ def test_runnable_templates_use_real_mujoco(runtime, world, task):
         assert not any(b['evaluation']['success'] for b in branches)
 
 
-def test_catalog_public_contract_and_retired_discovery(tmp_path):
+def test_catalog_public_contract_and_science_backend(tmp_path):
     with TestClient(create_app(tmp_path/'catalog.sqlite')) as client:
         public = client.get('/v1/templates').json()
         assert public==catalog()
         assert all(len(public[key])==5 for key in ('arms','worlds','tasks'))
         assert [o['id'] for o in public['arms'] if o['status']!='reference']==['panda','ur5e','iiwa','scara','dual_arm']
-        assert set(client.get('/health').json()['backends'])=={'mujoco','cloth'}
-        for endpoint in ('worlds','sessions'):
-            assert client.post('/v1/'+endpoint,json={'backend':'scipy'},headers={'X-Session-Token':'x'*40}).status_code==422
+        assert set(client.get('/health').json()['backends'])=={'mujoco','scipy','cloth'}
+        assert client.post('/v1/worlds',json={'backend':'scipy'}).status_code==201
         spec=client.get('/openapi.json').json()
-        assert 'ScienceConfig' not in spec['components']['schemas']
-        assert spec['components']['schemas']['CreateWorld']['properties']['backend']['enum']==['mujoco','cloth']
+        assert 'ScienceConfig' in spec['components']['schemas']
+        assert spec['components']['schemas']['CreateWorld']['properties']['backend']['enum']==['mujoco','scipy','cloth']
         for body in ({'arm':'missing'},{'task':'missing'},{'arm':'ur5e','task':'cloth_fold','world':'textile'},
                      {'task':'cloth_fold'},{'world':'textile'},{'world':'missing'}):
             response=client.post('/v1/templates/resolve',json=body)

@@ -1,29 +1,35 @@
-# Vivacity robotics runtime
+# Isabella Labs by Vivacity
 
-Current visual release: [VISUAL_RELEASE.md](docs/VISUAL_RELEASE.md) documents
-colored SPZ worlds, embedded GLB resources, the simplified workspace and actual
-release evidence. Earlier reduced-collider preview descriptions are historical.
+Current release evidence: [Isabella Labs report](docs/ISABELLA_LABS_REPORT.md).
+The earlier [robotics visual release](docs/VISUAL_RELEASE.md) documents SPZ
+worlds and embedded GLB resources as a separate, historical launch.
 
-The investor demo is robotics-only. Choose or generate a world, select a real
-robot and a bounded operation, save its conditions, then explicitly Start.
-Loading stays idle. Scientific Discovery remains retired.
+Isabella Labs is Vivacity's science and experimentation lab. Two disciplines
+are executable today: The Invisible Planet, a bounded 2D orbital-inference
+experiment using SciPy, and robotic handling using MuJoCo dynamics. Visitors
+can create worlds, change supported conditions, run independent branches,
+inspect measured outcomes, replay, and export. Other scientific fields are
+not implemented.
 
 The public `/` route opens **Isabella Labs by Vivacity**. A deterministic 7.5-second
-opening gives way to a homepage with a recorded MuJoCo world preview. The opening
+opening gives way to a homepage with recorded SciPy and MuJoCo results. The opening
 is skippable, omitted for reduced-motion visitors, and does not start physics.
-`ENTER THE LAB` opens the idle robotics laboratory; `WATCH AN EXPERIMENT` starts
-a fresh backend baseline after the click. Explore then offers a user-controlled
-six-trial matched-seed comparison. Research exposes the same saved trials, state
-provenance, measured plots, replay and exports. The recorded homepage preview is
-never used as a live experiment result.
+`ENTER THE LAB` opens `/laboratory`, where visitors select a discipline.
+`/discovery` generates new orbital observations and fits competing hypotheses
+after explicit actions. `/lab` opens the idle robotic laboratory; the visitor
+starts the baseline and matched six-trial comparison. Recorded homepage
+examples never populate new experiment results.
+
 Regenerate the opening evidence after changing the model or controller with
 `.\.venv\Scripts\python scripts\generate_lab_opening.py`; the generator asserts
 the measured failure and success before writing the fixture. The audit and
 current acceptance evidence are in [docs/DEMO_AUDIT.md](docs/DEMO_AUDIT.md)
 and [docs/ISABELLA_LABS_REPORT.md](docs/ISABELLA_LABS_REPORT.md).
+Regenerate the orbital preview with
+`.\.venv\Scripts\python scripts\generate-isabella-science-preview.py`.
 
 Public UI: [demo.tryvivacity.com](https://demo.tryvivacity.com/).
-Backend: [API reference](https://vivacity-runtime.onrender.com/docs).
+Backend: [API reference](https://isabella-labs-runtime.onrender.com/docs).
 
 Seven models are implemented: Panda, UR5e, KUKA iiwa 14, Kinova Gen3, xArm7,
 analytical educational SCARA and dual Panda (primary-arm execution). Non-Panda
@@ -34,11 +40,12 @@ rule-based sorting, passive fixture seating, two-body stacking, gravity-assisted
 insertion and actuated-door bay loading. Exact limits and API/setup examples are
 in [docs/WORLD_WORKSPACE_HANDOFF.md](docs/WORLD_WORKSPACE_HANDOFF.md).
 
-OpenAI provides real structured proposals; World Labs generates real 3D meshes.
-Generated/imported meshes use an explicit conservative solid collision proxy
-beside the workbench. They are not accurate full-facility digital twins.
-Provider keys are backend-only environment variables or a host secret file.
-Prebuilt worlds and deterministic experiments work without provider keys.
+Optional OpenAI and World Labs integrations are separate from the two flagship
+experiments and were not exercised in this Isabella release. When configured,
+generated/imported meshes use a conservative solid collision proxy beside the
+workbench; they are not accurate full-facility digital twins. Provider keys
+remain backend-only environment variables or host secret files. The two
+flagship experiments work without provider keys.
 
 The product explains both the application and runtime: automation teams can
 compare actions before a physical trial, inspect failures, change conditions and
@@ -56,7 +63,15 @@ Dragging and condition controls update real configuration and invalidate old
 results. Object dimensions, mass and friction are bounded by the supported
 gripper/workcell. Changed positions can be unreachable or occluded and must fail
 honestly. Cloth uses a pre-attached folding bar and fixed hinge; autonomous garment
-grasp is not implemented. SciPy remains for robotics rotation mathematics.
+grasp is not implemented.
+
+The scientific adapter integrates a restricted nondimensional 2D gravitational
+model with `scipy.integrate.solve_ivp`, generates seeded noisy observations,
+and fits central-only and fixed-perturber hypotheses with
+`scipy.optimize.least_squares`. Only training observations enter the fit.
+Chronological held-out RMSE and training BIC govern model selection. World
+state does not expose the hidden observation-generator mass or central
+parameter. This is model comparison, not discovery of a new physical law.
 
 ## Run
 

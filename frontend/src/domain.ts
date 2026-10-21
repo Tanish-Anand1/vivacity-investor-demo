@@ -1,5 +1,5 @@
 import type { components } from './generated/api';
-export type Backend = 'mujoco' | 'cloth';
+export type Backend = 'mujoco' | 'scipy' | 'cloth';
 export type World = components['schemas']['WorldResponse'];
 export type Experiment = components['schemas']['ExperimentResponse'];
 export type Vec3 = [number, number, number];

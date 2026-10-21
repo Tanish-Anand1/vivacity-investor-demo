@@ -22,6 +22,8 @@ import './engineering.css';
 import './labOpening.css';
 
 const FactoryWorkspace=lazy(()=>import('./FactoryWorkspace'));
+const LabIndex=lazy(()=>import('./LabIndex'));
+const ScienceLab=lazy(()=>import('./ScienceLab'));
 const RobotView=lazy(()=>import('./RobotView'));
 const ClothView=lazy(()=>import('./ClothView'));
 const ImportWorld=lazy(()=>import('./ImportWorld'));
@@ -34,8 +36,8 @@ export default function App(){
   const [guidedAutostart,setGuidedAutostart]=useState(()=>new URLSearchParams(window.location.search).get('guided')==='1');
   const [activeTemplate,setActiveTemplate]=useState<{selection:Selection;backend:Backend;config:Record<string,unknown>;key?:string;name?:string;configurationId?:string}>({selection:DEFAULT_SELECTION,backend:'mujoco',config:defaultWorkcell,key:'curated-warehouse-v1',name:'Franka Panda / Industrial warehouse / Pick and place'});
   const [draft,setDraft]=useState<Configuration>(defaultConfiguration('warehouse'));
-  type Page='home'|'factory'|'workspace'|'worlds'|'experiments'|'results'|'settings'|'import';
-  const routePage=(path:string):Page=>path==='/lab'?'factory':path==='/workspace'?'workspace':path==='/worlds'?'worlds':path==='/experiments'?'experiments':path==='/settings'?'settings':path==='/import'?'import':'home';
+  type Page='home'|'laboratory'|'discovery'|'factory'|'workspace'|'worlds'|'experiments'|'results'|'settings'|'import';
+  const routePage=(path:string):Page=>path==='/laboratory'?'laboratory':path==='/discovery'?'discovery':path==='/lab'?'factory':path==='/workspace'?'workspace':path==='/worlds'?'worlds':path==='/experiments'?'experiments':path==='/settings'?'settings':path==='/import'?'import':'home';
   const [page,setPage]=useState<Page>(()=>routePage(window.location.pathname));
   const navigate=useCallback((next:Page,path:string,guided=false)=>{window.history.pushState({},'',path);setGuidedAutostart(guided);setPage(next);window.scrollTo(0,0);},[]);
   useEffect(()=>{const back=()=>{setPage(routePage(window.location.pathname));setGuidedAutostart(new URLSearchParams(window.location.search).get('guided')==='1');};window.addEventListener('popstate',back);return()=>window.removeEventListener('popstate',back);},[]);
@@ -53,7 +55,7 @@ export default function App(){
     return()=>{active=false;};
   },[page,draft.environment_id,visualWorld]);
   const backend=activeTemplate.backend,cloth=backend==='cloth';
-  const rt=useRuntime(backend,activeTemplate.key??selectionKey(activeTemplate.selection),activeTemplate.config,activeTemplate.configurationId,page!=='factory'&&page!=='home');
+  const rt=useRuntime(backend,activeTemplate.key??selectionKey(activeTemplate.selection),activeTemplate.config,activeTemplate.configurationId,page!=='factory'&&page!=='home'&&page!=='laboratory'&&page!=='discovery');
   const [branchId,setBranchId]=useState<string|null>(null),[editing,setEditing]=useState(false),[downloadError,setDownloadError]=useState<string|null>(null);
   const compatible=rt.world?.backend===backend&&(rt.world.config.robot_model??'panda')===(activeTemplate.config.robot_model??'panda'),branches=compatible?rt.branches:[];
   const ranked=useMemo(()=>{
@@ -102,17 +104,19 @@ export default function App(){
   const chooseWorld=(world:LibraryWorld)=>prepare({...draft,environment_id:world.id,...(world.id==='textile_fixture'?{operation_id:'cloth_fold' as const,gripper_id:'fold_fixture' as const,robot_id:'panda' as const}:draft.operation_id==='cloth_fold'?{operation_id:'pick_place' as const,gripper_id:'panda_parallel' as const}:{})},0);
 
 
-  return <>{page==='home'?<IsabellaHome enterLab={()=>navigate('factory','/lab')} watchExperiment={()=>navigate('factory','/lab?guided=1',true)} openWorlds={()=>navigate('worlds','/worlds')}/>:<>
+  return <>{page==='home'?<IsabellaHome enterLab={()=>navigate('laboratory','/laboratory')} openScience={()=>navigate('discovery','/discovery')} openRobotics={()=>navigate('factory','/lab')} openWorlds={()=>navigate('worlds','/worlds')}/>:<>
     <a className="skip-link" href="#workspace">Skip to workspace</a>
     <header className="site-header platform-nav"><a className="isabella-lab-brand" href="/" aria-label="Isabella Labs home">ISABELLA LABS <small>BY VIVACITY</small></a><nav className="main-nav" aria-label="Workspace navigation">
-      {(['factory','workspace','worlds','experiments'] as const).map(id=><button key={id} aria-pressed={page===id} disabled={rt.mutating} onClick={()=>navigate(id,id==='factory'?'/lab':`/${id}`)}>{id==='factory'?'Laboratory':id[0].toUpperCase()+id.slice(1)}</button>)}
+      {(['laboratory','discovery','factory','workspace','worlds','experiments'] as const).map(id=><button key={id} aria-pressed={page===id} disabled={rt.mutating} onClick={()=>navigate(id,id==='factory'?'/lab':`/${id}`)}>{({laboratory:'Lab',discovery:'Discovery',factory:'Robotics',workspace:'Robot setup',worlds:'Worlds',experiments:'Robot records'} as const)[id]}</button>)}
       <button className="nav-settings" aria-label="Runtime settings" onClick={()=>navigate('settings','/settings')}><SlidersHorizontal size={18}/></button>
     </nav></header>
     <main className="platform-main" id="workspace" tabIndex={-1}>
-      {page==='factory'?<Suspense fallback={<p role="status" className="lab-entry-status">Preparing the physical world…</p>}><FactoryWorkspace startGuided={guidedAutostart}/></Suspense>:
+      {page==='laboratory'?<Suspense fallback={<p role="status">Opening the laboratory…</p>}><LabIndex openScience={()=>navigate('discovery','/discovery')} openRobotics={()=>navigate('factory','/lab')} openWorlds={()=>navigate('worlds','/worlds')}/></Suspense>:
+       page==='discovery'?<Suspense fallback={<p role="status">Preparing numerical laboratory…</p>}><ScienceLab/></Suspense>:
+       page==='factory'?<Suspense fallback={<p role="status" className="lab-entry-status">Preparing the physical world…</p>}><FactoryWorkspace startGuided={guidedAutostart}/></Suspense>:
        page==='worlds'?<Suspense fallback={<p>Loading world library…</p>}><WorldLibrary choose={chooseWorld} nativeImport={async()=>{await rt.stop();navigate('import','/import');}}/></Suspense>:
        page==='experiments'||page==='results'?<Suspense fallback={<p>Loading measured experiment history…</p>}><ExperimentLibrary load={loadConfiguration} current={compatible?rt.experiment:null} currentConfig={(branches[0]?.initial_state.config as Record<string,unknown>|undefined)??config} currentFriction={robotFrame(branches[0]?.trace.at(-1))?.inspection?.object.friction[0]}/></Suspense>:
-       page==='settings'?<section className="library-area"><h1>Runtime settings</h1><p>API: {API}</p><p className="small">Provider keys stay in backend environment variables. World generation availability is shown in Worlds. This demo uses bounded shared compute and browser capabilities; it does not provide production user accounts or guaranteed uptime.</p><a href={`${BACKEND}/docs`} target="_blank" rel="noreferrer">API and schema reference</a></section>:
+       page==='settings'?<section className="library-area"><h1>Runtime settings</h1><p>API: {API}</p><p className="small">Provider keys stay in backend environment variables. Robotics world generation availability is shown in Worlds. Discovery runs bounded SciPy computations. This demo uses shared compute and browser capabilities; it does not provide production user accounts or guaranteed uptime.</p><a href={`${BACKEND}/docs`} target="_blank" rel="noreferrer">API and schema reference</a></section>:
        page==='import'?<><button className="secondary" onClick={()=>navigate('worlds','/worlds')}>Back to world library</button><Suspense fallback={<div className="viewport-loading">Loading import tools…</div>}><ImportWorld/></Suspense></>:<>
         <div className="workspace-heading"><div><h1>Physical experiments</h1><p>Configure a task. Test alternatives. Inspect measured results.</p></div><span className="connection" role="status">{rt.online?'Physics connected':'Connecting to runtime…'}</span></div>
         {preparing&&<p role="status" className="small">Loading the selected physical configuration…</p>}
@@ -156,7 +160,7 @@ export default function App(){
         
       </>}
     </main>
-    <footer className="platform-footer"><span>Viva Physics</span><a href={`${BACKEND}/docs`} target="_blank" rel="noreferrer">API reference <ArrowRight size={14}/></a></footer>
+    <footer className="platform-footer"><span>Vivacity execution runtime</span><a href={`${BACKEND}/docs`} target="_blank" rel="noreferrer">API reference <ArrowRight size={14}/></a></footer>
     </>}
     {showOpening&&page==='home'&&<LabOpening finish={finishOpening}/>}
   </>;

@@ -48,6 +48,7 @@ export const api = {
   state: (id: string) => request<components['schemas']['StateResponse']>(`/v1/worlds/${encodeURIComponent(id)}/state`),
   submit: (id: string, key: string, settings: Dict) => request<Experiment>(`/v1/worlds/${id}/experiments`, json('POST', settings, { 'Idempotency-Key': key })),
   experiment: (id: string) => request<Experiment>(`/v1/experiments/${encodeURIComponent(id)}`),
+  cancel: (id: string) => request<Experiment>(`/v1/experiments/${encodeURIComponent(id)}/cancel`,json('POST')),
   branches: (id: string) => request<Branch[]>(`/v1/experiments/${encodeURIComponent(id)}/branches`),
   events: (id: string, after=0) => request<Event[]>(`/v1/experiments/${encodeURIComponent(id)}/events?after=${after}`),
   download:async(eid:string,bid:string)=>{

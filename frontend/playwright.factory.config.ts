@@ -12,7 +12,7 @@ if(process.platform==='win32'){
 }
 
 export default defineConfig({
- testDir:'./e2e',testMatch:['factory-configurator.spec.ts','lab-journey.spec.ts','isabella-accessibility.spec.ts'],fullyParallel:false,workers:1,
+ testDir:'./e2e',testMatch:['factory-configurator.spec.ts','lab-journey.spec.ts','isabella-accessibility.spec.ts','science-journey.spec.ts'],fullyParallel:false,workers:1,
  timeout:900_000,expect:{timeout:120_000},retries:0,
  reporter:[['list'],['json',{outputFile:'test-results/factory-configurator/report.json'}]],
  outputDir:'test-results/factory-configurator',

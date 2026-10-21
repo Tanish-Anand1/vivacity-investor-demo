@@ -8,7 +8,7 @@
     {"key":"x-vercel-enable-rewrite-caching","value":"0"}
   ]}],
   "rewrites": [
-    {"source":"/runtime/:path*","destination":"https://vivacity-runtime.onrender.com/:path*"},
+    {"source":"/runtime/:path*","destination":"https://isabella-labs-runtime.onrender.com/:path*"},
     {"source":"/((?!vivacity/|runtime/).*)","destination":"/index.html"}
   ]
 }

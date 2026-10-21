@@ -1,5 +1,15 @@
 # Vivacity public uptime monitoring
 
+Current Isabella Labs deployment (2026-10-21): the science/robotics backend is
+`https://isabella-labs-runtime.onrender.com/health`. Its Render deploy
+`dep-dbc09mjbc2fs73aqkg20` succeeded and direct plus Vercel-proxied health
+checks returned HTTP 200. The older UptimeRobot backend monitor listed below
+still targets `vivacity-runtime.onrender.com`; it does **not** monitor the new
+service. No new external monitor was configured in this release. Render Free
+may spin down after inactivity and its SQLite storage is ephemeral; the
+available health checks do not establish always-on service or durable history.
+The older monitoring record follows for provenance.
+
 Verified on 2026-10-12 (Asia/Kolkata).
 
 | Surface | Public URL | UptimeRobot monitor | Check |

@@ -35,6 +35,9 @@ def finish(client, world):
     {'backend': 'cloth', 'config': {'side_length': 0}},
     {'backend': 'mujoco', 'config': {'hidden_mass': 0.1}},
     {'backend': 'cloth', 'config': {'friction': 0}},
+    {'backend': 'scipy', 'config': {'noise_std': -1}},
+    {'backend': 'scipy', 'config': {'samples': 10000}},
+    {'backend': 'scipy', 'config': {'initial_state': [0, 0, 0, 1]}},
 ])
 def test_request_validation(client, body):
     assert client.post('/v1/worlds', json=body).status_code == 422
@@ -71,6 +74,39 @@ def test_api_cloth_journey_events_commit_reset(client):
     reset = client.post(f"/v1/worlds/{w['id']}/reset").json()
     assert reset['state'] == w['initial_state']
     assert client.get(f"/v1/experiments/{e['id']}").json()['stale']
+
+
+def test_api_science_fits_replay_and_environment_invalidation(client):
+    response = client.post('/v1/worlds', json={'backend':'scipy','seed':7,'config':{'hidden_mass':.12}})
+    assert response.status_code == 201
+    world = response.json()
+    assert 'hidden_mass' not in response.text
+    observed = client.get(f"/v1/worlds/{world['id']}/state").json()
+    assert len(observed['observation']['observations']) == 70
+    assert 'hidden_mass' not in str(observed)
+    experiment = finish(client, world)
+    branches = client.get(f"/v1/experiments/{experiment['id']}/branches").json()
+    assert len(branches) == 2
+    assert branches[0]['evaluation']['hypothesis'] == 'central_only'
+    assert branches[1]['evaluation']['hypothesis'] == 'central_plus_fixed_perturber'
+    assert branches[1]['evaluation']['heldout_rmse'] < branches[0]['evaluation']['heldout_rmse']
+    assert experiment['selected_branch_id'] == branches[1]['id']
+    with client.websocket_connect(f"/v1/experiments/{experiment['id']}/events") as ws:
+        kinds = []
+        while True:
+            event = ws.receive_json()
+            kinds.append(event['kind'])
+            if event['kind'] == 'completed':
+                break
+    assert kinds.count('branch_completed') == 2
+    replay = client.get(f"/v1/experiments/{experiment['id']}/replay")
+    assert replay.status_code == 200
+    assert replay.json()['branches'][1]['frames'] == branches[1]['trace']
+    assert 'hidden_mass' not in replay.text
+    changed = client.patch(f"/v1/worlds/{world['id']}/environment",json={'config':{'noise_std':.01,'samples':50}})
+    assert changed.status_code == 200
+    assert changed.json()['revision'] == 1
+    assert client.get(f"/v1/experiments/{experiment['id']}").json()['stale']
 
 
 def test_api_robotics_reposition_and_replan(client):

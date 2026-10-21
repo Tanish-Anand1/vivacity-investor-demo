@@ -16,7 +16,7 @@ test('the 7.5-second opening reveals the homepage without starting physics',asyn
  await expect(opening).toHaveCount(0,{timeout:3000});
  expect(Date.now()-started).toBeGreaterThanOrEqual(7100);
  expect(Date.now()-started).toBeLessThan(9000);
- await expect(page.getByRole('heading',{name:/Explore possible worlds/i})).toBeVisible();
+ await expect(page.getByRole('heading',{name:/Make the unknown testable/i})).toBeVisible();
  await expect(page.locator('#isabella-main')).toBeFocused();
  await expect(page).toHaveURL('/');
  expect(starts).toBe(0);
@@ -29,15 +29,20 @@ test('homepage starts a real failure and six matched MuJoCo trials, then Researc
  test.setTimeout(process.env.FACTORY_E2E_EXTERNAL==='1'?1_800_000:900_000);
  await page.emulateMedia({reducedMotion:'reduce'});
  await page.goto('/',{waitUntil:'domcontentloaded'});
- await expect(page.getByRole('heading',{name:/Explore possible worlds/i})).toBeVisible();
+ await expect(page.getByRole('heading',{name:/Make the unknown testable/i})).toBeVisible();
  await page.locator('.isabella-primary').click();
+ await expect(page).toHaveURL('/laboratory');
+ await page.getByRole('button',{name:/Open robotics lab/i}).click();
  await expect(page).toHaveURL('/lab');
  await expect(page.getByRole('button',{name:'Run baseline',exact:true})).toBeEnabled({timeout:90_000});
  await page.goBack();
+ await expect(page).toHaveURL('/laboratory');
+ await page.goBack();
  await expect(page).toHaveURL('/');
- await page.getByRole('button',{name:/WATCH AN EXPERIMENT/i}).click();
- await expect(page).toHaveURL('/lab?guided=1');
+ await page.getByRole('button',{name:/Open robotics lab/i}).click();
+ await expect(page).toHaveURL('/lab');
  await expect(page.getByRole('heading',{name:'A package loses its grip.'})).toBeVisible({timeout:90_000});
+ await page.getByRole('button',{name:'Run baseline',exact:true}).click();
  // This contract test keeps the physics identical while using the lightweight
  // viewport; the high-fidelity scene is inspected separately in visual QA.
  await page.getByRole('button',{name:'Research',exact:true}).click();
@@ -109,10 +114,11 @@ test('reduced motion enters directly and the narrow layout has no horizontal ove
  await page.setViewportSize({width:390,height:844});
  await page.goto('/',{waitUntil:'domcontentloaded'});
  await expect(page.getByRole('dialog',{name:'Isabella Labs introduction'})).toHaveCount(0);
- await expect(page.getByRole('heading',{name:/Explore possible worlds/i})).toBeVisible();
+ await expect(page.getByRole('heading',{name:/Make the unknown testable/i})).toBeVisible();
  const mobileShots=path.resolve('test-results/isabella-home');fs.mkdirSync(mobileShots,{recursive:true});
  await page.screenshot({path:path.join(mobileShots,'mobile.png')});
  await page.locator('.isabella-primary').click();
+ await page.getByRole('button',{name:/Open robotics lab/i}).click();
  await expect(page.getByRole('button',{name:'Run baseline'})).toBeEnabled({timeout:90_000});
  expect(await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth)).toBe(false);
  await page.getByRole('button',{name:'Research',exact:true}).click();

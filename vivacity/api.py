@@ -53,7 +53,7 @@ def create_app(database=None):
 
     app = FastAPI(title='Vivacity Execution Runtime', version='1.0.0', lifespan=lifespan,
                   dependencies=[Depends(authorize_request)],
-                  description='Robotics-only runtime: measured Panda manipulation, reaching and experimental fixture-assisted flex folding. Public scenario templates declare readiness and reject unsupported combinations. Single-process demo.')
+                  description='Versioned experiment runtime: MuJoCo robotics and bounded SciPy orbital-inference experiments. Branches retain measured results and numerical failures. Single-process demo.')
     origins = [o.strip() for o in os.getenv('VIVACITY_CORS_ORIGINS', 'http://localhost:5173,http://127.0.0.1:5173').split(',') if o.strip()]
     app.add_middleware(CORSMiddleware, allow_origins=origins, allow_methods=['GET', 'POST', 'PATCH'], allow_headers=['Content-Type', 'Idempotency-Key','X-Session-Token','X-Workspace-Token'])
     from .workspace_api import router

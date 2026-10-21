@@ -6,10 +6,10 @@ import {APIError} from '../frontend/src/apiResponse.ts';
 const noWait=async()=>{};
 
 test('production HTTP stays on the demo origin and streams retain the backend',()=>{
-  const endpoints=runtimeEndpoints(true,'https://vivacity-runtime.onrender.com/','https://demo.tryvivacity.com');
+  const endpoints=runtimeEndpoints(true,'https://isabella-labs-runtime.onrender.com/','https://demo.tryvivacity.com');
   assert.equal(endpoints.http,'https://demo.tryvivacity.com/runtime');
-  assert.equal(runtimeSocketURL(endpoints.backend,'example','events',9),'wss://vivacity-runtime.onrender.com/v1/experiments/example/events?after=9');
-  assert.equal(runtimeSocketURL(endpoints.backend,'example','live'),'wss://vivacity-runtime.onrender.com/v1/experiments/example/live');
+  assert.equal(runtimeSocketURL(endpoints.backend,'example','events',9),'wss://isabella-labs-runtime.onrender.com/v1/experiments/example/events?after=9');
+  assert.equal(runtimeSocketURL(endpoints.backend,'example','live'),'wss://isabella-labs-runtime.onrender.com/v1/experiments/example/live');
 });
 test('local development retains the explicitly configured backend',()=>{
   assert.equal(runtimeEndpoints(false,'http://localhost:8000/','http://localhost:5173').http,'http://localhost:8000');

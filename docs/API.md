@@ -1,10 +1,14 @@
-Current product: robotics-only. Templates: GET `/v1/templates` and POST `/v1/templates/resolve`; see `docs/ROBOTICS_TEMPLATES.md`. Supported public backends are `mujoco` and `cloth`. Scientific Discovery is retired.
+Current product: Isabella Labs science and experimentation. Supported public
+backends are `mujoco`, `scipy`, and `cloth`. The SciPy adapter runs the
+bounded Invisible Planet 2D gravitational model comparison; robotics templates
+remain at GET `/v1/templates` and POST `/v1/templates/resolve` (see
+`docs/ROBOTICS_TEMPLATES.md`).
 
 # Version 1 frontend contract
 
 OpenAPI REST specification: root `openapi.json`, with an identical documentation copy at `docs/openapi.json` (regenerate both with `python -m scripts.export_openapi`). See `FRONTEND_HANDOFF.md` for complete frontend integration and `docs/frontend-examples.json` for actual responses. API schema version is `1.0`; URL major version is `/v1`. All request bodies reject unknown fields and non-finite values. World, state, experiment, branch and replay responses are named Pydantic schemas.
 
-Current master handoff: `FRONTEND_HANDOFF.md`, `docs/master-frontend-examples.json`, `ARCHITECTURE.md`. Historical captures in `docs/frontend-examples.json` describe standalone reaching/science. Current frontend requests contact-driven pickup explicitly and consumes fresh measured states, not replay.
+Current master handoff: `FRONTEND_HANDOFF.md`, `docs/master-frontend-examples.json`, `ARCHITECTURE.md`. Historical captures in `docs/frontend-examples.json` describe earlier standalone reaching/science. The current frontend uses live MuJoCo states for robotics and executed SciPy predictions for discovery; recorded homepage examples are labelled separately.
 
 ## Autonomous sessions and live state
 

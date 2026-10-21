@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "backend": "scipy",
+  "seed": 7,
+  "config": {
+    "central_mu": 1.0,
+    "hidden_mass": 0.12,
+    "perturbing_position": [2.5, 0.4],
+    "initial_state": [1.0, 0.0, 0.0, 1.0],
+    "noise_std": 0.001,
+    "samples": 70,
+    "horizon": 5,
+    "train_fraction": 0.7
+  }
+}

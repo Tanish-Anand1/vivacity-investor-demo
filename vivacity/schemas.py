@@ -139,15 +139,41 @@ class ClothConfig(Schema):
     friction: float = Field(.6,ge=.1,le=1.5)
 
 
+class ScienceConfig(Schema):
+    """Bounded, nondimensional 2D gravitational observation experiment."""
+    central_mu: float = Field(1., ge=.7, le=1.3)
+    hidden_mass: float = Field(.12, ge=0., le=.3)
+    perturbing_position: Annotated[list[float], Field(min_length=2, max_length=2)] = [2.5, .4]
+    initial_state: Annotated[list[float], Field(min_length=4, max_length=4)] = [1., 0., 0., 1.]
+    noise_std: float = Field(.001, ge=.00001, le=.05)
+    samples: int = Field(70, ge=30, le=200)
+    horizon: float = Field(5., ge=2., le=8.)
+    train_fraction: float = Field(.7, ge=.5, le=.85)
+
+    @model_validator(mode='after')
+    def bounds(self):
+        import math
+        radius = math.hypot(*self.perturbing_position)
+        initial_radius = math.hypot(*self.initial_state[:2])
+        initial_speed = math.hypot(*self.initial_state[2:])
+        if not 2. <= radius <= 5.:
+            raise ValueError('fixed perturber radius must be 2..5')
+        if not .8 <= initial_radius <= 1.2:
+            raise ValueError('initial orbital radius must be .8..1.2')
+        if not .85 <= initial_speed <= 1.15:
+            raise ValueError('initial orbital speed must be .85..1.15')
+        return self
+
+
 class CreateWorld(Schema):
     schema_version: Literal['1.0'] = '1.0'
-    backend: Literal['mujoco', 'cloth']
+    backend: Literal['mujoco', 'scipy', 'cloth']
     seed: int = Field(7, ge=0, le=2**32-1)
-    config: RoboticsConfig | ClothConfig | None = None
+    config: RoboticsConfig | ScienceConfig | ClothConfig | None = None
 
     @model_validator(mode='after')
     def matching_config(self):
-        expected = {'mujoco':RoboticsConfig,'cloth':ClothConfig}[self.backend]
+        expected = {'mujoco':RoboticsConfig,'scipy':ScienceConfig,'cloth':ClothConfig}[self.backend]
         if self.config is None:
             self.config = expected()
         if not isinstance(self.config, expected):
@@ -183,7 +209,7 @@ class HostedProposal(Schema):
 
 
 class EnvironmentPatch(Schema):
-    config: RoboticsConfig | ClothConfig
+    config: RoboticsConfig | ScienceConfig | ClothConfig
 
 
 class CommitRequest(Schema):

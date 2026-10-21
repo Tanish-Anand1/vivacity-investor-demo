@@ -1,5 +1,10 @@
 # Current compatibility
 
+This document describes the robotics picker. Isabella Labs also includes a
+separate SciPy scientific-discovery world at `/discovery`; the picker matrix
+below does not apply to it. The source and API contract are documented in
+`docs/API.md` and `FRONTEND_HANDOFF.md`.
+
 The older Panda-only availability notes below are historical. Current legacy
 catalog tests cover 81 runnable combinations and 1,215 selection interactions:
 five catalog arm models across four rigid worlds and four rigid tasks, plus
@@ -13,11 +18,11 @@ Historical implementation notes follow.
 
 # Robotics template release
 
-The public product is robotics-only. Scientific Discovery's UI, backend module,
-configuration schema, scenario fixture and dedicated tests have been removed.
-Public world/session creation accepts only `mujoco` and `cloth`; old scientific
-worlds cannot be resumed. Historical verification artifacts are retained as
-history. SciPy remains a dependency for robotics rotation mathematics.
+At the time of this earlier template release, the public product was
+robotics-only and accepted `mujoco` and `cloth`. The 2026-10-21 Isabella Labs
+release restored a bounded `scipy` scientific world, its configuration schema,
+fixture and tests. The description below is retained as historical context
+for the robotics template picker.
 
 The picker has five options in each of three categories. These are workcell
 presets and explicitly identified reference templates, not fifteen implemented

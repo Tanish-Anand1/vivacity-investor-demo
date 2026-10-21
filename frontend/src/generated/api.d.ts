@@ -1636,14 +1636,14 @@ export interface components {
              * Backend
              * @enum {string}
              */
-            backend: "mujoco" | "cloth";
+            backend: "mujoco" | "scipy" | "cloth";
             /**
              * Seed
              * @default 7
              */
             seed: number;
             /** Config */
-            config?: components["schemas"]["RoboticsConfig"] | components["schemas"]["ClothConfig"] | null;
+            config?: components["schemas"]["RoboticsConfig"] | components["schemas"]["ScienceConfig"] | components["schemas"]["ClothConfig"] | null;
         };
         /** CustomOperationRequest */
         CustomOperationRequest: {
@@ -1756,7 +1756,7 @@ export interface components {
         /** EnvironmentPatch */
         EnvironmentPatch: {
             /** Config */
-            config: components["schemas"]["RoboticsConfig"] | components["schemas"]["ClothConfig"];
+            config: components["schemas"]["RoboticsConfig"] | components["schemas"]["ScienceConfig"] | components["schemas"]["ClothConfig"];
         };
         /** EnvironmentProvenance */
         EnvironmentProvenance: {
@@ -3124,6 +3124,60 @@ export interface components {
             /** Creator Label */
             creator_label?: string | null;
         };
+        /**
+         * ScienceConfig
+         * @description Bounded, nondimensional 2D gravitational observation experiment.
+         */
+        ScienceConfig: {
+            /**
+             * Central Mu
+             * @default 1
+             */
+            central_mu: number;
+            /**
+             * Hidden Mass
+             * @default 0.12
+             */
+            hidden_mass: number;
+            /**
+             * Perturbing Position
+             * @default [
+             *       2.5,
+             *       0.4
+             *     ]
+             */
+            perturbing_position: number[];
+            /**
+             * Initial State
+             * @default [
+             *       1,
+             *       0,
+             *       0,
+             *       1
+             *     ]
+             */
+            initial_state: number[];
+            /**
+             * Noise Std
+             * @default 0.001
+             */
+            noise_std: number;
+            /**
+             * Samples
+             * @default 70
+             */
+            samples: number;
+            /**
+             * Horizon
+             * @default 5
+             */
+            horizon: number;
+            /**
+             * Train Fraction
+             * @default 0.7
+             */
+            train_fraction: number;
+        };
         /** SessionRequest */
         SessionRequest: {
             /**
@@ -3136,14 +3190,14 @@ export interface components {
              * Backend
              * @enum {string}
              */
-            backend: "mujoco" | "cloth";
+            backend: "mujoco" | "scipy" | "cloth";
             /**
              * Seed
              * @default 7
              */
             seed: number;
             /** Config */
-            config?: components["schemas"]["RoboticsConfig"] | components["schemas"]["ClothConfig"] | null;
+            config?: components["schemas"]["RoboticsConfig"] | components["schemas"]["ScienceConfig"] | components["schemas"]["ClothConfig"] | null;
             /**
              * @default {
              *       "enabled": false,

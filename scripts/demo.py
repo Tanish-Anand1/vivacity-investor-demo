@@ -22,7 +22,7 @@ async def read_events(base, eid):
     return events
 
 
-def run(base, output, timeout_seconds=120):
+def run(base, output, timeout_seconds=120, science_only=False):
     evidence = {'schema_version': '1.0', 'base_url': base, 'source': 'executed_live_api_experiments', 'experiments': []}
     with httpx.Client(base_url=base, timeout=60) as client:
         def post(route, body=None):
@@ -49,8 +49,29 @@ def run(base, output, timeout_seconds=120):
             assert all(item['frames'] for item in replay['branches'])
             return e, branches
 
+        def science_checks():
+            science = post('/v1/worlds', {'backend':'scipy','seed':7,'config':{'hidden_mass':0.12,'noise_std':0.001}})
+            assert 'hidden_mass' not in json.dumps(science)
+            signal, fits = experiment(science, {'candidates':2,'planner_iterations':100,'max_simulation_seconds':8})
+            assert len(fits) == 2 and all(b['performance']['integration_calls'] > 0 for b in fits)
+            assert signal['selected_branch_id'] == fits[1]['id']
+            assert fits[1]['evaluation']['heldout_rmse'] < fits[0]['evaluation']['heldout_rmse']
+            assert len(fits[0]['trace']) == len(fits[1]['trace']) == 70
+            changed = client.patch(f"/v1/worlds/{science['id']}/environment", json={'config':{'hidden_mass':0,'noise_std':0.004}})
+            changed.raise_for_status()
+            assert client.get(f"/v1/experiments/{signal['id']}").json()['stale']
+            control, control_fits = experiment(science, {'candidates':2,'planner_iterations':100,'max_simulation_seconds':8})
+            assert control['selected_branch_id'] == control_fits[0]['id']
+            evidence['checks'].update({'scientific_numerical_fits':True,'scientific_holdout_selection':True,'scientific_world_invalidation':True})
+
         try:
             evidence['health'] = client.get('/health').json()
+            evidence['checks'] = {}
+            if science_only:
+                science_checks()
+                evidence['status'] = 'passed'
+                print('Live scientific demonstration checks passed.')
+                return
             robot = post('/v1/worlds', {'backend': 'mujoco', 'seed': 7})
             evidence['robot_initialization'] = robot['performance']
             e, branches = experiment(robot)
@@ -79,8 +100,8 @@ def run(base, output, timeout_seconds=120):
             folded, folds = experiment(cloth, {'search_candidates':50,'physics_budget':3,'execute_selected':True,'max_simulation_seconds':40})
             assert folded['result']['execution_evaluation']['success']
             assert any(b['performance']['simulation_steps']>0 for b in folds)
-            assert client.post('/v1/worlds',json={'backend':'scipy'}).status_code==422
-            evidence['checks'] = {'live_http':True,'live_websocket':True,'deterministic_physics_reexecution':True,'failed_and_successful_reach':True,'geometry_replan':True,'stale_commit_rejection':True,'all_paths_fail':True,'real_fixture_fold':True,'scientific_backend_retired':True}
+            evidence['checks'].update({'live_http':True,'live_websocket':True,'deterministic_physics_reexecution':True,'failed_and_successful_reach':True,'geometry_replan':True,'stale_commit_rejection':True,'all_paths_fail':True,'real_fixture_fold':True})
+            science_checks()
             evidence['status'] = 'passed'
             print('Live demonstration checks passed.')
         finally:
@@ -94,5 +115,6 @@ if __name__ == '__main__':
     parser.add_argument('--base-url', default='http://127.0.0.1:8000')
     parser.add_argument('--output', default='artifacts/live-demo.json')
     parser.add_argument('--timeout-seconds', type=float, default=120)
+    parser.add_argument('--science-only', action='store_true', help='Run the real SciPy HTTP/WebSocket journey without the longer robotics cases')
     args = parser.parse_args()
-    run(args.base_url.rstrip('/'), args.output, args.timeout_seconds)
+    run(args.base_url.rstrip('/'), args.output, args.timeout_seconds, args.science_only)

@@ -1,6 +1,14 @@
-# Current scope: robotics-only templates
+# Current scope: science and robotics laboratory
 
-Scientific Discovery is retired. `templates.py` publishes capability readiness and resolves supported selections into existing MuJoCo robot/cloth adapters. No alternative arm controller is implied by a reference catalog entry. The template picker creates idle worlds; actual execution still requires Start. See `docs/ROBOTICS_TEMPLATES.md` and `IMPLEMENTATION_STATUS.md` for current acceptance evidence. The following records earlier architecture milestones; old Discovery verification is historical.
+The shared runtime now registers MuJoCo robotics, constrained cloth and a
+restricted SciPy orbital-inference adapter. Isabella Labs exposes the SciPy
+model comparison at `/discovery` and the MuJoCo Factory case at `/lab`.
+`templates.py` continues to resolve supported **robotics** choices into the
+existing robot/cloth adapters; no alternative arm controller is implied by a
+reference catalog entry. Both lab routes require an explicit user action to
+start an experiment. See `docs/ROBOTICS_TEMPLATES.md`, `docs/API.md`, and
+`IMPLEMENTATION_STATUS.md` for current boundaries. The following records
+earlier architecture milestones.
 
 # Vivacity master implementation
 

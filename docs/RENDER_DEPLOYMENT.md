@@ -1,4 +1,23 @@
-# Render deployment handoff — 2026-10-11
+# Render deployment handoff
+
+## Current Isabella Labs service — 2026-10-21
+
+The production Vercel rewrite and direct WebSocket client now use
+`https://isabella-labs-runtime.onrender.com`, Render service
+`srv-dbc09mbbc2fs73aqkf60` in the user's accessible workspace. Private
+backend commit `4b45d9e` deployed successfully as
+`dep-dbc09mjbc2fs73aqkg20`. It runs Docker on the **Free** 0.1 CPU / 512 MB
+plan with one physics-trial worker, `/health` readiness, and CORS limited to
+the two Vivacity frontend origins. No payment card or recurring compute charge
+was added for this service. Render states Free instances spin down after
+inactivity, and this service has no persistent disk. The public science and
+Factory API checks are in `docs/ISABELLA_LABS_REPORT.md`.
+
+The 2026-10-11 handoff below describes the previous backend service and is
+retained for history. Its deployment URL is no longer the active frontend
+target.
+
+## Previous Render service — 2026-10-11
 
 Status: **Render Free provisioned** at `https://vivacity-runtime.onrender.com`,
 service `srv-db5p7pjbc2fs739lnl6g`, Oregon. Both public frontend aliases use it.
