@@ -1,4 +1,4 @@
-# Isabella Labs: The Impossible Shot — current local release, 2026-10-21
+# Isabella Labs: The Impossible Shot — current production release, 2026-10-21
 
 The homepage opening is an authored 7.500-second 3D film. A single metallic
 cube moves through a Panda arm, an enlarged UR5e, a custom delta mechanism,
@@ -39,8 +39,18 @@ wall-clock playback may vary with decode scheduling and can exit early on the
 explicit safety paths. The handoff is a video-to-DOM mask, not one shared live
 3D camera. The enlarged UR5e is a visual stand-in for a heavy industrial arm.
 
-Production deployment and live-domain verification for this release are pending
-at the time of this local record.
+Production deployment `dpl_3KzQmcrSwUfTksPsJXUmcGfZixHF` reported READY and
+was aliased to `https://demo.tryvivacity.com/`. The live Chrome check passed:
+the page returned 200, the landscape film was delivered via HTTP 206 byte
+ranges and reached media time 7.5, the homepage became active, and Enter the
+Lab navigated to `/laboratory`. A 390px touch viewport selected the portrait
+lite film, skipped cleanly, and had no horizontal overflow. Reduced-motion
+navigation bypassed the intro. No page errors were observed. The reproducible
+check is `node cinematic/verify-live.mjs` from the `frontend` folder.
+The existing `/runtime/health` endpoint returned 200 but took **43.6 seconds**
+on the first live request, consistent with a cold backend wake. This release
+does not establish always-on backend availability; that remains a separate
+operational risk.
 
 # Historical robotics-first interface release — 2026-10-21
 
