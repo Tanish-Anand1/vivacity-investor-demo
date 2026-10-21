@@ -1,4 +1,25 @@
-# Isabella Labs robotics-first interface release — 2026-10-21
+# Isabella Labs cinematic opening release — 2026-10-21
+
+The current homepage uses a 7.500-second pre-rendered 3D film with four arm
+models, three humanoid models, spatial branching, an in-scene wordmark, and a
+spatial reveal into the existing homepage. It plays again on refresh and never
+starts an experiment. Sound is optional, reduced motion bypasses the film,
+Escape and Skip work, and failed or slow media falls through to the homepage.
+The authored animation is not a MuJoCo experiment result. Phone-sized screens
+receive the lighter portrait file. See `docs/ISABELLA_CINEMATIC.md` for model
+licenses, rendering steps, eight inspected frames per aspect ratio, and limits.
+
+Actual checks: production Vite builds passed in both source checkouts; the
+encoding script produced four valid H.264/AAC files of exactly 7.500 seconds;
+seven opening Playwright checks passed against `https://demo.tryvivacity.com/`;
+four local accessibility/navigation checks and one live lab-entry check passed.
+The final Vercel production deployment `dpl_5rf12Tm9SAKypRnwjn7vke1ADzaM`
+reported READY. Browser wall-clock handoff ranged roughly 7.6–8.9 seconds in
+headless runs because decoding/startup varies, so an exact 7.5-second wall
+duration is not yet guaranteed. The unchanged simulation backend was not
+retested in full for this opening-only release.
+
+# Historical robotics-first interface release — 2026-10-21
 
 The current frontend opens with a 7.5-second, skippable brand film: three
 authored robot-arm silhouettes give way to two humanoid silhouettes, then the

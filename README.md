@@ -11,17 +11,20 @@ can create worlds, change supported conditions, run independent branches,
 inspect measured outcomes, replay, and export. Other scientific fields are
 not implemented.
 
-The public `/` route opens **Isabella Labs by Vivacity**. A deterministic 7.5-second
-opening shows authored robot-arm and humanoid illustrations, then gives way to
-a robotics-led homepage with a recorded, measured robotic result. The opening
-is skippable, omitted for reduced-motion visitors, and does not start physics.
+The public `/` route opens **Isabella Labs by Vivacity**. A 7.5-second authored
+3D film moves through four robot arms and three humanoid models, then reveals
+the robotics-led homepage. It plays on every reload, can be skipped, includes
+optional sound, and is omitted for reduced-motion visitors. The film is motion
+design, not simulated evidence; it does not start physics. Source, licenses,
+rebuild steps, tests, and timing limits are in
+[the cinematic handoff](docs/ISABELLA_CINEMATIC.md).
 `ENTER THE LAB` opens `/laboratory`, where visitors select a discipline.
 `/discovery` generates new orbital observations and fits competing hypotheses
 after explicit actions. `/lab` opens the idle robotic laboratory; the visitor
 starts the baseline and matched six-trial comparison. Recorded homepage
 examples never populate new experiment results.
 
-Regenerate the opening evidence after changing the model or controller with
+Regenerate the saved homepage experiment evidence after changing the model or controller with
 `.\.venv\Scripts\python scripts\generate_lab_opening.py`; the generator asserts
 the measured failure and success before writing the fixture. The audit and
 current acceptance evidence are in [docs/DEMO_AUDIT.md](docs/DEMO_AUDIT.md)

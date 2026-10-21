@@ -14,14 +14,16 @@ in the repository for the scientific route and is never substituted for a new ru
 The homepage's `ENTER THE LAB` opens `/laboratory`; `Worlds` opens `/worlds`;
 `OPEN ROBOTICS EXPERIMENT` opens `/lab`. The homepage `Explore scientific
 experiments` control opens `/discovery`. The intro is bypassed under reduced
-motion and can be skipped by button or Escape; subsequent visits in the same
-session do not replay it. The opening SVG is brand illustration, not physics
-output. Google Fonts load Instrument Sans, Manrope and IBM Plex Mono.
-The final frontend was deployed as Vercel `dpl_FYSpFqYsbyUyrfpwN4Jy2HnqbUGQ`
-at `https://demo.tryvivacity.com/`. Its live robotic comparison, replay,
-scientific route, mobile and opening were browser-verified on 2026-10-21;
-exact results and the one repaired Playwright artifact collision are recorded
-in `IMPLEMENTATION_STATUS.md`.
+motion and can be skipped by button or Escape. It plays again on refresh.
+The new pre-rendered film uses licensed robot geometry and authored motion;
+it is not physics output. Sound is opt-in and phone-sized screens use a
+smaller rendition. See `docs/ISABELLA_CINEMATIC.md` for sources, formats,
+timing limits and the current release checks. Google Fonts load Instrument
+Sans, Manrope and IBM Plex Mono.
+The cinematic frontend was deployed as Vercel `dpl_5rf12Tm9SAKypRnwjn7vke1ADzaM`
+at `https://demo.tryvivacity.com/`. Seven live opening browser checks and a
+live robotics/science lab-entry check passed on 2026-10-21. The earlier full
+robotic comparison and replay checks are recorded in `IMPLEMENTATION_STATUS.md`.
 The verified deployed backend for this release is
 `https://isabella-labs-runtime.onrender.com`. Production HTTP requests use the
 same-origin `/runtime` Vercel rewrite; WebSockets connect directly to that
