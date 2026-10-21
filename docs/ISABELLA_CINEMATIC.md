@@ -1,55 +1,54 @@
-# Isabella Labs opening film
+# Isabella Labs: The Impossible Shot
 
-The homepage opening is a 7.5-second, 60 fps, pre-rendered Three.js film. It uses one continuous, deterministic camera path through an authored robotic workcell. Its robot motion, shared object, branching imagery, and soundtrack are **motion design**. They are not MuJoCo experiment output or evidence of a grasp. The interactive lab and its recorded measurements remain separate.
+The opening is a 7.500-second, 60 fps, offline-rendered Three.js film. A single authored clock drives the camera, robot poses, metallic cube, architecture, and identity reveal. It is motion design, **not** MuJoCo experiment footage or evidence of a physical grasp. The interactive laboratory and measured experiment results are separate.
 
-## Shipped behavior
+## Story and delivery
 
-- `/` plays the film on every page load and reload, including when a previous visit wrote the old intro-complete storage flag. Other routes do not play it.
-- Desktop/wide screens receive a 1440×810 H.264/AAC file; large portrait screens receive a separately composed 720×1280 file. Both contain 450 frames and last 7.500 seconds. Phone-width screens, browser data-saver, or a reported 2G/3G connection select a lighter 30 fps rendition at 960×540 or 540×960. The soundtrack starts muted and can be enabled by the visitor.
-- Escape or **Skip intro** opens the homepage immediately. The two visible controls stay keyboard-accessible while the homepage is inert. Focus moves to the homepage main element at completion.
-- Reduced-motion visitors enter the homepage directly. If playback fails or media cannot become playable within 2.3 seconds, the homepage appears rather than remaining behind a blank film surface.
-- The final camera move reveals the actual homepage through a 0.5-second spatial wipe. The homepage and its recorded-scene poster are mounted underneath throughout; the expensive live 3D preview starts after the film finishes. No extra loading page is inserted.
+| Time (s) | Beat | Authored action |
+| --- | --- | --- |
+| 0.00–0.60 | Ignition | A close view of the machined cube and Panda gripper emerges from darkness. |
+| 0.60–1.40 | First transfer | The camera pulls back with the Panda and the cube. |
+| 1.40–2.20 | Chain reaction | An enlarged UR5e, a custom parallel-delta mechanism, and an xArm7 receive the same cube in rapid succession. |
+| 2.20–3.00 | Impossible setup | The cobot places the cube above a plinth; the cube hangs briefly. |
+| 3.00–4.10 | World breaks | The cube descends; floor, walls, ceiling, and large structural slabs shear along authored axes. |
+| 4.10–5.10 | Possibility space | The camera passes a single layered alternate workcell with robot and humanoid imagery. |
+| 5.10–6.10 | Identity | The geometry aligns to reveal an in-scene **ISABELLA LABS / BY VIVACITY** wordmark. |
+| 6.10–7.50 | Handoff | The camera advances through the architecture while a portal mask reveals the already-mounted homepage. |
 
-## Models and provenance
+The four arms use three compiled MuJoCo Menagerie visual meshes (Panda, UR5e, xArm7) and one authored delta mechanism. The alternate scene also uses Unitree H1 visual geometry. The UR5e is enlarged and enclosed to read as a heavier arm; it is not a distinct heavy industrial robot model. Visual mesh license notices are in `frontend/public/vivacity/cinematic-licenses/`; source provenance is in `assets/PROVENANCE.md`. The film's kinematic choreography and impossible architecture are deliberately stylized. The renderer uses no experiment outputs.
 
-Four arm visual models are compiled from this repository's MuJoCo Menagerie assets: Franka Panda, KUKA iiwa 14, UFactory xArm7, and Universal Robots UR5e. See `assets/PROVENANCE.md` and the matching license texts in `frontend/public/vivacity/cinematic-licenses/`.
+The homepage plays the introduction again on reload. Playback starts when the chosen file becomes playable, so network delay is outside the seven-and-a-half-second film. Desktop uses 1440×810 landscape H.264/AAC; portrait uses separately framed 720×1280. Narrow or data-saver devices receive 30 fps lighter renditions. The soundtrack begins muted; Sound, Skip, and Escape are available. Reduced-motion visitors go straight to the homepage. If media fails or cannot start within 2.3 seconds, the homepage becomes usable. The homepage stays mounted underneath and no experiment starts on load.
 
-The Unitree G1, Unitree H1, and Berkeley Humanoid visual models were compiled from `google-deepmind/mujoco_menagerie` at revision `cda5236f98383f6fbaa4820c6b18dba892cd087f`; their BSD-3-Clause licenses are included in the same license directory. The film export includes visual geometry only. It does not bundle those model source files into the browser build.
+The film contains 450 frames. The frame at 7.500 seconds is the real homepage, because the final video frame occurs at 7.483 seconds. The portal opens over the last 0.75 seconds. The homepage is reactivated and focused when the media ends. A 15-second wall-clock safety exit handles a decoder that stops advancing. The authored source can be scrubbed at exact timestamps; in development, `/?introDebug=1` exposes a playback scrubber.
 
-## Rebuild
+## Rebuild and inspect
 
-With this repository's Python environment, Node dependencies, FFmpeg, and a checkout of `google-deepmind/mujoco_menagerie` at revision `cda5236f98383f6fbaa4820c6b18dba892cd087f` containing the three humanoid folders:
+The four visual mesh manifests and binaries used by the authoring renderer are versioned in `frontend/cinematic/generated/`. Regeneration requires a compatible MuJoCo Menagerie checkout and this repository's Python environment. With Node dependencies, FFmpeg, and the authoring server on port 5181:
 
 ```powershell
-$menagerie='C:\path\to\mujoco_menagerie'
-.venv\Scripts\python.exe scripts\build_isabella_cinematic_assets.py --menagerie $menagerie
 .venv\Scripts\python.exe scripts\build_isabella_cinematic_audio.py
 cd frontend
 npx vite --host 127.0.0.1 --port 5181 --strictPort
+```
+
+In another terminal:
+
+```powershell
+cd frontend
+node cinematic\check.mjs
 node cinematic\render.mjs preview landscape
 node cinematic\render.mjs preview portrait
 node cinematic\render.mjs film landscape
 node cinematic\render.mjs film portrait
 cd ..
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts\encode_isabella_cinematic.ps1
+.venv\Scripts\python.exe scripts\inspect_isabella_cinematic.py
 ```
 
-Run the Vite authoring server in a separate terminal while rendering. The renderer's output is under `artifacts/isabella-cinema-*`. The encoding script uses FFmpeg at 60 fps with `libx264`, `yuv420p`, AAC 128 kbps, `-t 7.5`, and `-movflags +faststart`, then derives the smaller renditions. Authoring geometry lives in ignored `frontend/cinematic/generated/` and is not deployed. No runtime WebGL context is created by the opening.
+`check.mjs` verifies deterministic seeking and cube position continuity across 451 samples. `inspect_isabella_cinematic.py` extracts the **encoded** frames at 0.30, 0.90, 1.80, 2.60, 3.50, 4.60, 5.60, 6.50, and 7.45 seconds, then writes landscape and portrait contact sheets under `artifacts/isabella-cinema-encoded-*/contact.png`. The true 7.50-second homepage state is captured by the browser test in `artifacts/isabella-cinema-runtime/homepage-after-7_5s.png`.
 
-## Visual QA
+## Verification and limitations
 
-The eight mandatory inspection frames are in `artifacts/isabella-cinema-preview-{landscape,portrait}/` at 0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, and 7.5 seconds. `contact.png` in each directory provides an overview. Browser acceptance tests verify film decoding, source selection, elapsed duration, reload behavior, keyboard/sound/skip, a blocked-media fallback, and the homepage handoff.
+The source check passed: 451 samples, identical frame after seek, and a maximum cube displacement of 0.206 m between adjacent 60 fps samples. Both main encoded films contain 450 H.264 frames, AAC audio, and report exactly 7.500 seconds via `ffprobe`. The production Vite build passed. The browser regression result and production deployment are recorded in `IMPLEMENTATION_STATUS.md` after release verification.
 
-## Known creative limits
-
-The reflective-object passage and branch duplication are authored geometric cues, not ray-traced mirror imagery or physics outcomes. The four arm actions are deliberately choreographed; they are not controlled by the lab planner. The homepage itself is unchanged by this release, so the film-to-home transition uses a spatial wipe rather than a shared live 3D camera. The film is intentionally available only for the intro and is not a substitute for the interactive simulation.
-
-The media clock is exactly 7.500 seconds, while wall-clock handoff depends on browser startup and decoding. Local and live headless Chrome checks measured roughly 7.6–8.9 seconds; an exact wall-clock duration is not guaranteed. The runtime favors showing the film's ending over cutting a delayed decode; if the file cannot become playable within 2.3 seconds, it reveals the homepage early.
-
-## Release verification · 2026-10-21
-
-- Production Vite build passed in both the development checkout and public source checkout. The Vercel production build completed, and `https://demo.tryvivacity.com/` returned HTTP 200.
-- Seven opening browser tests passed against the live custom domain: full warmed playback, real CDN desktop playback, phone layout and skip, cold phone rendition, media failure, stalled download, and data-saver selection.
-- Four homepage accessibility/navigation tests and a robotics/science lab-entry test passed locally. The lab-entry test also passed against the live custom domain.
-- `ffprobe` verified all four shipped H.264/AAC files have 7.500-second duration. The 60 fps files and 30 fps lighter renditions were decoded in headless Chrome; one live desktop sample reported 137 decoded frames at 4.29 seconds of the lighter rendition with zero dropped frames.
-- The live phone-sized cold-load probe played the 1.05 MB portrait rendition. A previous probe of the 2.9 MB portrait file took too long and triggered the designed fallback; that observation motivated the phone default.
+The cinema is a video-to-DOM handoff with a mask, not a shared live 3D camera. The last encoded frame on its own is dark; the homepage beneath the widening mask supplies the final visual. Heavy-arm scale, contact, depth of field, and architectural mechanics are art-directed rather than physically simulated. A cold or constrained connection can show the homepage before the film if the media load exceeds the 2.3-second fallback. Under slow decoding the 7.5-second media clock can take longer in wall time; the 15-second safety exit favors a usable homepage over a stalled opening.

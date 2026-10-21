@@ -15,4 +15,12 @@ artifacts/reliability-tests.xml
 artifacts/package-demo.json
 artifacts/v2-baseline-live.json
 frontend/*.tsbuildinfo
-frontend/cinematic/generated/
+frontend/cinematic/generated/*
+!frontend/cinematic/generated/panda.bin
+!frontend/cinematic/generated/panda.json
+!frontend/cinematic/generated/ur5e.bin
+!frontend/cinematic/generated/ur5e.json
+!frontend/cinematic/generated/xarm7.bin
+!frontend/cinematic/generated/xarm7.json
+!frontend/cinematic/generated/unitree_h1.bin
+!frontend/cinematic/generated/unitree_h1.json

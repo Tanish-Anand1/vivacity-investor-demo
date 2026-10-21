@@ -36,14 +36,15 @@ def add_stereo(left: np.ndarray, right: np.ndarray, signal: np.ndarray, pan: flo
 
 left = np.zeros(COUNT)
 right = np.zeros(COUNT)
-drone = .06 * (np.sin(2 * np.pi * 55 * TIMES) + .32 * np.sin(2 * np.pi * 110 * TIMES))
-add_stereo(left, right, drone * envelope(0, 7.5, .7, 1.2), 0)
+drone = .045 * (np.sin(2 * np.pi * 48 * TIMES) + .23 * np.sin(2 * np.pi * 96 * TIMES))
+add_stereo(left, right, drone * envelope(1.9, 2.22, .75, .16), 0)
 
 for hit, pitch, pan, strength in [
-    (.16, 715, -.72, .23), (.46, 850, -.35, .17), (.78, 1040, .1, .14),
-    (1.22, 610, .48, .16), (1.84, 780, -.25, .14), (2.44, 940, .52, .17),
-    (4.18, 720, -.45, .16), (4.35, 830, 0, .12), (4.53, 940, .45, .16),
-    (5.82, 320, 0, .26),
+    (.59, 965, -.68, .27), (1.39, 625, .35, .21),
+    (1.68, 835, -.18, .15), (1.9, 1120, .18, .13),
+    (2.19, 770, .6, .19), (3.36, 118, 0, .48),
+    (3.55, 540, -.46, .17), (3.82, 470, .42, .16),
+    (5.18, 290, -.3, .12), (5.72, 430, .3, .11),
 ]:
     local = TIMES - hit
     decay = np.exp(-np.maximum(local, 0) * (14 if hit < 5.8 else 6))
@@ -51,7 +52,7 @@ for hit, pitch, pan, strength in [
     sound = np.where((local >= 0) & (local < .7), ring * decay * strength, 0)
     add_stereo(left, right, sound, pan)
 
-for start, duration, low, high, pan in [(1.06, 1.35, 95, 190, -.35), (1.7, 1.12, 140, 265, .38), (2.68, .8, 110, 380, 0)]:
+for start, duration, low, high, pan in [(0.62, .78, 88, 170, -.35), (1.4, .8, 135, 290, .38), (3.38, .72, 55, 115, 0)]:
     local = np.maximum(TIMES - start, 0)
     frequency = low + (high - low) * np.clip(local / duration, 0, 1)
     phase = 2 * np.pi * (low * local + (high - low) * local**2 / (2 * duration))
@@ -60,12 +61,12 @@ for start, duration, low, high, pan in [(1.06, 1.35, 95, 190, -.35), (1.7, 1.12,
 
 noise = RNG.normal(0, 1, COUNT)
 filtered = sosfilt(butter(3, [180, 1800], btype="bandpass", fs=RATE, output="sos"), noise)
-swells = .028 * filtered * envelope(2.54, .78, .48, .15)
+swells = .045 * filtered * envelope(3.34, .76, .12, .43)
 add_stereo(left, right, swells, .1)
 
-for frequency, amount in [(110, .11), (164.81, .065), (220, .043), (329.63, .025)]:
-    local = np.maximum(TIMES - 5.9, 0)
-    note = amount * np.sin(2 * np.pi * frequency * local) * envelope(5.9, 1.6, .15, .63)
+for frequency, amount in [(110, .1), (164.81, .055), (220, .036), (329.63, .018)]:
+    local = np.maximum(TIMES - 6.16, 0)
+    note = amount * np.sin(2 * np.pi * frequency * local) * envelope(6.16, 1.34, .22, .53)
     add_stereo(left, right, note, 0)
 
 stereo = np.stack([left, right], axis=1)

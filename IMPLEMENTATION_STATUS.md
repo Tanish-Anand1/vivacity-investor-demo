@@ -1,23 +1,46 @@
-# Isabella Labs cinematic opening release — 2026-10-21
+# Isabella Labs: The Impossible Shot — current local release, 2026-10-21
 
-The current homepage uses a 7.500-second pre-rendered 3D film with four arm
-models, three humanoid models, spatial branching, an in-scene wordmark, and a
-spatial reveal into the existing homepage. It plays again on refresh and never
-starts an experiment. Sound is optional, reduced motion bypasses the film,
-Escape and Skip work, and failed or slow media falls through to the homepage.
-The authored animation is not a MuJoCo experiment result. Phone-sized screens
-receive the lighter portrait file. See `docs/ISABELLA_CINEMATIC.md` for model
-licenses, rendering steps, eight inspected frames per aspect ratio, and limits.
+The homepage opening is an authored 7.500-second 3D film. A single metallic
+cube moves through a Panda arm, an enlarged UR5e, a custom delta mechanism,
+and an xArm7. The cube settles on a plinth, structural layers separate, an
+alternate workcell with a Unitree H1 appears, and the architecture reveals an
+in-scene Isabella Labs wordmark. A portal mask opens onto the mounted homepage.
+This is motion design, not MuJoCo experiment footage or a validated grasp.
 
-Actual checks: production Vite builds passed in both source checkouts; the
-encoding script produced four valid H.264/AAC files of exactly 7.500 seconds;
-seven opening Playwright checks passed against `https://demo.tryvivacity.com/`;
-four local accessibility/navigation checks and one live lab-entry check passed.
-The final Vercel production deployment `dpl_5rf12Tm9SAKypRnwjn7vke1ADzaM`
-reported READY. Browser wall-clock handoff ranged roughly 7.6–8.9 seconds in
-headless runs because decoding/startup varies, so an exact 7.5-second wall
-duration is not yet guaranteed. The unchanged simulation backend was not
-retested in full for this opening-only release.
+The film replays on refresh and never starts an experiment. Sound is optional
+and muted by default. Escape and Skip work. Reduced-motion visitors bypass the
+film. A media error or a load exceeding 2.3 seconds reveals the homepage. The
+media clock controls normal completion; a 15-second wall-clock safety exit
+handles a stalled decoder. Landscape, portrait, and smaller 30 fps variants are
+shipped. See `docs/ISABELLA_CINEMATIC.md` for the exact eight-beat timeline,
+asset provenance, rebuild instructions, contact sheets, and creative limits.
+
+Actual local checks: `npm run build` passed; `node cinematic/check.mjs` passed
+451 time samples with reproducible exact-frame seeking and maximum cube motion
+of 0.206 m per 60 fps sample; `ffprobe` reported 450 H.264 frames and exactly
+7.500-second duration for each main film. The final browser suite passed
+**13/13** on an isolated Vite production preview and native Chrome. It covered
+complete media playback, the homepage handoff and lab entry, refresh, sound,
+keyboard skip, portrait layouts, network failures, data saver, reduced motion,
+navigation, missing-asset recovery, and accessibility checks. The encoded
+output was visually inspected at the nine requested timestamps in
+both aspect ratios; the 7.500-second homepage state was captured in Chromium.
+The encoded files are 3.49 MB landscape, 2.17 MB portrait, 1.02 MB landscape
+lite, and 0.87 MB portrait lite. The existing large WorldPreview JavaScript
+chunk remains about 901 KiB gzip; it was not changed in this scoped release.
+
+The simulation backend and expensive six-trial physics journey were not
+modified or retested for this opening-only release. An initial broad browser
+run reached a real MuJoCo baseline but its direct API assertion used a stale
+port 8002 and failed with `ECONNREFUSED`; the test default was corrected to
+match the configured port 8000. The corrected long journey was excluded from
+the scoped 13-test pass. The 7.5-second media duration is exact, while
+wall-clock playback may vary with decode scheduling and can exit early on the
+explicit safety paths. The handoff is a video-to-DOM mask, not one shared live
+3D camera. The enlarged UR5e is a visual stand-in for a heavy industrial arm.
+
+Production deployment and live-domain verification for this release are pending
+at the time of this local record.
 
 # Historical robotics-first interface release — 2026-10-21
 

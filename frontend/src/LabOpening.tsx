@@ -9,15 +9,17 @@ export default function LabOpening({finish}:{finish:()=>void}){
  const soundButton=useRef<HTMLButtonElement>(null);
  const opening=useRef<HTMLDivElement>(null);
  const video=useRef<HTMLVideoElement>(null);
- const startedAt=useRef(performance.now());
- const playable=useRef(false);
+ const startedAt=useRef<number|null>(null);
+ const starting=useRef(false);
+ const finishTimer=useRef<number|null>(null);
  const finished=useRef(false);
  const [soundOn,setSoundOn]=useState(false);
+ const debug=import.meta.env.DEV&&new URLSearchParams(window.location.search).has('introDebug');
  const portrait=window.matchMedia('(max-aspect-ratio: 4/5)').matches;
  const connection=(navigator as Navigator&{connection?:{saveData?:boolean;effectiveType?:string}}).connection;
  const lite=(portrait&&window.innerWidth<=600)||connection?.saveData===true||['slow-2g','2g','3g'].includes(connection?.effectiveType??'');
  const format=portrait?'portrait':'landscape';
- const complete=useCallback(()=>{if(finished.current)return;finished.current=true;video.current?.pause();finish();},[finish]);
+ const complete=useCallback(()=>{if(finished.current)return;finished.current=true;if(finishTimer.current!==null)window.clearTimeout(finishTimer.current);video.current?.pause();finish();},[finish]);
 
  useEffect(()=>{
   const previousOverflow=document.body.style.overflow;
@@ -32,45 +34,53 @@ export default function LabOpening({finish}:{finish:()=>void}){
   };
   const changed=()=>{if(motion.matches)complete();};
   document.addEventListener('keydown',key);motion.addEventListener('change',changed);
-  const deadline=window.setTimeout(complete,OPENING_DURATION_MS+1800);
-  // A delayed or unsupported video should reveal the real homepage promptly.
-  const loadGrace=window.setTimeout(()=>{if(!playable.current)complete();},LOAD_GRACE_MS);
+  // Network delay is outside the authored 7.5-second sequence. A failed load
+  // still reveals the usable homepage instead of trapping the visitor.
+  const loadGrace=window.setTimeout(()=>{if(startedAt.current===null)complete();},LOAD_GRACE_MS);
   let frame=0;
-  const matchFadeToFilm=()=>{
+  const matchPortalToFilm=()=>{
    const elapsed=video.current?.currentTime??0;
-   if(opening.current&&elapsed>=7){
-    const progress=Math.max(0,Math.min(1,(elapsed-7)/.5));
-    const edge=100-100*progress;
-    opening.current.style.clipPath=`polygon(0 0,${edge}% 0,${edge+4*(1-progress)}% 100%,0 100%)`;
+   if(opening.current&&elapsed>=6.75){
+    const progress=Math.max(0,Math.min(1,(elapsed-6.75)/.75));
+    const halfGap=50*progress;
+    const left=50-halfGap,right=50+halfGap;
+    const portal=`linear-gradient(90deg,#000 0 ${left}%,transparent ${left}% ${right}%,#000 ${right}% 100%)`;
+    opening.current.style.maskImage=portal;
+    opening.current.style.setProperty('-webkit-mask-image',portal);
    }
-   frame=requestAnimationFrame(matchFadeToFilm);
+   frame=requestAnimationFrame(matchPortalToFilm);
   };
-  frame=requestAnimationFrame(matchFadeToFilm);
+  frame=requestAnimationFrame(matchPortalToFilm);
   if(motion.matches)complete();
   return()=>{
-   window.clearTimeout(deadline);window.clearTimeout(loadGrace);cancelAnimationFrame(frame);
+   window.clearTimeout(loadGrace);if(finishTimer.current!==null)window.clearTimeout(finishTimer.current);cancelAnimationFrame(frame);
    document.body.style.overflow=previousOverflow;home?.removeAttribute('inert');
    document.removeEventListener('keydown',key);motion.removeEventListener('change',changed);
    if(finished.current)requestAnimationFrame(()=>document.getElementById('isabella-main')?.focus());
   };
  },[complete]);
 
- const play=()=>{
-  const element=video.current;if(!element||finished.current||playable.current)return;
-  playable.current=true;
-  const elapsed=(performance.now()-startedAt.current)/1000;
-  if(element.readyState>=HTMLMediaElement.HAVE_METADATA&&elapsed>.15&&elapsed<7.3)
-   element.currentTime=Math.min(elapsed,7.3);
-  element.play().catch(complete);
+ const play=async()=>{
+  const element=video.current;if(!element||finished.current||starting.current||startedAt.current!==null)return;
+  starting.current=true;
+  try{
+   await element.play();
+   if(finished.current)return;
+   startedAt.current=performance.now();
+   // The encoded media clock owns the 7.5-second ending. This deadline is
+   // only a safety exit when a device stops advancing an otherwise playable
+   // video, so a slow decoder cannot cut the authored final shots short.
+   if(!debug)finishTimer.current=window.setTimeout(complete,OPENING_DURATION_MS+7_500);
+  }catch{complete();}
  };
  const toggleSound=()=>{
   const element=video.current;if(!element)return;
   const next=!soundOn;element.muted=!next;setSoundOn(next);
-  if(next)element.play().catch(()=>{element.muted=true;setSoundOn(false);});
+  if(next&&startedAt.current!==null&&element.paused)element.play().catch(()=>{element.muted=true;setSoundOn(false);});
  };
 
  return <div ref={opening} className="lab-opening" role="dialog" aria-modal="true" aria-label="Isabella Labs introduction">
-  <video ref={video} className="lab-opening-video" autoPlay muted playsInline preload="auto" aria-hidden="true"
+  <video ref={video} className="lab-opening-video" muted playsInline preload="auto" aria-hidden="true"
    src={`/vivacity/isabella-impossible-${format}${lite?'-lite':''}.mp4`}
    onCanPlay={play} onError={complete} onEnded={complete}/>
   <div className="lab-opening-controls">
@@ -79,5 +89,6 @@ export default function LabOpening({finish}:{finish:()=>void}){
    </button>
    <button ref={skip} className="lab-opening-control" type="button" onClick={complete}>Skip intro <span aria-hidden="true">↗</span></button>
   </div>
+  {debug&&<label className="lab-opening-debug">Film time <input type="range" min="0" max="7.5" step="0.01" defaultValue="0" onChange={event=>{if(video.current){video.current.pause();video.current.currentTime=Number(event.target.value);}}}/></label>}
  </div>;
 }

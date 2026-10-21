@@ -22,15 +22,17 @@ try{
  await page.goto('http://127.0.0.1:5181/cinematic/',{waitUntil:'domcontentloaded',timeout:120_000});
  await page.waitForFunction(()=>window.__cinemaReady===true,null,{timeout:120_000});
  await page.evaluate(()=>document.fonts.ready);
- const samples=mode==='preview'?[.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5]:Array.from({length:framesPerSecond*7.5},(_,i)=>i/framesPerSecond);
+ const samples=mode==='preview'?[.3,.9,1.8,2.6,3.5,4.6,5.6,6.5,7.5]
+  :mode==='detail'?[.6,1.25,1.42,1.55,1.68,1.9,2.05,2.2,3.12,3.37,3.75,4.1,5.1,6.1,6.75]
+  :Array.from({length:framesPerSecond*7.5},(_,i)=>i/framesPerSecond);
  const start=performance.now();
  for(let i=0;i<samples.length;i++){
-  const time=samples[i];const kind=mode==='preview'?'image/png':'image/jpeg';
+  const time=samples[i];const kind=mode==='film'?'image/jpeg':'image/png';
   const data=await page.evaluate(([t,type])=>{
    window.__setCinemaTime(t);
    return window.__cinemaCanvas.toDataURL(type,type==='image/jpeg'?.94:undefined).split(',')[1];
   },[time,kind]);
-  const name=mode==='preview'?`${String(time).replace('.','_')}s.png`:`${String(i).padStart(4,'0')}.jpg`;
+  const name=mode==='film'?`${String(i).padStart(4,'0')}.jpg`:`${String(time).replace('.','_')}s.png`;
   fs.writeFileSync(path.join(output,name),Buffer.from(data,'base64'));
   if(mode==='film'&&i%60===0)console.log(`${format}: ${i}/${samples.length}`);
  }
