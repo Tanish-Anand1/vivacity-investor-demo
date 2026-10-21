@@ -32,3 +32,9 @@ $env:PLAYWRIGHT_JSON_OUTPUT_FILE='P:\VIVACITY\DEMO-\docs\v-robotics-browser-veri
 ```
 
 The single warning in both pytest runs was the existing Starlette/httpx deprecation warning. This matrix covers the local environment. Cross-solver-version, hardware and public-host reproducibility were not tested by these commands.
+
+## Public-host verification, 2026-10-21
+
+The backend source commit `33adfe4` served the new catalogue with seven programs and ran experiment `4ba6722a-4704-416f-9f43-4b743109c99e` on `https://isabella-labs-runtime.onrender.com`. Two independent physics branches both returned `execution_success`, with **11,320** and **12,481** integrated steps. The selected measured placement error was **0.001214604 m**. The report returned `verified`, a solver model hash, and **95** replay frames. These values were written by `python -m scripts.verify_v_robotics_public` to the local artifact `artifacts/v-robotics-public-live.json`; they are one live experiment, not a reliability estimate. A separate public WSS connection received six persisted events through `completed`.
+
+The frontend release `dpl_GGrz5UW1t4zVkq8hsQiisDqhnrEC` reached Vercel `READY` and was aliased to `https://demo.tryvivacity.com`. The live `/workspace` route showed the seven-program catalogue, loaded the UR5e workcell, streamed three measured validation results and an independent execution, and displayed the persisted assembly report. During the first release, an asset fetch failed and left the canvas blank while the physics job succeeded. The viewer now retries transient geometry requests and offers **Retry 3D view**; a dedicated Playwright failure-injection test passed. After redeployment, the live UR5e geometry rendered on a clean load. The first program-open request also timed out during deployment; a retry succeeded. Cold-start/deployment interruptions therefore remain an operational limitation.
