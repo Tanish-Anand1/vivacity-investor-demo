@@ -5,7 +5,7 @@ The homepage opening is a 7.5-second, 60 fps, pre-rendered Three.js film. It use
 ## Shipped behavior
 
 - `/` plays the film on every page load and reload, including when a previous visit wrote the old intro-complete storage flag. Other routes do not play it.
-- Desktop/wide screens receive a 1440×810 H.264/AAC file; portrait screens receive a separately composed 720×1280 file. Both contain 450 frames and last 7.500 seconds. Browser data-saver or a reported 2G/3G connection selects a lighter 30 fps rendition at 960×540 or 540×960. The soundtrack starts muted and can be enabled by the visitor.
+- Desktop/wide screens receive a 1440×810 H.264/AAC file; large portrait screens receive a separately composed 720×1280 file. Both contain 450 frames and last 7.500 seconds. Phone-width screens, browser data-saver, or a reported 2G/3G connection select a lighter 30 fps rendition at 960×540 or 540×960. The soundtrack starts muted and can be enabled by the visitor.
 - Escape or **Skip intro** opens the homepage immediately. The two visible controls stay keyboard-accessible while the homepage is inert. Focus moves to the homepage main element at completion.
 - Reduced-motion visitors enter the homepage directly. If playback fails or media cannot become playable within 2.3 seconds, the homepage appears rather than remaining behind a blank film surface.
 - The final camera move reveals the actual homepage through a 0.5-second spatial wipe. The homepage and its recorded-scene poster are mounted underneath throughout; the expensive live 3D preview starts after the film finishes. No extra loading page is inserted.
@@ -44,4 +44,4 @@ The eight mandatory inspection frames are in `artifacts/isabella-cinema-preview-
 
 The reflective-object passage and branch duplication are authored geometric cues, not ray-traced mirror imagery or physics outcomes. The four arm actions are deliberately choreographed; they are not controlled by the lab planner. The homepage itself is unchanged by this release, so the film-to-home transition uses a spatial wipe rather than a shared live 3D camera. The film is intentionally available only for the intro and is not a substitute for the interactive simulation.
 
-The media clock is exactly 7.500 seconds, while wall-clock handoff depends on browser startup and decoding. Local headless Chrome measurements ranged from 7.65 to 8.29 seconds. The runtime favors showing the film's ending over cutting a delayed decode; if the file cannot become playable within 2.3 seconds, it reveals the homepage early.
+The media clock is exactly 7.500 seconds, while wall-clock handoff depends on browser startup and decoding. Local and live headless Chrome measurements ranged from 7.65 to 8.50 seconds. The runtime favors showing the film's ending over cutting a delayed decode; if the file cannot become playable within 2.3 seconds, it reveals the homepage early.

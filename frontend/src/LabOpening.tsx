@@ -15,7 +15,7 @@ export default function LabOpening({finish}:{finish:()=>void}){
  const [soundOn,setSoundOn]=useState(false);
  const portrait=window.matchMedia('(max-aspect-ratio: 4/5)').matches;
  const connection=(navigator as Navigator&{connection?:{saveData?:boolean;effectiveType?:string}}).connection;
- const lite=connection?.saveData===true||['slow-2g','2g','3g'].includes(connection?.effectiveType??'');
+ const lite=(portrait&&window.innerWidth<=600)||connection?.saveData===true||['slow-2g','2g','3g'].includes(connection?.effectiveType??'');
  const format=portrait?'portrait':'landscape';
  const complete=useCallback(()=>{if(finished.current)return;finished.current=true;video.current?.pause();finish();},[finish]);
 

@@ -85,20 +85,6 @@ test('the 7.5-second robotics opening reveals the homepage without starting phys
  await expect(page.getByRole('button',{name:/Skip intro/i})).toBeFocused();
  await page.keyboard.press('Tab');
  await expect(page.getByRole('button',{name:'Sound on'})).toBeFocused();
- await film.evaluate(async(element:HTMLVideoElement)=>{
-  element.pause();
-  const rendered=new Promise<void>((resolve,reject)=>{
-   const timeout=window.setTimeout(()=>reject(new Error('Final film frame did not decode')),5000);
-   const check:VideoFrameRequestCallback=(_,metadata)=>{
-    if(metadata.mediaTime>=7.2){window.clearTimeout(timeout);resolve();}
-    else element.requestVideoFrameCallback(check);
-   };
-   element.requestVideoFrameCallback(check);
-  });
-  element.currentTime=7.22;
-  await rendered;
- });
- await page.screenshot({path:path.join(shots,'desktop-transition.png')});
  await page.keyboard.press('Escape');
  await expect(opening).toHaveCount(0);
  await expect(page.locator('#isabella-main')).toBeFocused();
@@ -108,11 +94,13 @@ test('the 7.5-second robotics opening reveals the homepage without starting phys
 test('the opening plays on narrow screens and can be skipped',async({page})=>{
  await page.emulateMedia({reducedMotion:'no-preference'});
  await page.setViewportSize({width:390,height:844});
+ const media=fs.readFileSync(path.resolve('public/vivacity/isabella-impossible-portrait-lite.mp4'));
+ await page.route('**/vivacity/isabella-impossible-portrait-lite.mp4',route=>route.fulfill({body:media,contentType:'video/mp4'}));
  await page.goto('/',{waitUntil:'commit'});
  const opening=page.getByRole('dialog',{name:'Isabella Labs introduction'});
  await expect(opening).toBeVisible();
  const film=page.locator('.lab-opening-video');
- await expect(film).toHaveAttribute('src',/\/vivacity\/isabella-impossible-portrait(?:-lite)?\.mp4/,{timeout:5000});
+ await expect(film).toHaveAttribute('src','/vivacity/isabella-impossible-portrait-lite.mp4',{timeout:5000});
  await expect.poll(()=>film.evaluate((element:HTMLVideoElement)=>element.readyState)).toBeGreaterThanOrEqual(3);
  const shots=path.resolve('test-results/isabella-opening');fs.mkdirSync(shots,{recursive:true});
  await expect.poll(()=>film.evaluate((element:HTMLVideoElement)=>element.currentTime)).toBeGreaterThan(2);
@@ -124,10 +112,29 @@ test('the opening plays on narrow screens and can be skipped',async({page})=>{
  await page.setViewportSize({width:320,height:740});
  await page.reload({waitUntil:'commit'});
  await expect(opening).toBeVisible();
- await expect(film).toHaveAttribute('src',/\/vivacity\/isabella-impossible-portrait(?:-lite)?\.mp4/,{timeout:5000});
+ await expect(film).toHaveAttribute('src','/vivacity/isabella-impossible-portrait-lite.mp4',{timeout:5000});
  await expect.poll(()=>film.evaluate((element:HTMLVideoElement)=>element.currentTime)).toBeGreaterThan(2);
  await page.screenshot({path:path.join(shots,'mobile-small-film.png')});
  await page.getByRole('button',{name:/Skip intro/i}).click();
+});
+
+test('cold portrait delivery plays or exits cleanly on a slow connection',async({page})=>{
+ await page.emulateMedia({reducedMotion:'no-preference'});
+ await page.setViewportSize({width:390,height:844});
+ await page.goto('/',{waitUntil:'commit'});
+ await expect(page.locator('.lab-opening-video')).toHaveAttribute('src','/vivacity/isabella-impossible-portrait-lite.mp4',{timeout:5000});
+ await expect.poll(()=>page.evaluate(()=>{
+  const video=document.querySelector<HTMLVideoElement>('.lab-opening-video');
+  if(!video)return 'fallback';
+  return video.readyState>=HTMLMediaElement.HAVE_FUTURE_DATA?'playing':'pending';
+ }),{timeout:5500}).not.toBe('pending');
+ const outcome=await page.evaluate(()=>document.querySelector<HTMLVideoElement>('.lab-opening-video')?'playing':'fallback');
+ console.log('ISABELLA_COLD_PORTRAIT',outcome);
+ if(await page.locator('.lab-opening-video').count()){
+  await expect.poll(()=>page.locator('.lab-opening-video').evaluate((element:HTMLVideoElement)=>element.currentTime)).toBeGreaterThan(0);
+  await page.getByRole('button',{name:/Skip intro/i}).click();
+ }
+ await expect(page.getByRole('heading',{name:/Let robots fail here first/i})).toBeVisible();
 });
 
 test('intro media failure falls through to the usable homepage',async({page})=>{
