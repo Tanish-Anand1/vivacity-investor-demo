@@ -1,11 +1,31 @@
-import {test,expect} from '@playwright/test';
+import {test,expect,type CDPSession,type Page} from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
 
 const apiBase=process.env.FACTORY_E2E_API_BASE_URL??'http://127.0.0.1:8002';
 
+async function captureOpeningPhase(page:Page,cdp:CDPSession,timeMs:number,file:string){
+ await page.evaluate(time=>{
+  const opening=document.querySelector('.lab-opening');
+  for(const animation of opening?.getAnimations({subtree:true})??[]){animation.pause();animation.currentTime=time;}
+ },timeMs);
+ await page.evaluate(()=>new Promise<void>(resolve=>requestAnimationFrame(()=>resolve())));
+ const screenshot=await cdp.send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});
+ fs.writeFileSync(file,Buffer.from(screenshot.data,'base64'));
+}
+
 test('the 7.5-second robotics opening reveals the homepage without starting physics',async({page})=>{
  await page.emulateMedia({reducedMotion:'no-preference'});
+ await page.addInitScript(()=>{
+  let started:number|undefined;
+  const lifecycle=window as typeof window&{__openingDurationMs?:number};
+  const observer=new MutationObserver(()=>{
+   const present=Boolean(document.querySelector('.lab-opening'));
+   if(present&&started===undefined)started=performance.now();
+   if(!present&&started!==undefined&&lifecycle.__openingDurationMs===undefined){lifecycle.__openingDurationMs=performance.now()-started;observer.disconnect();}
+  });
+  observer.observe(document,{childList:true,subtree:true});
+ });
  let starts=0;
  page.on('request',request=>{if(request.method()!=='POST')return;const path=new URL(request.url()).pathname;if(/\/v1\/factory\/cells\/[^/]+\/(runs|benchmarks)$/.test(path)||/\/v1\/worlds\/[^/]+\/experiments$/.test(path)||path==='/v1/sessions')starts++;});
  await page.goto('/',{waitUntil:'domcontentloaded'});
@@ -13,18 +33,60 @@ test('the 7.5-second robotics opening reveals the homepage without starting phys
  await expect(opening).toBeVisible();
  expect(await page.locator('.opening-arm').count()).toBe(3);
  expect(await page.locator('.opening-humanoid').count()).toBe(2);
- const started=Date.now(),shots=path.resolve('test-results/isabella-opening');fs.mkdirSync(shots,{recursive:true});
- for(const [target,label] of [[850,'heavy-arm'],[2000,'precision-arm'],[3600,'delta-arm'],[5200,'humanoids'],[7150,'identity']] as const){const remaining=target-(Date.now()-started);if(remaining>0)await page.waitForTimeout(remaining);await page.screenshot({path:path.join(shots,`${label}.png`)});}
- await expect(opening).toHaveCount(0,{timeout:3000});
- expect(Date.now()-started).toBeGreaterThanOrEqual(7100);
- expect(Date.now()-started).toBeLessThan(9000);
+ const shots=path.resolve('test-results/isabella-opening');fs.mkdirSync(shots,{recursive:true});
+ await expect.poll(()=>page.locator('.lab-opening-scene img').evaluate((image:HTMLImageElement)=>image.naturalWidth)).toBeGreaterThan(0);
+ await expect(opening).toHaveCount(0,{timeout:9000});
+ const elapsed=await page.evaluate(()=>(window as typeof window&{__openingDurationMs?:number}).__openingDurationMs);
+ expect(elapsed).toBeDefined();
+ expect(elapsed).toBeGreaterThanOrEqual(7300);
+ expect(elapsed).toBeLessThan(9000);
  await expect(page.getByRole('heading',{name:/Let robots fail here first/i})).toBeVisible();
  await expect(page.locator('#isabella-main')).toBeFocused({timeout:5_000});
  await expect(page).toHaveURL('/');
  expect(starts).toBe(0);
  expect(await page.evaluate(()=>document.body.style.overflow)).not.toBe('hidden');
- await page.reload();
+ await page.evaluate(()=>localStorage.setItem('vivacity:isabella-intro-complete','1'));
+ await page.reload({waitUntil:'commit'});
+ await expect(opening).toBeVisible();
+ const cdp=await page.context().newCDPSession(page);
+ await expect.poll(()=>page.locator('.lab-opening-scene img').evaluate((image:HTMLImageElement)=>image.naturalWidth)).toBeGreaterThan(0);
+ for(const [time,label,selector] of [[900,'world','.lab-opening-chapter-world'],[3000,'change','.lab-opening-chapter-change'],[5100,'holds','.lab-opening-chapter-holds'],[6500,'identity','.lab-opening-brand']] as const){
+  await captureOpeningPhase(page,cdp,time,path.join(shots,`desktop-${label}.png`));
+  await expect(page.locator(selector)).toHaveCSS('opacity','1');
+ }
+ await page.keyboard.press('Tab');
+ await expect(page.getByRole('button',{name:/Skip intro/i})).toBeFocused();
+ await page.keyboard.press('Escape');
  await expect(opening).toHaveCount(0);
+ await expect(page.locator('#isabella-main')).toBeFocused();
+ expect(starts).toBe(0);
+});
+
+test('the opening stays legible on a narrow screen',async({page})=>{
+ await page.emulateMedia({reducedMotion:'no-preference'});
+ await page.setViewportSize({width:390,height:844});
+ await page.goto('/',{waitUntil:'commit'});
+ const opening=page.getByRole('dialog',{name:'Isabella Labs introduction'});
+ await expect(opening).toBeVisible();
+ await expect.poll(()=>page.locator('.lab-opening-scene img').evaluate((image:HTMLImageElement)=>image.naturalWidth)).toBeGreaterThan(0);
+ const shots=path.resolve('test-results/isabella-opening');fs.mkdirSync(shots,{recursive:true});
+ const cdp=await page.context().newCDPSession(page);
+ for(const [time,label,selector] of [[900,'world','.lab-opening-chapter-world'],[3000,'change','.lab-opening-chapter-change'],[5100,'holds','.lab-opening-chapter-holds'],[6500,'identity','.lab-opening-brand']] as const){
+  await captureOpeningPhase(page,cdp,time,path.join(shots,`mobile-${label}.png`));
+  await expect(page.locator(selector)).toHaveCSS('opacity','1');
+ }
+ await expect(page.getByRole('button',{name:/Skip intro/i})).toBeVisible();
+ await page.getByRole('button',{name:/Skip intro/i}).click();
+ await expect(opening).toHaveCount(0);
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
+ await page.setViewportSize({width:320,height:740});
+ await page.reload({waitUntil:'commit'});
+ await expect(opening).toBeVisible();
+ await captureOpeningPhase(page,cdp,6500,path.join(shots,'mobile-small-identity.png'));
+ await expect(page.locator('.lab-opening-brand')).toHaveCSS('opacity','1');
+ const word=await page.locator('.lab-opening-brand strong').evaluate(element=>({width:element.clientWidth,content:element.scrollWidth}));
+ expect(word.content).toBeLessThanOrEqual(word.width);
+ await page.getByRole('button',{name:/Skip intro/i}).click();
 });
 
 test('homepage starts a real failure and six matched MuJoCo trials, then Research replays a saved run',async({page,request})=>{

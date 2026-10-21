@@ -31,8 +31,8 @@ const WorldLibrary=lazy(()=>import('./WorldLibrary'));
 const ExperimentLibrary=lazy(()=>import('./ExperimentLibrary'));
 
 export default function App(){
-  const [showOpening,setShowOpening]=useState(()=>{try{return window.location.pathname==='/'&&localStorage.getItem('vivacity:isabella-intro-complete')!=='1'&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch{return false;}});
-  const finishOpening=useCallback(()=>{try{localStorage.setItem('vivacity:isabella-intro-complete','1');}catch{ /* Storage may be disabled. */ }document.querySelector<HTMLElement>('.isabella-home')?.removeAttribute('inert');document.getElementById('isabella-main')?.focus({preventScroll:true});setShowOpening(false);},[]);
+  const [showOpening,setShowOpening]=useState(()=>window.location.pathname==='/'&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const finishOpening=useCallback(()=>{document.querySelector<HTMLElement>('.isabella-home')?.removeAttribute('inert');document.getElementById('isabella-main')?.focus({preventScroll:true});setShowOpening(false);},[]);
   const [guidedAutostart,setGuidedAutostart]=useState(()=>new URLSearchParams(window.location.search).get('guided')==='1');
   const [activeTemplate,setActiveTemplate]=useState<{selection:Selection;backend:Backend;config:Record<string,unknown>;key?:string;name?:string;configurationId?:string}>({selection:DEFAULT_SELECTION,backend:'mujoco',config:defaultWorkcell,key:'curated-warehouse-v1',name:'Franka Panda / Industrial warehouse / Pick and place'});
   const [draft,setDraft]=useState<Configuration>(defaultConfiguration('warehouse'));
