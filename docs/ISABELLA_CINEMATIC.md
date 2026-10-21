@@ -44,4 +44,12 @@ The eight mandatory inspection frames are in `artifacts/isabella-cinema-preview-
 
 The reflective-object passage and branch duplication are authored geometric cues, not ray-traced mirror imagery or physics outcomes. The four arm actions are deliberately choreographed; they are not controlled by the lab planner. The homepage itself is unchanged by this release, so the film-to-home transition uses a spatial wipe rather than a shared live 3D camera. The film is intentionally available only for the intro and is not a substitute for the interactive simulation.
 
-The media clock is exactly 7.500 seconds, while wall-clock handoff depends on browser startup and decoding. Local and live headless Chrome measurements ranged from 7.65 to 8.50 seconds. The runtime favors showing the film's ending over cutting a delayed decode; if the file cannot become playable within 2.3 seconds, it reveals the homepage early.
+The media clock is exactly 7.500 seconds, while wall-clock handoff depends on browser startup and decoding. Local and live headless Chrome checks measured roughly 7.6–8.9 seconds; an exact wall-clock duration is not guaranteed. The runtime favors showing the film's ending over cutting a delayed decode; if the file cannot become playable within 2.3 seconds, it reveals the homepage early.
+
+## Release verification · 2026-10-21
+
+- Production Vite build passed in both the development checkout and public source checkout. The Vercel production build completed, and `https://demo.tryvivacity.com/` returned HTTP 200.
+- Seven opening browser tests passed against the live custom domain: full warmed playback, real CDN desktop playback, phone layout and skip, cold phone rendition, media failure, stalled download, and data-saver selection.
+- Four homepage accessibility/navigation tests and a robotics/science lab-entry test passed locally. The lab-entry test also passed against the live custom domain.
+- `ffprobe` verified all four shipped H.264/AAC files have 7.500-second duration. The 60 fps files and 30 fps lighter renditions were decoded in headless Chrome; one live desktop sample reported 137 decoded frames at 4.29 seconds of the lighter rendition with zero dropped frames.
+- The live phone-sized cold-load probe played the 1.05 MB portrait rendition. A previous probe of the 2.9 MB portrait file took too long and triggered the designed fallback; that observation motivated the phone default.
