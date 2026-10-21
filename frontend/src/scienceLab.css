@@ -1,4 +1,4 @@
-.discovery-lab{--lab-bg:#0b0e0d;--lab-panel:#14201d;--lab-rule:#899b8b55;--lab-ink:#f0efe7;--lab-muted:#bdc9be;--lab-amber:#f3b482;background:var(--lab-bg);color:var(--lab-ink);min-height:100vh;margin:0 -24px;padding:0 24px 100px;font-family:Arial,Helvetica,sans-serif}
+.discovery-lab{--lab-bg:#0b0e0d;--lab-panel:#14201d;--lab-rule:#899b8b55;--lab-ink:#f0efe7;--lab-muted:#bdc9be;--lab-amber:#d1ad72;background:var(--lab-bg);color:var(--lab-ink);min-height:100vh;margin:0 -24px;padding:0 24px 100px;font-family:var(--font-body)}
 .discovery-lab *{box-sizing:border-box}
 .discovery-lab button,.discovery-lab select,.discovery-lab input{font:inherit}
 .discovery-lab button{cursor:pointer}

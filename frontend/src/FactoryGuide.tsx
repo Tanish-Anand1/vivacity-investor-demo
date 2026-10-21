@@ -49,7 +49,7 @@ export default function FactoryGuide({cell,run,blocked,onStart,onLoadChallenge,o
  const partitions=job?.comparison.partitions;
  const training=partitions?.training,heldOut=partitions?.held_out;
  return <section className="lab-guide" aria-label="Guided factory experiment">
-  <div className="lab-guide-intro"><span className="factory-eyebrow">Case 01 / Contact handling</span><h2>A package loses its grip.</h2><p>Can one physical change help the robot deliver it? Test the same MuJoCo world under two conditions.</p></div>
+  <div className="lab-guide-intro"><span className="factory-eyebrow">Case 01 / Contact handling</span><h2>A package loses its grip.</h2><p>Can one physical change help the robot deliver it? Test the same physical world under two conditions.</p></div>
   {!challenge&&<div className="lab-guide-recovery"><p>This saved cell has different conditions. Load the guided challenge to test a measured drop, or open Research to inspect the saved experiment.</p><button disabled={blocked} onClick={onLoadChallenge}>Load challenge world</button><button onClick={onResearch}>Inspect saved evidence</button></div>}
   {challenge&&<ol className="lab-steps">
    <li><span className="lab-step-number">01</span><div><h3>Observe the failure</h3><p>Run a one-carton baseline from a saved initial world state.</p><button className="primary" disabled={!challenge||blocked||benchmarking} onClick={()=>{setJob(null);onStart();}}>{running(baseline?.status??'')?'Baseline running…':baselineFinished?'Run baseline again':'Run baseline'}</button>
@@ -68,6 +68,6 @@ export default function FactoryGuide({cell,run,blocked,onStart,onLoadChallenge,o
    </>}</div></li>
   </ol>}
   {error&&<p role="alert" className="notice">{error}</p>}
-  <p className="lab-guide-foot">Simulation evidence · MuJoCo dynamics · one carton · seeded starts</p>
+  <p className="lab-guide-foot">Simulation evidence · physical dynamics · one carton · seeded starts</p>
  </section>;
 }

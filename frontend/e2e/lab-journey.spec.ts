@@ -4,20 +4,22 @@ import path from 'node:path';
 
 const apiBase=process.env.FACTORY_E2E_API_BASE_URL??'http://127.0.0.1:8002';
 
-test('the 7.5-second opening reveals the homepage without starting physics',async({page})=>{
+test('the 7.5-second robotics opening reveals the homepage without starting physics',async({page})=>{
  await page.emulateMedia({reducedMotion:'no-preference'});
  let starts=0;
  page.on('request',request=>{if(request.method()!=='POST')return;const path=new URL(request.url()).pathname;if(/\/v1\/factory\/cells\/[^/]+\/(runs|benchmarks)$/.test(path)||/\/v1\/worlds\/[^/]+\/experiments$/.test(path)||path==='/v1/sessions')starts++;});
  await page.goto('/',{waitUntil:'domcontentloaded'});
  const opening=page.getByRole('dialog',{name:'Isabella Labs introduction'});
  await expect(opening).toBeVisible();
+ expect(await page.locator('.opening-arm').count()).toBe(3);
+ expect(await page.locator('.opening-humanoid').count()).toBe(2);
  const started=Date.now(),shots=path.resolve('test-results/isabella-opening');fs.mkdirSync(shots,{recursive:true});
- for(const [target,label] of [[850,'what-if'],[2000,'branching'],[3600,'world'],[5200,'identity'],[7150,'reveal']] as const){const remaining=target-(Date.now()-started);if(remaining>0)await page.waitForTimeout(remaining);await page.screenshot({path:path.join(shots,`${label}.png`)});}
+ for(const [target,label] of [[850,'heavy-arm'],[2000,'precision-arm'],[3600,'delta-arm'],[5200,'humanoids'],[7150,'identity']] as const){const remaining=target-(Date.now()-started);if(remaining>0)await page.waitForTimeout(remaining);await page.screenshot({path:path.join(shots,`${label}.png`)});}
  await expect(opening).toHaveCount(0,{timeout:3000});
  expect(Date.now()-started).toBeGreaterThanOrEqual(7100);
  expect(Date.now()-started).toBeLessThan(9000);
- await expect(page.getByRole('heading',{name:/Make the unknown testable/i})).toBeVisible();
- await expect(page.locator('#isabella-main')).toBeFocused();
+ await expect(page.getByRole('heading',{name:/Let robots fail here first/i})).toBeVisible();
+ await expect(page.locator('#isabella-main')).toBeFocused({timeout:5_000});
  await expect(page).toHaveURL('/');
  expect(starts).toBe(0);
  expect(await page.evaluate(()=>document.body.style.overflow)).not.toBe('hidden');
@@ -29,7 +31,7 @@ test('homepage starts a real failure and six matched MuJoCo trials, then Researc
  test.setTimeout(process.env.FACTORY_E2E_EXTERNAL==='1'?1_800_000:900_000);
  await page.emulateMedia({reducedMotion:'reduce'});
  await page.goto('/',{waitUntil:'domcontentloaded'});
- await expect(page.getByRole('heading',{name:/Make the unknown testable/i})).toBeVisible();
+ await expect(page.getByRole('heading',{name:/Let robots fail here first/i})).toBeVisible();
  await page.locator('.isabella-primary').click();
  await expect(page).toHaveURL('/laboratory');
  await page.getByRole('button',{name:/Open robotics lab/i}).click();
@@ -39,7 +41,7 @@ test('homepage starts a real failure and six matched MuJoCo trials, then Researc
  await expect(page).toHaveURL('/laboratory');
  await page.goBack();
  await expect(page).toHaveURL('/');
- await page.getByRole('button',{name:/Open robotics lab/i}).click();
+ await page.getByRole('button',{name:'OPEN ROBOTICS EXPERIMENT'}).click();
  await expect(page).toHaveURL('/lab');
  await expect(page.getByRole('heading',{name:'A package loses its grip.'})).toBeVisible({timeout:90_000});
  await page.getByRole('button',{name:'Run baseline',exact:true}).click();
@@ -114,7 +116,7 @@ test('reduced motion enters directly and the narrow layout has no horizontal ove
  await page.setViewportSize({width:390,height:844});
  await page.goto('/',{waitUntil:'domcontentloaded'});
  await expect(page.getByRole('dialog',{name:'Isabella Labs introduction'})).toHaveCount(0);
- await expect(page.getByRole('heading',{name:/Make the unknown testable/i})).toBeVisible();
+ await expect(page.getByRole('heading',{name:/Let robots fail here first/i})).toBeVisible();
  const mobileShots=path.resolve('test-results/isabella-home');fs.mkdirSync(mobileShots,{recursive:true});
  await page.screenshot({path:path.join(mobileShots,'mobile.png')});
  await page.locator('.isabella-primary').click();

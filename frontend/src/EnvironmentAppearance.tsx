@@ -56,7 +56,7 @@ function SparkEngine({onStatus,quality}:{onStatus:(message:string,error?:boolean
 }
 
 /** Color, opacity, covariance and spherical harmonics remain in the original SPZ.
- * MuJoCo collision geometry is intentionally not derived from visible splats. */
+ * Native collision geometry is intentionally not derived from visible splats. */
 function Splats({world,appearance,onStatus,onBounds}:{world?:LibraryWorld;appearance:Appearance;onStatus:(message:string,error?:boolean)=>void;onBounds?:(bounds:Box3)=>void}){
   const {gl,scene,invalidate}=useThree();
   const quality=useRenderQuality(),callbacks=useRef({onStatus,onBounds});callbacks.current={onStatus,onBounds};

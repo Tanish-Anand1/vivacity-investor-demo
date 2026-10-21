@@ -1,4 +1,46 @@
-# Isabella Labs scientific laboratory release — 2026-10-21
+# Isabella Labs robotics-first interface release — 2026-10-21
+
+The current frontend opens with a 7.5-second, skippable brand film: three
+authored robot-arm silhouettes give way to two humanoid silhouettes, then the
+identity fades into the already-mounted homepage. These figures are brand
+illustrations, not simulated hardware. Reduced-motion visitors go directly to
+the homepage; a visitor can also skip with the button or Escape. The homepage
+leads with an actual saved robotic workcell, a measured weak-grip failure and
+full-grip delivery, and direct paths into the working robotics and scientific
+labs. It never starts an experiment on load. The consumer interface uses
+Instrument Sans, Manrope and restrained IBM Plex Mono from Google Fonts and
+does not display the simulator vendor name in its ordinary routes.
+
+This release changed frontend presentation and navigation, not the physics
+backend or its API. The existing Explore/Research progression, world library,
+condition controls, numerical lab, replay and export remain operational.
+The generated homepage fixture came from `scripts/generate_lab_opening.py`;
+selecting a saved condition does not create a new job. New experiments still
+run through the backend after an explicit visitor action.
+
+Actual local release checks: TypeScript and Vite build passed; frontend unit
+checks passed **5 template + 4 settings + 19 API = 28 tests**. The complete
+Chromium suite passed **12/12 in 3.4 minutes**, covering timed intro, desktop
+and mobile accessibility, direct routes, world entry, configuration changes,
+real robotic failure and six independent comparison trials, replay, SciPy
+inference, stale results, export and recovery. The opening was repeated five
+times against the rebuilt production bundle, **5/5 passed in 1.1 minutes**.
+Two additional route checks for visible engine-brand copy passed. The local
+physics benchmark measured **76.1197 s wall time** with 0/2 weak-grip versus
+2/2 full-grip training deliveries and 0/1 versus 1/1 held-out deliveries;
+its six native step counts were 4,148, 17,083, 4,148, 17,083, 4,148 and
+17,088. These results describe this fixed simulated case only. The prior
+full backend Pytest result below is historical; it was not rerun because this
+release made no backend changes.
+
+Remaining risks: the opening artwork is a stylized SVG sequence, not a rendered
+humanoid physics simulation. The homepage evidence is recorded, clearly
+labelled and separate from live runs. The large `WorldPreview` chunk remains
+about 901 KiB gzip, and no new field performance measurement was taken. Render
+Free can sleep and its SQLite storage is ephemeral; durable history and
+always-on availability remain incomplete.
+
+# Historical scientific laboratory release — 2026-10-21
 
 The current working checkout makes Isabella Labs a science and experimentation
 lab by Vivacity. The science-led homepage shows explicitly recorded SciPy

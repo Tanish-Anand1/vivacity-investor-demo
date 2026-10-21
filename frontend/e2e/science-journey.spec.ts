@@ -7,25 +7,25 @@ const apiBase=process.env.FACTORY_E2E_API_BASE_URL??'http://127.0.0.1:8002';
 const shots=path.resolve('test-results/science-journey');
 fs.mkdirSync(shots,{recursive:true});
 
-test('Isabella homepage presents science as the lab identity and opens both working disciplines',async({page})=>{
+test('Isabella homepage leads with robotics and opens both working disciplines',async({page})=>{
  await page.emulateMedia({reducedMotion:'reduce'});
  await page.goto('/',{waitUntil:'domcontentloaded'});
- await expect(page.getByRole('heading',{name:/Make the unknown testable/i})).toBeVisible();
- await expect(page.getByText('THE EXPERIMENTAL SCIENCE LAB / BY VIVACITY')).toBeVisible();
- await expect(page.getByText(/Recorded SciPy \d+\.\d+\.\d+ computation · seed 7/)).toBeVisible();
+ await expect(page.getByRole('heading',{name:/Let robots fail here first/i})).toBeVisible();
+ expect(await page.locator('body').innerText()).not.toMatch(/\bMuJoCo\b/i);
+ await expect(page.getByText('ISABELLA LABS / BY VIVACITY')).toBeVisible();
+ await expect(page.getByText('RECORDED SIMULATION').first()).toBeVisible();
  await page.screenshot({path:path.join(shots,'science-home-desktop.png'),fullPage:true});
- await page.getByRole('button',{name:'Central gravity'}).click();
- await expect(page.getByText('Held-out RMSE')).toBeVisible();
- await page.getByRole('button',{name:'Additional influence'}).click();
  await page.getByRole('button',{name:'ENTER THE LAB',exact:true}).click();
  await expect(page).toHaveURL('/laboratory');
- await expect(page.getByRole('heading',{name:/Choose a question/i})).toBeVisible();
- await page.getByRole('button',{name:/Open discovery lab/i}).click();
+ await expect(page.getByRole('heading',{name:/Choose a world/i})).toBeVisible();
+ await page.getByRole('button',{name:/Open scientific lab/i}).click();
  await expect(page).toHaveURL('/discovery');
  await expect(page.getByRole('heading',{name:/The Invisible Planet/i})).toBeVisible();
+ expect(await page.locator('body').innerText()).not.toMatch(/\bMuJoCo\b/i);
  await page.getByRole('button',{name:'Robotics',exact:true}).click();
  await expect(page).toHaveURL('/lab');
  await expect(page.getByRole('heading',{name:/Build a world/i})).toBeVisible();
+ expect(await page.locator('body').innerText()).not.toMatch(/\bMuJoCo\b/i);
 });
 
 test('real SciPy observations, independent fits, stale results, replay, export and control rejection',async({page,request})=>{
@@ -89,12 +89,12 @@ test('homepage and discovery controls remain usable on a narrow screen',async({p
  await page.setViewportSize({width:390,height:844});
  await page.emulateMedia({reducedMotion:'reduce'});
  await page.goto('/',{waitUntil:'domcontentloaded'});
- await expect(page.getByRole('heading',{name:/Make the unknown testable/i})).toBeVisible();
+ await expect(page.getByRole('heading',{name:/Let robots fail here first/i})).toBeVisible();
  await page.screenshot({path:path.join(shots,'science-home-mobile.png'),fullPage:true});
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth+1)).toBe(true);
  const audit=await new AxeBuilder({page}).include('.isabella-home').withTags(['wcag2a','wcag2aa','wcag22aa']).analyze();
  expect(audit.violations.filter(issue=>issue.impact==='serious'||issue.impact==='critical').map(issue=>issue.id)).toEqual([]);
- await page.getByRole('button',{name:'RUN AN EXPERIMENT'}).click();
+ await page.getByRole('button',{name:/Explore scientific experiments/i}).click();
  await expect(page).toHaveURL('/discovery');
  await expect(page.getByRole('button',{name:/Create observation world/i})).toBeEnabled();
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth+1)).toBe(true);

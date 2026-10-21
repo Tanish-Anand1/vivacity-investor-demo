@@ -1,4 +1,41 @@
-# Isabella Labs by Vivacity — scientific laboratory release
+# Isabella Labs by Vivacity — robotics-first release
+
+Date: 2026-10-21. The current homepage is a robotics-led Isabella Labs
+experience. A deterministic 7.5-second opening uses three distinct authored
+robot-arm silhouettes and two humanoid forms, followed by an identity reveal
+and a fade into the already-mounted homepage. The figures are graphic brand
+illustrations, not physics output. The opening has a skip button, Escape path,
+focus containment, reduced-motion bypass and one-time completion preference.
+
+The new homepage puts a recorded physical workcell beside the central action.
+Its two condition buttons show measured weak-grip failure and full-grip
+delivery from `scripts/generate_lab_opening.py`. They only inspect a saved
+fixture; the application does not start physics on load. `ENTER THE LAB`
+opens `/laboratory`, which puts the robotic case first and the SciPy orbital
+case second. `/lab` retains the active Factory experiment, `/worlds` and
+`/workspace` retain robot-world configuration, and `/discovery` retains the
+scientific inference lab. The ordinary frontend labels do not name the robot
+physics vendor. The typography uses Google-hosted Instrument Sans, Manrope and
+IBM Plex Mono rather than the older local Geist files.
+
+Release verification in this checkout: `npm run build` passed; 28/28 frontend
+unit checks passed; the production-bundle Chromium suite passed 12/12 in 3.4
+minutes. It exercised both physical failure and success, six independent
+backend comparison runs with replay, settings changes, SciPy fitting,
+stale-state handling, export and narrow-screen use. Five repeated timed-opening
+tests passed in 1.1 minutes. A separate two-route copy audit passed. The
+robotic comparison measured 76.1197 s and 4,148/17,083/4,148/17,083/4,148/
+17,088 native physics steps. These are case-specific simulated results, not a
+hardware reliability claim. The backend itself was not modified in this
+release; its prior full Pytest result remains in the historical report below.
+
+Known limits: the humanoid opening is illustration, not an executable
+humanoid model; the homepage condition results are saved evidence, not a new
+run; the public Render Free host can sleep and loses SQLite on redeploy; and
+the world-preview JavaScript chunk remains roughly 901 KiB gzip. Field LCP,
+INP and CLS for this release were not measured.
+
+## Historical scientific laboratory release
 
 Date: 2026-10-21. This section describes the deployed science-led redesign.
 The older Factory launch record follows below as historical context.

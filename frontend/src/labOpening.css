@@ -1,17 +1,26 @@
-.lab-opening{position:fixed;inset:0;z-index:100;overflow:hidden;color:#efeee8;pointer-events:auto;background:transparent}
-.lab-opening-curtain{position:absolute;inset:0;background:#050707;will-change:opacity}
-.lab-opening-top-mask{position:absolute;top:0;left:0;right:0;height:88px;background:#050707}
-.lab-opening-sculpture{position:absolute;inset:0;width:100%;height:100%;filter:drop-shadow(0 25px 25px #0008);pointer-events:none}
-.lab-opening-copy{position:absolute;left:clamp(24px,8vw,148px);bottom:clamp(80px,18vh,180px);max-width:90vw;pointer-events:none}
-.lab-opening-copy h1{font:500 clamp(75px,13vw,210px)/.88 Arial,sans-serif;letter-spacing:-.1em}
-.lab-opening-glimpse h1{font-size:clamp(68px,10vw,155px)}
-.lab-opening-copy em{font-family:Georgia,serif;font-weight:400;letter-spacing:-.075em}
-.lab-opening-name{position:absolute;top:51%;left:50%;width:min(90vw,1130px);text-align:center;pointer-events:none}
-.lab-opening-name strong{display:block;font:650 clamp(75px,13.5vw,210px)/.78 Arial,sans-serif;letter-spacing:-.105em}
-.lab-opening-name span{display:block;margin-top:36px;font:600 clamp(14px,1.6vw,25px)/1.1 Arial,sans-serif;letter-spacing:.24em}
-.lab-opening-skip{position:absolute;right:clamp(20px,4vw,70px);top:clamp(20px,4vw,70px);border:1px solid #aebcb0;background:#070a09be;color:#f4f0e8;padding:12px 16px;min-height:44px;font:12px Arial,sans-serif;letter-spacing:.02em}
-.lab-opening-skip span{margin-left:12px}
-.lab-opening-skip:hover{background:#d9e3d8;color:#111613}
-.lab-opening-skip:focus-visible{outline:2px solid #f4d6a6;outline-offset:4px}
-@media(max-width:680px){.lab-opening-copy{left:20px;bottom:18vh}.lab-opening-copy h1{font-size:clamp(70px,18vw,120px)}.lab-opening-glimpse h1{font-size:clamp(58px,14vw,100px)}.lab-opening-name strong{font-size:clamp(74px,17vw,128px)}.lab-opening-name span{margin-top:24px;font-size:14px}.lab-opening-sculpture{width:170%;left:-50%}.lab-opening-top-mask{height:70px}}
+.lab-opening{position:fixed;inset:0;z-index:100;overflow:hidden;color:#f1f1e9;background:#080c0a;isolation:isolate;animation:opening-exit 7.5s linear both}
+.lab-opening-film{position:absolute;inset:0;overflow:hidden;background:radial-gradient(ellipse at 50% 68%,#1f2925 0%,#0d1210 49%,#060908 100%)}
+.opening-figures{position:absolute;inset:0;width:100%;height:100%;filter:drop-shadow(0 22px 25px #0009)}
+.opening-arm,.opening-humanoid{transform-box:fill-box;transform-origin:center bottom;will-change:translate,scale,rotate,opacity}
+.opening-arm-heavy{animation:opening-heavy 7.5s cubic-bezier(.77,0,.175,1) both}
+.opening-arm-precision{animation:opening-precision 7.5s cubic-bezier(.77,0,.175,1) both}
+.opening-arm-delta{animation:opening-delta 7.5s cubic-bezier(.77,0,.175,1) both}
+.opening-humanoid-tall{animation:opening-tall 7.5s cubic-bezier(.77,0,.175,1) both}
+.opening-humanoid-compact{animation:opening-compact 7.5s cubic-bezier(.77,0,.175,1) both}
+.opening-ground{animation:opening-ground 7.5s linear both}
+.lab-opening-brand{position:absolute;top:50%;left:50%;width:min(84vw,1100px);text-align:center;transform:translate(-50%,-50%);animation:opening-brand 7.5s cubic-bezier(.23,1,.32,1) both;pointer-events:none}
+.lab-opening-brand strong{display:block;font:650 clamp(82px,13vw,205px)/.77 'Instrument Sans',sans-serif;letter-spacing:-.095em}
+.lab-opening-brand span{display:block;margin-top:30px;font:600 clamp(12px,1.3vw,20px)/1.2 Manrope,sans-serif;letter-spacing:.27em}
+.lab-opening-skip{position:absolute;right:clamp(20px,4vw,70px);top:clamp(20px,4vw,70px);border:1px solid #aeb9ad;background:#080d0bc9;color:#f2f1e9;padding:12px 16px;min-height:44px;font:600 12px Manrope,sans-serif;letter-spacing:.02em;animation:opening-skip 7.5s linear both}
+.lab-opening-skip span{margin-left:12px}.lab-opening-skip:hover{background:#e6e8db;color:#111713}.lab-opening-skip:focus-visible{outline:2px solid #d8bb86;outline-offset:4px}
+@keyframes opening-heavy{0%,3%{opacity:0;translate:-10% 7%;rotate:-8deg}12%,31%{opacity:1;translate:0 0;rotate:0deg}47%,100%{opacity:0;translate:-4% 1%;rotate:-3deg}}
+@keyframes opening-precision{0%,11%{opacity:0;translate:2% 9%;rotate:9deg}22%,37%{opacity:1;translate:0 0;rotate:0deg}51%,100%{opacity:0;translate:2% -2%;rotate:3deg}}
+@keyframes opening-delta{0%,20%{opacity:0;translate:10% -8%}30%,40%{opacity:1;translate:0 0}53%,100%{opacity:0;translate:4% -5%}}
+@keyframes opening-tall{0%,43%{opacity:0;translate:0 10%;scale:.96}54%,73%{opacity:1;translate:0 0;scale:1}85%,100%{opacity:0;translate:-4% 0;scale:1.03}}
+@keyframes opening-compact{0%,48%{opacity:0;translate:0 12%;scale:.95}60%,74%{opacity:1;translate:0 0;scale:1}86%,100%{opacity:0;translate:4% 0;scale:1.03}}
+@keyframes opening-ground{0%,32%{opacity:.4}56%,85%{opacity:.8}100%{opacity:0}}
+@keyframes opening-brand{0%,74%{opacity:0;transform:translate(-50%,-46%) scale(.96)}84%,93%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-52%) scale(1.01)}}
+@keyframes opening-skip{0%,86%{opacity:1}90%,100%{opacity:0}}
+@keyframes opening-exit{0%,87%{opacity:1}100%{opacity:0}}
+@media(max-width:700px){.opening-figures{width:175%;left:-39%}.lab-opening-brand strong{font-size:clamp(75px,18vw,130px)}.lab-opening-brand span{font-size:12px;margin-top:23px}}
 @media(prefers-reduced-motion:reduce){.lab-opening{display:none}}

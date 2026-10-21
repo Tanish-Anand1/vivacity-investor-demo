@@ -32,7 +32,7 @@ const ExperimentLibrary=lazy(()=>import('./ExperimentLibrary'));
 
 export default function App(){
   const [showOpening,setShowOpening]=useState(()=>{try{return window.location.pathname==='/'&&localStorage.getItem('vivacity:isabella-intro-complete')!=='1'&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch{return false;}});
-  const finishOpening=useCallback(()=>{try{localStorage.setItem('vivacity:isabella-intro-complete','1');}catch{ /* Storage may be disabled. */ }setShowOpening(false);requestAnimationFrame(()=>document.getElementById('isabella-main')?.focus());},[]);
+  const finishOpening=useCallback(()=>{try{localStorage.setItem('vivacity:isabella-intro-complete','1');}catch{ /* Storage may be disabled. */ }document.querySelector<HTMLElement>('.isabella-home')?.removeAttribute('inert');document.getElementById('isabella-main')?.focus({preventScroll:true});setShowOpening(false);},[]);
   const [guidedAutostart,setGuidedAutostart]=useState(()=>new URLSearchParams(window.location.search).get('guided')==='1');
   const [activeTemplate,setActiveTemplate]=useState<{selection:Selection;backend:Backend;config:Record<string,unknown>;key?:string;name?:string;configurationId?:string}>({selection:DEFAULT_SELECTION,backend:'mujoco',config:defaultWorkcell,key:'curated-warehouse-v1',name:'Franka Panda / Industrial warehouse / Pick and place'});
   const [draft,setDraft]=useState<Configuration>(defaultConfiguration('warehouse'));
@@ -107,7 +107,7 @@ export default function App(){
   return <>{page==='home'?<IsabellaHome enterLab={()=>navigate('laboratory','/laboratory')} openScience={()=>navigate('discovery','/discovery')} openRobotics={()=>navigate('factory','/lab')} openWorlds={()=>navigate('worlds','/worlds')}/>:<>
     <a className="skip-link" href="#workspace">Skip to workspace</a>
     <header className="site-header platform-nav"><a className="isabella-lab-brand" href="/" aria-label="Isabella Labs home">ISABELLA LABS <small>BY VIVACITY</small></a><nav className="main-nav" aria-label="Workspace navigation">
-      {(['laboratory','discovery','factory','workspace','worlds','experiments'] as const).map(id=><button key={id} aria-pressed={page===id} disabled={rt.mutating} onClick={()=>navigate(id,id==='factory'?'/lab':`/${id}`)}>{({laboratory:'Lab',discovery:'Discovery',factory:'Robotics',workspace:'Robot setup',worlds:'Worlds',experiments:'Robot records'} as const)[id]}</button>)}
+      {(['laboratory','factory','worlds','discovery','workspace','experiments'] as const).map(id=><button key={id} aria-pressed={page===id} disabled={rt.mutating} onClick={()=>navigate(id,id==='factory'?'/lab':`/${id}`)}>{({laboratory:'Lab',factory:'Robotics',worlds:'Worlds',discovery:'Science',workspace:'Robot setup',experiments:'Records'} as const)[id]}</button>)}
       <button className="nav-settings" aria-label="Runtime settings" onClick={()=>navigate('settings','/settings')}><SlidersHorizontal size={18}/></button>
     </nav></header>
     <main className="platform-main" id="workspace" tabIndex={-1}>
@@ -143,7 +143,7 @@ export default function App(){
           <aside className="results" aria-label="Verified results">
             {inspecting&&!cloth?<EngineeringPanel frame={robotFrame(currentFrame)} selection={inspectSelection} select={setInspectSelection}/>:setupOpen?<><div className="context-heading"><h2>Configure experiment</h2><button aria-label="Close configuration" className="icon-button" onClick={()=>setSetupOpen(false)}><X size={16}/></button></div><ExperimentSetup initial={draft} load={loadConfiguration} worldsPage={()=>navigate('worlds','/worlds')} step={setupStep} setStep={setSetupStep}/></>:<>
             <div className="section-heading"><h2>{cloth?'Best verified folds':'Best verified placements'}</h2><span className="status-label" data-testid="experiment-status" aria-live="polite">{status}</span></div>
-            {backend==='mujoco'&&config.task==='pick_place'&&config.scene_profile!=='orbital_salvage'&&<details className="sensor-details"><summary>Simulator object localization</summary><p className="sensor-summary" data-testid="object-perception" role="status">{rt.active?'Object localization pauses during physical execution.':rt.perception?.detected&&rt.perception.estimated_xy_m?`Simulated depth sensing: object at X ${format(rt.perception.estimated_xy_m[0])} m, Y ${format(rt.perception.estimated_xy_m[1])} m from ${rt.perception.visible_cube_rays} MuJoCo rays.`:rt.perception?'Object is not visible to the simulated overhead sensor.':'Locating the object…'} <span>Simulator labels, not a real camera.</span></p></details>}
+            {backend==='mujoco'&&config.task==='pick_place'&&config.scene_profile!=='orbital_salvage'&&<details className="sensor-details"><summary>Simulator object localization</summary><p className="sensor-summary" data-testid="object-perception" role="status">{rt.active?'Object localization pauses during physical execution.':rt.perception?.detected&&rt.perception.estimated_xy_m?`Simulated depth sensing: object at X ${format(rt.perception.estimated_xy_m[0])} m, Y ${format(rt.perception.estimated_xy_m[1])} m from ${rt.perception.visible_cube_rays} simulated depth rays.`:rt.perception?'Object is not visible to the simulated overhead sensor.':'Locating the object…'} <span>Simulator labels, not a real camera.</span></p></details>}
             {editing&&rt.world?cloth?<ClothSettings key={rt.world.id} config={rt.world.config} disabled={disabled} apply={rt.apply} close={()=>setEditing(false)}/>:
               <Settings key={rt.world.id} config={rt.world.config} disabled={disabled} apply={rt.apply} close={()=>setEditing(false)}/>:<>
               {!ranked.length?<p className="results-empty">{rt.busy?'Computing and validating independent alternatives…':terminal&&rt.experiment?.selected_branch_id?'Loading measured results…':terminal?'No feasible candidate. Measured failures are retained below.':rt.loaded?'Choose Start experiments when you’re ready. You can change the settings first.':'Initializing an actual physical world…'}</p>:
@@ -160,7 +160,6 @@ export default function App(){
         
       </>}
     </main>
-    <footer className="platform-footer"><span>Vivacity execution runtime</span><a href={`${BACKEND}/docs`} target="_blank" rel="noreferrer">API reference <ArrowRight size={14}/></a></footer>
     </>}
     {showOpening&&page==='home'&&<LabOpening finish={finishOpening}/>}
   </>;

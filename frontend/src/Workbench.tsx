@@ -1,7 +1,7 @@
 import {useEffect,useMemo} from 'react';
 import {ExtrudeGeometry,Shape} from 'three';
 
-/** Authored extrusion-frame bench. Its upper surface matches MuJoCo's 1.4 ×
+/** Authored extrusion-frame bench. Its upper surface matches the simulator's 1.4 ×
  * 1.3 m table at Z=0; trim, fasteners and legs are visual detailing only. */
 export default function Workbench(){
   const geometry=useMemo(()=>{

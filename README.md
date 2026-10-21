@@ -4,15 +4,16 @@ Current release evidence: [Isabella Labs report](docs/ISABELLA_LABS_REPORT.md).
 The earlier [robotics visual release](docs/VISUAL_RELEASE.md) documents SPZ
 worlds and embedded GLB resources as a separate, historical launch.
 
-Isabella Labs is Vivacity's science and experimentation lab. Two disciplines
-are executable today: The Invisible Planet, a bounded 2D orbital-inference
-experiment using SciPy, and robotic handling using MuJoCo dynamics. Visitors
+Isabella Labs is Vivacity's robotics-first science and experimentation lab. Two
+disciplines are executable today: robotic handling using MuJoCo dynamics and
+The Invisible Planet, a bounded 2D orbital-inference experiment using SciPy. Visitors
 can create worlds, change supported conditions, run independent branches,
 inspect measured outcomes, replay, and export. Other scientific fields are
 not implemented.
 
 The public `/` route opens **Isabella Labs by Vivacity**. A deterministic 7.5-second
-opening gives way to a homepage with recorded SciPy and MuJoCo results. The opening
+opening shows authored robot-arm and humanoid illustrations, then gives way to
+a robotics-led homepage with a recorded, measured robotic result. The opening
 is skippable, omitted for reduced-motion visitors, and does not start physics.
 `ENTER THE LAB` opens `/laboratory`, where visitors select a discipline.
 `/discovery` generates new orbital observations and fits competing hypotheses
