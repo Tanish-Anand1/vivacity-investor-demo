@@ -21,6 +21,9 @@ test('robotics homepage has keyboard entry, measured interactions, and no seriou
  await expect(page.getByText('carton not delivered')).toBeVisible();
  await page.getByRole('button',{name:/Full grip/i}).click();
  await expect(page.getByText('carton delivered', {exact:true})).toBeVisible();
+ const selected=page.getByRole('button',{name:/Full grip/i});
+ await selected.hover();
+ expect(await selected.evaluate(element=>({background:getComputedStyle(element).backgroundColor,color:getComputedStyle(element).color}))).toEqual({background:'rgb(224, 223, 211)',color:'rgb(17, 23, 19)'});
  await page.screenshot({path:path.join(shots,'comparison.png')});
 });
 
