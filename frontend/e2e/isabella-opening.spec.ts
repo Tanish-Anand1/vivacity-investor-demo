@@ -192,6 +192,30 @@ test('cold HTTP delivery serves a playable portrait film or a clean network fall
  await usableHome(page);
 });
 
+test('normal portrait playback uses the 60 fps film and reports presented frames',async({page},testInfo)=>{
+ await page.setViewportSize({width:390,height:844});
+ await warmFilm(page);
+ await page.addInitScript(()=>{
+  document.addEventListener('ended',event=>{
+   if(!(event.target as Element)?.matches?.('.lab-opening-video'))return;
+   const video=event.target as HTMLVideoElement;
+   const quality=video.getVideoPlaybackQuality?.();
+   (window as typeof window&{__portraitPlaybackQuality?:unknown}).__portraitPlaybackQuality={
+    duration_s:video.duration,width:video.videoWidth,height:video.videoHeight,
+    total_frames:quality?.totalVideoFrames??null,dropped_frames:quality?.droppedVideoFrames??null,
+   };
+  },true);
+ });
+ await page.goto('/',{waitUntil:'domcontentloaded'});
+ await expect(film(page)).toHaveAttribute('src',`${FILM}-portrait.mp4`);
+ await expect(intro(page)).toHaveCount(0,{timeout:17_000});
+ const quality=await page.evaluate(()=>(window as typeof window&{__portraitPlaybackQuality?:{duration_s:number;total_frames:number|null;dropped_frames:number|null}}).__portraitPlaybackQuality);
+ expect(quality?.duration_s).toBeCloseTo(7.5,3);
+ expect(quality?.total_frames).toBeGreaterThan(0);
+ await testInfo.attach('portrait-playback-quality',{body:JSON.stringify(quality,null,2),contentType:'application/json'});
+ await usableHome(page);
+});
+
 test('a data-saver desktop selects the smaller landscape rendition',async({page})=>{
  await useDataSaver(page);await warmFilm(page);
  await page.goto('/',{waitUntil:'domcontentloaded'});await expect(film(page)).toHaveAttribute('src',`${FILM}-landscape-lite.mp4`);

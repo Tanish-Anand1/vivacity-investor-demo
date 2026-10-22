@@ -17,6 +17,9 @@ test('G1 pickup runs measured physics, replays, and reports a heavy-parcel failu
   await expect(page.getByRole('heading',{name:'Unitree G1 with hands'})).toBeVisible({timeout:60_000});
   await expect(page.getByRole('combobox',{name:'Test mode'})).toHaveValue('pickup_place');
   await expect(page.getByRole('button',{name:'Run pickup experiment'})).toBeEnabled({timeout:60_000});
+  for(const name of ['Parcel X','Parcel Y','Destination X','Destination Y']){
+    await expect(page.getByRole('slider',{name,exact:true})).toBeVisible();
+  }
 
   const submission=page.waitForResponse(response=>response.url().includes('/v1/robotics/humanoids/experiments')&&response.request().method()==='POST');
   await page.getByRole('button',{name:'Run pickup experiment'}).click();

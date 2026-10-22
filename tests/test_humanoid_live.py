@@ -100,3 +100,35 @@ def test_cancelled_trial_retains_partial_frames(monkeypatch, tmp_path):
         assert cancelled['result'] is None
         assert client.get(prefix+'/frames', headers=OWNER).json()['frames']
         assert client.get(prefix+'/replay', headers=OWNER).status_code == 409
+
+
+def test_pause_resume_preserves_real_mujoco_trace(monkeypatch, tmp_path):
+    request = humanoids.HumanoidTrialRequest(robot_id='apptronik_apollo', action='service_machine')
+    baseline = humanoids.simulate(request)
+    actual_simulate = humanoids.simulate
+
+    def paced_simulation(settings, *, on_frame, checkpoint):
+        def deliver(frame, steps):
+            on_frame(frame, steps)
+            time.sleep(.012)  # Slow wall delivery only; never alter MuJoCo state.
+        return actual_simulate(settings, on_frame=deliver, checkpoint=checkpoint)
+
+    monkeypatch.setattr(humanoids, 'simulate', paced_simulation)
+    with TestClient(create_app(database=tmp_path / 'real-pause.sqlite3')) as client:
+        submitted = client.post('/v1/robotics/humanoids/experiments', headers=OWNER,
+                                json=request.model_dump())
+        assert submitted.status_code == 202
+        prefix = f"/v1/robotics/humanoids/experiments/{submitted.json()['id']}"
+        until(lambda: len(client.get(prefix+'/frames', headers=OWNER).json()['frames']) >= 4)
+        assert client.post(prefix+'/pause', headers=OWNER).json()['status'] == 'paused'
+        time.sleep(.07)
+        before = client.get(prefix+'/frames', headers=OWNER).json()
+        time.sleep(.07)
+        after = client.get(prefix+'/frames', headers=OWNER).json()
+        assert after['steps_completed'] == before['steps_completed']
+        assert after['sim_time_s'] == before['sim_time_s']
+        assert client.post(prefix+'/resume', headers=OWNER).json()['status'] == 'running'
+        completed = until(lambda: (record if (record := client.get(prefix, headers=OWNER).json())['status'] == 'completed' else None), timeout=5)
+        assert completed['result']['task_success']
+        assert completed['result']['frames'] == baseline['frames']
+        assert completed['result']['final_integration_state'] == baseline['final_integration_state']
