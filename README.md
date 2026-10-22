@@ -1,9 +1,24 @@
 # Isabella Labs by Vivacity
 
-Current release evidence: [Isabella Labs report](docs/ISABELLA_LABS_REPORT.md).
+Live investor demo: [demo.tryvivacity.com](https://demo.tryvivacity.com/works).
+The three bounded humanoid tasks and explicit replay passed the production
+browser journey on 2026-10-22. See the [release evidence](IMPLEMENTATION_STATUS.md)
+for the exact checks and limitations.
+
+The current `/works` source implements three measured MuJoCo humanoid tasks:
+G1 parcel placement, Apollo machine service, and H1 short threshold walking.
+Trials stream persisted simulator frames while they run, support actual
+pause/resume/cancel, compare saved outcomes, and replay only on request. The
+[live task frontend contract](FRONTEND_HANDOFF.md) and
+[implementation status](IMPLEMENTATION_STATUS.md) record the tested scope and
+limits. The H1 policy is pinned to a matching Unitree model and checked against
+its TorchScript reference; no hardware behavior is claimed.
+
+Earlier release evidence: [Isabella Labs report](docs/ISABELLA_LABS_REPORT.md).
 The staged physical-world editor and measured fulfillment SORT work are documented in
 [PHYSICAL_WORK_STATUS.md](PHYSICAL_WORK_STATUS.md), including unsupported stages and
-local verification evidence. These changes are local branch work until released.
+local verification evidence. Check each dated status record before treating a
+historical result as current production behavior.
 The earlier [robotics visual release](docs/VISUAL_RELEASE.md) documents SPZ
 worlds and embedded GLB resources as a separate, historical launch.
 

@@ -58,6 +58,8 @@ extrapolate the robot root or animate an unobserved action. A new client can
 resume reading from `cursor=0`. `partial_measurements` contains the latest
 sampled simulator contact count and base pose; machine trials also include
 measured switch and shaft angles. It is progress evidence, not a final verdict.
+Humanoid trials currently use this HTTP stream; there is no humanoid WebSocket
+endpoint. The older core-experiment WebSocket contract is documented below.
 
 `POST /runtime/v1/robotics/humanoids/experiments/{id}/pause`, `/resume`, and
 `/cancel` return the updated job. Pause blocks the physics worker at a step
@@ -93,6 +95,15 @@ They do not validate hardware perception, dexterous grasping, general
 maintenance, or general terrain walking. Render Free can sleep and stores
 SQLite on ephemeral storage, so it does not provide always-on service or
 durable public trial history.
+
+From `frontend/`, run `npm run test:humanoid:live` to exercise pickup,
+machine service, H1 walking, changed settings, live pause/resume, comparison
+and replay against `https://demo.tryvivacity.com`. Set `VIVACITY_LIVE_URL` to
+test another deployment. The [live Playwright config](frontend/playwright.humanoid-live.config.ts)
+does not start local servers.
+
+Earlier handoff notes below describe previous releases. For current humanoid
+endpoints and behavior, use the contract above and the generated OpenAPI file.
 
 ---
 

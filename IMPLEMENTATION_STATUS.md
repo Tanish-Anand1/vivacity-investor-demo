@@ -1,3 +1,83 @@
+# Live humanoid task release — 2026-10-22
+
+The `/works` lab now runs three separate bounded MuJoCo tasks: G1 stationary
+parcel placement, Apollo switch-and-machine service, and H1 short threshold
+walking. A trial commits ordered simulator frames to SQLite while the worker is
+running. The 3D scene consumes those frames live and stays at the measured final
+state. Replay starts only by visitor action. Pause, resume and cancel operate on
+the physics worker; results and frame queries are scoped to the workspace
+capability. The one-worker queue admits at most one waiting trial.
+
+The H1 scene uses Unitree's matching 10-actuator model and recurrent policy at
+source commit `276801e46c5d433564f24658bac64f254b7d2d4b`. The runtime uses
+NumPy policy inference; 256 sequential outputs were checked against the
+original TorchScript checkpoint with maximum absolute difference
+`7.0333481e-06`. Model and policy hashes, settings, seed, controller, full
+integration states, measured outcomes and trace frames are retained per result.
+
+**Actual local tests:** the full backend suite passed **345, skipped 1** in
+24m 51s. A separate sequential three-task smoke with production binaries
+passed **1/1**. The focused production-binary humanoid suite passed **22/22**.
+The frontend production build passed. Frontend API, template and factory
+setting checks passed **20/20**, **5/5**, and **4/4**. The H1/Apollo live browser
+journey and G1 pause/resume journey passed **2/2**; the G1 pickup and replay
+journey passed **1/1**. The opening passed **17/17** browser cases, including
+refresh, portrait, reduced motion, media failure and keyboard paths. A normal
+portrait playback presented 450 frames in 7.5 s with 1 dropped frame on this
+test PC; the measured landscape handoff elapsed 7.582 s. The private backend
+[Linux release run](https://github.com/Tanish-Anand1/vivacity-runtime/actions/runs/39820960610)
+and public source
+[Linux release run](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/39822069974)
+both passed all three test shards and a sequential three-task run inside a
+512 MiB Docker container. The private Render source is commit `dea346b`.
+Windows Animation effects were enabled on this PC and the browser reported
+`prefers-reduced-motion: reduce` as false. The site still honors a visitor's
+reduced-motion preference.
+An additional real-MuJoCo pause/resume test passed: Apollo's resumed trace and
+final integration state exactly matched an uninterrupted run under fixed input.
+
+**Production release evidence:** Render reports `isabella-labs-runtime` live
+at commit `dea346b3d89aec38755881e860bb09f00e141cc1` (deploy
+`dep-dbd4fhuk1f9s738lq8og`). Vercel production deployment
+`dpl_2xrX2caXMXFqagHHCTDUKauquiwf` is aliased to
+`https://demo.tryvivacity.com/`. Direct requests to the deployed backend
+completed G1 (161 ordered frames, 4,000 steps), Apollo (77 frames, 755 steps)
+and H1 (137 frames, 3,384 steps), each with frames available before terminal
+status and a 200 replay response. A switch stiffness of 14 N·m/rad produced
+an honest `switch_not_actuated` failure (66 frames, 641 steps). The same-origin
+`/runtime/health` endpoint returned 200. The production opening browser suite
+passed 17/17, with 450 portrait frames, zero dropped frames in that run, a
+7.500 s film and 7.765 s visual handoff. After the final deployment, the
+live humanoid browser journey passed **3/3**: G1 pickup, replay and heavy-mass
+failure; H1 and Apollo nominal tasks plus changed switch stiffness and
+comparison; and cooperative G1 pause/resume. A clean public reload exposed
+accessible names for the four G1 position sliders.
+
+**Measured nominal local runs with the precompiled models:**
+
+| Task | Outcome | MuJoCo steps / simulation time | Wall compute | Replay frames / JSON bytes | Key measured result |
+| --- | --- | ---: | ---: | ---: | --- |
+| G1 parcel placement | Success | 4,000 / 8.000 s | 3.588 s | 161 / 1,957,731 | Destination error 0.1076 m; peak tilt 0.056 rad |
+| Apollo machine service | Success | 755 / 3.775 s | 0.345 s | 77 / 738,411 | Contact-gated shaft travel 9.056 rad; peak tilt 0.061 rad |
+| H1 short threshold walk | Success | 3,384 / 6.768 s | 1.105 s | 137 / 444,749 | Goal error 0.0275 m; peak tilt 0.144 rad; support-foot slip p95 0.137 m/s |
+
+Changed conditions are measured, not scripted: a 2 kg parcel failed with
+prohibited contact, a stiffer Apollo switch failed to actuate, and H1 without
+forward motion failed the terrain/goal check. The browser compares persisted
+completed trials by actual result, condition, task metric and physics steps.
+
+**Known limits:** G1 reads privileged simulator parcel pose and uses a
+contact-gated rigid grasp constraint; this does not validate vision or
+dexterous grasping. Apollo services one modeled machine, not arbitrary
+equipment. H1 traverses a low bounded threshold with a vendor policy; this is
+not general terrain navigation or hardware walking. The current Render Free
+service may sleep and its SQLite disk is ephemeral. Pause is cooperative at a
+MuJoCo step boundary; there is no distributed worker failover. Peak H1 contact
+slip includes brief impact spikes above its measured p95; both values are
+reported. Hardware transfer remains unvalidated.
+
+---
+
 # Isabella Labs public humanoid release — 2026-10-22
 
 The current investor demo is live at `https://demo.tryvivacity.com/`.
