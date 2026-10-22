@@ -8,6 +8,9 @@ data/
 assets/menagerie/.git/
 assets/menagerie/*
 !assets/menagerie/franka_emika_panda/
+!assets/menagerie/apptronik_apollo/
+!assets/menagerie/unitree_g1/
+!assets/menagerie/unitree_h1/
 artifacts/live-demo.json
 artifacts/pytest.xml
 artifacts/api-tests.xml
