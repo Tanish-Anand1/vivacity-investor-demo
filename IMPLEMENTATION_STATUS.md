@@ -1,4 +1,35 @@
-# Vivacity: The One — local opening candidate, 2026-10-22
+# Isabella Labs public humanoid release — 2026-10-22
+
+The current investor demo is live at `https://demo.tryvivacity.com/`.
+`/works` contains the measured Unitree G1 stationary pickup-and-placement
+task plus distinct Apollo and H1 physical probes. Vercel production deployment
+`dpl_2LvE7ewweHCVdn2dGYSdQne6M8vz` serves the frontend; Render deployed
+backend commit `017e6d3` as `dep-dbd12q49v7es73c3935g`. The public GitHub
+source includes the licensed model assets required to reproduce its Docker
+build. Detailed scope and evidence are in
+[`docs/HUMANOID_CAPABILITY_AUDIT.md`](docs/HUMANOID_CAPABILITY_AUDIT.md).
+
+The final live backend revision completed a 0.5 kg G1 pickup in 4,000 MuJoCo
+steps and replayed all 161 recorded frames exactly. A 2 kg trial failed with
+measured prohibited contact. The live Apollo switch probe succeeded; the G1
+reach-only and H1 terrain probes reported their actual failed outcomes.
+The public Playwright pickup journey passed **1/1**; the 7.5-second opening
+and refresh replay checks passed **2/2**. The local backend suite passed
+**336 tests with 1 skip** before the production-memory fix; the focused
+humanoid suite passed **18/18** after it in the binary-loading profile. The
+final Linux image checks passed in both the private Render source and public
+source repositories: 339 tests passed, 3 skipped across three shards, plus
+4 constrained-memory lab checks in each repository. The exact runs are linked
+in the release audit.
+
+This is a stationary simulated task with privileged MuJoCo object pose and a
+contact-gated rigid grasp constraint. It is not walking, shared-world
+fulfillment, dexterous grasping, hardware perception, or a calibrated digital
+twin. Render remains on its Free plan: the service may sleep, first requests
+may be slow, and SQLite storage is ephemeral. Always-on availability and
+durable public histories are **not** delivered.
+
+# Vivacity: The One — earlier opening candidate, 2026-10-22
 
 The homepage opening has been rebuilt as a 7.500-second authored film: Panda
 gripper contact, synchronized machinery, a suspended cube, a divided industrial

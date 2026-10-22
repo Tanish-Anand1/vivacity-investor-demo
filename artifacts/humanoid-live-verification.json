@@ -1,0 +1,31 @@
+{
+  "base_url": "https://demo.tryvivacity.com/runtime",
+  "results": [
+    {
+      "mass_kg": 0.5,
+      "job_id": "997b3632-cf1e-481a-9819-aa336ee48bfd",
+      "success": true,
+      "failure_reason": null,
+      "steps": 4000,
+      "compute_wall_s": 26.407097660005093,
+      "frames": 161,
+      "replay_exact": true,
+      "destination_error_m": 0.12173471701302309,
+      "final_support_contact": true,
+      "model_hash": "9a2de885d1b801646b46571dc8ec3dbf62693b29bd42ebc38933cc026be3ec37"
+    },
+    {
+      "mass_kg": 2.0,
+      "job_id": "13aa4520-fe05-49e1-b6ca-ee2ba166a14c",
+      "success": false,
+      "failure_reason": "prohibited_robot_contact",
+      "steps": 1888,
+      "compute_wall_s": 13.161551179364324,
+      "frames": 77,
+      "replay_exact": true,
+      "destination_error_m": 0.39415693459445084,
+      "final_support_contact": false,
+      "model_hash": "9c33f96f3fc60c5a15d3cafee435897fc7f37165f38e36177290e81d78edd8ff"
+    }
+  ]
+}

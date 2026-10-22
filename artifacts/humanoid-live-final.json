@@ -1,0 +1,12 @@
+{
+  "deployment": "017e6d3",
+  "trial_id": "f1da952e-d803-42a6-bd94-e511391d6729",
+  "task_success": true,
+  "steps": 4000,
+  "compute_wall_s": 25.614718647208065,
+  "frames": 161,
+  "destination_error_m": 0.12173471701302309,
+  "final_support_contact": true,
+  "replay_exact": true,
+  "model_hash": "9a2de885d1b801646b46571dc8ec3dbf62693b29bd42ebc38933cc026be3ec37"
+}

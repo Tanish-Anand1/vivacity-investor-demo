@@ -1,6 +1,6 @@
 # Physical work and world editor status
 
-Verified locally on 2026-10-22. This is a staged implementation, not a claim that the full autonomous fulfillment directive is complete.
+Verified locally and in a bounded public release on 2026-10-22. This is a staged implementation, not a claim that the full autonomous fulfillment directive is complete.
 
 ## Working now
 
@@ -62,4 +62,4 @@ Executed checks:
 | `npm run test:api`, `test:templates`, `test:factory-settings` | 20, 5, and 4 passed, respectively. |
 | `playwright test e2e/physical-work.spec.ts` against the isolated local backend | 1 passed, 3.6m. |
 
-The full-suite run started before the final small table-contact and duplicate-boundary edits. The focused editor run, production build, and browser test were repeated after those edits. No public deployment was performed for this staged branch.
+The full-suite run started before the final small table-contact and duplicate-boundary edits. The focused editor run, production build, and browser test were repeated after those edits. The later G1 stationary pickup release is deployed at `https://demo.tryvivacity.com/works`; its live measurements and limits are recorded in `docs/HUMANOID_CAPABILITY_AUDIT.md`. The Render Free backend can sleep and has no durable disk guarantee.

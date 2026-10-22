@@ -119,7 +119,7 @@ nothing about hardware or general reliability.
 | H1 terrain traversal | FAIL | Existing controller probe falls in its tested terrain trial |
 | Onboard perception / hardware transfer | NOT TESTED | Object pose is privileged MuJoCo state; no camera estimator or hardware control |
 | Local desktop and narrow-screen browser pickup journey | PASS | Playwright on both Vite development and production-preview builds submitted physics jobs, inspected success/failure, replayed, exported a measured JSON record, and found no page exception or horizontal overflow |
-| Public deployment | NOT TESTED | Must be updated after release verification |
+| Public deployment | PASS for the bounded G1 task and robot probes | The public domain submitted real jobs, returned persisted replay frames, and passed the browser pickup journey on 2026-10-22; production limits are below |
 
 The full local backend suite on 2026-10-22 passed **336 tests, with 1 skip**
 and one upstream Starlette/httpx deprecation warning. After the final
@@ -139,3 +139,53 @@ not justify a general reliability claim. The configurations and per-trial
 outcomes are in `artifacts/humanoid-pickup-variation.json`. Browser
 captures from the local run are `artifacts/humanoid-pickup-replay-desktop.png`
 and `artifacts/humanoid-pickup-replay-mobile.png`.
+
+## Public release verification — 2026-10-22
+
+The Vercel frontend is live at `https://demo.tryvivacity.com/works` and proxies
+the Render runtime through `/runtime`. Render reports backend commit `017e6d3`
+live. The production image precompiles the original Menagerie scenes with
+MuJoCo 3.15.0 during its Docker build and loads independent `.mjb` models for
+each request. The G1 binary retains the full collision and visual model.
+Apollo's server binary uses MuJoCo `discardvisual` to omit visual-only meshes;
+the browser retains the original full-resolution mesh bundle. A paired local
+trial confirmed identical Apollo joint frames, switch contact count, and
+successful switch actuation with and without visual-only meshes. The frontend
+model hash still describes the same source MJCF, assets, parameters, and
+MuJoCo version.
+
+| Live case | Measured outcome |
+| --- | --- |
+| G1 0.5 kg pickup on final backend revision | Success; 4,000 physics steps, 161 replay frames, 25.61 s backend compute, 0.1217 m destination-center error, stable destination support, exact replay-frame equality |
+| G1 2.0 kg pickup on preceding binary-loader revision | Honest `prohibited_robot_contact` failure; 1,888 steps, 77 replay frames, no destination support, exact replay-frame equality |
+| G1 2-second reach probe | `parcel_not_transported`; 1,000 steps, 129 hand/parcel contact samples, 41 replay frames |
+| Apollo 2-second switch probe | Success; 400 steps, two hand/handle contact samples, 41 replay frames |
+| H1 2-second terrain probe | Honest `fall`; 1,000 steps, 3,470 foot/terrain contact points across steps, 41 replay frames |
+
+The live Playwright pickup journey passed **1/1** on the public domain. It
+submitted the default and heavy-parcel jobs, inspected their opposite
+outcomes, scrubbed replay, exported the measured JSON, checked the narrow
+layout, and recorded no page exception. Two public opening tests passed:
+the actual encoded 7.5-second film handed off to the homepage without
+starting physics, and refresh replayed the opening after a skip. The API
+summary is `artifacts/humanoid-live-final.json`; the success/failure pair is
+`artifacts/humanoid-live-verification.json`. Production browser captures are
+`artifacts/humanoid-pickup-live-desktop.png` and
+`artifacts/humanoid-pickup-live-mobile.png`.
+
+Both final Linux Docker-image CI runs passed: the
+[private runtime run](https://github.com/Tanish-Anand1/vivacity-runtime/actions/runs/39788360536)
+and the
+[public source run](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/39788391967).
+In each run, the three full-suite shards reported **154 + 115 + 70 = 339 passed,
+3 skipped**. The separate free-host memory check passed **4/4** in each run.
+The logs report one upstream warning per shard; no tests failed.
+
+The host remains **Render Free** (512 MB memory, shared 0.15 CPU). It can sleep
+after inactivity, delay the first request, and lose ephemeral SQLite data
+across restarts or redeploys. No always-on or durable-history claim is made.
+The local Windows process measured approximately 755 MB after XML compilation
+versus 229 MB after loading the exact G1 binary. Render Free does not expose
+application memory metrics, so those are local measurements, not production
+RSS. The production Docker build outputs 114.3 MiB for G1, 0.1 MiB for the
+headless Apollo physics model, and 49.2 MiB for H1.
