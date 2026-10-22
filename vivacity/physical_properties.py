@@ -36,6 +36,14 @@ def configure_xml(root, config):
     if physics.get('air_density_kg_m3', 0.) or physics.get('air_viscosity_pa_s', 0.):
         option.set('integrator', 'implicitfast')
     cube = root.find(".//geom[@name='cube']")
+    table = root.find(".//geom[@name='table']")
+    if table is not None:
+        table_friction = config.get('table_friction', 1.)
+        table.set('friction', f"{table_friction} .005 .0001")
+        if table_friction != 1.:
+            # The pick-place cube has contact priority 1. MuJoCo otherwise
+            # ignores the table coefficient entirely in cube/table contacts.
+            table.set('priority', '2')
     if cube is not None:
         material = MATERIALS.get(config.get('object_material'))
         if material:

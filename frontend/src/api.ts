@@ -1,6 +1,11 @@
 import type { Backend, World, Experiment, Branch, Replay, Dict, Event } from './domain';
 import type { components } from './generated/api';
 
+export type EditorProperty = {key:string;path:(string|number)[];label:string;meaning:string;unit:string;data_type:'number'|'boolean'|'choice';value:number|boolean|string|null;minimum:number|null;maximum:number|null;step:number|null;choices:string[];editable:boolean;requires_reset:boolean;dependency:string;physics_effect:string};
+export type EditorEntity = {id:string;name:string;kind:'object'|'obstacle'|'surface'|'robot'|'environment';properties:EditorProperty[]};
+export type WorldEditor = {schema_version:'vivacity.world_editor/1.0';world_id:string;revision:number;entities:EditorEntity[];scope:string};
+export type WorldVersion = {schema_version:'vivacity.world_version/1.0';world_id:string;revision:number;created_unix_s:number;reason:string;source_revision:number|null;config:Record<string,unknown>};
+
 import {fetchRuntime,runtimeEndpoints,runtimeSocketURL} from './apiTransport';
 const endpoints=runtimeEndpoints(import.meta.env.PROD,import.meta.env.VITE_API_BASE_URL,window.location.origin);
 export const API=endpoints.http;
@@ -61,7 +66,17 @@ export const api = {
   },
   replay: (id: string) => request<Replay>(`/v1/experiments/${encodeURIComponent(id)}/replay`),
   roboticsReport: (id: string) => request<components['schemas']['RoboticsExperimentReport']>(`/v1/robotics/experiments/${encodeURIComponent(id)}/report`),
-  environment: (id: string, config: Dict) => request<World>(`/v1/worlds/${id}/environment`, json('PATCH', { config })),
+  environment: (id: string, config: Dict, expected_revision?:number) => request<World>(`/v1/worlds/${id}/environment`, json('PATCH', { config, expected_revision })),
+  editor: (id:string) => request<WorldEditor>(`/v1/worlds/${encodeURIComponent(id)}/editor`),
+  editProperty: (id:string, expected_revision:number, entity_id:string, property_key:string, value:number|boolean|string) =>
+    request<World>(`/v1/worlds/${encodeURIComponent(id)}/editor/properties`,json('PATCH',{expected_revision,entity_id,property_key,value})),
+  editGeometry: (id:string, expected_revision:number, action:'add'|'duplicate'|'delete', entity_id?:string, geometry_type:'box'|'cylinder'='box') =>
+    request<World>(`/v1/worlds/${encodeURIComponent(id)}/editor/geometries`,json('POST',{expected_revision,action,entity_id,geometry_type})),
+  moveGeometry: (id:string, expected_revision:number, entity_id:string, position:[number,number,number]) =>
+    request<World>(`/v1/worlds/${encodeURIComponent(id)}/editor/geometry-position`,json('PATCH',{expected_revision,entity_id,position})),
+  worldVersions: (id:string) => request<WorldVersion[]>(`/v1/worlds/${encodeURIComponent(id)}/versions`),
+  restoreWorldVersion: (id:string, revision:number, expected_revision:number) =>
+    request<World>(`/v1/worlds/${encodeURIComponent(id)}/versions/${revision}/restore`,json('POST',{expected_revision})),
   reset: (id: string) => request<World>(`/v1/worlds/${id}/reset`, json('POST')),
   commit: (id: string, experiment_id: string, branch_id: string) => request<World>(`/v1/worlds/${id}/commit`, json('POST', { experiment_id, branch_id })),
 };

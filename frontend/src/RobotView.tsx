@@ -32,13 +32,16 @@ function CameraInteraction({command,enabled,catalog=false}:{command:{key:string;
 }
 
 type CubeDrag = { pointerId:number; start:Vec3; draft:Vec3; offsetX:number; offsetY:number; moved:boolean };
-function MeasuredRobot({ assets, frames, cursor, config, playing, renderTime, canMoveCube, onMoveCube, onDragging, onHover, onDragError, onSelect }: { assets: Assets; frames: RobotFrame[]; cursor: RefObject<number>; config: Dict; playing:boolean; renderTime:number; canMoveCube:boolean; onMoveCube:(point:Vec3)=>Promise<boolean>; onDragging:(active:boolean)=>void; onHover:(active:boolean)=>void; onDragError:(message:string|null)=>void;onSelect:(s:'object'|'robot')=>void }) {
+type GeometryDrag = CubeDrag & {name:string;z:number};
+function MeasuredRobot({ assets, frames, cursor, config, playing, renderTime, canMoveCube, canEditScene, onMoveCube, onMoveGeometry, onDragging, onHover, onDragError, onSelect }: { assets: Assets; frames: RobotFrame[]; cursor: RefObject<number>; config: Dict; playing:boolean; renderTime:number; canMoveCube:boolean;canEditScene:boolean; onMoveCube:(point:Vec3)=>Promise<boolean>;onMoveGeometry:(name:string,point:Vec3)=>Promise<boolean>; onDragging:(active:boolean)=>void; onHover:(active:boolean)=>void; onDragError:(message:string|null)=>void;onSelect:(s:string)=>void }) {
   const invalidate=useThree(state=>state.invalidate);
   useEffect(()=>{invalidate();},[invalidate,frames,playing,renderTime]);
   const groups = useRef(new Map<string,Group>());
+  const sceneGroups=useRef(new Map<string,Group>());
   const poseA = new Vector3(), poseB = new Vector3(), qa = new Quaternion(), qb = new Quaternion();
   const frameTimes = useRef<number[]>([]);
   const drag=useRef<CubeDrag|null>(null),preview=useRef<Vec3|null>(null);
+  const geometryDrag=useRef<GeometryDrag|null>(null);
   const halfSizes=objectHalfSizes(config);
   const dragPlane=useMemo(()=>new Plane(new Vector3(0,0,1),-(halfSizes[2]+.001)),[halfSizes[2]]);
   const dragPoint=new Vector3();
@@ -75,6 +78,42 @@ function MeasuredRobot({ assets, frames, cursor, config, playing, renderTime, ca
     if(!drag.current||drag.current.pointerId!==event.pointerId)return;
     drag.current=null;preview.current=null;onDragging(false);invalidate();
   };
+  const sceneDown=(event:ThreeEvent<PointerEvent>,name:string,position:Vec3)=>{
+    onSelect(`geometry:${name}`);
+    if(!canEditScene)return;
+    const plane=new Plane(new Vector3(0,0,1),-position[2]);
+    const point=event.ray.intersectPlane(plane,dragPoint);
+    if(!point)return;
+    event.stopPropagation();(event.target as Element|null)?.setPointerCapture(event.pointerId);
+    geometryDrag.current={name,z:position[2],pointerId:event.pointerId,start:position,draft:position,
+      offsetX:position[0]-point.x,offsetY:position[1]-point.y,moved:false};
+    onDragging(true);onDragError(null);
+  };
+  const sceneMove=(event:ThreeEvent<PointerEvent>)=>{
+    const active=geometryDrag.current;if(!active||active.pointerId!==event.pointerId)return;
+    const point=event.ray.intersectPlane(new Plane(new Vector3(0,0,1),-active.z),dragPoint);
+    if(!point)return;
+    event.stopPropagation();
+    const next:[number,number,number]=[Math.max(-.3,Math.min(1.1,point.x+active.offsetX)),
+      Math.max(-.65,Math.min(.65,point.y+active.offsetY)),active.z];
+    active.draft=next;active.moved ||= Math.hypot(next[0]-active.start[0],next[1]-active.start[1])>.002;
+    sceneGroups.current.get(active.name)?.position.fromArray(next);invalidate();
+  };
+  const sceneUp=(event:ThreeEvent<PointerEvent>)=>{
+    const active=geometryDrag.current;if(!active||active.pointerId!==event.pointerId)return;
+    event.stopPropagation();(event.target as Element|null)?.releasePointerCapture(event.pointerId);
+    geometryDrag.current=null;onDragging(false);
+    if(active.moved)void onMoveGeometry(active.name,active.draft).then(okay=>{
+      if(!okay){sceneGroups.current.get(active.name)?.position.fromArray(active.start);onDragError('The scene primitive could not be moved. Check the workcell bounds.');}
+      invalidate();
+    });
+    else {sceneGroups.current.get(active.name)?.position.fromArray(active.start);invalidate();}
+  };
+  const sceneCancel=(event:ThreeEvent<PointerEvent>)=>{
+    if(geometryDrag.current?.pointerId!==event.pointerId)return;
+    const active=geometryDrag.current;geometryDrag.current=null;onDragging(false);
+    sceneGroups.current.get(active.name)?.position.fromArray(active.start);invalidate();
+  };
   const lastPlaybackFrame=useRef<number|null>(null);
   useEffect(()=>{lastPlaybackFrame.current=playing?performance.now():null;if(playing)frameTimes.current=[];},[playing]);
   useFrame((_state,delta) => {
@@ -110,7 +149,7 @@ function MeasuredRobot({ assets, frames, cursor, config, playing, renderTime, ca
   const last = frames.at(-1);
   return <group dispose={null}>
     {assets.manifest.bodies.map(body => <group key={body.id} ref={g=>{ if (g) groups.current.set(body.name,g); else groups.current.delete(body.name); }}
-      onPointerDown={body.name==='target'?pointerDown:body.name!=='world'?()=>onSelect('robot'):undefined} onPointerMove={body.name==='target'?pointerMove:undefined}
+      onPointerDown={body.name==='target'?pointerDown:body.name==='obstacle'?()=>onSelect('obstacle'):body.name!=='world'?()=>onSelect('robot'):undefined} onPointerMove={body.name==='target'?pointerMove:undefined}
       onPointerUp={body.name==='target'?pointerUp:undefined} onPointerCancel={body.name==='target'?pointerCancel:undefined}
       onPointerOver={body.name==='target'&&canMoveCube?()=>onHover(true):undefined}
       onPointerOut={body.name==='target'?()=>onHover(false):undefined}>
@@ -118,7 +157,15 @@ function MeasuredRobot({ assets, frames, cursor, config, playing, renderTime, ca
       {!!config.collision_overlay&&assets.manifest.geoms.filter(g=>g.body_id===body.id&&(g.group===3||g.name==='cube')).map(g=><GeomMesh key={'collision-'+g.id} geom={g} assets={assets} config={{...config,collision_overlay:true}}/>)}
       {body.name==='target'&&canMoveCube&&<mesh><boxGeometry args={[.1,.1,.08]}/><meshBasicMaterial transparent opacity={0} depthWrite={false}/></mesh>}
     </group>)}
-    {last?.environment_geometries?.filter(geom=>!(config.show_imported_appearance&&geom.name==='environment_import_collision_proxy')&&!config.show_environment_appearance).map((geom,i)=><GeomMesh key={geom.name} geom={{...geom,id:i,body_id:0,group:0,mesh_id:null}} assets={assets} config={{}} />)}
+    {last?.environment_geometries?.filter(geom=>!(config.show_imported_appearance&&geom.name==='environment_import_collision_proxy')&&(!config.show_environment_appearance||geom.name.startsWith('environment_'))).map((geom,i)=>{
+      const name=geom.name.startsWith('environment_')?geom.name.slice('environment_'.length):'';
+      return <group key={geom.name} position={geom.position} ref={group=>{if(group)sceneGroups.current.set(name,group);else sceneGroups.current.delete(name);}}
+        onPointerDown={name?event=>sceneDown(event,name,geom.position):undefined}
+        onPointerMove={name?sceneMove:undefined} onPointerUp={name?sceneUp:undefined} onPointerCancel={name?sceneCancel:undefined}
+        onPointerOver={name&&canEditScene?()=>onHover(true):undefined} onPointerOut={name?()=>onHover(false):undefined}>
+        <GeomMesh geom={{...geom,position:[0,0,0],id:i,body_id:0,group:0,mesh_id:null}} assets={assets} config={{}} />
+      </group>;
+    })}
   </group>;
 }
 
@@ -129,7 +176,7 @@ class SceneBoundary extends Component<{children: ReactNode;onError:()=>void}, { 
   render() { return this.state.error ? null : this.props.children; }
 }
 
-function RobotView({ frames, cursor, config, playing, renderTime, canMoveCube=false, onMoveCube=async()=>false,visualWorld,overlays,trace=[],onSelect=()=>{} }: { frames: RobotFrame[]; cursor: RefObject<number>; config: Dict; replaying: boolean; playing:boolean; renderTime:number; canMoveCube?:boolean; onMoveCube?:(point:Vec3)=>Promise<boolean>;visualWorld?:LibraryWorld;overlays?:OverlayOptions;trace?:RobotFrame[];onSelect?:(s:'object'|'robot')=>void }) {
+function RobotView({ frames, cursor, config, playing, renderTime, canMoveCube=false, canEditScene=false, onMoveCube=async()=>false,onMoveGeometry=async()=>false,visualWorld,overlays,trace=[],onSelect=()=>{} }: { frames: RobotFrame[]; cursor: RefObject<number>; config: Dict; replaying: boolean; playing:boolean; renderTime:number; canMoveCube?:boolean;canEditScene?:boolean; onMoveCube?:(point:Vec3)=>Promise<boolean>;onMoveGeometry?:(name:string,point:Vec3)=>Promise<boolean>;visualWorld?:LibraryWorld;overlays?:OverlayOptions;trace?:RobotFrame[];onSelect?:(s:string)=>void }) {
   const [assets,setAssets] = useState<Assets | null>(null), [error,setError] = useState<string | null>(null);
   const [assetRetry,setAssetRetry]=useState(0);
   const [appearanceStatus,setAppearanceStatus]=useState(''),[appearanceError,setAppearanceError]=useState(false);
@@ -142,13 +189,13 @@ function RobotView({ frames, cursor, config, playing, renderTime, canMoveCube=fa
   const resetCamera=()=>setCameraCommand(c=>({key:'',seq:c.seq+1}));
   const robot=String(config.robot_model??'panda');
   useEffect(() => { let active = true;setAssets(null);setError(null);loadAssets(robot).then(a=>active&&setAssets(a)).catch(()=>active&&setError('Robot geometry could not load. Physics results remain available.')); return ()=>{ active=false; }; },[robot,assetRetry]);
-  return <><div className="robot-viewport" data-testid="robot-viewport" tabIndex={0} role="region" aria-label={`${robot==='panda'?'Franka Panda':robot} workcell. ${canMoveCube?'Drag the blue object on the supported table. Change conditions provides keyboard position controls. ':''}Arrow keys orbit, Shift and arrows pan, plus and minus zoom, R resets camera.`} onKeyDown={e=>{if(e.target!==e.currentTarget)return;if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','+','=','-'].includes(e.key)){e.preventDefault();setCameraCommand(c=>({key:e.shiftKey?'Shift+'+e.key:e.key,seq:c.seq+1}));}else if(e.key.toLowerCase()==='r'){e.preventDefault();resetCamera();}}}>
+  return <><div className="robot-viewport" data-testid="robot-viewport" tabIndex={0} role="region" aria-label={`${robot==='panda'?'Franka Panda':robot} workcell. ${canMoveCube?'Drag the blue object on the supported table. ':''}${canEditScene?'Drag an added scene primitive on the table or use numeric position fields. ':''}Arrow keys orbit, Shift and arrows pan, plus and minus zoom, R resets camera.`} onKeyDown={e=>{if(e.target!==e.currentTarget)return;if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','+','=','-'].includes(e.key)){e.preventDefault();setCameraCommand(c=>({key:e.shiftKey?'Shift+'+e.key:e.key,seq:c.seq+1}));}else if(e.key.toLowerCase()==='r'){e.preventDefault();resetCamera();}}}>
     {!error&&assets&&frames.length>0&&<SceneBoundary onError={()=>setError('3D rendering is unavailable. Your experiment data remains accessible in the inspector. Try a WebGL2-capable browser.')}>
-      <Canvas frameloop="demand" shadows={{type:PCFShadowMap}} dpr={qualityProfiles[quality].pixelRatio} style={{cursor:canMoveCube?(dragging?'grabbing':hovering?'grab':'auto'):'auto',touchAction:'none'}} camera={{ position:[1.8,-2.1,1.35], fov: 42, near: .015, far: 100 }} gl={{ antialias: false }} onCreated={({camera,gl})=>{ camera.up.set(0,0,1); gl.setClearColor('#262a2d'); performance.mark('vivacity:robot-scene-ready'); }}>
+      <Canvas frameloop="demand" shadows={{type:PCFShadowMap}} dpr={qualityProfiles[quality].pixelRatio} style={{cursor:canMoveCube||canEditScene?(dragging?'grabbing':hovering?'grab':'auto'):'auto',touchAction:'none'}} camera={{ position:[1.8,-2.1,1.35], fov: 42, near: .015, far: 100 }} gl={{ antialias: false }} onCreated={({camera,gl})=>{ camera.up.set(0,0,1); gl.setClearColor('#262a2d'); performance.mark('vivacity:robot-scene-ready'); }}>
         <ambientLight intensity={visualWorld?.spec.lighting.ambient??.72} /><hemisphereLight args={['#ffffff','#6f706a',1.8]} />
         <directionalLight position={[1,-1.5,3]} intensity={visualWorld?.spec.lighting.key_intensity??3.2} castShadow shadow-mapSize={[1024,1024]} shadow-bias={-.00005} shadow-normalBias={.008} shadow-camera-left={-1.5} shadow-camera-right={1.5} shadow-camera-top={1.5} shadow-camera-bottom={-1.5} />
         <directionalLight position={[-2,1,1.5]} intensity={1.3} />
-        <MeasuredRobot assets={assets} frames={frames} cursor={cursor} config={{...config,show_imported_appearance:(!!imported||!!appearance)&&showImported,show_environment_appearance:!!appearance&&showImported,collision_overlay:overlays?.collision}} playing={playing} renderTime={renderTime} canMoveCube={canMoveCube} onMoveCube={onMoveCube} onDragging={setDragging} onHover={setHovering} onDragError={setDragError} onSelect={onSelect} />
+        <MeasuredRobot assets={assets} frames={frames} cursor={cursor} config={{...config,show_imported_appearance:(!!imported||!!appearance)&&showImported,show_environment_appearance:!!appearance&&showImported,collision_overlay:overlays?.collision}} playing={playing} renderTime={renderTime} canMoveCube={canMoveCube} canEditScene={canEditScene} onMoveCube={onMoveCube} onMoveGeometry={onMoveGeometry} onDragging={setDragging} onHover={setHovering} onDragError={setDragError} onSelect={onSelect} />
         {overlays&&frames.at(-1)&&<EngineeringOverlay frame={frames.at(-1)!} trace={trace} options={overlays}/>}
         {imported&&showImported&&visualWorld?.mapping&&<ImportedVisual preview={imported} mapping={visualWorld.mapping}/>}
         {appearance&&showImported&&<EnvironmentAppearance world={visualWorld} appearance={appearance} onStatus={(message,failed=false)=>{setAppearanceStatus(message);setAppearanceError(failed);}}/>}

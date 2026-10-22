@@ -5,17 +5,20 @@ import {objectHalfSizes} from './pickupWorkspace';
 import Workbench from './Workbench';
 type MeshSpec = { id: number; positions: { byte_offset: number; count: number }; indices: { byte_offset: number; count: number } };
 type Geom = { id: number; name: string; body_id: number; type: string; group: number; mesh_id: number | null; position: Vec3; quaternion_wxyz: number[]; size: Vec3; rgba: number[] };
-type Manifest = { bodies: {id: number; name: string}[]; geoms: Geom[]; meshes: MeshSpec[] };
+type Manifest = { model_hash:string; bodies: {id: number; name: string}[]; geoms: Geom[]; meshes: MeshSpec[] };
 export type Assets = { manifest: Manifest; geometry: Map<number,BufferGeometry> };
 const assetPromises=new Map<string,Promise<Assets>>();
-export function loadAssets(robot='panda') {
-  if (!assetPromises.has(robot)) assetPromises.set(robot,(async () => {
+export function loadAssets(robot='panda',version='') {
+  const key=`${robot}:${version}`;
+  if (!assetPromises.has(key)) assetPromises.set(key,(async () => {
     const start = performance.now();
-    const prefix=robot==='panda'?'/vivacity':`/vivacity/robots/${encodeURIComponent(robot)}`;
+    const humanoid=['unitree_g1','unitree_h1','apptronik_apollo'].includes(robot);
+    const prefix=robot==='panda'?'/vivacity':humanoid?`/vivacity/humanoids/${encodeURIComponent(robot)}`:`/vivacity/robots/${encodeURIComponent(robot)}`;
+    const suffix=version?`?v=${encodeURIComponent(version)}`:'';
     let manifest:Manifest|undefined,buffer:ArrayBuffer|undefined;
     for(let attempt=0;attempt<3;attempt++){
       try{
-        const [a,b]=await Promise.all([fetch(prefix+'/robot-geometry.json'),fetch(prefix+'/robot-meshes.bin')]);
+        const [a,b]=await Promise.all([fetch(prefix+'/robot-geometry.json'+suffix),fetch(prefix+'/robot-meshes.bin'+suffix)]);
         if(!a.ok||!b.ok)throw new Error('Robot geometry assets could not be loaded.');
         [manifest,buffer]=await Promise.all([a.json() as Promise<Manifest>,b.arrayBuffer()]);
         break;
@@ -36,8 +39,8 @@ export function loadAssets(robot='panda') {
       ...((window as unknown as {__vivacityPerformance?: Dict}).__vivacityPerformance ?? {}), robotAssetLoadMs: performance.now()-start, meshBytes: buffer.byteLength
     };
     return { manifest, geometry };
-  })().catch(err => { assetPromises.delete(robot); throw err; }));
-  return assetPromises.get(robot)!;
+  })().catch(err => { assetPromises.delete(key); throw err; }));
+  return assetPromises.get(key)!;
 }
 const quaternion = (q: number[]) => new Quaternion(q[1],q[2],q[3],q[0]);
 
@@ -46,7 +49,16 @@ export function GeomMesh({ geom, assets, config }: { geom: Geom; assets: Assets;
   if(geom.type==='cylinder'||geom.type==='capsule')q.multiply(new Quaternion().setFromAxisAngle(new Vector3(1,0,0),Math.PI/2));
   const size = (geom.name === 'obstacle_geom' ? config.obstacle_size ?? geom.size : geom.name === 'cube' && config.task === 'pick_place'
     ? objectHalfSizes(config) : geom.size) as Vec3;
-  const color = useMemo(() => new Color().setRGB(geom.rgba[0],geom.rgba[1],geom.rgba[2],SRGBColorSpace),[geom]);
+  const color = useMemo(() => {
+    const source=geom.rgba.slice(0,3);
+    // The H1 source uses near-black (0.1 sRGB) mechanical surfaces. Lift only
+    // those robot materials for an inspectable studio view; world colors stay
+    // tied to the compiled physical model.
+    if(config.humanoid_visual==='unitree_h1'&&geom.body_id>0&&Math.max(...source)<.15){
+      source[0]=.23;source[1]=.24;source[2]=.24;
+    }
+    return new Color().setRGB(source[0],source[1],source[2],SRGBColorSpace);
+  },[geom,config.humanoid_visual]);
   if(geom.name==='table'&&geom.size.every((v,i)=>Math.abs(v-[.7,.65,.04][i])<1e-6)&&geom.position.every((v,i)=>Math.abs(v-[.4,0,-.04][i])<1e-6))return <Workbench/>;
   return <mesh position={geom.position} quaternion={q} geometry={geom.mesh_id !== null ? assets.geometry.get(geom.mesh_id) : undefined} castShadow={geom.type !== 'plane'} receiveShadow>
     {geom.type === 'box' && <boxGeometry args={[size[0]*2,size[1]*2,size[2]*2]} />}

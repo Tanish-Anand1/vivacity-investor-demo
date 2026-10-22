@@ -1,4 +1,96 @@
-# Isabella Labs: The Impossible Shot — current production release, 2026-10-21
+# Vivacity: The One — local opening candidate, 2026-10-22
+
+The homepage opening has been rebuilt as a 7.500-second authored film: Panda
+gripper contact, synchronized machinery, a suspended cube, a divided industrial
+hall, four alternative states, structural convergence, VIVACITY, and the
+Isabella Labs homepage handoff. The existing homepage, labs, experiment runtime,
+and backend were preserved. The opening is deployed at
+`https://demo.tryvivacity.com/`. The older production record below is
+historical, not verification of this new opening.
+
+Working delivery includes separately framed landscape/portrait films, smaller
+30 fps variants, a reusable lab configuration, muted playback with gesture-based
+sound, Skip, Escape, replay on every homepage load/refresh, explicit
+`/?intro=replay`, reduced motion, focus restoration, and failure recovery. Skip
+applies to the current playback only. The film never starts a physics experiment
+and does not depend on browser storage.
+
+On 2026-10-22 the one-time replay suppression was removed so refreshing the
+homepage starts the film again. The existing Playwright acceptance case now
+checks skip → refresh → opening playback. The production TypeScript/Vite build
+passes after this change. The automated browser suite has not yet been rerun for
+this update; its earlier **16/16** result below is historical.
+
+Actual checks executed for this candidate:
+
+- TypeScript application and cinematic-source checks passed.
+- `npm run build` passed; Vite compiled 5,198 modules. Existing large application
+  chunks remain (WorldPreview is about 901 kB gzip).
+- The deterministic source check passed **451 samples per format**, exact-frame
+  seek reproducibility, locked timeline boundaries, finite positions, four
+  world origins, and projected cube/identity checks. Maximum cube displacement
+  before convergence was 0.0652365 m per 60 fps sample in the scaled scene.
+- All four MP4s passed ffprobe validation at exactly **7.500 seconds**. Main
+  films have 450 frames at 60 fps; lighter films have 225 frames at 30 fps.
+- Before the replay-on-refresh change, the isolated production-preview Chrome
+  suite passed **16/16 in 54.9 s**. That historical run covered timed playback
+  and lab entry, repeat visits, sound, keyboard
+  focus/Escape, storage denial, reduced motion, 320/390 px framing, resize,
+  network failure, stalled loading, autoplay refusal, rendition selection,
+  metadata-triggered playback, and decoder-startup recovery.
+- The first run was **13/14**, with one cold decoder remaining at metadata until
+  the original 2.3-second fallback. The failure artifact is preserved. Playback
+  now starts on metadata as well as canplay, with a bounded 5-second startup
+  budget for metadata-ready decoders. Missing downloads still exit at 2.3 s.
+  Both added regressions passed; the failed assertion was not weakened.
+- Real browser journeys were recorded in both formats, reaching media time
+  7.500, restoring homepage focus/input, and entering `/laboratory`. Encoded
+  desktop and portrait contact sheets were inspected at all eight requested
+  film timestamps plus an actual homepage capture after the 7.500-second end.
+- All four delivered renditions decoded in real Chrome requests. Lite playback
+  took 7.545 s desktop and 7.546 s portrait in the recorded runs. Separate
+  60 fps checks decoded all 450 frames and reached 7.500 media seconds: 8.208 s
+  wall time / 0 dropped frames desktop, 7.582 s / 1 dropped frame portrait.
+  These are local observations, not a guarantee of playback on every device.
+- Manual browser inspection confirmed the homepage and laboratory route work
+  after playback, with no page errors. The backend physics suite was not rerun
+  for this opening-only change.
+- Initial Vercel deployment `dpl_AE2ojDarMpsouHFfPSirfBnL1GJV` and its health,
+  mobile, and full-playback results are historical; its former repeat-visit
+  bypass was replaced by this refresh behavior.
+- Vercel deployment `dpl_He1JeBQxtrqdQi1f5M8fHL18V897` reached `READY` and was
+  assigned to `https://demo.tryvivacity.com/`. A live browser check with normal
+  motion enabled verified: opening present on initial load; Skip dismissed the
+  current playback; a full refresh showed the opening again, with media time
+  already greater than zero. The browser originally had reduced motion enabled;
+  that setting was restored after verification, and the intro correctly bypasses
+  playback under that preference. The automated Playwright suite was not rerun
+  for this update. The production TypeScript/Vite build passed locally and in
+  Vercel; the existing large-chunk warning remains.
+
+Performance and evidence: offline capture of 450 frames took **34.845 s** for
+landscape and **35.257 s** for portrait on this machine. Delivered files are
+5,095,243 / 3,977,039 bytes (landscape/portrait) and 1,346,537 / 1,445,615 bytes
+(lite). Source checks, browser reports, contact sheets, and recordings are under
+`artifacts/the-one-*`; rebuild instructions and licenses are documented in
+`docs/ISABELLA_CINEMATIC.md`.
+
+Limitations: this is stylized Three.js cinematography, not a photorealistic
+Blender render or physics experiment footage. MuJoCo supplies authored arm
+kinematics; the cube attachment, suspension, architecture, and convergence are
+directed animation. The homepage handoff is a video-to-DOM mask, not a shared
+3D camera. Network/decode delays can extend wall time or safely bypass the film.
+Real Safari/iOS and Firefox acceptance, long-term leak profiling, production
+delivery, and a fresh full backend regression remain unverified. Existing
+backend availability and unrelated application issues are not resolved by this
+opening change. No paid asset or rendering service was used.
+
+# Isabella Labs: The Impossible Shot — historical production release, 2026-10-21
+
+The separate [humanoid lab implementation status](HUMANOID_IMPLEMENTATION_STATUS.md)
+records the 2026-10-22 local rebuild, actual physics outcomes, browser
+screenshots, and incomplete G1/H1 task controllers. That work has **not**
+replaced the public production release documented here.
 
 The homepage opening is an authored 7.500-second 3D film. A single metallic
 cube moves through a Panda arm, an enlarged UR5e, a custom delta mechanism,

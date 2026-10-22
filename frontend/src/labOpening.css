@@ -1,10 +1,12 @@
-.lab-opening{position:fixed;inset:0;z-index:100;overflow:hidden;isolation:isolate;background:#040807;color:#f3f1e8}
-.lab-opening-video{display:block;width:100%;height:100%;object-fit:cover;background:#040807}
-.lab-opening-controls{position:absolute;z-index:2;top:clamp(16px,3vw,48px);right:clamp(16px,3vw,48px);display:flex;gap:8px}
-.lab-opening-control{min-height:44px;border:1px solid #d6d9c68c;background:#080d0bd9;color:#f2f1e9;padding:10px 14px;font:600 12px/1.3 Manrope,sans-serif;letter-spacing:.02em;cursor:pointer;transition:background-color 140ms ease,color 140ms ease}
+.lab-opening{position:fixed;inset:0;z-index:100;overflow:hidden;isolation:isolate;background:#030405;color:#f3f1e8;--opening-aperture:0%;mask-image:linear-gradient(90deg,#000 0 calc(50% - var(--opening-aperture)),transparent calc(50% - var(--opening-aperture)) calc(50% + var(--opening-aperture)),#000 calc(50% + var(--opening-aperture)) 100%)}
+/* Preserve the authored 16:9 and 9:16 compositions at every window shape. */
+.lab-opening-video{display:block;width:100%;height:100%;object-fit:contain;background:#030405}
+.lab-opening-controls{position:absolute;z-index:2;top:max(16px,env(safe-area-inset-top));right:max(16px,env(safe-area-inset-right));display:flex;gap:8px}
+.lab-opening-control{min-height:44px;border:1px solid #f3f1e873;background:#080a0de6;color:#f3f1e8;padding:10px 14px;font:600 12px/1.3 Manrope,sans-serif;letter-spacing:.02em;cursor:pointer;transition:background-color 140ms ease,color 140ms ease}
 .lab-opening-control span{margin-left:12px}
-.lab-opening-control:hover{background:#e6e8db;color:#111713}
-.lab-opening-control:focus-visible{outline:2px solid #d8bb86;outline-offset:4px}
-.lab-opening-debug{position:absolute;left:24px;bottom:24px;z-index:3;display:flex;align-items:center;gap:12px;padding:10px 14px;background:#080d0bd9;color:#f2f1e9;font:12px Manrope,sans-serif}.lab-opening-debug input{width:240px}
-@media(max-width:700px){.lab-opening-controls{top:16px;right:16px}.lab-opening-control{padding:9px 11px;font-size:11px}}
-@media(prefers-reduced-motion:reduce){.lab-opening{display:none}}
+.lab-opening-control:hover{background:#eeece5;color:#111316}
+.lab-opening-control:focus-visible{outline:2px solid var(--opening-accent,#c8b69a);outline-offset:4px}
+.lab-opening-debug{position:absolute;left:24px;bottom:24px;z-index:3;display:flex;align-items:center;gap:12px;padding:10px 14px;background:#080a0de6;color:#f3f1e8;font:12px Manrope,sans-serif}
+.lab-opening-debug input{width:min(240px,50vw)}
+@media(min-width:900px){.lab-opening-controls{top:32px;right:32px}}
+@media(prefers-reduced-motion:reduce){.lab-opening{display:none}.lab-opening-control{transition:none}}

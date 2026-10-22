@@ -11,6 +11,7 @@ import type {FactoryImport} from './factoryApi';
 import type {Vec3} from './domain';
 import {editableFactorySettings,factorySettingsIssue} from './factorySettings';
 import FactoryGuide,{isGripChallenge} from './FactoryGuide';
+import FulfillmentPanel from './FulfillmentPanel';
 import './factory.css';
 import './lab.css';
 
@@ -53,6 +54,7 @@ export default function FactoryWorkspace({startGuided=false}:{startGuided?:boole
   {error&&<div role="alert" className="notice">{error} <button onClick={()=>action(load)}>Reconnect</button></div>}
   {inspectionRun&&<p className="factory-stage-note" role="status">Inspecting recorded trial {inspectionRun.id}. The original comparison and its cell remain selected. Return to latest to follow the ongoing simulation.</p>}
   {inspected&&!benchmarkBusy&&<p className="factory-stage-note" role="status">Viewport: recorded sample at {inspected.time.toFixed(3)} s. {active?'Production continues on the backend.':''}Use “Return to latest” in the analysis controls to leave inspection.</p>}
+  {cell&&<FulfillmentPanel cell={cell} active={active||benchmarkBusy||busy} onCell={showCell} onRun={setRun}/>}
   <div className="lab-stage">
    {experience==='explore'&&cell&&<FactoryGuide key={cell.id} cell={cell} run={run} blocked={active||benchmarkBusy||busy} onStart={()=>action(async()=>setRun(await factoryApi.start(cell.id,'production',creatorLabel)))} onLoadChallenge={()=>action(async()=>showCell(await factoryApi.create(flagshipSettings)))} onResearch={()=>setExperience('research')} setBenchmarkBusy={setBenchmarkBusy} setBenchmarkView={setBenchmarkView} setBenchmarkId={setBenchmarkId}/>}
    <div className="lab-world"><FactoryView frame={frame} mode={mode} geometry={cell?.collision_geometry} trajectory={trajectory} status={benchmarkView?.status??run?.status??'idle'}/>

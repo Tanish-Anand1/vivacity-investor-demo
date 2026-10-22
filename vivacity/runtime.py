@@ -94,7 +94,9 @@ class Runtime:
         state = backend.snapshot(instance)
         action_schema = backend.backend(state['config']).action_schema if request.backend == 'mujoco' else backend.action_schema
         world = {'schema_version': '1.0', 'id': uid(), 'backend': request.backend, 'config': deepcopy(state['config']), 'state': state, 'initial_state': deepcopy(state), 'action_schema': action_schema, 'simulator_version': backend.version, 'seed': request.seed, 'revision': 0, 'history': [], 'branches': [], 'evaluations': [], 'performance': {'initialization_wall_seconds': time.perf_counter()-tic}}
-        self.store.put('worlds', world)
+        with self.store.connect() as db:
+            self.store.put('worlds', world, db)
+            self.store.world_version(world, 'created', db)
         return world
 
     def get_world(self, identifier):
@@ -496,30 +498,105 @@ class Runtime:
                 raise Conflict('branch is stale or experiment is incomplete')
             if not b['evaluation']['success']:
                 raise Conflict('failed branch cannot be committed')
+            self.store.world_version(w, 'prior_to_commit', db)
             w['state'] = self.backends[w['backend']].commit(b['final_state'])
             w['revision'] += 1
             self.store.put('worlds', w, db)
+            self.store.world_version(w, 'committed_branch', db)
             return w
 
     def reset(self, world_id):
         with self.lock, self.store.connect() as db:
             w = self.store.get('worlds', world_id, db)
+            self.store.world_version(w, 'prior_to_reset', db)
             w['state'] = deepcopy(w['initial_state']); w['revision'] += 1
             self.store.put('worlds', w, db)
+            self.store.world_version(w, 'reset', db)
             return w
 
-    def environment(self, world_id, config):
+    def environment(self, world_id, config, expected_revision=None):
         from .schemas import RoboticsConfig, ScienceConfig, ClothConfig
         with self.lock, self.store.connect() as db:
             w = self.store.get('worlds', world_id, db)
+            if expected_revision is not None and expected_revision != w['revision']:
+                raise Conflict('world revision changed; reload before applying this edit')
             expected = {'mujoco':RoboticsConfig,'scipy':ScienceConfig,'cloth':ClothConfig}[w['backend']]
             if not isinstance(config, expected):
                 raise ValueError('config does not match world backend')
             self.validate_import_config(config)
             instance = self.backends[w['backend']].create_world(config.model_dump(), w['seed'])
             state = self.backends[w['backend']].snapshot(instance)
+            self.store.world_version(w, 'prior_to_environment_change', db)
             w.update(state=state, initial_state=deepcopy(state), config=state['config'], revision=w['revision']+1)
             self.store.put('worlds', w, db)
+            self.store.world_version(w, 'environment_changed', db)
+            return w
+
+    def editor(self, world_id):
+        from .world_editor import describe_world
+        w = self.get_world(world_id)
+        measured = self.observe(world_id)['observation'] if w['backend'] == 'mujoco' else None
+        return describe_world(w, measured)
+
+    def edit_property(self, world_id, change):
+        from .world_editor import apply_change
+        with self.lock:
+            w = self.get_world(world_id)
+            editor = self.editor(world_id)
+            entity = next((e for e in editor['entities'] if e['id'] == change.entity_id), None)
+            prop = next((p for p in entity['properties'] if p['key'] == change.property_key), None) if entity else None
+            if prop is None or not prop['editable']:
+                raise ValueError('property is not supported by this physical workcell')
+            config = apply_change(w['config'], prop, change.value)
+            return self.environment(world_id, config, change.expected_revision)
+
+    def edit_geometry(self, world_id, action):
+        from .world_editor import geometry_action
+        with self.lock:
+            w = self.get_world(world_id)
+            if not self.editor(world_id)['entities']:
+                raise ValueError('scene geometry editing is unsupported in this world')
+            config, _ = geometry_action(w['config'], action.action, action.entity_id, action.geometry_type)
+            return self.environment(world_id, config, action.expected_revision)
+
+    def move_geometry(self, world_id, move):
+        from .schemas import RoboticsConfig
+        with self.lock:
+            w = self.get_world(world_id)
+            if not self.editor(world_id)['entities']:
+                raise ValueError('scene geometry editing is unsupported in this world')
+            config = deepcopy(w['config'])
+            name = move.entity_id.split(':', 1)[1]
+            item = next((g for g in config['scene_geometries'] if g['name'] == name), None)
+            if item is None:
+                raise ValueError('scene primitive no longer exists')
+            limits = [(-.3,1.1),(-.65,.65),(.005,.8)]
+            if any(not lo <= value <= hi for value, (lo,hi) in zip(move.position, limits)):
+                raise ValueError('scene primitive is outside editable workcell bounds')
+            item['position'] = move.position
+            return self.environment(world_id, RoboticsConfig.model_validate(config), move.expected_revision)
+
+    def world_versions(self, world_id):
+        self.get_world(world_id)
+        return self.store.world_versions(world_id)
+
+    def restore_world_version(self, world_id, revision, expected_revision):
+        with self.lock, self.store.connect() as db:
+            w = self.store.get('worlds', world_id, db)
+            if expected_revision != w['revision']:
+                raise Conflict('world revision changed; reload before restoring')
+            saved = self.store.get_world_version(world_id, revision, db)
+            if saved['state']['config'] != saved['config']:
+                raise ValueError('saved world version has inconsistent configuration')
+            # Reconstruct via the backend so model/version hashes and integration
+            # state are checked before changing the durable world record.
+            restored = self.backends[w['backend']].fork(saved['state'])
+            state = self.backends[w['backend']].snapshot(restored)
+            self.store.world_version(w, 'prior_to_restore', db)
+            w.update(config=deepcopy(saved['config']), state=state,
+                     initial_state=deepcopy(saved['initial_state']), revision=w['revision']+1)
+            self.store.put('worlds', w, db)
+            self.store.world_version(w, 'restored', db, source_revision=revision)
             return w
 
     def _replay(self, e, branches):

@@ -17,6 +17,9 @@ class Store:
             db.execute('PRAGMA journal_mode=WAL')
             db.executescript('''
                 CREATE TABLE IF NOT EXISTS worlds(id TEXT PRIMARY KEY, payload TEXT NOT NULL);
+                CREATE TABLE IF NOT EXISTS world_versions(
+                    world_id TEXT NOT NULL, revision INTEGER NOT NULL, payload TEXT NOT NULL,
+                    PRIMARY KEY(world_id, revision));
                 CREATE TABLE IF NOT EXISTS experiments(id TEXT PRIMARY KEY, payload TEXT NOT NULL);
                 CREATE TABLE IF NOT EXISTS branches(id TEXT PRIMARY KEY, experiment_id TEXT NOT NULL, payload TEXT NOT NULL);
                 CREATE INDEX IF NOT EXISTS branch_experiment ON branches(experiment_id);
@@ -69,6 +72,28 @@ class Store:
     def branches(self, experiment_id):
         with self.connect() as db:
             return [json.loads(r[0]) for r in db.execute('SELECT payload FROM branches WHERE experiment_id=? ORDER BY rowid', (experiment_id,))]
+
+    def world_version(self, world, reason, db, source_revision=None):
+        record = {'schema_version': 'vivacity.world_version/1.0',
+                  'world_id': world['id'], 'revision': world['revision'],
+                  'created_unix_s': time.time(), 'reason': reason,
+                  'source_revision': source_revision, 'config': world['config'],
+                  'state': world['state'], 'initial_state': world['initial_state']}
+        db.execute('INSERT OR IGNORE INTO world_versions(world_id,revision,payload) VALUES(?,?,?)',
+                   (world['id'], world['revision'], encode(record)))
+
+    def world_versions(self, world_id):
+        with self.connect() as db:
+            return [{k: value for k, value in json.loads(row[0]).items()
+                     if k not in ('state', 'initial_state')}
+                    for row in db.execute('SELECT payload FROM world_versions WHERE world_id=? ORDER BY revision DESC LIMIT 100', (world_id,))]
+
+    def get_world_version(self, world_id, revision, db):
+        row = db.execute('SELECT payload FROM world_versions WHERE world_id=? AND revision=?',
+                         (world_id, revision)).fetchone()
+        if row is None:
+            raise KeyError(f'{world_id}:{revision}')
+        return json.loads(row[0])
 
     def trial(self, experiment_id, record):
         with self.connect() as db:

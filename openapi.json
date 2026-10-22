@@ -3494,6 +3494,216 @@
         }
       }
     },
+    "/v1/fulfillment/orders": {
+      "post": {
+        "tags": [
+          "Fulfillment (sorting stage)"
+        ],
+        "summary": "Create Order",
+        "operationId": "create_order_v1_fulfillment_orders_post",
+        "parameters": [
+          {
+            "name": "X-Workspace-Token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 32,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "title": "X-Workspace-Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FulfillmentOrderResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Fulfillment (sorting stage)"
+        ],
+        "summary": "Orders",
+        "operationId": "orders_v1_fulfillment_orders_get",
+        "parameters": [
+          {
+            "name": "X-Workspace-Token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 32,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "title": "X-Workspace-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FulfillmentOrderResponse"
+                  },
+                  "title": "Response Orders V1 Fulfillment Orders Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/fulfillment/orders/{identifier}": {
+      "get": {
+        "tags": [
+          "Fulfillment (sorting stage)"
+        ],
+        "summary": "Order",
+        "operationId": "order_v1_fulfillment_orders__identifier__get",
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Identifier"
+            }
+          },
+          {
+            "name": "X-Workspace-Token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 32,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "title": "X-Workspace-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FulfillmentOrderResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/fulfillment/orders/{identifier}/start": {
+      "post": {
+        "tags": [
+          "Fulfillment (sorting stage)"
+        ],
+        "summary": "Start Order",
+        "operationId": "start_order_v1_fulfillment_orders__identifier__start_post",
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Identifier"
+            }
+          },
+          {
+            "name": "X-Workspace-Token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 32,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "title": "X-Workspace-Token"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FulfillmentOrderResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/health": {
       "get": {
         "summary": "Health",
@@ -3577,6 +3787,250 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RoboticsProgramCatalog"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/robotics/humanoids/models/{robot_id}": {
+      "get": {
+        "summary": "Humanoid Model",
+        "operationId": "humanoid_model_v1_robotics_humanoids_models__robot_id__get",
+        "parameters": [
+          {
+            "name": "robot_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Robot Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HumanoidModelResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/robotics/humanoids/experiments": {
+      "post": {
+        "summary": "Submit Humanoid",
+        "operationId": "submit_humanoid_v1_robotics_humanoids_experiments_post",
+        "parameters": [
+          {
+            "name": "x-workspace-token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 32,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "title": "X-Workspace-Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HumanoidTrialRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HumanoidTrialResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "List Humanoid",
+        "operationId": "list_humanoid_v1_robotics_humanoids_experiments_get",
+        "parameters": [
+          {
+            "name": "robot_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Robot Id"
+            }
+          },
+          {
+            "name": "x-workspace-token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 32,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "title": "X-Workspace-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HumanoidTrialResponse"
+                  },
+                  "title": "Response List Humanoid V1 Robotics Humanoids Experiments Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/robotics/humanoids/experiments/{trial_id}": {
+      "get": {
+        "summary": "Get Humanoid",
+        "operationId": "get_humanoid_v1_robotics_humanoids_experiments__trial_id__get",
+        "parameters": [
+          {
+            "name": "trial_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Trial Id"
+            }
+          },
+          {
+            "name": "x-workspace-token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 32,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "title": "X-Workspace-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HumanoidTrialResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/robotics/humanoids/experiments/{trial_id}/replay": {
+      "get": {
+        "summary": "Replay Humanoid",
+        "operationId": "replay_humanoid_v1_robotics_humanoids_experiments__trial_id__replay_get",
+        "parameters": [
+          {
+            "name": "trial_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Trial Id"
+            }
+          },
+          {
+            "name": "x-workspace-token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 32,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "title": "X-Workspace-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
                 }
               }
             }
@@ -4717,6 +5171,293 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/EnvironmentPatch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorldResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/worlds/{world_id}/editor": {
+      "get": {
+        "summary": "World Editor",
+        "operationId": "world_editor_v1_worlds__world_id__editor_get",
+        "parameters": [
+          {
+            "name": "world_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "World Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorldEditorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/worlds/{world_id}/editor/properties": {
+      "patch": {
+        "summary": "Edit World Property",
+        "operationId": "edit_world_property_v1_worlds__world_id__editor_properties_patch",
+        "parameters": [
+          {
+            "name": "world_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "World Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditorChange"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorldResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/worlds/{world_id}/editor/geometries": {
+      "post": {
+        "summary": "Edit World Geometry",
+        "operationId": "edit_world_geometry_v1_worlds__world_id__editor_geometries_post",
+        "parameters": [
+          {
+            "name": "world_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "World Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditorGeometryAction"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorldResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/worlds/{world_id}/editor/geometry-position": {
+      "patch": {
+        "summary": "Move World Geometry",
+        "operationId": "move_world_geometry_v1_worlds__world_id__editor_geometry_position_patch",
+        "parameters": [
+          {
+            "name": "world_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "World Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditorMove"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorldResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/worlds/{world_id}/versions": {
+      "get": {
+        "summary": "World Versions",
+        "operationId": "world_versions_v1_worlds__world_id__versions_get",
+        "parameters": [
+          {
+            "name": "world_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "World Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WorldVersion"
+                  },
+                  "title": "Response World Versions V1 Worlds  World Id  Versions Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/worlds/{world_id}/versions/{revision}/restore": {
+      "post": {
+        "summary": "Restore World Version",
+        "operationId": "restore_world_version_v1_worlds__world_id__versions__revision__restore_post",
+        "parameters": [
+          {
+            "name": "world_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "World Id"
+            }
+          },
+          {
+            "name": "revision",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Revision"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RestoreWorldVersion"
               }
             }
           }
@@ -5886,6 +6627,303 @@
         ],
         "title": "DiscoverySeriesResponse"
       },
+      "EditorChange": {
+        "properties": {
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Expected Revision"
+          },
+          "entity_id": {
+            "type": "string",
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Entity Id"
+          },
+          "property_key": {
+            "type": "string",
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Property Key"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "expected_revision",
+          "entity_id",
+          "property_key",
+          "value"
+        ],
+        "title": "EditorChange"
+      },
+      "EditorEntity": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "object",
+              "obstacle",
+              "surface",
+              "robot",
+              "environment"
+            ],
+            "title": "Kind"
+          },
+          "properties": {
+            "items": {
+              "$ref": "#/components/schemas/EditorProperty"
+            },
+            "type": "array",
+            "title": "Properties"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "kind",
+          "properties"
+        ],
+        "title": "EditorEntity"
+      },
+      "EditorGeometryAction": {
+        "properties": {
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Expected Revision"
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "add",
+              "duplicate",
+              "delete"
+            ],
+            "title": "Action"
+          },
+          "entity_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Entity Id"
+          },
+          "geometry_type": {
+            "type": "string",
+            "enum": [
+              "box",
+              "cylinder"
+            ],
+            "title": "Geometry Type",
+            "default": "box"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "expected_revision",
+          "action"
+        ],
+        "title": "EditorGeometryAction"
+      },
+      "EditorMove": {
+        "properties": {
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Expected Revision"
+          },
+          "entity_id": {
+            "type": "string",
+            "pattern": "^geometry:[A-Za-z][A-Za-z0-9_-]*$",
+            "title": "Entity Id"
+          },
+          "position": {
+            "items": {
+              "type": "number",
+              "maximum": 8.0,
+              "minimum": -8.0
+            },
+            "type": "array",
+            "maxItems": 3,
+            "minItems": 3,
+            "title": "Position"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "expected_revision",
+          "entity_id",
+          "position"
+        ],
+        "title": "EditorMove"
+      },
+      "EditorProperty": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "path": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Path"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "meaning": {
+            "type": "string",
+            "title": "Meaning"
+          },
+          "unit": {
+            "type": "string",
+            "title": "Unit"
+          },
+          "data_type": {
+            "type": "string",
+            "enum": [
+              "number",
+              "boolean",
+              "choice"
+            ],
+            "title": "Data Type"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          },
+          "minimum": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Minimum"
+          },
+          "maximum": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Maximum"
+          },
+          "step": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Step"
+          },
+          "choices": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Choices",
+            "default": []
+          },
+          "editable": {
+            "type": "boolean",
+            "title": "Editable",
+            "default": true
+          },
+          "requires_reset": {
+            "type": "boolean",
+            "title": "Requires Reset",
+            "default": true
+          },
+          "dependency": {
+            "type": "string",
+            "title": "Dependency"
+          },
+          "physics_effect": {
+            "type": "string",
+            "title": "Physics Effect"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "key",
+          "path",
+          "label",
+          "meaning",
+          "unit",
+          "data_type",
+          "value",
+          "dependency",
+          "physics_effect"
+        ],
+        "title": "EditorProperty"
+      },
       "EnvironmentPatch": {
         "properties": {
           "config": {
@@ -5901,6 +6939,18 @@
               }
             ],
             "title": "Config"
+          },
+          "expected_revision": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Revision"
           }
         },
         "additionalProperties": false,
@@ -7309,6 +8359,118 @@
         "type": "object",
         "title": "FactorySettings"
       },
+      "FulfillmentOrderResponse": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "title": "Schema Version"
+          },
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "order_label": {
+            "type": "string",
+            "title": "Order Label"
+          },
+          "created_unix_s": {
+            "type": "number",
+            "title": "Created Unix S"
+          },
+          "cell_id": {
+            "type": "string",
+            "title": "Cell Id"
+          },
+          "run_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Run Id"
+          },
+          "attempts": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Attempts"
+          },
+          "settings": {
+            "$ref": "#/components/schemas/FactorySettings"
+          },
+          "initial_state_hash": {
+            "type": "string",
+            "title": "Initial State Hash"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/OrderItem"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "tasks": {
+            "items": {
+              "$ref": "#/components/schemas/TaskState"
+            },
+            "type": "array",
+            "title": "Tasks"
+          },
+          "sorted_count": {
+            "type": "integer",
+            "title": "Sorted Count"
+          },
+          "metrics": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/JsonValue"
+            },
+            "type": "object",
+            "title": "Metrics"
+          },
+          "events": {
+            "items": {
+              "additionalProperties": {
+                "$ref": "#/components/schemas/JsonValue"
+              },
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Events"
+          },
+          "scope": {
+            "type": "string",
+            "title": "Scope"
+          }
+        },
+        "type": "object",
+        "required": [
+          "schema_version",
+          "id",
+          "order_label",
+          "created_unix_s",
+          "cell_id",
+          "run_id",
+          "attempts",
+          "settings",
+          "initial_state_hash",
+          "status",
+          "items",
+          "tasks",
+          "sorted_count",
+          "metrics",
+          "events",
+          "scope"
+        ],
+        "title": "FulfillmentOrderResponse"
+      },
       "GenerationRequest": {
         "properties": {
           "prompt": {
@@ -7529,6 +8691,244 @@
         },
         "type": "object",
         "title": "HTTPValidationError"
+      },
+      "HumanoidModelResponse": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "title": "Schema Version",
+            "default": "vivacity.humanoid-model/1.0"
+          },
+          "robot_id": {
+            "type": "string",
+            "title": "Robot Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "environment_id": {
+            "type": "string",
+            "title": "Environment Id"
+          },
+          "model_hash": {
+            "type": "string",
+            "title": "Model Hash"
+          },
+          "simulator_version": {
+            "type": "string",
+            "title": "Simulator Version"
+          },
+          "dof": {
+            "type": "integer",
+            "title": "Dof"
+          },
+          "actuators": {
+            "type": "integer",
+            "title": "Actuators"
+          },
+          "mesh_count": {
+            "type": "integer",
+            "title": "Mesh Count"
+          },
+          "joint_names": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Joint Names"
+          },
+          "initial_frame": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Initial Frame"
+          },
+          "geometry_url": {
+            "type": "string",
+            "title": "Geometry Url"
+          },
+          "task_scope": {
+            "type": "string",
+            "title": "Task Scope"
+          }
+        },
+        "type": "object",
+        "required": [
+          "robot_id",
+          "name",
+          "environment_id",
+          "model_hash",
+          "simulator_version",
+          "dof",
+          "actuators",
+          "mesh_count",
+          "joint_names",
+          "initial_frame",
+          "geometry_url",
+          "task_scope"
+        ],
+        "title": "HumanoidModelResponse"
+      },
+      "HumanoidTrialRequest": {
+        "properties": {
+          "robot_id": {
+            "type": "string",
+            "title": "Robot Id"
+          },
+          "action": {
+            "type": "string",
+            "pattern": "^(attempt_task|hold_stance|pickup_place)$",
+            "title": "Action",
+            "default": "attempt_task"
+          },
+          "duration_s": {
+            "type": "number",
+            "maximum": 3.0,
+            "minimum": 0.5,
+            "title": "Duration S",
+            "default": 2.0
+          },
+          "movement_scale": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Movement Scale",
+            "default": 0.6
+          },
+          "floor_friction": {
+            "type": "number",
+            "maximum": 1.5,
+            "minimum": 0.2,
+            "title": "Floor Friction",
+            "default": 0.8
+          },
+          "parcel_mass_kg": {
+            "type": "number",
+            "maximum": 2.0,
+            "minimum": 0.1,
+            "title": "Parcel Mass Kg",
+            "default": 0.5
+          },
+          "parcel_xy_m": {
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "type": "array",
+            "maxItems": 2,
+            "minItems": 2,
+            "title": "Parcel Xy M",
+            "default": [
+              0.35,
+              0.0
+            ]
+          },
+          "destination_xy_m": {
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "type": "array",
+            "maxItems": 2,
+            "minItems": 2,
+            "title": "Destination Xy M",
+            "default": [
+              0.66,
+              -0.47
+            ]
+          },
+          "task_timeout_s": {
+            "type": "number",
+            "maximum": 12.0,
+            "minimum": 6.0,
+            "title": "Task Timeout S",
+            "default": 8.0
+          },
+          "perturbation_n": {
+            "type": "number",
+            "maximum": 80.0,
+            "minimum": 0.0,
+            "title": "Perturbation N",
+            "default": 0
+          },
+          "seed": {
+            "type": "integer",
+            "maximum": 2147483647.0,
+            "minimum": 0.0,
+            "title": "Seed",
+            "default": 7
+          }
+        },
+        "type": "object",
+        "required": [
+          "robot_id"
+        ],
+        "title": "HumanoidTrialRequest"
+      },
+      "HumanoidTrialResponse": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "title": "Schema Version",
+            "default": "vivacity.humanoid-job/1.0"
+          },
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "request": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Request"
+          },
+          "created_unix_s": {
+            "type": "number",
+            "title": "Created Unix S"
+          },
+          "result": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Result"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "status",
+          "request",
+          "created_unix_s"
+        ],
+        "title": "HumanoidTrialResponse"
       },
       "ImportMapping": {
         "properties": {
@@ -8077,6 +9477,95 @@
         ],
         "title": "MeasurementRequest"
       },
+      "OrderItem": {
+        "properties": {
+          "item_id": {
+            "type": "string",
+            "title": "Item Id"
+          },
+          "carton_id": {
+            "type": "string",
+            "title": "Carton Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "lane": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lane"
+          },
+          "mass_kg": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mass Kg"
+          },
+          "verified_simulation_time_s": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Verified Simulation Time S"
+          }
+        },
+        "type": "object",
+        "required": [
+          "item_id",
+          "carton_id",
+          "status",
+          "lane",
+          "mass_kg",
+          "verified_simulation_time_s"
+        ],
+        "title": "OrderItem"
+      },
+      "OrderRequest": {
+        "properties": {
+          "order_label": {
+            "type": "string",
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Order Label"
+          },
+          "item_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 3,
+            "minItems": 1,
+            "title": "Item Ids"
+          },
+          "settings": {
+            "$ref": "#/components/schemas/FactorySettings"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "order_label",
+          "item_ids",
+          "settings"
+        ],
+        "title": "OrderRequest"
+      },
       "PhysicsSettings": {
         "properties": {
           "schema_version": {
@@ -8401,6 +9890,21 @@
         ],
         "title": "ResolvedConfiguration"
       },
+      "RestoreWorldVersion": {
+        "properties": {
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Expected Revision"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "expected_revision"
+        ],
+        "title": "RestoreWorldVersion"
+      },
       "RoboticsConfig": {
         "properties": {
           "physics": {
@@ -8597,11 +10101,31 @@
             "title": "Cube Mass",
             "default": 0.06
           },
+          "cube_density_kg_m3": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 5000.0,
+                "minimum": 50.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cube Density Kg M3"
+          },
           "cube_friction": {
             "type": "number",
             "maximum": 1.5,
             "minimum": 0.05,
             "title": "Cube Friction",
+            "default": 1.0
+          },
+          "table_friction": {
+            "type": "number",
+            "maximum": 2.0,
+            "minimum": 0.05,
+            "title": "Table Friction",
             "default": 1.0
           },
           "obstacle_position": {
@@ -9477,6 +11001,21 @@
             "minItems": 3,
             "title": "Size"
           },
+          "quaternion_wxyz": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array",
+            "maxItems": 4,
+            "minItems": 4,
+            "title": "Quaternion Wxyz",
+            "default": [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
           "rgba": {
             "items": {
               "type": "number"
@@ -9508,6 +11047,36 @@
           "size"
         ],
         "title": "StaticGeometry"
+      },
+      "TaskState": {
+        "properties": {
+          "stage": {
+            "type": "string",
+            "title": "Stage"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "stage",
+          "status",
+          "reason"
+        ],
+        "title": "TaskState"
       },
       "TemplateCatalog": {
         "properties": {
@@ -9938,6 +11507,44 @@
         ],
         "title": "VersionRequest"
       },
+      "WorldEditorResponse": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "const": "vivacity.world_editor/1.0",
+            "title": "Schema Version",
+            "default": "vivacity.world_editor/1.0"
+          },
+          "world_id": {
+            "type": "string",
+            "title": "World Id"
+          },
+          "revision": {
+            "type": "integer",
+            "title": "Revision"
+          },
+          "entities": {
+            "items": {
+              "$ref": "#/components/schemas/EditorEntity"
+            },
+            "type": "array",
+            "title": "Entities"
+          },
+          "scope": {
+            "type": "string",
+            "title": "Scope"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "world_id",
+          "revision",
+          "entities",
+          "scope"
+        ],
+        "title": "WorldEditorResponse"
+      },
       "WorldResponse": {
         "properties": {
           "schema_version": {
@@ -10033,6 +11640,58 @@
           "performance"
         ],
         "title": "WorldResponse"
+      },
+      "WorldVersion": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "const": "vivacity.world_version/1.0",
+            "title": "Schema Version",
+            "default": "vivacity.world_version/1.0"
+          },
+          "world_id": {
+            "type": "string",
+            "title": "World Id"
+          },
+          "revision": {
+            "type": "integer",
+            "title": "Revision"
+          },
+          "created_unix_s": {
+            "type": "number",
+            "title": "Created Unix S"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          },
+          "source_revision": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Revision"
+          },
+          "config": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Config"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "world_id",
+          "revision",
+          "created_unix_s",
+          "reason",
+          "config"
+        ],
+        "title": "WorldVersion"
       }
     }
   },

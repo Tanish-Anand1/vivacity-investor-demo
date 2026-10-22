@@ -1,0 +1,4 @@
+{
+  "extends": "./tsconfig.json",
+  "include": ["cinematic/theOneStage.ts", "src/openingConfig.ts"]
+}

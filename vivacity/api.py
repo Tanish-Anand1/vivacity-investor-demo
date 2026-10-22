@@ -5,7 +5,7 @@ import os
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, Response, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from .runtime import Runtime, Conflict, Busy, Unavailable
-from .schemas import CreateWorld, ExperimentRequest, EnvironmentPatch, CommitRequest, WorldResponse, ExperimentResponse, BranchResponse, StateResponse, ReplayResponse, EventResponse, BranchExport
+from .schemas import CreateWorld, ExperimentRequest, EnvironmentPatch, CommitRequest, WorldResponse, ExperimentResponse, BranchResponse, StateResponse, ReplayResponse, EventResponse, BranchExport, WorldEditorResponse, EditorChange, EditorGeometryAction, EditorMove, WorldVersion, RestoreWorldVersion
 from .schemas import ImportResponse,ImportPreview
 from .schemas import SessionRequest,SessionResponse,LiveState,TrialsResponse
 from .imports import ImportService,MAX_UPLOAD
@@ -13,6 +13,8 @@ from pathlib import Path
 from starlette.requests import HTTPConnection
 from .templates import TemplateSelection, TemplateCatalog, catalog, resolve
 from .v_robotics import RoboticsProgramCatalog, RoboticsExperimentReport, catalog as robotics_catalog, experiment_report as robotics_report
+from .humanoids import HumanoidModelResponse, HumanoidTrialRequest, HumanoidTrialResponse, HumanoidTrialService, model_info as humanoid_model_info
+from .workspace import owner as workspace_owner
 
 
 def create_app(database=None):
@@ -22,12 +24,16 @@ def create_app(database=None):
     async def lifespan(app):
         path=database or os.getenv('VIVACITY_DATABASE', 'data/vivacity.sqlite3')
         app.state.runtime = Runtime(path)
+        app.state.humanoids = HumanoidTrialService(app.state.runtime.store)
         app.state.imports = app.state.runtime.imports
         from .workspace import WorkspaceService
         app.state.workspace = WorkspaceService(app.state.runtime)
         from .factory_service import FactoryService
         app.state.factory = FactoryService(app.state.workspace)
+        from .fulfillment import FulfillmentService
+        app.state.fulfillment = FulfillmentService(app.state.factory)
         yield
+        await asyncio.to_thread(app.state.humanoids.close)
         await asyncio.to_thread(app.state.factory.close)
         await asyncio.to_thread(app.state.workspace.close)
         await asyncio.to_thread(app.state.runtime.close)
@@ -61,6 +67,8 @@ def create_app(database=None):
     app.include_router(router)
     from .factory_api import router as factory_router
     app.include_router(factory_router)
+    from .fulfillment_api import router as fulfillment_router
+    app.include_router(fulfillment_router)
 
     @app.exception_handler(PermissionError)
     async def permission(request,exc):
@@ -109,6 +117,40 @@ def create_app(database=None):
     @app.get('/v1/robotics/programs', response_model=RoboticsProgramCatalog)
     def robotics_programs():
         return robotics_catalog()
+
+    @app.get('/v1/robotics/humanoids/models/{robot_id}', response_model=HumanoidModelResponse)
+    def humanoid_model(robot_id: str):
+        try:
+            return humanoid_model_info(robot_id)
+        except FileNotFoundError as exc:
+            raise HTTPException(503, str(exc)) from exc
+
+    HumanoidToken = Annotated[str, Header(min_length=32, max_length=128, pattern=r'^[A-Za-z0-9_-]+$')]
+
+    @app.post('/v1/robotics/humanoids/experiments', response_model=HumanoidTrialResponse, status_code=202)
+    def submit_humanoid(request: HumanoidTrialRequest, x_workspace_token: HumanoidToken):
+        try:
+            return app.state.humanoids.submit(workspace_owner(x_workspace_token), request)
+        except FileNotFoundError as exc:
+            raise HTTPException(503, str(exc)) from exc
+
+    @app.get('/v1/robotics/humanoids/experiments', response_model=list[HumanoidTrialResponse])
+    def list_humanoid(robot_id: str, x_workspace_token: HumanoidToken):
+        return app.state.humanoids.list(workspace_owner(x_workspace_token), robot_id)
+
+    @app.get('/v1/robotics/humanoids/experiments/{trial_id}', response_model=HumanoidTrialResponse)
+    def get_humanoid(trial_id: str, x_workspace_token: HumanoidToken):
+        return app.state.humanoids.get(workspace_owner(x_workspace_token), trial_id)
+
+    @app.get('/v1/robotics/humanoids/experiments/{trial_id}/replay')
+    def replay_humanoid(trial_id: str, x_workspace_token: HumanoidToken):
+        trial = app.state.humanoids.get(workspace_owner(x_workspace_token), trial_id)
+        if trial['status'] != 'completed':
+            raise HTTPException(409, 'This trial has no completed physics trace')
+        result = trial['result']
+        return {'schema_version': 'vivacity.humanoid-replay/1.0', 'trial_id': trial_id,
+                'model_hash': result['model_hash'], 'frames': result['frames'],
+                'measurements': result['measurements'], 'task_success': result['task_success']}
 
     @app.get('/v1/robotics/experiments/{experiment_id}/report', response_model=RoboticsExperimentReport)
     def robotics_experiment_report(experiment_id:str, x_session_token:Annotated[str | None,Header()]=None):
@@ -254,7 +296,31 @@ def create_app(database=None):
 
     @app.patch('/v1/worlds/{world_id}/environment', response_model=WorldResponse)
     def environment(world_id: str, request: EnvironmentPatch):
-        return app.state.runtime.environment(world_id, request.config)
+        return app.state.runtime.environment(world_id, request.config, request.expected_revision)
+
+    @app.get('/v1/worlds/{world_id}/editor', response_model=WorldEditorResponse)
+    def world_editor(world_id: str):
+        return app.state.runtime.editor(world_id)
+
+    @app.patch('/v1/worlds/{world_id}/editor/properties', response_model=WorldResponse)
+    def edit_world_property(world_id: str, request: EditorChange):
+        return app.state.runtime.edit_property(world_id, request)
+
+    @app.post('/v1/worlds/{world_id}/editor/geometries', response_model=WorldResponse)
+    def edit_world_geometry(world_id: str, request: EditorGeometryAction):
+        return app.state.runtime.edit_geometry(world_id, request)
+
+    @app.patch('/v1/worlds/{world_id}/editor/geometry-position', response_model=WorldResponse)
+    def move_world_geometry(world_id: str, request: EditorMove):
+        return app.state.runtime.move_geometry(world_id, request)
+
+    @app.get('/v1/worlds/{world_id}/versions', response_model=list[WorldVersion])
+    def world_versions(world_id: str):
+        return app.state.runtime.world_versions(world_id)
+
+    @app.post('/v1/worlds/{world_id}/versions/{revision}/restore', response_model=WorldResponse)
+    def restore_world_version(world_id: str, revision: int, request: RestoreWorldVersion):
+        return app.state.runtime.restore_world_version(world_id, revision, request.expected_revision)
 
     @app.get('/v1/experiments/{experiment_id}/replay', response_model=ReplayResponse)
     def replay(experiment_id: str):

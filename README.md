@@ -1,6 +1,9 @@
 # Isabella Labs by Vivacity
 
 Current release evidence: [Isabella Labs report](docs/ISABELLA_LABS_REPORT.md).
+The staged physical-world editor and measured fulfillment SORT work are documented in
+[PHYSICAL_WORK_STATUS.md](PHYSICAL_WORK_STATUS.md), including unsupported stages and
+local verification evidence. These changes are local branch work until released.
 The earlier [robotics visual release](docs/VISUAL_RELEASE.md) documents SPZ
 worlds and embedded GLB resources as a separate, historical launch.
 

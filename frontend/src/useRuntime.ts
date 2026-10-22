@@ -4,7 +4,7 @@ import { simulatedPerception, type Backend, type World, type Experiment, type Br
 import type { components } from './generated/api';
 import {workspaceApi} from './workspaceApi';
 import {isConnectionMessage} from './apiTransport';
-import {expiredRuntimeReference,forgetRuntimeReferences,missingSavedConfiguration} from './runtimeRecovery';
+import {expiredRuntimeReference,forgetRuntimeReferences,incompatibleSnapshotReference,missingSavedConfiguration} from './runtimeRecovery';
 
 type Session = components['schemas']['SessionResponse'];
 type Live = components['schemas']['LiveState'];
@@ -49,13 +49,15 @@ export function useRuntime(backend:Backend,templateKey="default",initialConfig?:
   const inspecting=useRef(false);
   const stagedConfig=useRef<Dict|null>(null);
 
-  const recoverExpired=useCallback(()=>{
+  const recoverExpired=useCallback((incompatible=false)=>{
     try{forgetRuntimeReferences(localStorage,storageKey);}catch{/* Optional storage. */}
     ++generation.current;
     currentSession.current=null;currentWorld.current=null;currentExperiment.current=null;
     setSession(null);setWorld(null);setExperiment(null);setBranches([]);setEvents([]);setLiveState(null);
     setOnline(false);setLoaded(false);setError(null);
-    setRecoveryNotice('The previous run is no longer available on the server. A fresh world will be initialized; press Start experiments to run it.');
+    setRecoveryNotice(incompatible
+      ? 'This saved world uses an older physics model. Its experiment history remains saved; a fresh world will be initialized from your saved settings.'
+      : 'The previous run is no longer available on the server. A fresh world will be initialized; press Start experiments to run it.');
     setEpoch(value=>value+1);
   },[storageKey]);
 
@@ -132,7 +134,9 @@ export function useRuntime(backend:Backend,templateKey="default",initialConfig?:
         }
         if(active&&version===generation.current){setOnline(true);setLoaded(true);setError(previous=>isConnectionMessage(previous)?null:previous);}
       }catch(e){if(active&&version===generation.current){
-        if(expiredRuntimeReference(e,Boolean(currentSession.current||currentWorld.current||currentExperiment.current)))recoverExpired();
+        const known=Boolean(get(`${storageKey}:world`)||currentSession.current||currentWorld.current||currentExperiment.current);
+        if(incompatibleSnapshotReference(e,known))recoverExpired(true);
+        else if(expiredRuntimeReference(e,known))recoverExpired();
         else{setError(errorMessage(e));setOnline(false);setLoaded(true);}
       }}
       finally{refreshing=false;}
@@ -172,7 +176,7 @@ export function useRuntime(backend:Backend,templateKey="default",initialConfig?:
           terminal=true;setStream('idle');eventSocket?.close();liveSocket?.close();
         }
       }catch(e){if(active){
-        if(expiredRuntimeReference(e)){terminal=true;eventSocket?.close();liveSocket?.close();recoverExpired();}
+        if(expiredRuntimeReference(e)||incompatibleSnapshotReference(e)){terminal=true;eventSocket?.close();liveSocket?.close();recoverExpired(incompatibleSnapshotReference(e));}
         else{setError(errorMessage(e));setStream('reconnecting');}
       }}
       finally{refreshing=false;}
@@ -194,7 +198,8 @@ export function useRuntime(backend:Backend,templateKey="default",initialConfig?:
   const perform=useCallback(async(operation:()=>Promise<void>)=>{
     if(lock.current)return false;lock.current=true;setMutating(true);setError(null);setRecoveryNotice(null);
     try{await operation();return true;}catch(e){
-      if(expiredRuntimeReference(e))recoverExpired();else setError(errorMessage(e));
+      if(expiredRuntimeReference(e)||incompatibleSnapshotReference(e))recoverExpired(incompatibleSnapshotReference(e));
+      else setError(errorMessage(e));
       return false;
     }finally{lock.current=false;setMutating(false);}
   },[recoverExpired]);
@@ -214,17 +219,40 @@ export function useRuntime(backend:Backend,templateKey="default",initialConfig?:
     const next=await(s.pause_requested?api.resumeSession(s.id):api.pauseSession(s.id));
     currentSession.current=next;setSession(next);
   });
-  const apply=(config:Dict)=>perform(async()=>{
-    await stop();inspecting.current=false;const w=currentWorld.current;
-    if(!w)return;
-    const changed=await api.environment(w.id,config),state=await api.state(w.id);
+  const acceptWorld=async(changed:World)=>{
+    const state=await api.state(changed.id);
     // Retain user-selected physical conditions,
     // so waiting or reloading between Apply and Start does not change the request.
-    stagedConfig.current=config;put(`${storageKey}:settings`,JSON.stringify(config));
+    stagedConfig.current=changed.config;put(`${storageKey}:settings`,JSON.stringify(changed.config));
     currentWorld.current=changed;setWorld(changed);setObservation(state.observation as Dict);
     setPerception(simulatedPerception((state.observation as Dict).perception));setLiveState(null);
     currentSession.current=null;setSession(null);
     if(currentExperiment.current){const e=await api.experiment(currentExperiment.current.id);currentExperiment.current=e;setExperiment(e);}
+  };
+  const apply=(config:Dict)=>perform(async()=>{
+    await stop();inspecting.current=false;const w=currentWorld.current;
+    if(!w)return;
+    await acceptWorld(await api.environment(w.id,config,w.revision));
+  });
+  const editProperty=(entityId:string,key:string,value:number|boolean|string)=>perform(async()=>{
+    await stop();inspecting.current=false;const w=currentWorld.current;
+    if(!w)return;
+    await acceptWorld(await api.editProperty(w.id,w.revision,entityId,key,value));
+  });
+  const editGeometry=(action:'add'|'duplicate'|'delete',entityId?:string,geometryType:'box'|'cylinder'='box')=>perform(async()=>{
+    await stop();inspecting.current=false;const w=currentWorld.current;
+    if(!w)return;
+    await acceptWorld(await api.editGeometry(w.id,w.revision,action,entityId,geometryType));
+  });
+  const moveGeometry=(entityId:string,position:[number,number,number])=>perform(async()=>{
+    await stop();inspecting.current=false;const w=currentWorld.current;
+    if(!w)return;
+    await acceptWorld(await api.moveGeometry(w.id,w.revision,entityId,position));
+  });
+  const restoreVersion=(revision:number)=>perform(async()=>{
+    await stop();inspecting.current=false;const w=currentWorld.current;
+    if(!w)return;
+    await acceptWorld(await api.restoreWorldVersion(w.id,revision,w.revision));
   });
   const reset=()=>perform(async()=>{
     await stop();const w=currentWorld.current;if(!w)return;
@@ -241,5 +269,5 @@ export function useRuntime(backend:Backend,templateKey="default",initialConfig?:
   });
   return {world,observation,perception,experiment,branches,events,session,liveState,hostPhysicsLimit,online,loaded,mutating,error,recoveryNotice,stream,
     busy:mutating||isBusy(experiment),active:session?.status==='active'||session?.status==='stopping',
-    run:start,stop,togglePause,apply,reset,history,reconnect:()=>setEpoch(e=>e+1),clearError:()=>setError(null)};
+    run:start,stop,togglePause,apply,editProperty,editGeometry,moveGeometry,restoreVersion,reset,history,reconnect:()=>setEpoch(e=>e+1),clearError:()=>setError(null)};
 }

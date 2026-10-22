@@ -8,6 +8,7 @@ def append_scene(worldbody, config, root=None):
         size = item['size'][:2] if item['type'] == 'cylinder' else item['size']
         ET.SubElement(worldbody, 'geom', name='environment_' + item['name'],
                       type=item['type'], pos=' '.join(map(str, item['position'])),
+                      quat=' '.join(map(str, item.get('quaternion_wxyz', [1., 0., 0., 0.]))),
                       size=' '.join(map(str, size)), rgba=' '.join(map(str, item['rgba'])),
                       friction=f"{item['friction']} .005 .0001")
     operation=config.get('physical_operation','pick_place')

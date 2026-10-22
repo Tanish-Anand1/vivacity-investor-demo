@@ -16,13 +16,18 @@ class StaticGeometry(Schema):
     type: Literal['box', 'cylinder'] = 'box'
     position: ScenePosition
     size: SceneSize
+    quaternion_wxyz: Annotated[list[float], Field(min_length=4, max_length=4)] = [1., 0., 0., 0.]
     rgba: Annotated[list[float], Field(min_length=4, max_length=4)] = [.4, .45, .5, 1.]
     friction: float = Field(.8, ge=.05, le=2.)
 
     @model_validator(mode='after')
     def bounded_geometry(self):
+        import math
         if any(abs(v) > 8 for v in self.position) or any(not .005 <= v <= 8 for v in self.size):
             raise ValueError('static geometry exceeds the 16 m scene bounds')
+        norm = math.sqrt(sum(v*v for v in self.quaternion_wxyz))
+        if not .999 <= norm <= 1.001:
+            raise ValueError('geometry orientation must be a unit quaternion in WXYZ order')
         if any(not 0 <= v <= 1 for v in self.rgba) or self.rgba[3] != 1:
             raise ValueError('collision geometry requires opaque RGBA values in 0..1')
         return self
@@ -91,7 +96,9 @@ class RoboticsConfig(Schema):
     cube_half_size: float = Field(0.025, ge=0.02, le=0.03)
     cube_half_sizes: Vec3 | None = None
     cube_mass: float = Field(0.06, ge=0.02, le=0.30)
+    cube_density_kg_m3: float | None = Field(None, ge=50., le=5000.)
     cube_friction: float = Field(1.0, ge=0.05, le=1.5)
+    table_friction: float = Field(1.0, ge=0.05, le=2.0)
     obstacle_position: Vec3 = [0.45, 0.04, 0.22]
     obstacle_size: Vec3 = [0.055, 0.13, 0.22]
     target_position: Vec3 = [0.55, 0.28, 0.22]
@@ -100,6 +107,11 @@ class RoboticsConfig(Schema):
 
     @model_validator(mode='after')
     def bounds(self):
+        if self.cube_density_kg_m3 is not None:
+            half = self.cube_half_sizes or [self.cube_half_size] * 3
+            self.cube_mass = 8 * half[0] * half[1] * half[2] * self.cube_density_kg_m3
+            if not .02 <= self.cube_mass <= .30:
+                raise ValueError('density and dimensions imply mass outside the supported 0.02..0.30 kg range')
         if self.program_id == 'precision_assembly':
             if self.robot_model != 'ur5e' or self.task != 'pick_place' or self.physical_operation != 'assembly' or self.scene_profile != 'workcell':
                 raise ValueError('precision assembly requires the six-axis UR5e workcell and assembly task')
@@ -229,6 +241,74 @@ class HostedProposal(Schema):
 
 class EnvironmentPatch(Schema):
     config: RoboticsConfig | ScienceConfig | ClothConfig
+    expected_revision: int | None = Field(None, ge=0)
+
+
+class RestoreWorldVersion(Schema):
+    expected_revision: int = Field(ge=0)
+
+
+class WorldVersion(Schema):
+    schema_version: Literal['vivacity.world_version/1.0'] = 'vivacity.world_version/1.0'
+    world_id: str
+    revision: int
+    created_unix_s: float
+    reason: str
+    source_revision: int | None = None
+    config: dict
+
+
+class EditorProperty(Schema):
+    key: str
+    path: list[str | int]
+    label: str
+    meaning: str
+    unit: str
+    data_type: Literal['number', 'boolean', 'choice']
+    value: float | bool | str | None
+    minimum: float | None = None
+    maximum: float | None = None
+    step: float | None = None
+    choices: list[str] = []
+    editable: bool = True
+    requires_reset: bool = True
+    dependency: str
+    physics_effect: str
+
+
+class EditorEntity(Schema):
+    id: str
+    name: str
+    kind: Literal['object', 'obstacle', 'surface', 'robot', 'environment']
+    properties: list[EditorProperty]
+
+
+class WorldEditorResponse(Schema):
+    schema_version: Literal['vivacity.world_editor/1.0'] = 'vivacity.world_editor/1.0'
+    world_id: str
+    revision: int
+    entities: list[EditorEntity]
+    scope: str
+
+
+class EditorChange(Schema):
+    expected_revision: int = Field(ge=0)
+    entity_id: str = Field(min_length=1, max_length=80)
+    property_key: str = Field(min_length=1, max_length=80)
+    value: float | bool | str | None
+
+
+class EditorGeometryAction(Schema):
+    expected_revision: int = Field(ge=0)
+    action: Literal['add', 'duplicate', 'delete']
+    entity_id: str | None = None
+    geometry_type: Literal['box', 'cylinder'] = 'box'
+
+
+class EditorMove(Schema):
+    expected_revision: int = Field(ge=0)
+    entity_id: str = Field(pattern=r'^geometry:[A-Za-z][A-Za-z0-9_-]*$')
+    position: ScenePosition
 
 
 class CommitRequest(Schema):

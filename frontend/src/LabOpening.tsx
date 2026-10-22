@@ -1,94 +1,152 @@
-import {useCallback,useEffect,useRef,useState} from 'react';
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react';
+import { openingMediaSource, OPENING_TIMELINE, type LabOpeningConfig } from './openingConfig';
 import './labOpening.css';
 
-export const OPENING_DURATION_MS=7500;
-const LOAD_GRACE_MS=2300;
+export const OPENING_DURATION_MS = OPENING_TIMELINE.durationSeconds * 1000;
+const PORTRAIT_QUERY = '(max-aspect-ratio: 4/5)';
 
-export default function LabOpening({finish}:{finish:()=>void}){
- const skip=useRef<HTMLButtonElement>(null);
- const soundButton=useRef<HTMLButtonElement>(null);
- const opening=useRef<HTMLDivElement>(null);
- const video=useRef<HTMLVideoElement>(null);
- const startedAt=useRef<number|null>(null);
- const starting=useRef(false);
- const finishTimer=useRef<number|null>(null);
- const finished=useRef(false);
- const [soundOn,setSoundOn]=useState(false);
- const debug=import.meta.env.DEV&&new URLSearchParams(window.location.search).has('introDebug');
- const portrait=window.matchMedia('(max-aspect-ratio: 4/5)').matches;
- const connection=(navigator as Navigator&{connection?:{saveData?:boolean;effectiveType?:string}}).connection;
- const lite=(portrait&&window.innerWidth<=600)||connection?.saveData===true||['slow-2g','2g','3g'].includes(connection?.effectiveType??'');
- const format=portrait?'portrait':'landscape';
- const complete=useCallback(()=>{if(finished.current)return;finished.current=true;if(finishTimer.current!==null)window.clearTimeout(finishTimer.current);video.current?.pause();finish();},[finish]);
+export default function LabOpening({ config, finish }: { config: LabOpeningConfig; finish: () => void }) {
+  const skip = useRef<HTMLButtonElement>(null);
+  const soundButton = useRef<HTMLButtonElement>(null);
+  const debugSlider = useRef<HTMLInputElement>(null);
+  const opening = useRef<HTMLDivElement>(null);
+  const video = useRef<HTMLVideoElement>(null);
+  const started = useRef(false);
+  const starting = useRef(false);
+  const finishTimer = useRef<number | null>(null);
+  const finished = useRef(false);
+  const mounted = useRef(true);
+  const [soundOn, setSoundOn] = useState(false);
+  const debug = import.meta.env.DEV && new URLSearchParams(window.location.search).has('introDebug');
+  const [media] = useState(() => {
+    const portrait = window.matchMedia(PORTRAIT_QUERY).matches;
+    const connection = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
+    const lite = (portrait && window.innerWidth <= 600) || connection?.saveData === true ||
+      ['slow-2g', '2g', '3g'].includes(connection?.effectiveType ?? '');
+    return { portrait, src: openingMediaSource(config, portrait, lite) };
+  });
 
- useEffect(()=>{
-  const previousOverflow=document.body.style.overflow;
-  const home=document.querySelector<HTMLElement>('.isabella-home');
-  const motion=window.matchMedia('(prefers-reduced-motion: reduce)');
-  document.body.style.overflow='hidden';home?.setAttribute('inert','');skip.current?.focus();
-  const key=(event:KeyboardEvent)=>{
-   if(event.key==='Escape'){event.preventDefault();complete();return;}
-   if(event.key!=='Tab')return;
-   if(event.shiftKey&&document.activeElement===soundButton.current){event.preventDefault();skip.current?.focus();}
-   else if(!event.shiftKey&&document.activeElement===skip.current){event.preventDefault();soundButton.current?.focus();}
+  const complete = useCallback(() => {
+    if (finished.current || !mounted.current) return;
+    finished.current = true;
+    if (finishTimer.current !== null) window.clearTimeout(finishTimer.current);
+    video.current?.pause();
+    finish();
+  }, [config, finish]);
+
+  useEffect(() => {
+    mounted.current = true;
+    const previousOverflow = document.body.style.overflow;
+    const home = document.querySelector<HTMLElement>(config.homeRootSelector);
+    const previouslyInert = home?.hasAttribute('inert');
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const aspect = window.matchMedia(PORTRAIT_QUERY);
+    const element = video.current;
+    document.body.style.overflow = 'hidden';
+    home?.setAttribute('inert', '');
+    skip.current?.focus({ preventScroll: true });
+
+    const key = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') { event.preventDefault(); complete(); return; }
+      if (event.key !== 'Tab') return;
+      const controls = [soundButton.current, skip.current, debugSlider.current].filter(
+        (control): control is HTMLButtonElement | HTMLInputElement => control !== null,
+      );
+      const index = controls.findIndex(control => control === document.activeElement);
+      if (index === -1 || (event.shiftKey && index === 0) || (!event.shiftKey && index === controls.length - 1)) {
+        event.preventDefault();
+        controls[event.shiftKey ? controls.length - 1 : 0]?.focus();
+      }
+    };
+    const changedMotion = () => { if (motion.matches) complete(); };
+    // Rotation requires a different authored camera. Finish to the mounted homepage
+    // instead of replaying or swapping the shot in the middle of a frame.
+    const changedAspect = () => { if (aspect.matches !== media.portrait) complete(); };
+    document.addEventListener('keydown', key);
+    motion.addEventListener('change', changedMotion);
+    aspect.addEventListener('change', changedAspect);
+
+    const startupDeadline = performance.now() + OPENING_TIMELINE.decoderStartupDeadlineMs;
+    let loadGrace = window.setTimeout(() => {
+      if (started.current) return;
+      // Metadata confirms that delivery has begun. A cold decoder gets bounded
+      // time to produce its first frame; an unavailable download still exits fast.
+      const remaining = startupDeadline - performance.now();
+      if (element && element.readyState >= HTMLMediaElement.HAVE_METADATA && !element.error && remaining > 0) {
+        loadGrace = window.setTimeout(() => { if (!started.current) complete(); }, remaining);
+      } else complete();
+    }, OPENING_TIMELINE.loadGraceMs);
+    let frame = 0;
+    const syncHandoff = () => {
+      const elapsed = element?.currentTime ?? 0;
+      const progress = Math.max(0, Math.min(1,
+        (elapsed - OPENING_TIMELINE.apertureStartSeconds) /
+        (OPENING_TIMELINE.durationSeconds - OPENING_TIMELINE.apertureStartSeconds),
+      ));
+      // Reveal the real homepage through the same central opening as the film.
+      // Seeking backward resets the mask for production review.
+      opening.current?.style.setProperty('--opening-aperture', `${50 * progress}%`);
+      frame = requestAnimationFrame(syncHandoff);
+    };
+    frame = requestAnimationFrame(syncHandoff);
+    if (motion.matches) complete();
+
+    return () => {
+      mounted.current = false;
+      window.clearTimeout(loadGrace);
+      if (finishTimer.current !== null) window.clearTimeout(finishTimer.current);
+      cancelAnimationFrame(frame);
+      element?.pause();
+      document.body.style.overflow = previousOverflow;
+      if (!previouslyInert) home?.removeAttribute('inert');
+      document.removeEventListener('keydown', key);
+      motion.removeEventListener('change', changedMotion);
+      aspect.removeEventListener('change', changedAspect);
+    };
+  }, [complete, config.homeRootSelector, debug, media.portrait]);
+
+  const play = async () => {
+    const element = video.current;
+    if (!element || finished.current || starting.current || started.current) return;
+    starting.current = true;
+    try {
+      await element.play();
+      if (finished.current || !mounted.current) { element.pause(); return; }
+      started.current = true;
+      // Media time owns the exact ending; wall time only protects a stalled decoder.
+      if (!debug) finishTimer.current = window.setTimeout(complete, OPENING_TIMELINE.stalledPlaybackDeadlineMs);
+    } catch { complete(); }
+    finally { starting.current = false; }
   };
-  const changed=()=>{if(motion.matches)complete();};
-  document.addEventListener('keydown',key);motion.addEventListener('change',changed);
-  // Network delay is outside the authored 7.5-second sequence. A failed load
-  // still reveals the usable homepage instead of trapping the visitor.
-  const loadGrace=window.setTimeout(()=>{if(startedAt.current===null)complete();},LOAD_GRACE_MS);
-  let frame=0;
-  const matchPortalToFilm=()=>{
-   const elapsed=video.current?.currentTime??0;
-   if(opening.current&&elapsed>=6.75){
-    const progress=Math.max(0,Math.min(1,(elapsed-6.75)/.75));
-    const halfGap=50*progress;
-    const left=50-halfGap,right=50+halfGap;
-    const portal=`linear-gradient(90deg,#000 0 ${left}%,transparent ${left}% ${right}%,#000 ${right}% 100%)`;
-    opening.current.style.maskImage=portal;
-    opening.current.style.setProperty('-webkit-mask-image',portal);
-   }
-   frame=requestAnimationFrame(matchPortalToFilm);
-  };
-  frame=requestAnimationFrame(matchPortalToFilm);
-  if(motion.matches)complete();
-  return()=>{
-   window.clearTimeout(loadGrace);if(finishTimer.current!==null)window.clearTimeout(finishTimer.current);cancelAnimationFrame(frame);
-   document.body.style.overflow=previousOverflow;home?.removeAttribute('inert');
-   document.removeEventListener('keydown',key);motion.removeEventListener('change',changed);
-   if(finished.current)requestAnimationFrame(()=>document.getElementById('isabella-main')?.focus());
-  };
- },[complete]);
 
- const play=async()=>{
-  const element=video.current;if(!element||finished.current||starting.current||startedAt.current!==null)return;
-  starting.current=true;
-  try{
-   await element.play();
-   if(finished.current)return;
-   startedAt.current=performance.now();
-   // The encoded media clock owns the 7.5-second ending. This deadline is
-   // only a safety exit when a device stops advancing an otherwise playable
-   // video, so a slow decoder cannot cut the authored final shots short.
-   if(!debug)finishTimer.current=window.setTimeout(complete,OPENING_DURATION_MS+7_500);
-  }catch{complete();}
- };
- const toggleSound=()=>{
-  const element=video.current;if(!element)return;
-  const next=!soundOn;element.muted=!next;setSoundOn(next);
-  if(next&&startedAt.current!==null&&element.paused)element.play().catch(()=>{element.muted=true;setSoundOn(false);});
- };
+  const toggleSound = () => {
+    const element = video.current;
+    if (!element) return;
+    const next = !soundOn;
+    element.muted = !next;
+    setSoundOn(next);
+    if (next && started.current && element.paused) {
+      element.play().catch(() => {
+        element.muted = true;
+        if (mounted.current) setSoundOn(false);
+      });
+    }
+  };
 
- return <div ref={opening} className="lab-opening" role="dialog" aria-modal="true" aria-label="Isabella Labs introduction">
-  <video ref={video} className="lab-opening-video" muted playsInline preload="auto" aria-hidden="true"
-   src={`/vivacity/isabella-impossible-${format}${lite?'-lite':''}.mp4`}
-   onCanPlay={play} onError={complete} onEnded={complete}/>
-  <div className="lab-opening-controls">
-   <button ref={soundButton} className="lab-opening-control" type="button" onClick={toggleSound} aria-pressed={soundOn}>
-    {soundOn?'Sound on':'Sound off'}
-   </button>
-   <button ref={skip} className="lab-opening-control" type="button" onClick={complete}>Skip intro <span aria-hidden="true">↗</span></button>
-  </div>
-  {debug&&<label className="lab-opening-debug">Film time <input type="range" min="0" max="7.5" step="0.01" defaultValue="0" onChange={event=>{if(video.current){video.current.pause();video.current.currentTime=Number(event.target.value);}}}/></label>}
- </div>;
+  return <div ref={opening} className="lab-opening" role="dialog" aria-modal="true"
+    aria-label={`${config.labName} introduction`} data-frame-format={media.portrait ? 'portrait' : 'landscape'}
+    style={{ '--opening-accent': config.accentColor } as CSSProperties}>
+    <video ref={video} className="lab-opening-video" muted playsInline preload="auto" aria-hidden="true"
+      src={media.src} onLoadedMetadata={play} onCanPlay={play} onError={complete} onEnded={complete} />
+    <div className="lab-opening-controls">
+      <button ref={soundButton} className="lab-opening-control" type="button" onClick={toggleSound} aria-pressed={soundOn}>
+        {soundOn ? 'Sound on' : 'Sound off'}
+      </button>
+      <button ref={skip} className="lab-opening-control" type="button" onClick={complete}>Skip intro <span aria-hidden="true">↗</span></button>
+    </div>
+    {debug && <label className="lab-opening-debug">Film time <input ref={debugSlider} type="range" min="0"
+      max={OPENING_TIMELINE.durationSeconds} step="0.01" defaultValue="0" onChange={event => {
+        if (video.current) { video.current.pause(); video.current.currentTime = Number(event.target.value); }
+      }} /></label>}
+  </div>;
 }

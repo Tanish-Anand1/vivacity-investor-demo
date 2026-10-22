@@ -1,0 +1,385 @@
+{
+  "schema_version": "vivacity.humanoid-pickup-variation/1.0",
+  "seed": 2027,
+  "trials": 12,
+  "successes": 11,
+  "failures": 1,
+  "observed_success_fraction": 0.9166666666666666,
+  "exact_binomial_95pct_interval": [
+    0.6152038348490559,
+    0.9978924067681397
+  ],
+  "domain": {
+    "parcel_mass_kg": [
+      0.2,
+      1.2
+    ],
+    "parcel_x_m": [
+      0.32,
+      0.36
+    ],
+    "parcel_y_m": [
+      -0.01,
+      0.01
+    ],
+    "destination_x_m": [
+      0.6,
+      0.68
+    ],
+    "destination_y_m": [
+      -0.5,
+      -0.44
+    ]
+  },
+  "disclaimer": "Uncalibrated MuJoCo simulation with a contact-gated rigid-grasp fixture; not a hardware reliability estimate.",
+  "records": [
+    {
+      "index": 0,
+      "configuration": {
+        "robot_id": "unitree_g1",
+        "action": "pickup_place",
+        "parcel_mass_kg": 0.20800546040576723,
+        "parcel_xy_m": [
+          0.3354353020354034,
+          -0.008349587687827264
+        ],
+        "destination_xy_m": [
+          0.639832126861021,
+          -0.4730752619926145
+        ]
+      },
+      "success": true,
+      "failure_reason": null,
+      "simulated_seconds": 7.999999999999341,
+      "steps": 4000,
+      "physics_compute_wall_s": 5.898069699993357,
+      "final_parcel_position_m": [
+        0.5254789558998663,
+        -0.44529080444644437,
+        0.6899520685660422
+      ],
+      "destination_error_m": 0.11768017585815382,
+      "minimum_base_height_m": 0.79,
+      "prohibited_contacts": []
+    },
+    {
+      "index": 1,
+      "configuration": {
+        "robot_id": "unitree_g1",
+        "action": "pickup_place",
+        "parcel_mass_kg": 0.905428343425329,
+        "parcel_xy_m": [
+          0.33191153948801977,
+          0.002425293811243994
+        ],
+        "destination_xy_m": [
+          0.6448721874413158,
+          -0.49460913501060216
+        ]
+      },
+      "success": true,
+      "failure_reason": null,
+      "simulated_seconds": 7.999999999999341,
+      "steps": 4000,
+      "physics_compute_wall_s": 2.989586200012127,
+      "final_parcel_position_m": [
+        0.5215738359974795,
+        -0.4986991019300544,
+        0.6899519325495708
+      ],
+      "destination_error_m": 0.1233661675588975,
+      "minimum_base_height_m": 0.79,
+      "prohibited_contacts": []
+    },
+    {
+      "index": 2,
+      "configuration": {
+        "robot_id": "unitree_g1",
+        "action": "pickup_place",
+        "parcel_mass_kg": 0.20894068408153116,
+        "parcel_xy_m": [
+          0.3352912189396474,
+          0.00793918647208859
+        ],
+        "destination_xy_m": [
+          0.6023142616209761,
+          -0.44231002528894653
+        ]
+      },
+      "success": true,
+      "failure_reason": null,
+      "simulated_seconds": 7.999999999999341,
+      "steps": 4000,
+      "physics_compute_wall_s": 2.681210299982922,
+      "final_parcel_position_m": [
+        0.5589087290289002,
+        -0.4319420888572706,
+        0.6899428665962082
+      ],
+      "destination_error_m": 0.044626610508227464,
+      "minimum_base_height_m": 0.79,
+      "prohibited_contacts": []
+    },
+    {
+      "index": 3,
+      "configuration": {
+        "robot_id": "unitree_g1",
+        "action": "pickup_place",
+        "parcel_mass_kg": 0.9452056561305497,
+        "parcel_xy_m": [
+          0.3489421488285913,
+          -0.006325817184820277
+        ],
+        "destination_xy_m": [
+          0.6469711462075476,
+          -0.4570185401637118
+        ]
+      },
+      "success": true,
+      "failure_reason": null,
+      "simulated_seconds": 7.999999999999341,
+      "steps": 4000,
+      "physics_compute_wall_s": 3.305799499998102,
+      "final_parcel_position_m": [
+        0.5822702791056709,
+        -0.42655478832107036,
+        0.689942866596208
+      ],
+      "destination_error_m": 0.07151393137050119,
+      "minimum_base_height_m": 0.79,
+      "prohibited_contacts": []
+    },
+    {
+      "index": 4,
+      "configuration": {
+        "robot_id": "unitree_g1",
+        "action": "pickup_place",
+        "parcel_mass_kg": 1.109078072725061,
+        "parcel_xy_m": [
+          0.32164733177587773,
+          -0.007962960522323807
+        ],
+        "destination_xy_m": [
+          0.677584797443435,
+          -0.4522341046204874
+        ]
+      },
+      "success": true,
+      "failure_reason": null,
+      "simulated_seconds": 7.999999999999341,
+      "steps": 4000,
+      "physics_compute_wall_s": 3.102400400006445,
+      "final_parcel_position_m": [
+        0.5583857846171909,
+        -0.43143082020191525,
+        0.689942866596208
+      ],
+      "destination_error_m": 0.12100074917681757,
+      "minimum_base_height_m": 0.79,
+      "prohibited_contacts": []
+    },
+    {
+      "index": 5,
+      "configuration": {
+        "robot_id": "unitree_g1",
+        "action": "pickup_place",
+        "parcel_mass_kg": 0.5588541156726285,
+        "parcel_xy_m": [
+          0.3253997720195651,
+          0.002938123516893378
+        ],
+        "destination_xy_m": [
+          0.673764200170074,
+          -0.48746385397989367
+        ]
+      },
+      "success": true,
+      "failure_reason": null,
+      "simulated_seconds": 7.999999999999341,
+      "steps": 4000,
+      "physics_compute_wall_s": 3.608686499996111,
+      "final_parcel_position_m": [
+        0.5139855477705382,
+        -0.45930697643269275,
+        0.6899527330012625
+      ],
+      "destination_error_m": 0.16224064692862808,
+      "minimum_base_height_m": 0.79,
+      "prohibited_contacts": []
+    },
+    {
+      "index": 6,
+      "configuration": {
+        "robot_id": "unitree_g1",
+        "action": "pickup_place",
+        "parcel_mass_kg": 0.9270753168965553,
+        "parcel_xy_m": [
+          0.32737564601103447,
+          0.004474417894197946
+        ],
+        "destination_xy_m": [
+          0.6111798043792928,
+          -0.4405180073674839
+        ]
+      },
+      "success": true,
+      "failure_reason": null,
+      "simulated_seconds": 7.999999999999341,
+      "steps": 4000,
+      "physics_compute_wall_s": 3.468275999999605,
+      "final_parcel_position_m": [
+        0.5369581207442526,
+        -0.45395971939171215,
+        0.6899511493682968
+      ],
+      "destination_error_m": 0.07542902587043175,
+      "minimum_base_height_m": 0.79,
+      "prohibited_contacts": []
+    },
+    {
+      "index": 7,
+      "configuration": {
+        "robot_id": "unitree_g1",
+        "action": "pickup_place",
+        "parcel_mass_kg": 0.24885056333764594,
+        "parcel_xy_m": [
+          0.33430137744366717,
+          0.0028232615117272045
+        ],
+        "destination_xy_m": [
+          0.6496970075059462,
+          -0.4897606104223158
+        ]
+      },
+      "success": true,
+      "failure_reason": null,
+      "simulated_seconds": 7.999999999999341,
+      "steps": 4000,
+      "physics_compute_wall_s": 3.336512699985178,
+      "final_parcel_position_m": [
+        0.5328083021997786,
+        -0.4568428744297749,
+        0.6899515860329861
+      ],
+      "destination_error_m": 0.12143536046402098,
+      "minimum_base_height_m": 0.79,
+      "prohibited_contacts": []
+    },
+    {
+      "index": 8,
+      "configuration": {
+        "robot_id": "unitree_g1",
+        "action": "pickup_place",
+        "parcel_mass_kg": 0.2993869070780733,
+        "parcel_xy_m": [
+          0.33214367077097334,
+          -0.005595900277247648
+        ],
+        "destination_xy_m": [
+          0.6589693116701544,
+          -0.4795468714101124
+        ]
+      },
+      "success": true,
+      "failure_reason": null,
+      "simulated_seconds": 7.999999999999341,
+      "steps": 4000,
+      "physics_compute_wall_s": 3.4330450000124983,
+      "final_parcel_position_m": [
+        0.5256236532870276,
+        -0.45916097098139774,
+        0.6899521251330673
+      ],
+      "destination_error_m": 0.13489495745178542,
+      "minimum_base_height_m": 0.79,
+      "prohibited_contacts": []
+    },
+    {
+      "index": 9,
+      "configuration": {
+        "robot_id": "unitree_g1",
+        "action": "pickup_place",
+        "parcel_mass_kg": 0.8835087722139756,
+        "parcel_xy_m": [
+          0.3589236841268098,
+          0.0038426104164791895
+        ],
+        "destination_xy_m": [
+          0.6282967868060592,
+          -0.4583556431729272
+        ]
+      },
+      "success": false,
+      "failure_reason": "no_supported_bilateral_grasp",
+      "simulated_seconds": 2.803999999999913,
+      "steps": 1402,
+      "physics_compute_wall_s": 1.4460585000051651,
+      "final_parcel_position_m": [
+        0.49094937837330754,
+        -0.12193551615566768,
+        0.6799688692658904
+      ],
+      "destination_error_m": 0.36337695643161266,
+      "minimum_base_height_m": 0.79,
+      "prohibited_contacts": []
+    },
+    {
+      "index": 10,
+      "configuration": {
+        "robot_id": "unitree_g1",
+        "action": "pickup_place",
+        "parcel_mass_kg": 1.0899845182942471,
+        "parcel_xy_m": [
+          0.33884846087333365,
+          0.001515376243806859
+        ],
+        "destination_xy_m": [
+          0.6228144380984516,
+          -0.4598186256098094
+        ]
+      },
+      "success": true,
+      "failure_reason": null,
+      "simulated_seconds": 7.999999999999341,
+      "steps": 4000,
+      "physics_compute_wall_s": 3.3148900999804027,
+      "final_parcel_position_m": [
+        0.4765333771634185,
+        -0.4667844853894812,
+        0.6899413997686322
+      ],
+      "destination_error_m": 0.1464468230817894,
+      "minimum_base_height_m": 0.79,
+      "prohibited_contacts": []
+    },
+    {
+      "index": 11,
+      "configuration": {
+        "robot_id": "unitree_g1",
+        "action": "pickup_place",
+        "parcel_mass_kg": 0.40504248530974835,
+        "parcel_xy_m": [
+          0.3490459970006761,
+          0.008929177510854864
+        ],
+        "destination_xy_m": [
+          0.6588129183717263,
+          -0.4901569290638135
+        ]
+      },
+      "success": true,
+      "failure_reason": null,
+      "simulated_seconds": 7.999999999999341,
+      "steps": 4000,
+      "physics_compute_wall_s": 2.801903500017943,
+      "final_parcel_position_m": [
+        0.5385791712688898,
+        -0.46706442755764815,
+        0.6899511031686217
+      ],
+      "destination_error_m": 0.1224312769197524,
+      "minimum_base_height_m": 0.79,
+      "prohibited_contacts": []
+    }
+  ]
+}
