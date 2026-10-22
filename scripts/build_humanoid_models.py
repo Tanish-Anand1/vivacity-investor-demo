@@ -12,16 +12,28 @@ import gc
 import hashlib
 import json
 from pathlib import Path
+import xml.etree.ElementTree as ET
 
 import mujoco as mj
 
-from vivacity.humanoids import MODELS, _compiled_xml_model
+from vivacity.humanoids import MODELS, _compiled_xml_model, _configured_tree
 
 
 def build(output: Path) -> None:
     output.mkdir(parents=True, exist_ok=True)
     for robot_id in MODELS:
-        model, model_hash = _compiled_xml_model(robot_id, .8, .5)
+        source_model, model_hash = _compiled_xml_model(robot_id, .8, .5)
+        source_mesh_count = int(source_model.nmesh)
+        model = source_model
+        if robot_id == 'apptronik_apollo':
+            # Apollo's large meshes are visual-only. MuJoCo documents that
+            # discardvisual retains identical dynamics while eliminating
+            # purely visual geometry from the server-side model.
+            root, _ = _configured_tree(robot_id, .8, .5)
+            root.find('compiler').set('discardvisual', 'true')
+            model = mj.MjModel.from_xml_string(ET.tostring(root, encoding='unicode'))
+            assert model.nq == source_model.nq and model.nv == source_model.nv
+            assert model.nu == source_model.nu and model.nbody == source_model.nbody
         binary = output / f'{robot_id}.mjb'
         mj.mj_saveModel(model, str(binary))
         digest = hashlib.sha256()
@@ -33,9 +45,10 @@ def build(output: Path) -> None:
             'simulator_version': mj.__version__,
             'model_hash': model_hash,
             'binary_sha256': digest.hexdigest(),
+            'source_mesh_count': source_mesh_count,
         }, sort_keys=True, indent=2) + '\n', encoding='utf-8')
         print(f'{robot_id}: compiled {binary.stat().st_size / 1048576:.1f} MiB', flush=True)
-        del model
+        del model, source_model
         _compiled_xml_model.cache_clear()
         gc.collect()
 

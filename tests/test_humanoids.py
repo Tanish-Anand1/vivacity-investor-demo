@@ -46,7 +46,7 @@ def test_exported_frontend_geometry_matches_compiled_model_when_packaged(robot_i
     assert manifest['model_hash'] == digest
     assert manifest['simulator_version'] == mj.__version__
     assert len(manifest['bodies']) == model.nbody
-    assert len(manifest['meshes']) == model.nmesh
+    assert len(manifest['meshes']) == model_info(robot_id)['mesh_count']
     assert (directory / 'robot-meshes.bin').stat().st_size > 1_000_000
     assert (directory / 'LICENSE.txt').is_file()
 

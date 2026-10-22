@@ -298,9 +298,16 @@ def _frame(model, data):
 def model_info(robot_id):
     model, digest = compiled_model(robot_id)
     data = initial_data(model)
+    visual_mesh_count = int(model.nmesh)
+    directory = os.getenv('VIVACITY_HUMANOID_MODEL_DIR')
+    if directory:
+        # A headless binary can omit visual-only meshes while the public
+        # geometry bundle still contains the source model's visual meshes.
+        record = json.loads((Path(directory) / f'{robot_id}.json').read_text(encoding='utf-8'))
+        visual_mesh_count = int(record['source_mesh_count'])
     return {'robot_id': robot_id, 'name': MODELS[robot_id][0], 'environment_id': MODELS[robot_id][2],
             'model_hash': digest, 'simulator_version': mj.__version__, 'dof': int(model.nv),
-            'actuators': int(model.nu), 'mesh_count': int(model.nmesh),
+            'actuators': int(model.nu), 'mesh_count': visual_mesh_count,
             'joint_names': [mj.mj_id2name(model, mj.mjtObj.mjOBJ_JOINT, i) or f'joint_{i}' for i in range(model.njnt)],
             'initial_frame': _frame(model, data),
             'geometry_url': f'/vivacity/humanoids/{robot_id}/robot-geometry.json',

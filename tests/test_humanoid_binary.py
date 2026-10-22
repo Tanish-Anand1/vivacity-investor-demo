@@ -2,13 +2,15 @@
 
 import hashlib
 import json
+import xml.etree.ElementTree as ET
 
 import mujoco as mj
 import numpy as np
 import pytest
 
 from vivacity.humanoids import (
-    _compiled_xml_model, _verified_binary_path, compiled_model, configured_digest,
+    HumanoidTrialRequest, _compiled_xml_model, _configured_tree,
+    _verified_binary_path, compiled_model, configured_digest, model_info, simulate,
 )
 
 
@@ -20,7 +22,7 @@ def test_precompiled_g1_matches_source_and_supports_parameter_edits(tmp_path, mo
         checksum = hashlib.file_digest(stream, 'sha256').hexdigest()
     manifest = tmp_path / 'unitree_g1.json'
     record = {'simulator_version': mj.__version__, 'model_hash': digest,
-              'binary_sha256': checksum}
+              'binary_sha256': checksum, 'source_mesh_count': int(source.nmesh)}
     manifest.write_text(json.dumps(record), encoding='utf-8')
 
     monkeypatch.setenv('VIVACITY_HUMANOID_MODEL_DIR', str(tmp_path))
@@ -44,3 +46,30 @@ def test_precompiled_g1_matches_source_and_supports_parameter_edits(tmp_path, mo
     with pytest.raises(RuntimeError, match='does not match source'):
         compiled_model('unitree_g1')
     _verified_binary_path.cache_clear()
+
+
+def test_apollo_visual_strip_keeps_switch_physics_and_visual_metadata(tmp_path, monkeypatch):
+    monkeypatch.delenv('VIVACITY_HUMANOID_MODEL_DIR', raising=False)
+    source, digest = _compiled_xml_model('apptronik_apollo', .8, .5)
+    request = HumanoidTrialRequest(robot_id='apptronik_apollo', movement_scale=1)
+    reference = simulate(request)
+
+    root, _ = _configured_tree('apptronik_apollo', .8, .5)
+    root.find('compiler').set('discardvisual', 'true')
+    stripped = mj.MjModel.from_xml_string(ET.tostring(root, encoding='unicode'))
+    assert stripped.nmesh == 0 and source.nmesh >= 40
+    binary = tmp_path / 'apptronik_apollo.mjb'
+    mj.mj_saveModel(stripped, str(binary))
+    with binary.open('rb') as stream:
+        checksum = hashlib.file_digest(stream, 'sha256').hexdigest()
+    (tmp_path / 'apptronik_apollo.json').write_text(json.dumps({
+        'simulator_version': mj.__version__, 'model_hash': digest,
+        'binary_sha256': checksum, 'source_mesh_count': int(source.nmesh),
+    }), encoding='utf-8')
+
+    monkeypatch.setenv('VIVACITY_HUMANOID_MODEL_DIR', str(tmp_path))
+    result = simulate(request)
+    assert reference['task_success'] and result['task_success']
+    assert reference['frames'] == result['frames']
+    assert reference['measurements']['task_contact_samples'] == result['measurements']['task_contact_samples']
+    assert model_info('apptronik_apollo')['mesh_count'] == source.nmesh
