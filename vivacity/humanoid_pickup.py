@@ -17,7 +17,7 @@ import numpy as np
 
 from .humanoids import (
     STATE, HumanoidTrialRequest, _actuator_target, _frame, _solve_position_ik,
-    compiled_model, initial_data,
+    compiled_model, configured_digest, initial_data,
 )
 
 
@@ -327,7 +327,7 @@ def simulate_pickup(request: HumanoidTrialRequest):
         'robot_id': 'unitree_g1', 'environment_id': 'warehouse_logistics',
         'action': 'pickup_place', 'parameters': request.model_dump(),
         'seed': request.seed, 'model_hash': digest,
-        'scene_geometry_hash': compiled_model('unitree_g1')[1],
+        'scene_geometry_hash': configured_digest('unitree_g1'),
         'simulator_version': mj.__version__, 'status': 'completed',
         'task_success': bool(success), 'failure_reason': None if success else failure,
         'planning': planning, 'initial_frame': initial, 'frames': frames,

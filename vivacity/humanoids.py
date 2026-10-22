@@ -12,6 +12,7 @@ from copy import deepcopy
 from functools import lru_cache
 import hashlib
 import json
+import os
 from pathlib import Path
 import threading
 import time
@@ -163,8 +164,7 @@ def _asset_digest(robot_id):
     return digest.digest()
 
 
-@lru_cache(maxsize=4)
-def compiled_model(robot_id: str, floor_friction: float = .8, parcel_mass_kg: float = .5):
+def _configured_tree(robot_id: str, floor_friction: float, parcel_mass_kg: float):
     if robot_id not in MODELS:
         raise ValueError('Unknown humanoid model')
     source = ASSETS / MODELS[robot_id][1]
@@ -207,8 +207,6 @@ def compiled_model(robot_id: str, floor_friction: float = .8, parcel_mass_kg: fl
             geom.set('contype', '0')
             geom.set('conaffinity', '1')
     _scene(root, robot_id, floor_friction, parcel_mass_kg)
-    xml = ET.tostring(root, encoding='unicode')
-    model = mj.MjModel.from_xml_string(xml)
     portable = deepcopy(root)
     portable_compiler = portable.find('compiler')
     portable_compiler.set('meshdir', 'assets')
@@ -217,7 +215,61 @@ def compiled_model(robot_id: str, floor_friction: float = .8, parcel_mass_kg: fl
     digest.update(ET.tostring(portable, encoding='utf-8'))
     digest.update(_asset_digest(robot_id))
     digest.update(mj.__version__.encode())
-    return model, digest.hexdigest()
+    return root, digest.hexdigest()
+
+
+@lru_cache(maxsize=16)
+def configured_digest(robot_id: str, floor_friction: float = .8, parcel_mass_kg: float = .5):
+    """Identity of the source MJCF, assets, physics parameters, and MuJoCo version."""
+    return _configured_tree(robot_id, floor_friction, parcel_mass_kg)[1]
+
+
+@lru_cache(maxsize=4)
+def _compiled_xml_model(robot_id: str, floor_friction: float, parcel_mass_kg: float):
+    root, digest = _configured_tree(robot_id, floor_friction, parcel_mass_kg)
+    return mj.MjModel.from_xml_string(ET.tostring(root, encoding='unicode')), digest
+
+
+@lru_cache(maxsize=3)
+def _verified_binary_path(robot_id: str, directory: str):
+    """Reject stale or corrupt build artifacts before loading their physics state."""
+    location = Path(directory)
+    record = json.loads((location / f'{robot_id}.json').read_text(encoding='utf-8'))
+    path = location / f'{robot_id}.mjb'
+    if record.get('simulator_version') != mj.__version__ or record.get('model_hash') != configured_digest(robot_id):
+        raise RuntimeError(f'Precompiled humanoid model does not match source: {robot_id}')
+    digest = hashlib.sha256()
+    with path.open('rb') as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b''):
+            digest.update(chunk)
+    if digest.hexdigest() != record.get('binary_sha256'):
+        raise RuntimeError(f'Precompiled humanoid model is corrupt: {robot_id}')
+    return path
+
+
+def compiled_model(robot_id: str, floor_friction: float = .8, parcel_mass_kg: float = .5):
+    """Load exact MuJoCo dynamics; production binaries avoid XML compile peaks.
+
+    The build step compiles the default Menagerie scene into .mjb. MuJoCo
+    preserves its full mesh/contact model in that binary. Each runtime call
+    loads an independent MjModel so physical parameter edits and grasp welds
+    cannot mutate another trial. Source XML remains the local fallback.
+    """
+    directory = os.getenv('VIVACITY_HUMANOID_MODEL_DIR')
+    if not directory:
+        return _compiled_xml_model(robot_id, floor_friction, parcel_mass_kg)
+    if robot_id not in MODELS:
+        raise ValueError('Unknown humanoid model')
+    model = mj.MjModel.from_binary_path(str(_verified_binary_path(robot_id, directory)))
+    if floor_friction != .8:
+        model.geom_friction[model.geom('floor').id, 0] = floor_friction
+    if robot_id == 'unitree_g1' and parcel_mass_kg != .5:
+        parcel = model.body('parcel').id
+        scale = parcel_mass_kg / .5
+        model.body_mass[parcel] *= scale
+        model.body_inertia[parcel] *= scale
+        mj.mj_setConst(model, mj.MjData(model))
+    return model, configured_digest(robot_id, floor_friction, parcel_mass_kg)
 
 
 def initial_data(model):
@@ -464,7 +516,7 @@ def simulate(request: HumanoidTrialRequest):
         reason = None if success else 'fall' if fallen else 'terrain_incomplete'
     final_state = np.zeros(mj.mj_stateSize(model, STATE))
     mj.mj_getState(model, data, final_state, STATE)
-    scene_geometry_hash = compiled_model(request.robot_id)[1]
+    scene_geometry_hash = configured_digest(request.robot_id)
     return {'schema_version': 'vivacity.humanoid-trial/1.0', 'robot_id': request.robot_id,
             'environment_id': MODELS[request.robot_id][2], 'action': request.action,
             'parameters': request.model_dump(), 'seed': request.seed,
