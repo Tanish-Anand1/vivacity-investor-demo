@@ -10,7 +10,7 @@ const film=(page:Page)=>page.locator('.lab-opening-video');
 // Serve the actual encoded deliverable from memory for decoder/lifecycle tests.
 // Cold HTTP delivery is tested separately; no video, clock, or result is faked.
 async function warmFilm(page:Page,format:'landscape'|'portrait'='landscape'){
- const src=`${FILM}-${format}-lite.mp4`;
+ const src=`${FILM}-${format}${format==='portrait'?'':'-lite'}.mp4`;
  const body=fs.readFileSync(path.resolve(`public${src}`));
  await page.route(`**${src}`,route=>route.fulfill({body,contentType:'video/mp4'}));
 }
@@ -131,7 +131,7 @@ test('changing the motion preference during playback exits safely',async({page})
 for(const width of [390,320])test(`portrait framing keeps the full film and controls at ${width}px`,async({page},testInfo)=>{
  await page.setViewportSize({width,height:844});await warmFilm(page,'portrait');
  await page.goto('/',{waitUntil:'domcontentloaded'});await expect(intro(page)).toBeVisible();
- await expect(film(page)).toHaveAttribute('src',`${FILM}-portrait-lite.mp4`);
+ await expect(film(page)).toHaveAttribute('src',`${FILM}-portrait.mp4`);
  await expect.poll(()=>film(page).evaluate((element:HTMLVideoElement)=>element.currentTime)).toBeGreaterThan(.1);
  const display=await film(page).evaluate((element:HTMLVideoElement)=>({ratio:element.videoWidth/element.videoHeight,fit:getComputedStyle(element).objectFit,overflow:document.documentElement.scrollWidth>innerWidth}));
  expect(display.ratio).toBeCloseTo(9/16,2);expect(display.fit).toBe('contain');expect(display.overflow).toBe(false);
@@ -179,7 +179,7 @@ test('autoplay rejection reveals the usable homepage',async({page})=>{
 test('cold HTTP delivery serves a playable portrait film or a clean network fallback',async({page})=>{
  await page.setViewportSize({width:390,height:844});
  const statuses:number[]=[];
- page.on('response',response=>{if(response.url().includes(`${FILM}-portrait-lite.mp4`))statuses.push(response.status());});
+ page.on('response',response=>{if(response.url().includes(`${FILM}-portrait.mp4`))statuses.push(response.status());});
  await page.goto('/',{waitUntil:'domcontentloaded'});
  await expect.poll(()=>page.evaluate(()=>{
   const element=document.querySelector<HTMLVideoElement>('.lab-opening-video');

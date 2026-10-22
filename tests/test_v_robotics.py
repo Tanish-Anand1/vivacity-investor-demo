@@ -1,4 +1,4 @@
-"""Executable precision assembly and honest seven-program readiness boundary."""
+"""Test executable physical programs and the remaining research boundary."""
 from copy import deepcopy
 
 import mujoco as mj
@@ -20,13 +20,16 @@ def configuration(**changes):
     return ExperimentConfiguration.model_validate(payload)
 
 
-def test_catalog_has_one_executable_program_and_no_decorative_humanoid_claim():
+def test_catalog_exposes_only_measured_programs_as_executable():
     programs = catalog().programs
     assert len(programs) == 7
-    assert [program.id for program in programs if program.status == 'executable'] == ['precision_assembly']
+    assert [program.id for program in programs if program.status == 'executable'] == [
+        'precision_assembly', 'humanoid_maintenance', 'humanoid_terrain', 'humanoid_logistics']
     assert len([program for program in programs if program.category == 'robotic_arms']) == 4
     assert len([program for program in programs if program.category == 'humanoids']) == 3
-    assert all(program.default_configuration is None and program.missing_capability for program in programs[1:])
+    assert all(program.default_configuration is None for program in programs[1:])
+    assert all(program.missing_capability for program in programs if program.status == 'not_implemented')
+    assert all(program.missing_capability is None for program in programs if program.status == 'executable')
     for change in ({'robot_id': 'panda'}, {'operation_id': 'pick_place'}, {'environment_id': 'warehouse'},
                    {'object_mass_kg': .31}, {'assembly': {'arm_speed_rad_s': 2}}):
         with pytest.raises(ValidationError):

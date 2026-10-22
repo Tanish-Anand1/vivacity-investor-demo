@@ -1,8 +1,8 @@
 """Bounded, inspectable humanoid physics trials.
 
-The imported Menagerie models are the source of robot geometry and dynamics.
-These controllers are deliberately limited probes, not walking or manipulation
-policies. A task is reported successful only when measured task conditions hold.
+Licensed source models define robot geometry and dynamics. The three task
+controllers are bounded to one simulated parcel cell, machine, and walking
+course. Success requires measured task conditions, not a scripted visual path.
 """
 
 from __future__ import annotations
@@ -26,18 +26,18 @@ from pydantic import BaseModel, Field, model_validator
 from .storage import Store, encode
 
 
-ASSETS = Path(__file__).resolve().parents[1] / 'assets' / 'menagerie'
+ASSETS = Path(__file__).resolve().parents[1] / 'assets'
 MODELS = {
-    'unitree_g1': ('Unitree G1 with hands', 'unitree_g1/g1_with_hands.xml', 'warehouse_logistics'),
-    'apptronik_apollo': ('Apptronik Apollo', 'apptronik_apollo/apptronik_apollo.xml', 'industrial_maintenance'),
-    'unitree_h1': ('Unitree H1', 'unitree_h1/h1.xml', 'terrain_mobility'),
+    'unitree_g1': ('Unitree G1 with hands', 'menagerie/unitree_g1/g1_with_hands.xml', 'warehouse_logistics'),
+    'apptronik_apollo': ('Apptronik Apollo', 'menagerie/apptronik_apollo/apptronik_apollo.xml', 'industrial_maintenance'),
+    'unitree_h1': ('Unitree H1', 'unitree_rl_gym/h1/h1.xml', 'terrain_mobility'),
 }
 STATE = mj.mjtState.mjSTATE_INTEGRATION
 
 
 class HumanoidTrialRequest(BaseModel):
     robot_id: str
-    action: str = Field(default='attempt_task', pattern='^(attempt_task|hold_stance|pickup_place)$')
+    action: str = Field(default='attempt_task', pattern='^(attempt_task|hold_stance|pickup_place|walk_to_goal|service_machine)$')
     duration_s: float = Field(default=2.0, ge=.5, le=3.0)
     movement_scale: float = Field(default=.6, ge=0, le=1)
     floor_friction: float = Field(default=.8, ge=.2, le=1.5)
@@ -45,6 +45,9 @@ class HumanoidTrialRequest(BaseModel):
     parcel_xy_m: tuple[float, float] = (.35, 0.)
     destination_xy_m: tuple[float, float] = (.66, -.47)
     task_timeout_s: float = Field(default=8., ge=6., le=12.)
+    goal_distance_m: float = Field(default=.9, ge=.5, le=1.3)
+    switch_y_m: float = Field(default=-.18, ge=-.28, le=-.10)
+    switch_stiffness_n_m_rad: float = Field(default=8., ge=4., le=16.)
     perturbation_n: float = Field(default=0, ge=0, le=80)
     seed: int = Field(default=7, ge=0, le=2**31-1)
 
@@ -52,7 +55,11 @@ class HumanoidTrialRequest(BaseModel):
     def valid_task_configuration(self):
         if self.action == 'pickup_place' and self.robot_id != 'unitree_g1':
             raise ValueError('Stationary pickup is validated only for Unitree G1 with hands')
-        if self.action == 'pickup_place' and 'movement_scale' not in self.model_fields_set:
+        if self.action == 'walk_to_goal' and self.robot_id != 'unitree_h1':
+            raise ValueError('Matched walking controller is available only for Unitree H1')
+        if self.action == 'service_machine' and self.robot_id != 'apptronik_apollo':
+            raise ValueError('Machine service is available only for Apptronik Apollo')
+        if self.action in ('pickup_place', 'service_machine', 'walk_to_goal') and 'movement_scale' not in self.model_fields_set:
             self.movement_scale = 1.
         if not (.18 <= self.parcel_xy_m[0] <= 1.0 and -.22 <= self.parcel_xy_m[1] <= .22):
             raise ValueError('Parcel center must be inside the bounded collection workspace')
@@ -85,6 +92,51 @@ class HumanoidTrialResponse(BaseModel):
     created_unix_s: float
     result: dict | None = None
     error: str | None = None
+    steps_completed: int = 0
+    sim_time_s: float = 0.
+    current_phase: str | None = None
+    partial_measurements: dict = Field(default_factory=dict)
+
+
+class HumanoidFramesResponse(BaseModel):
+    schema_version: str = 'vivacity.humanoid-frames/1.0'
+    trial_id: str
+    status: str
+    frames: list[dict]
+    next_cursor: int
+    steps_completed: int
+    sim_time_s: float
+    current_phase: str | None
+    partial_measurements: dict = Field(default_factory=dict)
+
+
+class TrialCancelled(Exception):
+    """A cooperative cancellation, distinct from simulator failure."""
+
+
+class TrialGate:
+    def __init__(self):
+        self.condition = threading.Condition()
+        self.paused = False
+        self.cancelled = False
+
+    def checkpoint(self):
+        with self.condition:
+            while self.paused and not self.cancelled:
+                self.condition.wait()
+            if self.cancelled:
+                raise TrialCancelled()
+
+    def set_action(self, action):
+        with self.condition:
+            if action == 'pause':
+                self.paused = True
+            elif action == 'resume':
+                self.paused = False
+            elif action == 'cancel':
+                self.cancelled = True
+                self.paused = False
+            self.condition.notify_all()
 
 
 def _add_box(world, name, pos, size, rgba, *, friction='0.8 0.005 0.0001', **other):
@@ -95,7 +147,7 @@ def _add_box(world, name, pos, size, rgba, *, friction='0.8 0.005 0.0001', **oth
                          friction=friction, **other)
 
 
-def _scene(root, robot_id, friction, parcel_mass):
+def _scene(root, robot_id, friction, parcel_mass, switch_y, switch_stiffness):
     world = root.find('worldbody')
     if world is None:
         raise ValueError('robot model has no worldbody')
@@ -134,22 +186,34 @@ def _scene(root, robot_id, friction, parcel_mass):
         _add_box(world, 'cabinet_face', [.615,0,1.05],[.018,.41,.53],[.37,.43,.45,1])
         _add_box(world, 'machine_base', [1.45,-.85,.4],[.45,.4,.4],[.25,.31,.33,1])
         _add_box(world, 'machine_top', [1.45,-.85,.9],[.32,.31,.1],[.43,.46,.44,1])
-        switch = ET.SubElement(world, 'body', name='control_switch', pos='.56 -.18 1.12')
+        switch = ET.SubElement(world, 'body', name='control_switch', pos=f'.56 {switch_y} 1.12')
         ET.SubElement(switch, 'joint', name='switch_hinge', type='hinge', axis='0 1 0',
-                      range='-.65 .65', damping='0.15', stiffness='8', armature='.01')
+                      range='-.65 .65', damping='0.15', stiffness=str(switch_stiffness), armature='.01')
         ET.SubElement(switch, 'geom', name='switch_handle', type='box', pos='-.055 0 .03',
                       size='.075 .025 .025', mass='.16', rgba='.78 .46 .18 1',
                       contype='1', conaffinity='1')
-        _add_box(world, 'switch_label', [.59,-.18,1.23],[.01,.08,.015],[.71,.7,.63,1], contype='0', conaffinity='0')
+        label_mount = ET.SubElement(world, 'body', name='switch_label_mount',
+                                    pos=f'.59 {switch_y} 1.23')
+        _add_box(label_mount, 'switch_label', [0,0,0],[.01,.08,.015],[.71,.7,.63,1],
+                 contype='0', conaffinity='0')
+        shaft = ET.SubElement(world, 'body', name='machine_rotor', pos='1.45 -.85 1.04')
+        ET.SubElement(shaft, 'joint', name='machine_shaft', type='hinge', axis='0 0 1',
+                      damping='.04', limited='false')
+        ET.SubElement(shaft, 'geom', name='rotor_disc', type='cylinder', size='.12 .02',
+                      mass='.35', rgba='.76 .51 .20 1', contype='0', conaffinity='0')
+        ET.SubElement(shaft, 'geom', name='rotor_pointer', type='box', pos='.09 0 .035',
+                      size='.055 .012 .012', mass='.02', rgba='.13 .17 .17 1', contype='0', conaffinity='0')
+        actuators = root.find('actuator')
+        if actuators is None:
+            actuators = ET.SubElement(root, 'actuator')
+        ET.SubElement(actuators, 'motor', name='machine_motor', joint='machine_shaft',
+                      ctrllimited='true', ctrlrange='0 .8')
     else:
-        # The start stripe is flush with the ground plane. Keep it visual-only
-        # to avoid duplicate coplanar foot contacts from two identical floors.
-        _add_box(world, 'track_start', [-.55,0,-.015],[.6,.58,.015],[.42,.44,.42,1], contype='0', conaffinity='0')
-        _add_box(world, 'ramp', [1.45,0,.12],[.6,.48,.08],[.43,.42,.38,1], euler='0 -0.22 0')
-        for i in range(3):
-            _add_box(world, f'step_{i}', [2.3+i*.45,0,.08+i*.08],[.22,.48,.08+i*.08],[.37,.39,.37,1])
-        for i, (x,y,z) in enumerate([(3.9,-.22,.06),(4.35,.17,.09),(4.8,-.1,.05)]):
-            _add_box(world, f'rough_block_{i}', [x,y,z],[.2,.22,z],[.39,.4,.36,1])
+        # A bounded mobility course: the 1.5 cm threshold is real collision
+        # geometry while the destination marker never contributes contact.
+        _add_box(world, 'low_threshold', [.65,0,.0075],[.06,.62,.0075],[.43,.42,.38,1])
+        _add_box(world, 'walk_goal', [1.0,0,-.005],[.13,.46,.005],[.24,.48,.38,1],
+                 contype='0', conaffinity='0')
     return world
 
 
@@ -164,7 +228,8 @@ def _asset_digest(robot_id):
     return digest.digest()
 
 
-def _configured_tree(robot_id: str, floor_friction: float, parcel_mass_kg: float):
+def _configured_tree(robot_id: str, floor_friction: float, parcel_mass_kg: float,
+                     switch_y_m: float = -.18, switch_stiffness_n_m_rad: float = 8.):
     if robot_id not in MODELS:
         raise ValueError('Unknown humanoid model')
     source = ASSETS / MODELS[robot_id][1]
@@ -177,11 +242,13 @@ def _configured_tree(robot_id: str, floor_friction: float, parcel_mass_kg: float
     compiler.set('meshdir', str(source.parent / 'assets'))
     compiler.set('texturedir', str(source.parent / 'assets'))
     if robot_id == 'unitree_h1':
-        scene = ET.parse(source.parent / 'scene.xml').getroot()
-        keyframe = scene.find('keyframe')
-        if keyframe is None:
-            raise ValueError('H1 standing keyframe unavailable')
-        root.append(deepcopy(keyframe))
+        option = root.find('option')
+        if option is None:
+            option = ET.SubElement(root, 'option')
+        option.set('timestep', '0.002')
+        keyframe = ET.SubElement(root, 'keyframe')
+        standing = [0, 0, 1.05, 1, 0, 0, 0] + [0, 0, -.1, .3, -.2] * 2
+        ET.SubElement(keyframe, 'key', name='standing', qpos=' '.join(map(str, standing)))
     elif robot_id == 'apptronik_apollo':
         scene = ET.parse(source.parent / 'scene.xml').getroot()
         scene_option = scene.find('option')
@@ -206,7 +273,7 @@ def _configured_tree(robot_id: str, floor_friction: float, parcel_mass_kg: float
         for geom in collision_geoms:
             geom.set('contype', '0')
             geom.set('conaffinity', '1')
-    _scene(root, robot_id, floor_friction, parcel_mass_kg)
+    _scene(root, robot_id, floor_friction, parcel_mass_kg, switch_y_m, switch_stiffness_n_m_rad)
     portable = deepcopy(root)
     portable_compiler = portable.find('compiler')
     portable_compiler.set('meshdir', 'assets')
@@ -219,14 +286,18 @@ def _configured_tree(robot_id: str, floor_friction: float, parcel_mass_kg: float
 
 
 @lru_cache(maxsize=16)
-def configured_digest(robot_id: str, floor_friction: float = .8, parcel_mass_kg: float = .5):
+def configured_digest(robot_id: str, floor_friction: float = .8, parcel_mass_kg: float = .5,
+                      switch_y_m: float = -.18, switch_stiffness_n_m_rad: float = 8.):
     """Identity of the source MJCF, assets, physics parameters, and MuJoCo version."""
-    return _configured_tree(robot_id, floor_friction, parcel_mass_kg)[1]
+    return _configured_tree(robot_id, floor_friction, parcel_mass_kg,
+                            switch_y_m, switch_stiffness_n_m_rad)[1]
 
 
 @lru_cache(maxsize=4)
-def _compiled_xml_model(robot_id: str, floor_friction: float, parcel_mass_kg: float):
-    root, digest = _configured_tree(robot_id, floor_friction, parcel_mass_kg)
+def _compiled_xml_model(robot_id: str, floor_friction: float, parcel_mass_kg: float,
+                        switch_y_m: float = -.18, switch_stiffness_n_m_rad: float = 8.):
+    root, digest = _configured_tree(robot_id, floor_friction, parcel_mass_kg,
+                                    switch_y_m, switch_stiffness_n_m_rad)
     return mj.MjModel.from_xml_string(ET.tostring(root, encoding='unicode')), digest
 
 
@@ -247,7 +318,8 @@ def _verified_binary_path(robot_id: str, directory: str):
     return path
 
 
-def compiled_model(robot_id: str, floor_friction: float = .8, parcel_mass_kg: float = .5):
+def compiled_model(robot_id: str, floor_friction: float = .8, parcel_mass_kg: float = .5,
+                   switch_y_m: float = -.18, switch_stiffness_n_m_rad: float = 8.):
     """Load exact MuJoCo dynamics; production binaries avoid XML compile peaks.
 
     The build step compiles the default Menagerie scene into .mjb. MuJoCo
@@ -257,19 +329,26 @@ def compiled_model(robot_id: str, floor_friction: float = .8, parcel_mass_kg: fl
     """
     directory = os.getenv('VIVACITY_HUMANOID_MODEL_DIR')
     if not directory:
-        return _compiled_xml_model(robot_id, floor_friction, parcel_mass_kg)
+        return _compiled_xml_model(robot_id, floor_friction, parcel_mass_kg,
+                                   switch_y_m, switch_stiffness_n_m_rad)
     if robot_id not in MODELS:
         raise ValueError('Unknown humanoid model')
     model = mj.MjModel.from_binary_path(str(_verified_binary_path(robot_id, directory)))
     if floor_friction != .8:
         model.geom_friction[model.geom('floor').id, 0] = floor_friction
+    if robot_id == 'apptronik_apollo':
+        model.body_pos[model.body('control_switch').id, 1] = switch_y_m
+        model.body_pos[model.body('switch_label_mount').id, 1] = switch_y_m
+        model.jnt_stiffness[model.joint('switch_hinge').id] = switch_stiffness_n_m_rad
+        mj.mj_setConst(model, mj.MjData(model))
     if robot_id == 'unitree_g1' and parcel_mass_kg != .5:
         parcel = model.body('parcel').id
         scale = parcel_mass_kg / .5
         model.body_mass[parcel] *= scale
         model.body_inertia[parcel] *= scale
         mj.mj_setConst(model, mj.MjData(model))
-    return model, configured_digest(robot_id, floor_friction, parcel_mass_kg)
+    return model, configured_digest(robot_id, floor_friction, parcel_mass_kg,
+                                    switch_y_m, switch_stiffness_n_m_rad)
 
 
 def initial_data(model):
@@ -311,9 +390,11 @@ def model_info(robot_id):
             'joint_names': [mj.mj_id2name(model, mj.mjtObj.mjOBJ_JOINT, i) or f'joint_{i}' for i in range(model.njnt)],
             'initial_frame': _frame(model, data),
             'geometry_url': f'/vivacity/humanoids/{robot_id}/robot-geometry.json',
-            'task_scope': ('Stationary G1 parcel pickup and placement uses measured bilateral contact and an explicit rigid-grasp fixture. Walking and warehouse fulfillment are unvalidated.'
+            'task_scope': ('Stationary parcel pickup and placement uses bilateral hand contact and a contact-gated rigid grasp fixture. Walking is not part of this task.'
                            if robot_id == 'unitree_g1' else
-                           'Physical task probe. Switch actuation and terrain traversal require measured completion; previews alone are not success.')}
+                           'Stationary machine service requires physical switch contact, motor response, and arm retraction.'
+                           if robot_id == 'apptronik_apollo' else
+                           'Short bounded walk uses Unitree\'s matched 10-actuator recurrent policy; completion requires goal, balance, contacts, and a stable stop.')}
 
 
 def _actuator_target(model, data, index):
@@ -388,22 +469,10 @@ def _control(model, data, request, elapsed, reach_targets=None):
             reach_phase = min(1., max(0., (elapsed - .2) / reach_duration))
             reach_blend = np.sin(np.pi * reach_phase / 2)**2
             target += (reach_targets[jid] - home) * request.movement_scale * reach_blend
-        elif request.robot_id == 'unitree_h1':
-            gait = np.sin(2*np.pi*1.1*elapsed)
-            sign = 1 if name.startswith('left_') else -1
-            if 'hip_pitch' in name: target += sign*.16*request.movement_scale*gait*blend
-            if 'knee' in name: target += max(0., sign*gait)*.17*request.movement_scale*blend
-            if 'shoulder_pitch' in name: target -= sign*.13*request.movement_scale*gait*blend
         if model.jnt_limited[jid]:
             lo, hi = model.jnt_range[jid]
             target = float(np.clip(target, lo+.002, hi-.002))
-        if request.robot_id == 'unitree_h1':
-            qadr, vadr = int(model.jnt_qposadr[jid]), int(model.jnt_dofadr[jid])
-            kp = 105. if any(part in name for part in ('hip', 'knee', 'torso')) else 55. if 'ankle' in name else 28.
-            torque = kp*(target-data.qpos[qadr])-2*np.sqrt(kp)*data.qvel[vadr]
-            data.ctrl[i] = np.clip(torque, *model.actuator_ctrlrange[i])
-        else:
-            data.ctrl[i] = target
+        data.ctrl[i] = target
 
 
 def _contact_names(model, data):
@@ -419,12 +488,12 @@ def _contact_names(model, data):
         yield a, b
 
 
-def _terrain_foot_contacts(model, data):
-    """Count grounded H1 contact points and measure tangential point speed."""
+def _terrain_foot_contacts(model, data, min_normal_force_n=0.):
+    """Count grounded H1 contacts and slip at force-bearing support points."""
     count = 0
     peak_slip = 0.
     jacobian = np.zeros((3, model.nv))
-    for contact in data.contact[:data.ncon]:
+    for contact_index, contact in enumerate(data.contact[:data.ncon]):
         if contact.dist > 0:
             continue
         geom_ids = (int(contact.geom1), int(contact.geom2))
@@ -435,8 +504,13 @@ def _terrain_foot_contacts(model, data):
         if foot_side is None:
             continue
         terrain_geom = mj.mj_id2name(model, mj.mjtObj.mjOBJ_GEOM, geom_ids[1-foot_side]) or ''
-        if not terrain_geom.startswith(('floor', 'track_start', 'ramp', 'step_', 'rough_block_')):
+        if not terrain_geom.startswith(('floor', 'low_threshold')):
             continue
+        if min_normal_force_n:
+            force = np.zeros(6)
+            mj.mj_contactForce(model, data, contact_index, force)
+            if force[0] < min_normal_force_n:
+                continue
         count += 1
         mj.mj_jac(model, data, jacobian, None, contact.pos, body_ids[foot_side])
         point_velocity = jacobian @ data.qvel
@@ -445,17 +519,27 @@ def _terrain_foot_contacts(model, data):
     return count, peak_slip
 
 
-def simulate(request: HumanoidTrialRequest):
+def simulate(request: HumanoidTrialRequest, *, on_frame=None, checkpoint=None):
     if request.robot_id not in MODELS:
         raise ValueError('Unknown humanoid model')
     if request.action == 'pickup_place':
         from .humanoid_pickup import simulate_pickup
-        return simulate_pickup(request)
+        return simulate_pickup(request, on_frame=on_frame, checkpoint=checkpoint)
+    if request.action == 'service_machine':
+        from .apollo_service import simulate_machine
+        return simulate_machine(request, on_frame=on_frame, checkpoint=checkpoint)
+    if request.robot_id == 'unitree_h1':
+        from .h1_walk import simulate_walk
+        return simulate_walk(request, on_frame=on_frame, checkpoint=checkpoint)
     model, digest = compiled_model(request.robot_id, request.floor_friction, request.parcel_mass_kg)
     data = initial_data(model)
     reach_targets, planning = _reach_plan(model, request.robot_id) if request.robot_id in ('unitree_g1', 'apptronik_apollo') and request.action == 'attempt_task' else (None, None)
     initial = _frame(model, data)
     frames = [initial]
+    initial_state = np.zeros(mj.mj_stateSize(model, STATE))
+    mj.mj_getState(model, data, initial_state, STATE)
+    if on_frame:
+        on_frame(initial, 0)
     minimum_height = float(data.qpos[2])
     maximum_tilt = 0.
     min_hand_goal_distance = float('inf')
@@ -473,6 +557,8 @@ def simulate(request: HumanoidTrialRequest):
     steps = round(request.duration_s/model.opt.timestep)
     start = time.perf_counter()
     for step in range(steps):
+        if checkpoint:
+            checkpoint()
         elapsed = float(data.time)
         _control(model, data, request, elapsed, reach_targets)
         data.xfrc_applied[base_id, 0] = request.perturbation_n if .4 <= elapsed <= .65 else 0.
@@ -510,7 +596,10 @@ def simulate(request: HumanoidTrialRequest):
             # mj_step integrates qpos after its forward pass. Refresh derived
             # transforms so each replay frame matches its recorded qpos/time.
             mj.mj_forward(model, data)
-            frames.append(_frame(model, data))
+            frame = _frame(model, data)
+            frames.append(frame)
+            if on_frame:
+                on_frame(frame, step+1)
     fallen = minimum_height < ({'unitree_g1':.48, 'apptronik_apollo':.65, 'unitree_h1':.55}[request.robot_id]) or maximum_tilt > .75
     if request.robot_id == 'unitree_g1':
         success = not fallen and task_contacts > 0 and max_parcel_height > .85 and float(data.body('parcel').xpos[0]) > 1.35
@@ -527,11 +616,13 @@ def simulate(request: HumanoidTrialRequest):
     return {'schema_version': 'vivacity.humanoid-trial/1.0', 'robot_id': request.robot_id,
             'environment_id': MODELS[request.robot_id][2], 'action': request.action,
             'parameters': request.model_dump(), 'seed': request.seed,
+            'controller': 'bounded_joint_position_probe', 'policy_sha256': None,
             'model_hash': digest, 'scene_geometry_hash': scene_geometry_hash,
             'simulator_version': mj.__version__,
             'status': 'completed', 'task_success': bool(success), 'failure_reason': reason,
             'planning': planning,
             'initial_frame': initial, 'frames': frames, 'final_frame': frames[-1],
+            'initial_integration_state': initial_state.tolist(),
             'final_integration_state': final_state.tolist(),
             'measurements': {'simulation_steps': steps, 'simulation_duration_s': float(data.time),
                              'compute_wall_s': time.perf_counter()-start,
@@ -550,17 +641,25 @@ class HumanoidTrialService:
     def __init__(self, store: Store):
         self.store = store
         self.executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix='humanoid-physics')
-        self.lock = threading.Lock()
+        self.lock = threading.RLock()
         self.active = 0
+        self.gates: dict[str, TrialGate] = {}
+        self.records: dict[str, dict] = {}
         with self.store.connect() as db:
             db.execute('CREATE TABLE IF NOT EXISTS humanoid_trials(id TEXT PRIMARY KEY, owner TEXT NOT NULL, payload TEXT NOT NULL)')
+            db.execute('CREATE TABLE IF NOT EXISTS humanoid_trial_frames('
+                       'trial_id TEXT NOT NULL, seq INTEGER NOT NULL, payload TEXT NOT NULL, '
+                       'PRIMARY KEY(trial_id,seq))')
             for trial_id, payload in db.execute('SELECT id,payload FROM humanoid_trials'):
                 record = json.loads(payload)
-                if record['status'] in ('queued', 'running'):
+                if record['status'] in ('queued', 'running', 'paused'):
                     record.update(status='failed', error='worker_interrupted_by_restart')
                     db.execute('UPDATE humanoid_trials SET payload=? WHERE id=?', (encode(record), trial_id))
 
     def close(self):
+        with self.lock:
+            for gate in self.gates.values():
+                gate.set_action('cancel')
         self.executor.shutdown(wait=True, cancel_futures=False)
 
     def _save(self, owner, record):
@@ -583,6 +682,42 @@ class HumanoidTrialService:
                 'SELECT payload FROM humanoid_trials WHERE owner=? ORDER BY rowid DESC LIMIT 30', (owner,))]
         return [row for row in rows if row['request']['robot_id'] == robot_id][:10]
 
+    def frames(self, owner, trial_id, cursor=0, limit=32):
+        record = self.get(owner, trial_id)
+        with self.store.connect() as db:
+            rows = db.execute(
+                'SELECT seq,payload FROM humanoid_trial_frames WHERE trial_id=? AND seq>=? '
+                'ORDER BY seq LIMIT ?', (trial_id, cursor, limit)).fetchall()
+        return {'trial_id': trial_id, 'status': record['status'],
+                'frames': [{'seq': seq, 'frame': json.loads(payload)} for seq, payload in rows],
+                'next_cursor': rows[-1][0]+1 if rows else cursor,
+                'steps_completed': record.get('steps_completed', 0),
+                'sim_time_s': record.get('sim_time_s', 0.),
+                'current_phase': record.get('current_phase'),
+                'partial_measurements': record.get('partial_measurements', {})}
+
+    def control(self, owner, trial_id, action):
+        if action not in ('pause', 'resume', 'cancel'):
+            raise ValueError('Unsupported trial action')
+        with self.lock:
+            # Authorization is checked against persisted ownership, including
+            # when the worker has already finished or the service restarted.
+            current = self.get(owner, trial_id)
+            gate = self.gates.get(trial_id)
+            record = self.records.get(trial_id)
+            if gate is None or record is None:
+                raise ValueError('The trial is no longer running')
+            allowed = {'pause': ('queued', 'running'),
+                       'resume': ('paused',),
+                       'cancel': ('queued', 'running', 'paused')}
+            if current['status'] not in allowed[action]:
+                raise ValueError(f"Cannot {action} a {current['status']} trial")
+            gate.set_action(action)
+            record['status'] = {'pause': 'paused', 'resume': 'running',
+                                'cancel': 'cancelling'}[action]
+            self._save(owner, record)
+            return record.copy()
+
     def submit(self, owner, request):
         if request.robot_id not in MODELS:
             raise ValueError('Unknown humanoid model')
@@ -591,20 +726,71 @@ class HumanoidTrialService:
                 raise ValueError('Humanoid compute capacity reached; retry after a trial finishes')
             self.active += 1
         record = {'id': str(uuid.uuid4()), 'status': 'queued', 'request': request.model_dump(),
-                  'created_unix_s': time.time(), 'result': None, 'error': None}
-        self._save(owner, record)
+                  'created_unix_s': time.time(), 'result': None, 'error': None,
+                  'steps_completed': 0, 'sim_time_s': 0., 'current_phase': None,
+                  'partial_measurements': {}}
+        with self.lock:
+            self.gates[record['id']] = TrialGate()
+            self.records[record['id']] = record
+            self._save(owner, record)
         self.executor.submit(self._run, owner, record, request)
-        return record
+        return record.copy()
 
     def _run(self, owner, record, request):
+        trial_id = record['id']
+        gate = self.gates[trial_id]
+        pending = []
+        next_seq = 0
+
+        def flush():
+            if not pending:
+                return
+            with self.lock, self.store.connect() as db:
+                db.executemany('INSERT INTO humanoid_trial_frames(trial_id,seq,payload) VALUES(?,?,?)',
+                               [(trial_id, seq, encode(frame)) for seq, frame in pending])
+                db.execute('UPDATE humanoid_trials SET payload=? WHERE id=? AND owner=?',
+                           (encode(record), trial_id, owner))
+                pending.clear()
+
+        def on_frame(frame, steps):
+            nonlocal next_seq
+            pending.append((next_seq, frame))
+            next_seq += 1
+            record['steps_completed'] = steps
+            record['sim_time_s'] = frame['time_s']
+            record['current_phase'] = frame.get('phase')
+            measured = {'contact_count': frame['contacts']} if 'contacts' in frame else {}
+            if 'base_position_m' in frame:
+                measured['base_position_m'] = frame['base_position_m']
+            if 'switch_angle_rad' in frame:
+                measured['switch_angle_rad'] = frame['switch_angle_rad']
+            if 'machine_shaft_angle_rad' in frame:
+                measured['machine_shaft_angle_rad'] = frame['machine_shaft_angle_rad']
+            if measured:
+                record['partial_measurements'] = measured
+            if len(pending) >= 2 or steps == 0:
+                flush()
+
         try:
-            record['status'] = 'running'
-            self._save(owner, record)
-            result = simulate(request)
-            record.update(status='completed', result=result)
-        except Exception as exc:
-            record.update(status='failed', error=f'{type(exc).__name__}: {exc}')
-        finally:
-            self._save(owner, record)
             with self.lock:
+                if record['status'] == 'queued':
+                    record['status'] = 'running'
+                    self._save(owner, record)
+            gate.checkpoint()
+            result = simulate(request, on_frame=on_frame, checkpoint=gate.checkpoint)
+            flush()
+            with self.lock:
+                record.update(status='completed', result=result)
+        except TrialCancelled:
+            with self.lock:
+                record.update(status='cancelled', error=None)
+        except Exception as exc:
+            with self.lock:
+                record.update(status='failed', error=f'{type(exc).__name__}: {exc}')
+        finally:
+            flush()
+            with self.lock:
+                self._save(owner, record)
+                self.gates.pop(trial_id, None)
+                self.records.pop(trial_id, None)
                 self.active -= 1

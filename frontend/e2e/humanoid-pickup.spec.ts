@@ -5,7 +5,13 @@ import path from 'node:path';
 test('G1 pickup runs measured physics, replays, and reports a heavy-parcel failure',async({page})=>{
   test.setTimeout(180_000);
   const errors:string[]=[];
+  let measuredBeforeCompletion=false;
   page.on('pageerror',error=>errors.push(error.message));
+  page.on('response',async response=>{
+    if(!response.url().includes('/v1/robotics/humanoids/experiments/')||!response.url().includes('/frames?'))return;
+    const delta=await response.json().catch(()=>null);
+    if(delta?.status==='running'&&delta.frames?.length>0)measuredBeforeCompletion=true;
+  });
   await page.emulateMedia({reducedMotion:'reduce'});
   await page.goto('/works',{waitUntil:'domcontentloaded'});
   await expect(page.getByRole('heading',{name:'Unitree G1 with hands'})).toBeVisible({timeout:60_000});
@@ -16,6 +22,7 @@ test('G1 pickup runs measured physics, replays, and reports a heavy-parcel failu
   await page.getByRole('button',{name:'Run pickup experiment'}).click();
   expect((await submission).status()).toBe(202);
   await expect(page.getByText('Task completed in simulation')).toBeVisible({timeout:90_000});
+  expect(measuredBeforeCompletion).toBe(true);
   await expect(page.getByText(/The G1 lifted the parcel and released it onto the destination stand/)).toBeVisible();
   await expect(page.locator('.pickup-evidence')).toContainText('Destination support: yes');
   await expect(page.locator('.pickup-evidence')).toContainText('Grasp released: yes');
@@ -31,6 +38,7 @@ test('G1 pickup runs measured physics, replays, and reports a heavy-parcel failu
   expect(saved.measurements.destination_error_m).toBeLessThan(.17);
   expect(saved.events.map((event:{phase:string})=>event.phase)).toEqual([
     'lift','transfer','lower','settle_before_release','released']);
+  await page.getByRole('button',{name:'Play replay'}).click();
   await page.getByRole('button',{name:'Pause replay'}).click();
   await page.getByRole('slider',{name:'Recorded simulation time'}).fill('4');
   await expect(page.getByText(/4\.00 \/ 8\.00 s/)).toBeVisible();

@@ -3989,6 +3989,233 @@
         }
       }
     },
+    "/v1/robotics/humanoids/experiments/{trial_id}/frames": {
+      "get": {
+        "summary": "Humanoid Frames",
+        "operationId": "humanoid_frames_v1_robotics_humanoids_experiments__trial_id__frames_get",
+        "parameters": [
+          {
+            "name": "trial_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Trial Id"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Cursor"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 64,
+              "minimum": 1,
+              "default": 32,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "x-workspace-token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 32,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "title": "X-Workspace-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HumanoidFramesResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/robotics/humanoids/experiments/{trial_id}/pause": {
+      "post": {
+        "summary": "Pause Humanoid",
+        "operationId": "pause_humanoid_v1_robotics_humanoids_experiments__trial_id__pause_post",
+        "parameters": [
+          {
+            "name": "trial_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Trial Id"
+            }
+          },
+          {
+            "name": "x-workspace-token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 32,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "title": "X-Workspace-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HumanoidTrialResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/robotics/humanoids/experiments/{trial_id}/resume": {
+      "post": {
+        "summary": "Resume Humanoid",
+        "operationId": "resume_humanoid_v1_robotics_humanoids_experiments__trial_id__resume_post",
+        "parameters": [
+          {
+            "name": "trial_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Trial Id"
+            }
+          },
+          {
+            "name": "x-workspace-token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 32,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "title": "X-Workspace-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HumanoidTrialResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/robotics/humanoids/experiments/{trial_id}/cancel": {
+      "post": {
+        "summary": "Cancel Humanoid",
+        "operationId": "cancel_humanoid_v1_robotics_humanoids_experiments__trial_id__cancel_post",
+        "parameters": [
+          {
+            "name": "trial_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Trial Id"
+            }
+          },
+          {
+            "name": "x-workspace-token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 32,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "title": "X-Workspace-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HumanoidTrialResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/robotics/humanoids/experiments/{trial_id}/replay": {
       "get": {
         "summary": "Replay Humanoid",
@@ -8692,6 +8919,70 @@
         "type": "object",
         "title": "HTTPValidationError"
       },
+      "HumanoidFramesResponse": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "title": "Schema Version",
+            "default": "vivacity.humanoid-frames/1.0"
+          },
+          "trial_id": {
+            "type": "string",
+            "title": "Trial Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "frames": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Frames"
+          },
+          "next_cursor": {
+            "type": "integer",
+            "title": "Next Cursor"
+          },
+          "steps_completed": {
+            "type": "integer",
+            "title": "Steps Completed"
+          },
+          "sim_time_s": {
+            "type": "number",
+            "title": "Sim Time S"
+          },
+          "current_phase": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Phase"
+          },
+          "partial_measurements": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Partial Measurements"
+          }
+        },
+        "type": "object",
+        "required": [
+          "trial_id",
+          "status",
+          "frames",
+          "next_cursor",
+          "steps_completed",
+          "sim_time_s",
+          "current_phase"
+        ],
+        "title": "HumanoidFramesResponse"
+      },
       "HumanoidModelResponse": {
         "properties": {
           "schema_version": {
@@ -8777,7 +9068,7 @@
           },
           "action": {
             "type": "string",
-            "pattern": "^(attempt_task|hold_stance|pickup_place)$",
+            "pattern": "^(attempt_task|hold_stance|pickup_place|walk_to_goal|service_machine)$",
             "title": "Action",
             "default": "attempt_task"
           },
@@ -8852,6 +9143,27 @@
             "title": "Task Timeout S",
             "default": 8.0
           },
+          "goal_distance_m": {
+            "type": "number",
+            "maximum": 1.3,
+            "minimum": 0.5,
+            "title": "Goal Distance M",
+            "default": 0.9
+          },
+          "switch_y_m": {
+            "type": "number",
+            "maximum": -0.1,
+            "minimum": -0.28,
+            "title": "Switch Y M",
+            "default": -0.18
+          },
+          "switch_stiffness_n_m_rad": {
+            "type": "number",
+            "maximum": 16.0,
+            "minimum": 4.0,
+            "title": "Switch Stiffness N M Rad",
+            "default": 8.0
+          },
           "perturbation_n": {
             "type": "number",
             "maximum": 80.0,
@@ -8919,6 +9231,32 @@
               }
             ],
             "title": "Error"
+          },
+          "steps_completed": {
+            "type": "integer",
+            "title": "Steps Completed",
+            "default": 0
+          },
+          "sim_time_s": {
+            "type": "number",
+            "title": "Sim Time S",
+            "default": 0.0
+          },
+          "current_phase": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Phase"
+          },
+          "partial_measurements": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Partial Measurements"
           }
         },
         "type": "object",

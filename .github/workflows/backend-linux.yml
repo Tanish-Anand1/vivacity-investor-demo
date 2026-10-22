@@ -54,3 +54,13 @@ jobs:
         with:
           name: host-memory-verification
           path: artifacts/host-memory.xml
+      - name: Execute all humanoid tasks within the free host memory limit
+        if: matrix.shard == 0
+        run: |
+          docker run --rm --memory=512m --memory-swap=512m -v "$PWD/tests:/app/tests:ro" -v "$PWD/artifacts:/verification" vivacity-runtime:verification python -m pytest /app/tests/test_humanoid_host_capacity.py -s -vv --junitxml=/verification/humanoid-host-memory.xml
+      - name: Upload humanoid memory-limit evidence
+        if: always() && matrix.shard == 0
+        uses: actions/upload-artifact@v4
+        with:
+          name: humanoid-host-memory-verification
+          path: artifacts/humanoid-host-memory.xml

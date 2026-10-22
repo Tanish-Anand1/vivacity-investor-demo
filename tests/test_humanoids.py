@@ -18,19 +18,19 @@ OTHER = {'X-Workspace-Token': 'humanoid-other-owner-' + 'b' * 40}
 
 
 @pytest.mark.parametrize('robot_id,minimum_dof,minimum_meshes', [
-    ('unitree_g1', 50, 40), ('apptronik_apollo', 35, 40), ('unitree_h1', 24, 20),
+    ('unitree_g1', 50, 40), ('apptronik_apollo', 35, 40), ('unitree_h1', 16, 20),
 ])
 def test_distinct_full_body_models_and_frontend_geometry(robot_id, minimum_dof, minimum_meshes):
     info = model_info(robot_id)
     model, digest = compiled_model(robot_id)
     assert info['dof'] >= minimum_dof
     assert info['mesh_count'] >= minimum_meshes
-    assert model.nbody > 20 and model.nu >= 19
+    assert model.nbody > 20 and model.nu >= 19 if robot_id != 'unitree_h1' else model.nbody >= 12 and model.nu == 10
     assert all(name in info['joint_names'] for name in (
         ('left_hip_pitch_joint', 'right_shoulder_pitch_joint') if robot_id == 'unitree_g1'
         else ('l_hip_fe', 'r_shoulder_fe') if robot_id == 'apptronik_apollo'
-        else ('left_hip_pitch', 'right_shoulder_pitch')))
-    assert (ASSETS / robot_id / 'LICENSE').is_file()
+        else ('left_hip_pitch_joint', 'right_hip_pitch_joint')))
+    assert ((ASSETS / MODELS[robot_id][1]).parent / 'LICENSE').is_file()
     assert model.geom('floor').id >= 0
     assert info['initial_frame']['contacts'] >= 0
     assert digest == info['model_hash']
@@ -87,6 +87,28 @@ def test_apollo_ik_hand_contact_activates_physical_switch_reproducibly():
     assert reduced['measurements']['switch_activation_time_s'] is None
 
 
+def test_apollo_machine_service_requires_contact_motor_response_and_retraction():
+    request = HumanoidTrialRequest(robot_id='apptronik_apollo', action='service_machine',
+                                   movement_scale=1)
+    first, second = simulate(request), simulate(request)
+    assert first['task_success'] and first['failure_reason'] is None
+    assert first['frames'] == second['frames']
+    assert first['measurements']['task_contact_samples'] > 0
+    assert first['measurements']['maximum_switch_angle_rad'] >= .3
+    assert first['measurements']['machine_shaft_travel_rad'] >= .5
+    assert first['measurements']['peak_machine_shaft_speed_rad_s'] >= .3
+    assert first['measurements']['final_hand_switch_distance_m'] >= .1
+    assert first['final_integration_state'] == second['final_integration_state']
+    stiff = simulate(HumanoidTrialRequest(robot_id='apptronik_apollo', action='service_machine',
+                                          movement_scale=1, switch_stiffness_n_m_rad=14))
+    assert not stiff['task_success'] and stiff['failure_reason'] == 'switch_not_actuated'
+    assert stiff['measurements']['machine_shaft_travel_rad'] == 0
+    shifted = simulate(HumanoidTrialRequest(robot_id='apptronik_apollo', action='service_machine',
+                                            movement_scale=1, switch_y_m=-.24))
+    assert shifted['model_hash'] != first['model_hash']
+    assert shifted['frames'] != first['frames']
+
+
 def test_g1_reachable_parcel_contact_moves_object_without_false_transport_claim():
     result = simulate(HumanoidTrialRequest(robot_id='unitree_g1', duration_s=2, movement_scale=1))
     assert result['planning']['feasible']
@@ -98,16 +120,23 @@ def test_g1_reachable_parcel_contact_moves_object_without_false_transport_claim(
     assert result['failure_reason'] == 'parcel_not_transported'
 
 
-def test_h1_fall_detected_and_replay_deterministic():
-    request = HumanoidTrialRequest(robot_id='unitree_h1', duration_s=2)
+def test_h1_matched_policy_walks_stops_and_replays_deterministically():
+    request = HumanoidTrialRequest(robot_id='unitree_h1', action='walk_to_goal')
     first, second = simulate(request), simulate(request)
-    assert first['failure_reason'] == 'fall' and not first['task_success']
-    assert first['measurements']['fallen']
+    assert first['task_success'] and first['failure_reason'] is None
+    assert not first['measurements']['fallen']
     assert first['measurements']['task_contact_samples'] > 0
     assert first['measurements']['maximum_foot_slip_m_s'] > 0
+    assert first['measurements']['p95_support_foot_slip_m_s'] < .8
+    assert first['measurements']['goal_error_m'] < .18
+    assert first['measurements']['stable_stop_duration_s'] >= 1
     assert first['measurements']['peak_joint_delta_rad'] > .1
+    assert len(first['policy_sha256']) == 64
     assert first['frames'] == second['frames']
     assert first['final_integration_state'] == second['final_integration_state']
+    no_motion = simulate(HumanoidTrialRequest(robot_id='unitree_h1', action='walk_to_goal', movement_scale=0))
+    assert not no_motion['task_success'] and no_motion['failure_reason'] == 'terrain_not_crossed'
+    assert no_motion['measurements']['goal_error_m'] > first['measurements']['goal_error_m']
 
 
 def test_parameter_change_changes_model_and_motion_without_mutating_parent():

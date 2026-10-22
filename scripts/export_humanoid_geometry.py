@@ -21,7 +21,7 @@ def main(robot_ids=None):
         model, digest = compiled_model(robot_id)
         destination = root / robot_id
         export(destination, SimpleNamespace(model=model, model_hash=digest, config={'robot_id': robot_id}))
-        copyfile(ASSETS / robot_id / 'LICENSE', destination / 'LICENSE.txt')
+        copyfile((ASSETS / MODELS[robot_id][1]).parent / 'LICENSE', destination / 'LICENSE.txt')
 
 
 if __name__ == '__main__':

@@ -1,3 +1,15 @@
+# Historical audit notice — superseded on 2026-10-22
+
+The measurements below describe the **previous** 19-actuator Menagerie H1
+open-loop gait probe and Apollo switch-only probe. They are preserved as
+historical failure evidence. The current bounded tasks use a matched
+10-leg-actuator Unitree H1 policy, an Apollo contact-gated machine cycle, and
+live persisted frames. Current outcomes and limitations are in
+[`IMPLEMENTATION_STATUS.md`](../IMPLEMENTATION_STATUS.md) and the current API
+contract is in [`FRONTEND_HANDOFF.md`](../FRONTEND_HANDOFF.md).
+
+---
+
 # Humanoid capability audit — stationary G1 milestone
 
 Date: 2026-10-22. Evidence is the checked-in MuJoCo Menagerie models, compiled

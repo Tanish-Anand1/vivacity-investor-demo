@@ -118,7 +118,7 @@ def _integration_state(model, data):
     return state.tolist()
 
 
-def simulate_pickup(request: HumanoidTrialRequest):
+def simulate_pickup(request: HumanoidTrialRequest, *, on_frame=None, checkpoint=None):
     """Run one bounded, independently restored G1 MuJoCo experiment."""
     if request.robot_id != 'unitree_g1' or request.action != 'pickup_place':
         raise ValueError('Pickup controller requires Unitree G1 and pickup_place')
@@ -139,6 +139,8 @@ def simulate_pickup(request: HumanoidTrialRequest):
     initial['grasp_active'] = False
     initial_state = _integration_state(model, data)
     frames = [initial]
+    if on_frame:
+        on_frame(initial, 0)
     events = []
     phase = 'approach'
     failure = None
@@ -200,6 +202,8 @@ def simulate_pickup(request: HumanoidTrialRequest):
                        'evidence': measured})
 
     for step in range(max_steps if failure is None else 0):
+        if checkpoint:
+            checkpoint()
         elapsed = float(data.time)
         duration = PHASE_DURATIONS.get(phase, .5)
         progress = float(np.clip((elapsed-phase_start)/duration, 0, 1))
@@ -232,6 +236,8 @@ def simulate_pickup(request: HumanoidTrialRequest):
             frame['parcel_position_m'] = parcel.tolist()
             frame['grasp_active'] = bool(data.eq_active[0])
             frames.append(frame)
+            if on_frame:
+                on_frame(frame, step_count)
 
         if minimum_base_height < .7 or maximum_tilt > .4:
             failure = 'unstable_stance'
@@ -307,6 +313,8 @@ def simulate_pickup(request: HumanoidTrialRequest):
         frame['parcel_position_m'] = data.body('parcel').xpos.tolist()
         frame['grasp_active'] = bool(data.eq_active[0])
         frames.append(frame)
+        if on_frame:
+            on_frame(frame, step_count)
     parcel_final = np.asarray(data.body('parcel').xpos).copy()
     final_forces, final_support, final_floor, _ = _contact_measurements(model, data)
     parcel_velocity = np.asarray(data.qvel[model.jnt_dofadr[free_joint]:model.jnt_dofadr[free_joint]+6])
@@ -327,6 +335,8 @@ def simulate_pickup(request: HumanoidTrialRequest):
         'robot_id': 'unitree_g1', 'environment_id': 'warehouse_logistics',
         'action': 'pickup_place', 'parameters': request.model_dump(),
         'seed': request.seed, 'model_hash': digest,
+        'controller': 'bilateral_ik_contact_gated_rigid_grasp',
+        'policy_sha256': None,
         'scene_geometry_hash': configured_digest('unitree_g1'),
         'simulator_version': mj.__version__, 'status': 'completed',
         'task_success': bool(success), 'failure_reason': None if success else failure,

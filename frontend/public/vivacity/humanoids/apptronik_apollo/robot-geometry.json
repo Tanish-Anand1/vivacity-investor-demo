@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "source": "compiled_mujoco_model",
   "simulator_version": "3.15.0",
-  "model_hash": "fe014b092acf3ad8cead7d54f024fa03f527e49f070b492a31c8dd4082e40699",
+  "model_hash": "b410d631ac55389c3344153de0fd1c454a92cb86c82036cde9bb2c0bed1dca2f",
   "config": {
     "robot_id": "apptronik_apollo"
   },
@@ -199,6 +199,16 @@
       "id": 37,
       "name": "control_switch",
       "parent_id": 0
+    },
+    {
+      "id": 38,
+      "name": "switch_label_mount",
+      "parent_id": 0
+    },
+    {
+      "id": 39,
+      "name": "machine_rotor",
+      "parent_id": 0
     }
   ],
   "geoms": [
@@ -364,39 +374,7 @@
     },
     {
       "id": 5,
-      "name": "switch_label",
-      "body_id": 0,
-      "type": "box",
-      "group": 1,
-      "mesh_id": null,
-      "position": [
-        0.59,
-        -0.18,
-        1.23
-      ],
-      "quaternion_wxyz": [
-        1.0,
-        0.0,
-        0.0,
-        0.0
-      ],
-      "size": [
-        0.01,
-        0.08,
-        0.015
-      ],
-      "rgba": [
-        0.7099999785423279,
-        0.699999988079071,
-        0.6299999952316284,
-        1.0
-      ],
-      "contype": 0,
-      "conaffinity": 0
-    },
-    {
-      "id": 6,
-      "name": "geom_6",
+      "name": "geom_5",
       "body_id": 1,
       "type": "mesh",
       "group": 1,
@@ -427,7 +405,7 @@
       "conaffinity": 0
     },
     {
-      "id": 7,
+      "id": 6,
       "name": "collision_capsule_body_pelvis",
       "body_id": 1,
       "type": "capsule",
@@ -459,8 +437,8 @@
       "conaffinity": 1
     },
     {
-      "id": 8,
-      "name": "geom_8",
+      "id": 7,
+      "name": "geom_7",
       "body_id": 4,
       "type": "mesh",
       "group": 1,
@@ -491,8 +469,8 @@
       "conaffinity": 0
     },
     {
-      "id": 9,
-      "name": "geom_9",
+      "id": 8,
+      "name": "geom_8",
       "body_id": 5,
       "type": "mesh",
       "group": 1,
@@ -523,8 +501,8 @@
       "conaffinity": 0
     },
     {
-      "id": 10,
-      "name": "geom_10",
+      "id": 9,
+      "name": "geom_9",
       "body_id": 6,
       "type": "mesh",
       "group": 1,
@@ -555,7 +533,7 @@
       "conaffinity": 0
     },
     {
-      "id": 11,
+      "id": 10,
       "name": "collision_cylinder_torso",
       "body_id": 6,
       "type": "capsule",
@@ -587,8 +565,8 @@
       "conaffinity": 1
     },
     {
-      "id": 12,
-      "name": "geom_12",
+      "id": 11,
+      "name": "geom_11",
       "body_id": 6,
       "type": "mesh",
       "group": 1,
@@ -619,8 +597,8 @@
       "conaffinity": 0
     },
     {
-      "id": 13,
-      "name": "geom_13",
+      "id": 12,
+      "name": "geom_12",
       "body_id": 6,
       "type": "mesh",
       "group": 1,
@@ -651,8 +629,8 @@
       "conaffinity": 0
     },
     {
-      "id": 14,
-      "name": "geom_14",
+      "id": 13,
+      "name": "geom_13",
       "body_id": 7,
       "type": "mesh",
       "group": 1,
@@ -683,8 +661,8 @@
       "conaffinity": 0
     },
     {
-      "id": 15,
-      "name": "geom_15",
+      "id": 14,
+      "name": "geom_14",
       "body_id": 9,
       "type": "mesh",
       "group": 1,
@@ -715,8 +693,8 @@
       "conaffinity": 0
     },
     {
-      "id": 16,
-      "name": "geom_16",
+      "id": 15,
+      "name": "geom_15",
       "body_id": 10,
       "type": "mesh",
       "group": 1,
@@ -747,8 +725,8 @@
       "conaffinity": 0
     },
     {
-      "id": 17,
-      "name": "geom_17",
+      "id": 16,
+      "name": "geom_16",
       "body_id": 11,
       "type": "mesh",
       "group": 1,
@@ -779,8 +757,8 @@
       "conaffinity": 0
     },
     {
-      "id": 18,
-      "name": "geom_18",
+      "id": 17,
+      "name": "geom_17",
       "body_id": 12,
       "type": "mesh",
       "group": 1,
@@ -811,7 +789,7 @@
       "conaffinity": 0
     },
     {
-      "id": 19,
+      "id": 18,
       "name": "collision_capsule_body_l_arm_1",
       "body_id": 12,
       "type": "capsule",
@@ -843,7 +821,7 @@
       "conaffinity": 1
     },
     {
-      "id": 20,
+      "id": 19,
       "name": "collision_capsule_body_l_arm_2",
       "body_id": 12,
       "type": "capsule",
@@ -875,7 +853,7 @@
       "conaffinity": 1
     },
     {
-      "id": 21,
+      "id": 20,
       "name": "collision_capsule_body_l_arm_3",
       "body_id": 12,
       "type": "capsule",
@@ -907,8 +885,8 @@
       "conaffinity": 1
     },
     {
-      "id": 22,
-      "name": "geom_22",
+      "id": 21,
+      "name": "geom_21",
       "body_id": 13,
       "type": "mesh",
       "group": 1,
@@ -939,8 +917,8 @@
       "conaffinity": 0
     },
     {
-      "id": 23,
-      "name": "geom_23",
+      "id": 22,
+      "name": "geom_22",
       "body_id": 14,
       "type": "mesh",
       "group": 1,
@@ -971,7 +949,7 @@
       "conaffinity": 0
     },
     {
-      "id": 24,
+      "id": 23,
       "name": "collision_cylinder_l_arm",
       "body_id": 14,
       "type": "capsule",
@@ -1003,8 +981,8 @@
       "conaffinity": 1
     },
     {
-      "id": 25,
-      "name": "geom_25",
+      "id": 24,
+      "name": "geom_24",
       "body_id": 15,
       "type": "mesh",
       "group": 1,
@@ -1035,8 +1013,8 @@
       "conaffinity": 0
     },
     {
-      "id": 26,
-      "name": "geom_26",
+      "id": 25,
+      "name": "geom_25",
       "body_id": 16,
       "type": "mesh",
       "group": 1,
@@ -1067,7 +1045,7 @@
       "conaffinity": 0
     },
     {
-      "id": 27,
+      "id": 26,
       "name": "wrist_adapter_mesh",
       "body_id": 16,
       "type": "mesh",
@@ -1099,7 +1077,7 @@
       "conaffinity": 0
     },
     {
-      "id": 28,
+      "id": 27,
       "name": "wrist_mesh",
       "body_id": 16,
       "type": "mesh",
@@ -1131,7 +1109,7 @@
       "conaffinity": 0
     },
     {
-      "id": 29,
+      "id": 28,
       "name": "palm_mesh",
       "body_id": 16,
       "type": "mesh",
@@ -1163,7 +1141,7 @@
       "conaffinity": 0
     },
     {
-      "id": 30,
+      "id": 29,
       "name": "index_mesh_1",
       "body_id": 16,
       "type": "mesh",
@@ -1195,7 +1173,7 @@
       "conaffinity": 0
     },
     {
-      "id": 31,
+      "id": 30,
       "name": "index_mesh_2",
       "body_id": 16,
       "type": "mesh",
@@ -1227,7 +1205,7 @@
       "conaffinity": 0
     },
     {
-      "id": 32,
+      "id": 31,
       "name": "middle_mesh_1",
       "body_id": 16,
       "type": "mesh",
@@ -1259,7 +1237,7 @@
       "conaffinity": 0
     },
     {
-      "id": 33,
+      "id": 32,
       "name": "middle_mesh_2",
       "body_id": 16,
       "type": "mesh",
@@ -1291,7 +1269,7 @@
       "conaffinity": 0
     },
     {
-      "id": 34,
+      "id": 33,
       "name": "ring_mesh_1",
       "body_id": 16,
       "type": "mesh",
@@ -1323,7 +1301,7 @@
       "conaffinity": 0
     },
     {
-      "id": 35,
+      "id": 34,
       "name": "ring_mesh_2",
       "body_id": 16,
       "type": "mesh",
@@ -1355,7 +1333,7 @@
       "conaffinity": 0
     },
     {
-      "id": 36,
+      "id": 35,
       "name": "pinky_mesh_1",
       "body_id": 16,
       "type": "mesh",
@@ -1387,7 +1365,7 @@
       "conaffinity": 0
     },
     {
-      "id": 37,
+      "id": 36,
       "name": "pinky_mesh_2",
       "body_id": 16,
       "type": "mesh",
@@ -1419,7 +1397,7 @@
       "conaffinity": 0
     },
     {
-      "id": 38,
+      "id": 37,
       "name": "thumb_mesh_1",
       "body_id": 16,
       "type": "mesh",
@@ -1451,7 +1429,7 @@
       "conaffinity": 0
     },
     {
-      "id": 39,
+      "id": 38,
       "name": "thumb_mesh_2",
       "body_id": 16,
       "type": "mesh",
@@ -1483,7 +1461,7 @@
       "conaffinity": 0
     },
     {
-      "id": 40,
+      "id": 39,
       "name": "collision_l_hand_plate",
       "body_id": 16,
       "type": "box",
@@ -1515,8 +1493,8 @@
       "conaffinity": 1
     },
     {
-      "id": 41,
-      "name": "geom_41",
+      "id": 40,
+      "name": "geom_40",
       "body_id": 17,
       "type": "mesh",
       "group": 1,
@@ -1547,8 +1525,8 @@
       "conaffinity": 0
     },
     {
-      "id": 42,
-      "name": "geom_42",
+      "id": 41,
+      "name": "geom_41",
       "body_id": 18,
       "type": "mesh",
       "group": 1,
@@ -1579,8 +1557,8 @@
       "conaffinity": 0
     },
     {
-      "id": 43,
-      "name": "geom_43",
+      "id": 42,
+      "name": "geom_42",
       "body_id": 19,
       "type": "mesh",
       "group": 1,
@@ -1611,7 +1589,7 @@
       "conaffinity": 0
     },
     {
-      "id": 44,
+      "id": 43,
       "name": "collision_capsule_body_r_arm_1",
       "body_id": 19,
       "type": "capsule",
@@ -1643,7 +1621,7 @@
       "conaffinity": 1
     },
     {
-      "id": 45,
+      "id": 44,
       "name": "collision_capsule_body_r_arm_2",
       "body_id": 19,
       "type": "capsule",
@@ -1675,7 +1653,7 @@
       "conaffinity": 1
     },
     {
-      "id": 46,
+      "id": 45,
       "name": "collision_capsule_body_r_arm_3",
       "body_id": 19,
       "type": "capsule",
@@ -1707,8 +1685,8 @@
       "conaffinity": 1
     },
     {
-      "id": 47,
-      "name": "geom_47",
+      "id": 46,
+      "name": "geom_46",
       "body_id": 20,
       "type": "mesh",
       "group": 1,
@@ -1739,8 +1717,8 @@
       "conaffinity": 0
     },
     {
-      "id": 48,
-      "name": "geom_48",
+      "id": 47,
+      "name": "geom_47",
       "body_id": 21,
       "type": "mesh",
       "group": 1,
@@ -1771,7 +1749,7 @@
       "conaffinity": 0
     },
     {
-      "id": 49,
+      "id": 48,
       "name": "collision_cylinder_r_arm",
       "body_id": 21,
       "type": "capsule",
@@ -1803,8 +1781,8 @@
       "conaffinity": 1
     },
     {
-      "id": 50,
-      "name": "geom_50",
+      "id": 49,
+      "name": "geom_49",
       "body_id": 22,
       "type": "mesh",
       "group": 1,
@@ -1835,8 +1813,8 @@
       "conaffinity": 0
     },
     {
-      "id": 51,
-      "name": "geom_51",
+      "id": 50,
+      "name": "geom_50",
       "body_id": 23,
       "type": "mesh",
       "group": 1,
@@ -1867,8 +1845,8 @@
       "conaffinity": 0
     },
     {
-      "id": 52,
-      "name": "geom_52",
+      "id": 51,
+      "name": "geom_51",
       "body_id": 23,
       "type": "mesh",
       "group": 1,
@@ -1899,8 +1877,8 @@
       "conaffinity": 0
     },
     {
-      "id": 53,
-      "name": "geom_53",
+      "id": 52,
+      "name": "geom_52",
       "body_id": 23,
       "type": "mesh",
       "group": 1,
@@ -1931,8 +1909,8 @@
       "conaffinity": 0
     },
     {
-      "id": 54,
-      "name": "geom_54",
+      "id": 53,
+      "name": "geom_53",
       "body_id": 23,
       "type": "mesh",
       "group": 1,
@@ -1963,8 +1941,8 @@
       "conaffinity": 0
     },
     {
-      "id": 55,
-      "name": "geom_55",
+      "id": 54,
+      "name": "geom_54",
       "body_id": 23,
       "type": "mesh",
       "group": 1,
@@ -1995,8 +1973,8 @@
       "conaffinity": 0
     },
     {
-      "id": 56,
-      "name": "geom_56",
+      "id": 55,
+      "name": "geom_55",
       "body_id": 23,
       "type": "mesh",
       "group": 1,
@@ -2027,8 +2005,8 @@
       "conaffinity": 0
     },
     {
-      "id": 57,
-      "name": "geom_57",
+      "id": 56,
+      "name": "geom_56",
       "body_id": 23,
       "type": "mesh",
       "group": 1,
@@ -2059,8 +2037,8 @@
       "conaffinity": 0
     },
     {
-      "id": 58,
-      "name": "geom_58",
+      "id": 57,
+      "name": "geom_57",
       "body_id": 23,
       "type": "mesh",
       "group": 1,
@@ -2091,8 +2069,8 @@
       "conaffinity": 0
     },
     {
-      "id": 59,
-      "name": "geom_59",
+      "id": 58,
+      "name": "geom_58",
       "body_id": 23,
       "type": "mesh",
       "group": 1,
@@ -2123,8 +2101,8 @@
       "conaffinity": 0
     },
     {
-      "id": 60,
-      "name": "geom_60",
+      "id": 59,
+      "name": "geom_59",
       "body_id": 23,
       "type": "mesh",
       "group": 1,
@@ -2155,8 +2133,8 @@
       "conaffinity": 0
     },
     {
-      "id": 61,
-      "name": "geom_61",
+      "id": 60,
+      "name": "geom_60",
       "body_id": 23,
       "type": "mesh",
       "group": 1,
@@ -2187,8 +2165,8 @@
       "conaffinity": 0
     },
     {
-      "id": 62,
-      "name": "geom_62",
+      "id": 61,
+      "name": "geom_61",
       "body_id": 23,
       "type": "mesh",
       "group": 1,
@@ -2219,8 +2197,8 @@
       "conaffinity": 0
     },
     {
-      "id": 63,
-      "name": "geom_63",
+      "id": 62,
+      "name": "geom_62",
       "body_id": 23,
       "type": "mesh",
       "group": 1,
@@ -2251,8 +2229,8 @@
       "conaffinity": 0
     },
     {
-      "id": 64,
-      "name": "geom_64",
+      "id": 63,
+      "name": "geom_63",
       "body_id": 23,
       "type": "mesh",
       "group": 1,
@@ -2283,7 +2261,7 @@
       "conaffinity": 0
     },
     {
-      "id": 65,
+      "id": 64,
       "name": "collision_r_hand_plate",
       "body_id": 23,
       "type": "box",
@@ -2315,8 +2293,8 @@
       "conaffinity": 1
     },
     {
-      "id": 66,
-      "name": "geom_66",
+      "id": 65,
+      "name": "geom_65",
       "body_id": 24,
       "type": "mesh",
       "group": 1,
@@ -2347,8 +2325,8 @@
       "conaffinity": 0
     },
     {
-      "id": 67,
-      "name": "geom_67",
+      "id": 66,
+      "name": "geom_66",
       "body_id": 25,
       "type": "mesh",
       "group": 1,
@@ -2379,8 +2357,8 @@
       "conaffinity": 0
     },
     {
-      "id": 68,
-      "name": "geom_68",
+      "id": 67,
+      "name": "geom_67",
       "body_id": 26,
       "type": "mesh",
       "group": 1,
@@ -2411,7 +2389,7 @@
       "conaffinity": 0
     },
     {
-      "id": 69,
+      "id": 68,
       "name": "collision_capsule_body_l_thigh",
       "body_id": 26,
       "type": "capsule",
@@ -2443,8 +2421,8 @@
       "conaffinity": 1
     },
     {
-      "id": 70,
-      "name": "geom_70",
+      "id": 69,
+      "name": "geom_69",
       "body_id": 27,
       "type": "mesh",
       "group": 1,
@@ -2475,7 +2453,7 @@
       "conaffinity": 0
     },
     {
-      "id": 71,
+      "id": 70,
       "name": "collision_capsule_body_l_shin",
       "body_id": 27,
       "type": "capsule",
@@ -2507,8 +2485,8 @@
       "conaffinity": 1
     },
     {
-      "id": 72,
-      "name": "geom_72",
+      "id": 71,
+      "name": "geom_71",
       "body_id": 28,
       "type": "mesh",
       "group": 1,
@@ -2539,8 +2517,8 @@
       "conaffinity": 0
     },
     {
-      "id": 73,
-      "name": "geom_73",
+      "id": 72,
+      "name": "geom_72",
       "body_id": 29,
       "type": "mesh",
       "group": 1,
@@ -2571,7 +2549,7 @@
       "conaffinity": 0
     },
     {
-      "id": 74,
+      "id": 73,
       "name": "collision_l_sole",
       "body_id": 29,
       "type": "box",
@@ -2603,8 +2581,8 @@
       "conaffinity": 1
     },
     {
-      "id": 75,
-      "name": "geom_75",
+      "id": 74,
+      "name": "geom_74",
       "body_id": 30,
       "type": "mesh",
       "group": 1,
@@ -2635,8 +2613,8 @@
       "conaffinity": 0
     },
     {
-      "id": 76,
-      "name": "geom_76",
+      "id": 75,
+      "name": "geom_75",
       "body_id": 31,
       "type": "mesh",
       "group": 1,
@@ -2667,8 +2645,8 @@
       "conaffinity": 0
     },
     {
-      "id": 77,
-      "name": "geom_77",
+      "id": 76,
+      "name": "geom_76",
       "body_id": 32,
       "type": "mesh",
       "group": 1,
@@ -2699,7 +2677,7 @@
       "conaffinity": 0
     },
     {
-      "id": 78,
+      "id": 77,
       "name": "collision_capsule_body_r_thigh",
       "body_id": 32,
       "type": "capsule",
@@ -2731,8 +2709,8 @@
       "conaffinity": 1
     },
     {
-      "id": 79,
-      "name": "geom_79",
+      "id": 78,
+      "name": "geom_78",
       "body_id": 33,
       "type": "mesh",
       "group": 1,
@@ -2763,7 +2741,7 @@
       "conaffinity": 0
     },
     {
-      "id": 80,
+      "id": 79,
       "name": "collision_capsule_body_r_shin",
       "body_id": 33,
       "type": "capsule",
@@ -2795,8 +2773,8 @@
       "conaffinity": 1
     },
     {
-      "id": 81,
-      "name": "geom_81",
+      "id": 80,
+      "name": "geom_80",
       "body_id": 34,
       "type": "mesh",
       "group": 1,
@@ -2827,8 +2805,8 @@
       "conaffinity": 0
     },
     {
-      "id": 82,
-      "name": "geom_82",
+      "id": 81,
+      "name": "geom_81",
       "body_id": 35,
       "type": "mesh",
       "group": 1,
@@ -2859,7 +2837,7 @@
       "conaffinity": 0
     },
     {
-      "id": 83,
+      "id": 82,
       "name": "collision_r_sole",
       "body_id": 35,
       "type": "box",
@@ -2891,7 +2869,7 @@
       "conaffinity": 1
     },
     {
-      "id": 84,
+      "id": 83,
       "name": "switch_handle",
       "body_id": 37,
       "type": "box",
@@ -2921,6 +2899,102 @@
       ],
       "contype": 1,
       "conaffinity": 1
+    },
+    {
+      "id": 84,
+      "name": "switch_label",
+      "body_id": 38,
+      "type": "box",
+      "group": 1,
+      "mesh_id": null,
+      "position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.01,
+        0.08,
+        0.015
+      ],
+      "rgba": [
+        0.7099999785423279,
+        0.699999988079071,
+        0.6299999952316284,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
+    },
+    {
+      "id": 85,
+      "name": "rotor_disc",
+      "body_id": 39,
+      "type": "cylinder",
+      "group": 1,
+      "mesh_id": null,
+      "position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.12,
+        0.02,
+        0.0
+      ],
+      "rgba": [
+        0.7599999904632568,
+        0.5099999904632568,
+        0.20000000298023224,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
+    },
+    {
+      "id": 86,
+      "name": "rotor_pointer",
+      "body_id": 39,
+      "type": "box",
+      "group": 1,
+      "mesh_id": null,
+      "position": [
+        0.09,
+        0.0,
+        0.035
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size": [
+        0.055,
+        0.012,
+        0.012
+      ],
+      "rgba": [
+        0.12999999523162842,
+        0.17000000178813934,
+        0.17000000178813934,
+        1.0
+      ],
+      "contype": 0,
+      "conaffinity": 0
     }
   ],
   "meshes": [

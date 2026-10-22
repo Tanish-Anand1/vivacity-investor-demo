@@ -13,7 +13,7 @@ from pathlib import Path
 from starlette.requests import HTTPConnection
 from .templates import TemplateSelection, TemplateCatalog, catalog, resolve
 from .v_robotics import RoboticsProgramCatalog, RoboticsExperimentReport, catalog as robotics_catalog, experiment_report as robotics_report
-from .humanoids import HumanoidModelResponse, HumanoidTrialRequest, HumanoidTrialResponse, HumanoidTrialService, model_info as humanoid_model_info
+from .humanoids import HumanoidFramesResponse, HumanoidModelResponse, HumanoidTrialRequest, HumanoidTrialResponse, HumanoidTrialService, model_info as humanoid_model_info
 from .workspace import owner as workspace_owner
 
 
@@ -141,6 +141,23 @@ def create_app(database=None):
     @app.get('/v1/robotics/humanoids/experiments/{trial_id}', response_model=HumanoidTrialResponse)
     def get_humanoid(trial_id: str, x_workspace_token: HumanoidToken):
         return app.state.humanoids.get(workspace_owner(x_workspace_token), trial_id)
+
+    @app.get('/v1/robotics/humanoids/experiments/{trial_id}/frames', response_model=HumanoidFramesResponse)
+    def humanoid_frames(trial_id: str, x_workspace_token: HumanoidToken,
+                        cursor: int = Query(default=0, ge=0), limit: int = Query(default=32, ge=1, le=64)):
+        return app.state.humanoids.frames(workspace_owner(x_workspace_token), trial_id, cursor, limit)
+
+    @app.post('/v1/robotics/humanoids/experiments/{trial_id}/pause', response_model=HumanoidTrialResponse)
+    def pause_humanoid(trial_id: str, x_workspace_token: HumanoidToken):
+        return app.state.humanoids.control(workspace_owner(x_workspace_token), trial_id, 'pause')
+
+    @app.post('/v1/robotics/humanoids/experiments/{trial_id}/resume', response_model=HumanoidTrialResponse)
+    def resume_humanoid(trial_id: str, x_workspace_token: HumanoidToken):
+        return app.state.humanoids.control(workspace_owner(x_workspace_token), trial_id, 'resume')
+
+    @app.post('/v1/robotics/humanoids/experiments/{trial_id}/cancel', response_model=HumanoidTrialResponse)
+    def cancel_humanoid(trial_id: str, x_workspace_token: HumanoidToken):
+        return app.state.humanoids.control(workspace_owner(x_workspace_token), trial_id, 'cancel')
 
     @app.get('/v1/robotics/humanoids/experiments/{trial_id}/replay')
     def replay_humanoid(trial_id: str, x_workspace_token: HumanoidToken):

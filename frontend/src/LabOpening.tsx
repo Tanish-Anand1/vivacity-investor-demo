@@ -21,7 +21,7 @@ export default function LabOpening({ config, finish }: { config: LabOpeningConfi
   const [media] = useState(() => {
     const portrait = window.matchMedia(PORTRAIT_QUERY).matches;
     const connection = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
-    const lite = (portrait && window.innerWidth <= 600) || connection?.saveData === true ||
+    const lite = connection?.saveData === true ||
       ['slow-2g', '2g', '3g'].includes(connection?.effectiveType ?? '');
     return { portrait, src: openingMediaSource(config, portrait, lite) };
   });
@@ -77,8 +77,8 @@ export default function LabOpening({ config, finish }: { config: LabOpeningConfi
       } else complete();
     }, OPENING_TIMELINE.loadGraceMs);
     let frame = 0;
-    const syncHandoff = () => {
-      const elapsed = element?.currentTime ?? 0;
+    let videoFrame = 0;
+    const setAperture = (elapsed: number) => {
       const progress = Math.max(0, Math.min(1,
         (elapsed - OPENING_TIMELINE.apertureStartSeconds) /
         (OPENING_TIMELINE.durationSeconds - OPENING_TIMELINE.apertureStartSeconds),
@@ -86,9 +86,20 @@ export default function LabOpening({ config, finish }: { config: LabOpeningConfi
       // Reveal the real homepage through the same central opening as the film.
       // Seeking backward resets the mask for production review.
       opening.current?.style.setProperty('--opening-aperture', `${50 * progress}%`);
-      frame = requestAnimationFrame(syncHandoff);
     };
-    frame = requestAnimationFrame(syncHandoff);
+    if (element && 'requestVideoFrameCallback' in element) {
+      const syncVideo = (_now: DOMHighResTimeStamp, metadata: VideoFrameCallbackMetadata) => {
+        setAperture(metadata.mediaTime);
+        videoFrame = element.requestVideoFrameCallback(syncVideo);
+      };
+      videoFrame = element.requestVideoFrameCallback(syncVideo);
+    } else {
+      const syncFallback = () => {
+        setAperture(video.current?.currentTime ?? 0);
+        frame = requestAnimationFrame(syncFallback);
+      };
+      frame = requestAnimationFrame(syncFallback);
+    }
     if (motion.matches) complete();
 
     return () => {
@@ -96,6 +107,7 @@ export default function LabOpening({ config, finish }: { config: LabOpeningConfi
       window.clearTimeout(loadGrace);
       if (finishTimer.current !== null) window.clearTimeout(finishTimer.current);
       cancelAnimationFrame(frame);
+      if (videoFrame) element?.cancelVideoFrameCallback(videoFrame);
       element?.pause();
       document.body.style.overflow = previousOverflow;
       if (!previouslyInert) home?.removeAttribute('inert');
