@@ -188,4 +188,29 @@ The browser journey verifies measured frame delivery, replay controls and JSON
 export, and the captured robot poses were inspected visually. There is not yet
 an automated canvas-to-simulator transform-registration test across every
 scene and camera.
+
+Reproduce the live browser run from the repository root on Windows. Run the
+three terminal blocks separately, after installing the repository's documented
+Python and frontend dependencies:
+
+```powershell
+.\.venv\Scripts\python.exe -m scripts.build_humanoid_models --output artifacts/physical-truth-binaries
+$env:VIVACITY_DATABASE='artifacts/physical-truth-repro.sqlite3'
+$env:VIVACITY_CORS_ORIGINS='http://127.0.0.1:5182'
+$env:VIVACITY_HUMANOID_MODEL_DIR=(Resolve-Path 'artifacts/physical-truth-binaries').Path
+.\.venv\Scripts\python.exe -m uvicorn vivacity.api:app --host 127.0.0.1 --port 8001
+```
+
+```powershell
+Set-Location frontend
+$env:VITE_API_BASE_URL='http://127.0.0.1:8001'
+npm run dev -- --port 5182 --strictPort
+```
+
+```powershell
+Set-Location frontend
+$env:VIVACITY_LIVE_URL='http://127.0.0.1:5182'
+.\node_modules\.bin\playwright.cmd test --config playwright.humanoid-live.config.ts
+```
+
 This branch has not been deployed.
