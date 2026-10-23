@@ -184,4 +184,8 @@ in the local SQLite artifact and are available through the replay endpoint.
 SHA-256 `098ebf8dabfea0d391eb90eaf061a6c4fbfbb94ca571f909a48965f7798eb54d`
 after decompression. It is evidence of the bounded fixture pickup only.
 The production build and live browser journey passed after the final changes.
+The browser journey verifies measured frame delivery, replay controls and JSON
+export, and the captured robot poses were inspected visually. There is not yet
+an automated canvas-to-simulator transform-registration test across every
+scene and camera.
 This branch has not been deployed.
