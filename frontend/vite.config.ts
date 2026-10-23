@@ -4,7 +4,12 @@ import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig(({mode})=>({
   plugins: [react(), tailwindcss()],
-  server: { host: '127.0.0.1', port: 5173, strictPort: true },
+  server: {
+    host: '127.0.0.1', port: 5173, strictPort: true,
+    // Playwright writes traces/screenshots while the dev server is open.
+    // Watching those artifacts caused page reloads in the middle of live trials.
+    watch: {ignored: ['**/test-results-live/**', '**/test-results-public/**']},
+  },
   preview:{proxy:{'/runtime':{
     target:loadEnv(mode,'.','VITE_').VITE_API_BASE_URL??'http://127.0.0.1:8000',
     changeOrigin:true,rewrite:path=>path.replace(/^\/runtime/,'')

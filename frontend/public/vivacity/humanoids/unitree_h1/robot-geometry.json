@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "source": "compiled_mujoco_model",
   "simulator_version": "3.15.0",
-  "model_hash": "ba6b6ac86dfd810c2c22868e6592075ce58c8e3b41a257dcd250a5a6bf39f12f",
+  "model_hash": "a10e612d7ed10903ac99befa4cddfe398f608755a866c9925f51e7fc82c5900d",
   "config": {
     "robot_id": "unitree_h1"
   },

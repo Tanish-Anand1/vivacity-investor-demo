@@ -1,0 +1,261 @@
+{
+  "schema_version": "vivacity.physical-truth-browser-evidence/1.0",
+  "source": "Final local serial Playwright journey with precompiled MuJoCo models and fresh SQLite; not a hosted or hardware trial",
+  "trials": [
+    {
+      "action": "pickup_place",
+      "compute_wall_s": 12.973220300045796,
+      "controller": "bilateral_ik_contact_gated_rigid_grasp",
+      "destination_error_m": 0.10073362601490883,
+      "effective_physics": {
+        "floor_contact_priority": 2,
+        "floor_sliding_friction": 0.8,
+        "grasp_model": "contact_gated_single_wrist_weld",
+        "gravity_m_s2": [
+          0.0,
+          0.0,
+          -9.81
+        ],
+        "parcel_collision_size_m": [
+          0.18,
+          0.18,
+          0.16
+        ],
+        "parcel_mass_kg": 0.5,
+        "parcel_principal_inertia_kg_m2": [
+          0.0024166666666666664,
+          0.0024166666666666664,
+          0.0026999999999999997
+        ],
+        "timestep_s": 0.002
+      },
+      "failure_reason": null,
+      "goal_error_m": null,
+      "machine_shaft_travel_rad": null,
+      "model_hash": "efd02e1ca290a61e859baeb8ea2036512d6605533df965aed751395244743967",
+      "observed_floor_sliding_friction_range": [
+        0.8,
+        0.8
+      ],
+      "robot_id": "unitree_g1",
+      "seed": 7,
+      "simulation_steps": 4000,
+      "status": "completed",
+      "submitted_parameters": {
+        "floor_friction": 0.8,
+        "goal_distance_m": 0.9,
+        "parcel_mass_kg": 0.5,
+        "switch_stiffness_n_m_rad": 8.0
+      },
+      "task_success": true
+    },
+    {
+      "action": "pickup_place",
+      "compute_wall_s": 4.141548300045542,
+      "controller": "bilateral_ik_contact_gated_rigid_grasp",
+      "destination_error_m": 0.393591630251225,
+      "effective_physics": {
+        "floor_contact_priority": 2,
+        "floor_sliding_friction": 0.8,
+        "grasp_model": "contact_gated_single_wrist_weld",
+        "gravity_m_s2": [
+          0.0,
+          0.0,
+          -9.81
+        ],
+        "parcel_collision_size_m": [
+          0.18,
+          0.18,
+          0.16
+        ],
+        "parcel_mass_kg": 2.0,
+        "parcel_principal_inertia_kg_m2": [
+          0.009666666666666665,
+          0.009666666666666665,
+          0.010799999999999999
+        ],
+        "timestep_s": 0.002
+      },
+      "failure_reason": "prohibited_robot_contact",
+      "goal_error_m": null,
+      "machine_shaft_travel_rad": null,
+      "model_hash": "4c4d062700d936c3514e2ce115d81d03841eceb813f7f17a2fbf6075f198449c",
+      "observed_floor_sliding_friction_range": [
+        0.8,
+        0.8
+      ],
+      "robot_id": "unitree_g1",
+      "seed": 7,
+      "simulation_steps": 1916,
+      "status": "completed",
+      "submitted_parameters": {
+        "floor_friction": 0.8,
+        "goal_distance_m": 0.9,
+        "parcel_mass_kg": 2.0,
+        "switch_stiffness_n_m_rad": 8.0
+      },
+      "task_success": false
+    },
+    {
+      "action": "walk_to_goal",
+      "compute_wall_s": 2.8212094000191428,
+      "controller": "unitree_recurrent_policy_numpy_pd",
+      "destination_error_m": null,
+      "effective_physics": {
+        "floor_contact_priority": 2,
+        "floor_sliding_friction": 0.8,
+        "gravity_m_s2": [
+          0.0,
+          0.0,
+          -9.81
+        ],
+        "threshold_collision_size_m": [
+          0.12,
+          1.24,
+          0.015
+        ],
+        "timestep_s": 0.002
+      },
+      "failure_reason": null,
+      "goal_error_m": 0.013219394169341954,
+      "machine_shaft_travel_rad": null,
+      "model_hash": "a10e612d7ed10903ac99befa4cddfe398f608755a866c9925f51e7fc82c5900d",
+      "observed_floor_sliding_friction_range": [
+        0.8,
+        0.8
+      ],
+      "robot_id": "unitree_h1",
+      "seed": 7,
+      "simulation_steps": 3536,
+      "status": "completed",
+      "submitted_parameters": {
+        "floor_friction": 0.8,
+        "goal_distance_m": 0.9,
+        "parcel_mass_kg": 0.5,
+        "switch_stiffness_n_m_rad": 8.0
+      },
+      "task_success": true
+    },
+    {
+      "action": "service_machine",
+      "compute_wall_s": 1.1537015999783762,
+      "controller": "damped_least_squares_contact_gated_machine_cycle",
+      "destination_error_m": null,
+      "effective_physics": {
+        "floor_contact_priority": 2,
+        "floor_sliding_friction": 0.8,
+        "gravity_m_s2": [
+          0.0,
+          0.0,
+          -9.81
+        ],
+        "switch_stiffness_n_m_rad": 8.0,
+        "switch_y_m": -0.18,
+        "timestep_s": 0.005
+      },
+      "failure_reason": null,
+      "goal_error_m": null,
+      "machine_shaft_travel_rad": 9.056249974292864,
+      "model_hash": "65a6bc9e7e5d445f172f4b069023eefbf0b97d84a136bd42094ad2fbfb8fe688",
+      "observed_floor_sliding_friction_range": [
+        0.8,
+        0.8
+      ],
+      "robot_id": "apptronik_apollo",
+      "seed": 7,
+      "simulation_steps": 753,
+      "status": "completed",
+      "submitted_parameters": {
+        "floor_friction": 0.8,
+        "goal_distance_m": 0.9,
+        "parcel_mass_kg": 0.5,
+        "switch_stiffness_n_m_rad": 8.0
+      },
+      "task_success": true
+    },
+    {
+      "action": "service_machine",
+      "compute_wall_s": 1.3588571000145748,
+      "controller": "damped_least_squares_contact_gated_machine_cycle",
+      "destination_error_m": null,
+      "effective_physics": {
+        "floor_contact_priority": 2,
+        "floor_sliding_friction": 0.8,
+        "gravity_m_s2": [
+          0.0,
+          0.0,
+          -9.81
+        ],
+        "switch_stiffness_n_m_rad": 16.0,
+        "switch_y_m": -0.18,
+        "timestep_s": 0.005
+      },
+      "failure_reason": "switch_not_actuated",
+      "goal_error_m": null,
+      "machine_shaft_travel_rad": 0.0,
+      "model_hash": "2fcf749ec20a1e42a276e2275fad53e6a50294d38b608075311c4c19af6014dd",
+      "observed_floor_sliding_friction_range": [
+        0.8,
+        0.8
+      ],
+      "robot_id": "apptronik_apollo",
+      "seed": 7,
+      "simulation_steps": 641,
+      "status": "completed",
+      "submitted_parameters": {
+        "floor_friction": 0.8,
+        "goal_distance_m": 0.9,
+        "parcel_mass_kg": 0.5,
+        "switch_stiffness_n_m_rad": 16.0
+      },
+      "task_success": false
+    },
+    {
+      "action": "pickup_place",
+      "compute_wall_s": 6.417325500049628,
+      "controller": "bilateral_ik_contact_gated_rigid_grasp",
+      "destination_error_m": 0.10073362601490883,
+      "effective_physics": {
+        "floor_contact_priority": 2,
+        "floor_sliding_friction": 0.8,
+        "grasp_model": "contact_gated_single_wrist_weld",
+        "gravity_m_s2": [
+          0.0,
+          0.0,
+          -9.81
+        ],
+        "parcel_collision_size_m": [
+          0.18,
+          0.18,
+          0.16
+        ],
+        "parcel_mass_kg": 0.5,
+        "parcel_principal_inertia_kg_m2": [
+          0.0024166666666666664,
+          0.0024166666666666664,
+          0.0026999999999999997
+        ],
+        "timestep_s": 0.002
+      },
+      "failure_reason": null,
+      "goal_error_m": null,
+      "machine_shaft_travel_rad": null,
+      "model_hash": "efd02e1ca290a61e859baeb8ea2036512d6605533df965aed751395244743967",
+      "observed_floor_sliding_friction_range": [
+        0.8,
+        0.8
+      ],
+      "robot_id": "unitree_g1",
+      "seed": 7,
+      "simulation_steps": 4000,
+      "status": "completed",
+      "submitted_parameters": {
+        "floor_friction": 0.8,
+        "goal_distance_m": 0.9,
+        "parcel_mass_kg": 0.5,
+        "switch_stiffness_n_m_rad": 8.0
+      },
+      "task_success": true
+    }
+  ]
+}

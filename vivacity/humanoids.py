@@ -21,7 +21,7 @@ import xml.etree.ElementTree as ET
 
 import mujoco as mj
 import numpy as np
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from .storage import Store, encode
 
@@ -36,6 +36,7 @@ STATE = mj.mjtState.mjSTATE_INTEGRATION
 
 
 class HumanoidTrialRequest(BaseModel):
+    model_config = ConfigDict(extra='forbid', allow_inf_nan=False)
     robot_id: str
     action: str = Field(default='attempt_task', pattern='^(attempt_task|hold_stance|pickup_place|walk_to_goal|service_machine)$')
     duration_s: float = Field(default=2.0, ge=.5, le=3.0)
@@ -154,7 +155,7 @@ def _scene(root, robot_id, friction, parcel_mass, switch_y, switch_stiffness):
     ET.SubElement(world, 'light', name='lab_key', pos='-2 -3 5', dir='.3 .4 -1', diffuse='0.95 0.95 0.93')
     ET.SubElement(world, 'geom', name='floor', type='plane', size='8 8 0.05',
                   rgba='.31 .34 .34 1', friction=f'{friction} 0.005 0.0001',
-                  contype='1', conaffinity='1')
+                  priority='2', contype='1', conaffinity='1')
     if robot_id == 'unitree_g1':
         # Keep the approach lane and camera sightline clear; racks are behind
         # the robot and remain genuine collision geometry.
@@ -263,6 +264,13 @@ def _configured_tree(robot_id: str, floor_friction: float, parcel_mass_kg: float
             if contacts is None:
                 contacts = ET.SubElement(root, 'contact')
             contacts.extend(deepcopy(list(scene_contacts)))
+            # Explicit Apollo sole/floor pairs ignore both geoms' friction.
+            # Set their tangential coefficients in the authoritative MJCF.
+            for pair in contacts.findall('pair'):
+                if pair.get('geom2') == 'floor' and pair.get('geom1') in (
+                        'collision_l_sole', 'collision_r_sole'):
+                    pair.set('friction',
+                             f'{floor_friction} {floor_friction} 0.01 0.0001 0.0001')
         # Apollo's default class disables general contacts. Its named collision
         # geoms may contact world objects (contype 1) without turning on robot
         # self-collision; the original sole-floor pairs remain in place.
@@ -334,8 +342,22 @@ def compiled_model(robot_id: str, floor_friction: float = .8, parcel_mass_kg: fl
     if robot_id not in MODELS:
         raise ValueError('Unknown humanoid model')
     model = mj.MjModel.from_binary_path(str(_verified_binary_path(robot_id, directory)))
-    if floor_friction != .8:
-        model.geom_friction[model.geom('floor').id, 0] = floor_friction
+    # MuJoCo takes the elementwise MAX when equal-priority geoms touch. G1
+    # soles have priority 1 and H1 soles have friction 1.0; priority 2 makes
+    # this floor setting reach their actual contact solver. Apollo has
+    # explicit sole/floor pairs, patched separately below.
+    floor_id = model.geom('floor').id
+    model.geom_friction[floor_id, 0] = floor_friction
+    model.geom_priority[floor_id] = 2
+    if robot_id == 'apptronik_apollo':
+        for index in range(model.npair):
+            pair_geoms = (int(model.pair_geom1[index]), int(model.pair_geom2[index]))
+            if floor_id not in pair_geoms:
+                continue
+            sole = pair_geoms[1] if pair_geoms[0] == floor_id else pair_geoms[0]
+            if mj.mj_id2name(model, mj.mjtObj.mjOBJ_GEOM, sole) in (
+                    'collision_l_sole', 'collision_r_sole'):
+                model.pair_friction[index, :2] = floor_friction
     if robot_id == 'apptronik_apollo':
         model.body_pos[model.body('control_switch').id, 1] = switch_y_m
         model.body_pos[model.body('switch_label_mount').id, 1] = switch_y_m
@@ -349,6 +371,40 @@ def compiled_model(robot_id: str, floor_friction: float = .8, parcel_mass_kg: fl
         mj.mj_setConst(model, mj.MjData(model))
     return model, configured_digest(robot_id, floor_friction, parcel_mass_kg,
                                     switch_y_m, switch_stiffness_n_m_rad)
+
+
+def effective_physics(model: mj.MjModel, robot_id: str) -> dict:
+    """Read the executed model, not merely the submitted slider settings."""
+    floor = model.geom('floor').id
+    values = {
+        'floor_sliding_friction': float(model.geom_friction[floor, 0]),
+        'floor_contact_priority': int(model.geom_priority[floor]),
+        'gravity_m_s2': model.opt.gravity.tolist(),
+        'timestep_s': float(model.opt.timestep),
+    }
+    if robot_id == 'unitree_g1':
+        parcel = model.body('parcel').id
+        box = model.geom('parcel_box').id
+        values.update(parcel_mass_kg=float(model.body_mass[parcel]),
+                      parcel_principal_inertia_kg_m2=model.body_inertia[parcel].tolist(),
+                      parcel_collision_size_m=(2 * model.geom_size[box]).tolist(),
+                      grasp_model='contact_gated_single_wrist_weld')
+    elif robot_id == 'apptronik_apollo':
+        switch = model.body('control_switch').id
+        hinge = model.joint('switch_hinge').id
+        values.update(switch_y_m=float(model.body_pos[switch, 1]),
+                      switch_stiffness_n_m_rad=float(model.jnt_stiffness[hinge]))
+    elif robot_id == 'unitree_h1':
+        threshold = model.geom('low_threshold').id
+        values['threshold_collision_size_m'] = (2 * model.geom_size[threshold]).tolist()
+    return values
+
+
+def floor_contact_friction(model: mj.MjModel, data: mj.MjData) -> list[float]:
+    """Sliding coefficients on active floor contacts after MuJoCo mixing."""
+    floor = model.geom('floor').id
+    return [float(contact.friction[0]) for contact in data.contact[:data.ncon]
+            if contact.dist <= 0 and floor in (int(contact.geom1), int(contact.geom2))]
 
 
 def initial_data(model):
@@ -392,7 +448,7 @@ def model_info(robot_id):
             'geometry_url': f'/vivacity/humanoids/{robot_id}/robot-geometry.json',
             'task_scope': ('Stationary parcel pickup and placement uses bilateral hand contact and a contact-gated rigid grasp fixture. Walking is not part of this task.'
                            if robot_id == 'unitree_g1' else
-                           'Stationary machine service requires physical switch contact, motor response, and arm retraction.'
+                           'Stationary switch actuation probe verifies hand contact, motor response, and arm retraction. Cabinet servicing is not implemented.'
                            if robot_id == 'apptronik_apollo' else
                            'Short bounded walk uses Unitree\'s matched 10-actuator recurrent policy; completion requires goal, balance, contacts, and a stable stop.')}
 
@@ -616,6 +672,7 @@ def simulate(request: HumanoidTrialRequest, *, on_frame=None, checkpoint=None):
     return {'schema_version': 'vivacity.humanoid-trial/1.0', 'robot_id': request.robot_id,
             'environment_id': MODELS[request.robot_id][2], 'action': request.action,
             'parameters': request.model_dump(), 'seed': request.seed,
+            'effective_physics': effective_physics(model, request.robot_id),
             'controller': 'bounded_joint_position_probe', 'policy_sha256': None,
             'model_hash': digest, 'scene_geometry_hash': scene_geometry_hash,
             'simulator_version': mj.__version__,
@@ -638,6 +695,8 @@ def simulate(request: HumanoidTrialRequest, *, on_frame=None, checkpoint=None):
 
 
 class HumanoidTrialService:
+    FRAME_BATCH_SIZE = 16
+
     def __init__(self, store: Store):
         self.store = store
         self.executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix='humanoid-physics')
@@ -768,7 +827,10 @@ class HumanoidTrialService:
                 measured['machine_shaft_angle_rad'] = frame['machine_shaft_angle_rad']
             if measured:
                 record['partial_measurements'] = measured
-            if len(pending) >= 2 or steps == 0:
+            # A transaction per two frames dominated actual H1 physics time
+            # on the local SQLite volume. Persist the initial pose and first
+            # measured motion promptly, then batch the longer trace.
+            if len(pending) >= self.FRAME_BATCH_SIZE or next_seq <= 2:
                 flush()
 
         try:

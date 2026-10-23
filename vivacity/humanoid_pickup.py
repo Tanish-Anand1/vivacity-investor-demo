@@ -17,7 +17,8 @@ import numpy as np
 
 from .humanoids import (
     STATE, HumanoidTrialRequest, _actuator_target, _frame, _solve_position_ik,
-    compiled_model, configured_digest, initial_data,
+    compiled_model, configured_digest, effective_physics, floor_contact_friction,
+    initial_data,
 )
 
 
@@ -172,6 +173,7 @@ def simulate_pickup(request: HumanoidTrialRequest, *, on_frame=None, checkpoint=
     peak_joint_delta = 0.
     peak_contact = {'left': 0., 'right': 0.}
     contact_samples = 0
+    floor_friction_samples = []
     prohibited_contacts = set()
     limited_joints = np.flatnonzero(model.jnt_limited)
     joint_qadrs = model.jnt_qposadr[limited_joints]
@@ -231,6 +233,7 @@ def simulate_pickup(request: HumanoidTrialRequest, *, on_frame=None, checkpoint=
         prohibited_contacts.update(violations)
         saw_floor_drop |= floor_drop
         if (step+1) % sample_stride == 0 or step == max_steps-1:
+            floor_friction_samples.extend(floor_contact_friction(model, data))
             frame = _frame(model, data)
             frame['phase'] = phase
             frame['parcel_position_m'] = parcel.tolist()
@@ -334,6 +337,7 @@ def simulate_pickup(request: HumanoidTrialRequest, *, on_frame=None, checkpoint=
         'schema_version': 'vivacity.humanoid-trial/1.0',
         'robot_id': 'unitree_g1', 'environment_id': 'warehouse_logistics',
         'action': 'pickup_place', 'parameters': request.model_dump(),
+        'effective_physics': effective_physics(model, 'unitree_g1'),
         'seed': request.seed, 'model_hash': digest,
         'controller': 'bilateral_ik_contact_gated_rigid_grasp',
         'policy_sha256': None,
@@ -360,6 +364,9 @@ def simulate_pickup(request: HumanoidTrialRequest, *, on_frame=None, checkpoint=
             'final_base_position_m': data.qpos[:3].tolist(),
             'fallen': minimum_base_height < .7 or maximum_tilt > .4,
             'contact_force_peak_n': peak_contact,
+            'observed_floor_sliding_friction_range':
+                [min(floor_friction_samples), max(floor_friction_samples)]
+                if floor_friction_samples else None,
             'grasp_constraint_pose_jump_m': constraint_jump_m,
             'release_time_s': released_at,
             'support_contact_samples_after_release': support_samples_after_release,
