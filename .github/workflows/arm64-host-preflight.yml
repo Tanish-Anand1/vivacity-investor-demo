@@ -1,0 +1,32 @@
+name: ARM64 no-cost host preflight
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native-arm64:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the unchanged deployment image on ARM64
+        run: docker build --tag vivacity-runtime:arm64 .
+      - name: Exercise native models, checkpoints and HTTP in a bounded container
+        run: |
+          mkdir -p artifacts/arm64
+          docker run --rm --memory=8g --memory-swap=8g \
+            -e PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 \
+            -v "$PWD/tests:/app/tests:ro" -v "$PWD/artifacts/arm64:/verification" \
+            vivacity-runtime:arm64 python -m pytest --noconftest \
+            /app/tests/test_execution_checkpoint.py \
+            /app/tests/test_cabinet_mechanism.py \
+            /app/tests/test_apollo_execution.py::test_apollo_adapter_forks_independent_full_native_state_and_classifies_scope \
+            /app/tests/test_api.py::test_cors_and_openapi \
+            -q --junitxml=/verification/arm64-native.xml
+      - name: Preserve executed evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: arm64-native-preflight
+          path: artifacts/arm64/arm64-native.xml
+          retention-days: 14

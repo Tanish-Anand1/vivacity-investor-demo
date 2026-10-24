@@ -113,6 +113,18 @@ disposable runtime was disconnected. See `training/README.md` and
 Paid hosting and training remain unfulfilled release requirements, not implied
 authorizations. The following paid quote is retained only as historical context.
 
+At zero new spend, Render Free cannot qualify for the requested persistent,
+always-available release: it spins down after idle time and cannot attach a
+persistent disk ([Render Free limitations](https://render.com/docs/free)).
+Oracle's [Always Free A1 allowance](https://docs.oracle.com/en-us/iaas/Content/FreeTier/freetier_topic-Always_Free_Resources.htm)
+advertises 2 OCPUs, 12 GB RAM and free block storage; availability depends on
+the account's home region and idle instances can be reclaimed. MuJoCo 3.15.0
+publishes a Linux ARM64 wheel. The manual `.github/workflows/arm64-host-preflight.yml`
+checks whether the unchanged deployment image and native smoke tests work on a
+free public-repository ARM64 runner. That CI check is **not** a production-host
+capacity test, a provisioned Oracle account or a 24-hour soak. No qualifying
+no-cost host has yet been demonstrated.
+
 Runpod sign-in is complete. The observed 2026-10-24 quote is one A40 with 48 GB
 VRAM, 43 GB RAM and 9 vCPU: $0.59/hour compute plus $0.007/hour container disk
 (50 GB, no persistent volume). The first requested approval is a $2 ceiling for
