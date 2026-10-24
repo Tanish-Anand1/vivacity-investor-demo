@@ -9,7 +9,8 @@ import numpy as np
 
 from .h1_policy import ACTION_SCALE, DEFAULT_ANGLES, H1Policy, KD, KP, SOURCE_COMMIT, observation, policy_hash
 from .humanoids import (STATE, HumanoidTrialRequest, _frame, _terrain_foot_contacts,
-                        compiled_model, configured_digest, initial_data)
+                        compiled_model, configured_digest, effective_physics,
+                        floor_contact_friction, initial_data)
 
 
 def _integration_state(model, data):
@@ -37,6 +38,7 @@ def simulate_walk(request: HumanoidTrialRequest, *, on_frame=None, checkpoint=No
     peak_slip = 0.
     support_slip_samples = []
     foot_samples = 0
+    floor_friction_samples = []
     threshold_contact_samples = 0
     peak_joint_delta = 0.
     achieved_at = None
@@ -94,6 +96,7 @@ def simulate_walk(request: HumanoidTrialRequest, *, on_frame=None, checkpoint=No
             achieved_at = None
             phase = 'walk'
         if step_count % sample_stride == 0 or step_count == max_steps:
+            floor_friction_samples.extend(floor_contact_friction(model, data))
             mj.mj_forward(model, data)
             frame = _frame(model, data)
             frame['phase'] = phase
@@ -129,6 +132,7 @@ def simulate_walk(request: HumanoidTrialRequest, *, on_frame=None, checkpoint=No
         'schema_version': 'vivacity.humanoid-trial/1.0', 'robot_id': 'unitree_h1',
         'environment_id': 'terrain_mobility', 'action': request.action,
         'parameters': request.model_dump(), 'seed': request.seed,
+        'effective_physics': effective_physics(model, 'unitree_h1'),
         'model_hash': digest, 'scene_geometry_hash': configured_digest('unitree_h1'),
         'policy_sha256': policy_hash(), 'policy_source_commit': SOURCE_COMMIT,
         'controller': 'unitree_recurrent_policy_numpy_pd',
@@ -151,6 +155,9 @@ def simulate_walk(request: HumanoidTrialRequest, *, on_frame=None, checkpoint=No
             'switch_activation_time_s': None,
             'maximum_foot_slip_m_s': peak_slip,
             'p95_support_foot_slip_m_s': p95_slip if np.isfinite(p95_slip) else None,
+            'observed_floor_sliding_friction_range':
+                [min(floor_friction_samples), max(floor_friction_samples)]
+                if floor_friction_samples else None,
             'threshold_contact_samples': threshold_contact_samples,
             'final_base_position_m': data.qpos[:3].tolist(),
             'goal_error_m': final_error, 'stable_stop_duration_s':

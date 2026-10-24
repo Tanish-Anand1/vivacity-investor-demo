@@ -9179,6 +9179,7 @@
             "default": 7
           }
         },
+        "additionalProperties": false,
         "type": "object",
         "required": [
           "robot_id"

@@ -9,7 +9,7 @@ import numpy as np
 
 from .humanoids import (STATE, HumanoidTrialRequest, _actuator_target, _control,
                         _frame, _reach_plan, compiled_model, configured_digest,
-                        initial_data)
+                        effective_physics, floor_contact_friction, initial_data)
 
 
 def _integration_state(model, data):
@@ -57,6 +57,7 @@ def simulate_machine(request: HumanoidTrialRequest, *, on_frame=None, checkpoint
     minimum_height = float(data.qpos[2])
     maximum_tilt = 0.
     contact_samples = 0
+    floor_friction_samples = []
     shaft_travel = 0.
     peak_shaft_speed = 0.
     phase = 'approach'
@@ -107,6 +108,7 @@ def simulate_machine(request: HumanoidTrialRequest, *, on_frame=None, checkpoint
             retract_start = data.ctrl.copy()
             phase = 'retract'
         if step_count % sample_stride == 0 or step_count == max_steps:
+            floor_friction_samples.extend(floor_contact_friction(model, data))
             mj.mj_forward(model, data)
             frame = _frame(model, data)
             frame['phase'] = phase
@@ -145,6 +147,7 @@ def simulate_machine(request: HumanoidTrialRequest, *, on_frame=None, checkpoint
         'schema_version': 'vivacity.humanoid-trial/1.0', 'robot_id': 'apptronik_apollo',
         'environment_id': 'industrial_maintenance', 'action': 'service_machine',
         'parameters': request.model_dump(), 'seed': request.seed,
+        'effective_physics': effective_physics(model, 'apptronik_apollo'),
         'model_hash': digest, 'scene_geometry_hash': configured_digest('apptronik_apollo'),
         'controller': 'damped_least_squares_contact_gated_machine_cycle',
         'policy_sha256': None,
@@ -167,6 +170,9 @@ def simulate_machine(request: HumanoidTrialRequest, *, on_frame=None, checkpoint
             'switch_activation_time_s': activated_at,
             'maximum_foot_slip_m_s': None,
             'peak_hand_switch_contact_force_n': peak_force,
+            'observed_floor_sliding_friction_range':
+                [min(floor_friction_samples), max(floor_friction_samples)]
+                if floor_friction_samples else None,
             'machine_shaft_travel_rad': shaft_travel,
             'peak_machine_shaft_speed_rad_s': peak_shaft_speed,
             'final_hand_switch_distance_m': hand_distance,

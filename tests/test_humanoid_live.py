@@ -1,6 +1,7 @@
 """The live-trial transport exposes only committed simulator frames."""
 
 import time
+from threading import Event
 
 from fastapi.testclient import TestClient
 
@@ -100,6 +101,37 @@ def test_cancelled_trial_retains_partial_frames(monkeypatch, tmp_path):
         assert cancelled['result'] is None
         assert client.get(prefix+'/frames', headers=OWNER).json()['frames']
         assert client.get(prefix+'/replay', headers=OWNER).status_code == 409
+
+
+def test_short_trial_publishes_measured_motion_before_completion(monkeypatch, tmp_path):
+    delivered = Event()
+    release = Event()
+
+    def short_simulation(request, *, on_frame, checkpoint):
+        first = {'time_s': 0., 'phase': 'initial', 'qpos': [0.]}
+        moving = {'time_s': .05, 'phase': 'moving', 'qpos': [.1]}
+        on_frame(first, 0)
+        checkpoint()
+        on_frame(moving, 25)
+        delivered.set()
+        assert release.wait(3)
+        return {'frames': [first, moving], 'task_success': False,
+                'robot_id': request.robot_id, 'measurements': {'simulation_steps': 25}}
+
+    monkeypatch.setattr(humanoids, 'simulate', short_simulation)
+    with TestClient(create_app(database=tmp_path / 'short.sqlite3')) as client:
+        trial_id = client.post('/v1/robotics/humanoids/experiments', headers=OWNER,
+                               json={'robot_id': 'unitree_g1', 'duration_s': .5}).json()['id']
+        prefix = f'/v1/robotics/humanoids/experiments/{trial_id}'
+        try:
+            assert delivered.wait(3)
+            live = client.get(prefix+'/frames', headers=OWNER).json()
+            assert live['status'] == 'running'
+            assert [entry['seq'] for entry in live['frames']] == [0, 1]
+            assert live['frames'][1]['frame']['qpos'] == [.1]
+        finally:
+            release.set()
+        until(lambda: client.get(prefix, headers=OWNER).json()['status'] == 'completed')
 
 
 def test_pause_resume_preserves_real_mujoco_trace(monkeypatch, tmp_path):

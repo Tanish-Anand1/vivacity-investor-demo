@@ -100,7 +100,7 @@ def test_apollo_machine_service_requires_contact_motor_response_and_retraction()
     assert first['measurements']['final_hand_switch_distance_m'] >= .1
     assert first['final_integration_state'] == second['final_integration_state']
     stiff = simulate(HumanoidTrialRequest(robot_id='apptronik_apollo', action='service_machine',
-                                          movement_scale=1, switch_stiffness_n_m_rad=14))
+                                          movement_scale=1, switch_stiffness_n_m_rad=16))
     assert not stiff['task_success'] and stiff['failure_reason'] == 'switch_not_actuated'
     assert stiff['measurements']['machine_shaft_travel_rad'] == 0
     shifted = simulate(HumanoidTrialRequest(robot_id='apptronik_apollo', action='service_machine',
@@ -165,6 +165,8 @@ def test_background_api_owner_isolation_validation_persistence_and_replay(tmp_pa
         assert client.get('/v1/robotics/humanoids/models/panda').status_code == 422
         assert client.post('/v1/robotics/humanoids/experiments', headers=TOKEN,
                            json={'robot_id': 'unitree_g1', 'duration_s': 8}).status_code == 422
+        assert client.post('/v1/robotics/humanoids/experiments', headers=TOKEN,
+                           json={'robot_id': 'unitree_g1', 'fictional_grip_strength': 100}).status_code == 422
         assert client.post('/v1/robotics/humanoids/experiments',
                            json={'robot_id': 'unitree_g1'}).status_code == 422
         submitted = client.post('/v1/robotics/humanoids/experiments', headers=TOKEN,
@@ -179,6 +181,7 @@ def test_background_api_owner_isolation_validation_persistence_and_replay(tmp_pa
             time.sleep(.05)
         assert current['status'] == 'completed', current.get('error')
         assert current['result']['measurements']['simulation_steps'] == 250
+        assert current['result']['effective_physics']['floor_sliding_friction'] == pytest.approx(.8)
         assert client.get('/v1/robotics/humanoids/experiments?robot_id=unitree_g1', headers=TOKEN).json()[0]['id'] == trial_id
         replay = client.get(f'/v1/robotics/humanoids/experiments/{trial_id}/replay', headers=TOKEN)
         assert replay.status_code == 200

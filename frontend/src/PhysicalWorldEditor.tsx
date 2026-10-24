@@ -102,7 +102,7 @@ export default function PhysicalWorldEditor({world,selected,select,disabled,edit
   };
   return <section className="physical-world-editor" aria-labelledby="physical-editor-heading">
     <div className="section-heading"><h2 id="physical-editor-heading">Physical world editor</h2><button type="button" className="icon-button" onClick={close} aria-label="Close world editor">×</button></div>
-    <p className="small">World version {world.revision}. Each applied edit rebuilds MuJoCo geometry or dynamics and makes prior experiment results stale.</p>
+    <p className="small">World version {world.revision}. Each applied edit rebuilds the physical scene and makes prior experiment results stale.</p>
     {loading&&<p role="status">Loading supported physical properties…</p>}
     {error&&<p className="negative" role="alert">{error}</p>}
     {editor&&<>
