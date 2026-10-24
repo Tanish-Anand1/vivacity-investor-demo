@@ -6,6 +6,19 @@ Historical sorting reference: `8d785b9`. Work is isolated from unrelated local f
 Outcome: reproducible, inspectable physical tasks with truthful success and failure
 classification, followed by two independently verified production releases.
 
+The current branch also routes Apollo's experimental latch-and-door primitive
+through the G1 transactional worker. Three new tests passed in two local runs:
+2/2 covered full-state restore and real HTTP live/pause/fork/cancel/replay, and
+1/1 completed a real HTTP partial-door trial with measured latch and door motion.
+The API result sets `cabinet_service_complete: false`. This does not change the
+wide-door, cartridge-service, warehouse or production release gates below.
+The cabinet friction parameter now reaches every native fixture/cartridge service
+surface instead of leaving the door, handle and trays at their default. Nine
+cabinet mechanism tests pass locally, including the new compiled-contact check.
+After the fixture source changed, the combined Apollo adapter and original door
+regression passed 12/12 in 297.57 seconds. The existing generic checkpoint/API
+regression passed 11/11 in 129.58 seconds, and the frontend build passed.
+
 ## Release order and acceptance
 
 The Physical Truth release precedes all opening changes. No existing acceptance

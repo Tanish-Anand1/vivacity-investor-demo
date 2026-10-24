@@ -950,6 +950,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/robotics/contact/apollo-door-experiments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Start Apollo Door */
+        post: operations["start_apollo_door_v1_robotics_contact_apollo_door_experiments_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/robotics/contact/experiments/{identifier}": {
         parameters: {
             query?: never;
@@ -1907,6 +1924,31 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** ApolloDoorRequest */
+        ApolloDoorRequest: {
+            /**
+             * Schema Version
+             * @default vivacity.apollo-door-request/1
+             * @constant
+             */
+            schema_version: "vivacity.apollo-door-request/1";
+            config?: components["schemas"]["ApolloDoorSettings"];
+        };
+        /** ApolloDoorSettings */
+        ApolloDoorSettings: {
+            cabinet?: components["schemas"]["CabinetConfig"];
+            tooling?: components["schemas"]["ParallelGripperConfig"];
+            /**
+             * Opening Angle Rad
+             * @default 0.25
+             */
+            opening_angle_rad: number;
+            /**
+             * Seed
+             * @default 7
+             */
+            seed: number;
+        };
         /**
          * AssemblySettings
          * @description Bounded single-part fixture seating, expressed in SI units.
@@ -2223,6 +2265,52 @@ export interface components {
             byte_offset: number;
             /** Count */
             count: number;
+        };
+        /** CabinetConfig */
+        CabinetConfig: {
+            /**
+             * Front X M
+             * @default 0.6
+             */
+            front_x_m: number;
+            /**
+             * Center Y M
+             * @default 0
+             */
+            center_y_m: number;
+            /**
+             * Cartridge Dimensions M
+             * @default [
+             *       0.2,
+             *       0.15,
+             *       0.12
+             *     ]
+             */
+            cartridge_dimensions_m: [
+                number,
+                number,
+                number
+            ];
+            /**
+             * Cartridge Mass Kg
+             * @default 0.35
+             */
+            cartridge_mass_kg: number;
+            /**
+             * Latch Stiffness N M
+             * @default 300
+             */
+            latch_stiffness_n_m: number;
+            /**
+             * Retention Stiffness N M
+             * @default 500
+             */
+            retention_stiffness_n_m: number;
+            /**
+             * Contact Friction
+             * @default 0.6
+             */
+            contact_friction: number;
         };
         /** CaptureReference */
         CaptureReference: {
@@ -4071,6 +4159,24 @@ export interface components {
             /** Item Ids */
             item_ids: string[];
             settings: components["schemas"]["FactorySettings"];
+        };
+        /** ParallelGripperConfig */
+        ParallelGripperConfig: {
+            /**
+             * Finger Force N
+             * @default 40
+             */
+            finger_force_n: number;
+            /**
+             * Sliding Friction
+             * @default 0.8
+             */
+            sliding_friction: number;
+            /**
+             * Position Stiffness N M
+             * @default 800
+             */
+            position_stiffness_n_m: number;
         };
         /** PhysicsSettings */
         PhysicsSettings: {
@@ -7515,6 +7621,41 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["ContactRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JobResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    start_apollo_door_v1_robotics_contact_apollo_door_experiments_post: {
+        parameters: {
+            query?: never;
+            header: {
+                "x-workspace-token": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApolloDoorRequest"];
             };
         };
         responses: {

@@ -3837,6 +3837,61 @@
         }
       }
     },
+    "/v1/robotics/contact/apollo-door-experiments": {
+      "post": {
+        "tags": [
+          "Experimental contact execution"
+        ],
+        "summary": "Start Apollo Door",
+        "operationId": "start_apollo_door_v1_robotics_contact_apollo_door_experiments_post",
+        "parameters": [
+          {
+            "name": "x-workspace-token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 32,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "title": "X-Workspace-Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApolloDoorRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/robotics/contact/experiments/{identifier}": {
       "get": {
         "tags": [
@@ -6565,6 +6620,49 @@
   },
   "components": {
     "schemas": {
+      "ApolloDoorRequest": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "const": "vivacity.apollo-door-request/1",
+            "title": "Schema Version",
+            "default": "vivacity.apollo-door-request/1"
+          },
+          "config": {
+            "$ref": "#/components/schemas/ApolloDoorSettings"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "ApolloDoorRequest"
+      },
+      "ApolloDoorSettings": {
+        "properties": {
+          "cabinet": {
+            "$ref": "#/components/schemas/CabinetConfig"
+          },
+          "tooling": {
+            "$ref": "#/components/schemas/ParallelGripperConfig"
+          },
+          "opening_angle_rad": {
+            "type": "number",
+            "maximum": 1.2,
+            "minimum": 0.25,
+            "title": "Opening Angle Rad",
+            "default": 0.25
+          },
+          "seed": {
+            "type": "integer",
+            "maximum": 2147483647.0,
+            "minimum": 0.0,
+            "title": "Seed",
+            "default": 7
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "ApolloDoorSettings"
+      },
       "AssemblySettings": {
         "properties": {
           "arm_speed_rad_s": {
@@ -7167,6 +7265,77 @@
           "count"
         ],
         "title": "BufferRange"
+      },
+      "CabinetConfig": {
+        "properties": {
+          "front_x_m": {
+            "type": "number",
+            "maximum": 1.2,
+            "minimum": 0.5,
+            "title": "Front X M",
+            "default": 0.6
+          },
+          "center_y_m": {
+            "type": "number",
+            "maximum": 0.3,
+            "minimum": -0.3,
+            "title": "Center Y M",
+            "default": 0.0
+          },
+          "cartridge_dimensions_m": {
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "type": "array",
+            "maxItems": 3,
+            "minItems": 3,
+            "title": "Cartridge Dimensions M",
+            "default": [
+              0.2,
+              0.15,
+              0.12
+            ]
+          },
+          "cartridge_mass_kg": {
+            "type": "number",
+            "maximum": 2.0,
+            "minimum": 0.05,
+            "title": "Cartridge Mass Kg",
+            "default": 0.35
+          },
+          "latch_stiffness_n_m": {
+            "type": "number",
+            "maximum": 4000.0,
+            "minimum": 50.0,
+            "title": "Latch Stiffness N M",
+            "default": 300.0
+          },
+          "retention_stiffness_n_m": {
+            "type": "number",
+            "maximum": 4000.0,
+            "minimum": 50.0,
+            "title": "Retention Stiffness N M",
+            "default": 500.0
+          },
+          "contact_friction": {
+            "type": "number",
+            "maximum": 1.5,
+            "minimum": 0.05,
+            "title": "Contact Friction",
+            "default": 0.6
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "CabinetConfig"
       },
       "CaptureReference": {
         "properties": {
@@ -11451,6 +11620,34 @@
           "settings"
         ],
         "title": "OrderRequest"
+      },
+      "ParallelGripperConfig": {
+        "properties": {
+          "finger_force_n": {
+            "type": "number",
+            "maximum": 60.0,
+            "minimum": 1.0,
+            "title": "Finger Force N",
+            "default": 40.0
+          },
+          "sliding_friction": {
+            "type": "number",
+            "maximum": 1.5,
+            "minimum": 0.001,
+            "title": "Sliding Friction",
+            "default": 0.8
+          },
+          "position_stiffness_n_m": {
+            "type": "number",
+            "maximum": 4000.0,
+            "minimum": 200.0,
+            "title": "Position Stiffness N M",
+            "default": 800.0
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "ParallelGripperConfig"
       },
       "PhysicsSettings": {
         "properties": {

@@ -39,6 +39,7 @@ Other owners receive 404. Capability discovery is public.
 | --- | --- | --- |
 | GET | `/capabilities` | Experimental status and native parameter definitions |
 | POST | `/experiments` | Validate and queue an independent native world |
+| POST | `/apollo-door-experiments` | Queue the experimental Apollo latch-and-door primitive through the same worker |
 | GET | `/experiments?limit=20` | Owner-scoped saved trials, newest first |
 | GET | `/experiments/{id}` | Persisted state, measured progress and outcome |
 | GET | `/experiments/{id}/frames?cursor=0&limit=32` | Ordered committed frames; maximum page size 64 |
@@ -117,6 +118,28 @@ replay, export and changed-condition trials. The three-engine journey passed at
 `f3d9817`, including actual WebGL2, network interruption, cancellation and direct
 final-frame history loading. Each changed physics revision still requires a new
 integration pass. Loading the route makes read-only requests only.
+
+### Apollo door research through the shared contract
+
+`POST /v1/robotics/contact/apollo-door-experiments` accepts a versioned request:
+
+```json
+{"schema_version":"vivacity.apollo-door-request/1","config":{
+  "cabinet":{"front_x_m":0.75,"latch_stiffness_n_m":300},
+  "tooling":{"finger_force_n":40},"opening_angle_rad":0.25,"seed":7}}
+```
+
+Omitted nested fields use validated model defaults. The experimental flag and
+owner token requirements are identical to the G1 route. The response is a
+`vivacity.checkpoint-job/1` record with `task: apollo_door_primitive`; use its ID
+with the existing status, frames, pause, resume, cancel, checkpoint, scene,
+meshes, fork, compare, replay and export endpoints above. Frames contain actual
+MuJoCo body transforms, phase and mechanism measurements. Results explicitly set
+`cabinet_service_complete: false`, even when the latch-and-door primitive passes.
+Opening requests up to 1.2 rad are accepted as experiments, but the wide-opening
+controller has not passed acceptance. A failed wide request remains a failed run;
+it never substitutes the verified 0.25 rad partial goal. No cabinet control is
+exposed in the current visitor UI.
 
 ## Geometry and physical meaning
 

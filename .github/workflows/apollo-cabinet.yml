@@ -4,6 +4,9 @@ on:
     branches: [codex/physical-truth-runtime]
     paths:
       - vivacity/apollo_door.py
+      - vivacity/apollo_execution.py
+      - vivacity/api.py
+      - vivacity/execution_api.py
       - vivacity/cabinet_mechanism.py
       - vivacity/cabinet_tooling.py
       - vivacity/cabinet_route.py
@@ -12,6 +15,7 @@ on:
       - vivacity/simulated_tooling.py
       - vivacity/stance_control.py
       - tests/test_apollo_door.py
+      - tests/test_apollo_execution.py
       - tests/test_cabinet_tooling.py
       - tests/test_cabinet_route.py
       - tests/test_joint_reserve_ik.py
@@ -33,7 +37,8 @@ jobs:
             -e PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 \
             -v "$PWD/tests:/app/tests:ro" -v "$PWD/artifacts/apollo-cabinet:/verification" \
             vivacity-cabinet:verification python -u -m pytest --noconftest \
-            /app/tests/test_apollo_door.py /app/tests/test_joint_reserve_ik.py \
+            /app/tests/test_apollo_door.py /app/tests/test_apollo_execution.py \
+            /app/tests/test_joint_reserve_ik.py \
             /app/tests/test_simulated_tooling.py /app/tests/test_cabinet_mechanism.py \
             /app/tests/test_cabinet_tooling.py /app/tests/test_cabinet_route.py \
             -q --durations=10 --junitxml=/verification/apollo-components.xml

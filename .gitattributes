@@ -11,6 +11,7 @@ vivacity/simulated_tooling.py text eol=lf
 vivacity/stance_control.py text eol=lf
 vivacity/humanoid_ik.py text eol=lf
 vivacity/apollo_door.py text eol=lf
+vivacity/apollo_execution.py text eol=lf
 vivacity/cabinet_mechanism.py text eol=lf
 vivacity/cabinet_tooling.py text eol=lf
 vivacity/cabinet_route.py text eol=lf

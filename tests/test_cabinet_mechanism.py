@@ -141,6 +141,25 @@ def test_dimensions_mass_and_spring_resistance_reach_compiled_model_and_invalid_
     assert model.body('service_old_cartridge').mass[0] == pytest.approx(.8)
 
 
+def test_cabinet_contact_friction_reaches_every_native_service_surface_and_contact():
+    observed = []
+    for friction in (.15, 1.3):
+        model = compile_fixture(CabinetConfig(contact_friction=friction))
+        data = mj.MjData(model)
+        surfaces = [model.geom(index) for index in range(model.ngeom)
+                    if (model.geom(index).name or '').startswith('service_')]
+        assert len(surfaces) > 30
+        assert all(geom.friction[0] == pytest.approx(friction) for geom in surfaces)
+        step(model, data, .2)
+        contacts = [contact for contact in data.contact[:data.ncon]
+                    if {'service_old_shell', 'service_shelf'} ==
+                    {model.geom(contact.geom1).name, model.geom(contact.geom2).name}]
+        assert contacts
+        observed.append(float(contacts[0].friction[0]))
+    assert observed[0] == pytest.approx(.15)
+    assert observed[1] == pytest.approx(1.3)
+
+
 def test_full_native_fixture_state_restores_independently_with_contact_forces():
     config = CabinetConfig()
     model = with_ram(config, 'latch')

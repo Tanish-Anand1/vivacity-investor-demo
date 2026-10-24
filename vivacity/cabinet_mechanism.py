@@ -140,6 +140,11 @@ def append_cabinet(root: ET.Element, config: CabinetConfig):
         _box(body, f'service_{identity}_shell', (0, 0, 0), half,
              mass=config.cartridge_mass_kg, rgba='.50 .38 .21 1' if identity == 'old' else '.28 .52 .57 1',
              friction=config.contact_friction)
+    # All fixture and cartridge contact surfaces share the exposed cabinet
+    # friction setting. Tool-pad friction is a separate gripper parameter.
+    for geom in root.findall('.//geom'):
+        if (geom.get('name') or '').startswith('service_'):
+            geom.set('friction', f'{config.contact_friction} .002 .0001')
     return cabinet
 
 

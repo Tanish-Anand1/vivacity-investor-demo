@@ -28,8 +28,11 @@ def create_app(database=None):
         app.state.contact_execution = None
         if os.getenv('VIVACITY_EXPERIMENTAL_CONTACT_TASKS', '0') == '1':
             from .execution_service import ExecutionService, BimanualAdapter, ConstrainedBimanualAdapter
+            from .apollo_execution import ApolloDoorAdapter
             app.state.contact_execution = ExecutionService(app.state.runtime.store,
-                {'g1_stationary_bimanual': BimanualAdapter(), 'g1_constrained_carton': ConstrainedBimanualAdapter()},
+                {'g1_stationary_bimanual': BimanualAdapter(),
+                 'g1_constrained_carton': ConstrainedBimanualAdapter(),
+                 'apollo_door_primitive': ApolloDoorAdapter()},
                 executor=app.state.humanoids.executor)
         app.state.imports = app.state.runtime.imports
         from .workspace import WorkspaceService

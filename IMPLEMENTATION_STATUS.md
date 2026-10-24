@@ -1,5 +1,24 @@
 ## Verified Physical Truth baselines — 2026-10-24
 
+### Apollo shared-execution integration — 2026-10-24
+
+The opt-in `/v1/robotics/contact/apollo-door-experiments` route now runs the
+existing Apollo latch-and-door primitive through the same transactional
+checkpoint worker as the G1 contact tasks. Real HTTP tests verified ordered live
+MuJoCo frames, owner-scoped pause, independent fork, cancellation, comparison,
+export and replay. A separate end-to-end HTTP trial reached the measured partial
+door goal: the latch retracted more than 35 mm and the door opened more than
+0.20 rad. Its result explicitly reports `cabinet_service_complete: false`.
+Three new tests passed in two runs (2/2 and 1/1); the latter native trial took
+110.12 seconds. This adds a reusable execution path, not full cartridge service,
+wide-door acceptance, warehouse execution or production deployment.
+Cabinet `contact_friction` now changes all native service surfaces, including the
+door and handle. The compiled-contact check and all eight existing mechanism
+checks passed together: **9/9** locally.
+After that source change, the combined Apollo execution and original door
+regression passed **12/12 in 297.57 seconds**; generic checkpoint/API regressions
+passed **11/11 in 129.58 seconds**. The frontend production build passed.
+
 **The full directive is incomplete and has not been deployed.** Work remains on
 the isolated `codex/physical-truth-runtime` branch. The opening is unchanged.
 

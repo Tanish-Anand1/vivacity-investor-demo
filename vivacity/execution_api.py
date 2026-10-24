@@ -12,6 +12,7 @@ from fastapi import APIRouter, Depends, Header, HTTPException, Query, Request, R
 from pydantic import BaseModel, ConfigDict, Field
 
 from .bimanual import BimanualConfig
+from .apollo_execution import ApolloDoorSettings
 from .execution_checkpoint import Checkpoint
 from .execution_service import AdmissionRejected
 from .physical_parameters import parameter_manifest
@@ -28,6 +29,12 @@ class ContactRequest(BaseModel):
     schema_version: Literal['vivacity.contact-request/1'] = 'vivacity.contact-request/1'
     task: Literal['g1_stationary_bimanual', 'g1_constrained_carton'] = 'g1_stationary_bimanual'
     config: BimanualConfig = Field(default_factory=BimanualConfig)
+
+
+class ApolloDoorRequest(BaseModel):
+    model_config = ConfigDict(extra='forbid')
+    schema_version: Literal['vivacity.apollo-door-request/1'] = 'vivacity.apollo-door-request/1'
+    config: ApolloDoorSettings = Field(default_factory=ApolloDoorSettings)
 
 
 class JobResponse(BaseModel):
@@ -148,7 +155,11 @@ def capabilities(request: Request):
                        'scope': 'Stationary contact-only carton transfer. Whole-body inverse dynamics, locomotion, camera-controlled operation and hardware validation have not passed release gates.'},
                       {'id':'g1_constrained_carton', 'embodiment':'unitree_g1_with_hands',
                        'tooling':'native articulated hands', 'motion_source':'native MuJoCo steps',
-                       'scope':'Experimental constrained contact-wrench controller using the unchanged native actuator model. Full robustness, locomotion, camera control and hardware release gates remain open.'}],
+                       'scope':'Experimental constrained contact-wrench controller using the unchanged native actuator model. Full robustness, locomotion, camera control and hardware release gates remain open.'},
+                      {'id':'apollo_door_primitive', 'embodiment':'apptronik_apollo_with_service_tools',
+                       'tooling':'two visible force-limited grippers; optional left swivel',
+                       'motion_source':'native MuJoCo steps',
+                       'scope':'Experimental latch and door opening only. Cartridge exchange and full cabinet service are not validated.'}],
             'parcel_parameters': parameter_manifest(), 'task_parameters':contact_parameter_manifest()}
 
 
@@ -156,6 +167,16 @@ def capabilities(request: Request):
 def start(body: ContactRequest, request: Request, x_workspace_token: Token, service=Depends(runtime)):
     try:
         return service.submit(owner(x_workspace_token), admission_key(request), body.task, body.config.model_dump())
+    except AdmissionRejected as exc:
+        raise HTTPException(429, str(exc), headers={'Retry-After':'60'}) from exc
+
+
+@router.post('/apollo-door-experiments', response_model=JobResponse, status_code=202)
+def start_apollo_door(body: ApolloDoorRequest, request: Request, x_workspace_token: Token,
+                      service=Depends(runtime)):
+    try:
+        return service.submit(owner(x_workspace_token), admission_key(request),
+                              'apollo_door_primitive', body.config.model_dump())
     except AdmissionRejected as exc:
         raise HTTPException(429, str(exc), headers={'Retry-After':'60'}) from exc
 
