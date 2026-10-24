@@ -24,10 +24,12 @@ def stage_commands(stage, fractions):
     return path[indices] * (1-blend[:, None]) + path[indices+1] * blend[:, None]
 
 
-def joint_route(start, goal, limits, valid, rng, iterations, checkpoint=None):
+def joint_route(start, goal, limits, valid, rng, iterations, checkpoint=None, *, edge_resolution=.05):
     """RRT with deterministic shortcutting; every accepted edge is checked."""
+    if not np.isfinite(edge_resolution) or not .0005<=edge_resolution<=.05:
+        raise ValueError('edge resolution must be finite and within 0.0005..0.05')
     def edge(a, b):
-        return all(valid(a+(b-a)*t) for t in np.linspace(0, 1, max(2, int(np.linalg.norm(b-a)/.05)+1)))
+        return all(valid(a+(b-a)*t) for t in np.linspace(0, 1, max(2, int(np.linalg.norm(b-a)/edge_resolution)+1)))
     if not valid(start) or not valid(goal):
         return None
     if edge(start, goal):

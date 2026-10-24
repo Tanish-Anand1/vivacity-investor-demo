@@ -48,7 +48,10 @@ def test_door_primitive_checkpoint_preserves_feedback_and_independent_native_sta
 def test_wide_opening_keeps_its_distinct_model_and_never_substitutes_the_partial_goal():
     task=CabinetDoorPrimitive(opening_angle_rad=1.1)
     assert task.manifest['cabinet_fixture_profile']=='wide-opening-development'
-    assert task.manifest['identity']=='vivacity.apollo-cabinet-opposed-tools/1-experimental'
+    assert task.manifest['identity']=='vivacity.apollo-cabinet-swivel-tool/2-experimental'
+    assert task.model.nu==37
+    assert task.manifest['cabinet_tooling']['torque_range_nm']==[-3.,3.]
+    assert not task.manifest['cabinet_tooling']['hardware_validation']
     assert task.controller.wide_tooling
     assert task.state['opening_angle_rad']==1.1
     np.testing.assert_allclose(task.model.geom('service_latch_button').pos,[-.085,.4,.065])
@@ -65,11 +68,29 @@ def test_invalid_cartesian_integral_state_is_rejected():
     with pytest.raises(ValueError,match='integral'):
         task.controller.restore(state)
     state=deepcopy(task.controller.snapshot())
-    state['rotation_integrals']['l']=[.2,0.,0.]
+    state['stance']['commands'][0]=float('nan')
     before=task.controller.snapshot()
-    with pytest.raises(ValueError,match='angular integral'):
+    with pytest.raises(ValueError,match='stance checkpoint'):
         task.controller.restore(state)
     assert task.controller.snapshot()==before
+
+
+def test_swivel_embodiment_checkpoint_restores_independent_actuators_and_native_state():
+    task=CabinetDoorPrimitive(opening_angle_rad=1.1)
+    for _ in range(40):
+        task.step()
+    saved=task.snapshot()
+    branch=CabinetDoorPrimitive.from_checkpoint(saved)
+    assert branch.model.nu==37 and branch.controller.wide_tooling
+    for _ in range(20):
+        task.step()
+        branch.step()
+    np.testing.assert_array_equal(task.data.qpos,branch.data.qpos)
+    np.testing.assert_array_equal(task.data.qvel,branch.data.qvel)
+    assert task.controller.snapshot()==branch.controller.snapshot()
+    assert task.state==branch.state
+    branch.data.ctrl[branch.model.actuator('l_service_swivel_drive').id]=1.
+    assert not np.array_equal(task.data.ctrl,branch.data.ctrl)
 
 
 def test_failed_primitive_freezes_the_measured_state_and_is_not_a_service_success():

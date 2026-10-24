@@ -2,7 +2,14 @@ name: Complete embodiment MJX preflight
 on:
   push:
     branches: [codex/physical-truth-runtime]
-    paths: ['training/**', '.github/workflows/locomotion-preflight.yml']
+    paths:
+      - training/preflight.py
+      - training/requirements*
+      - training/gpu_pilot.sh
+      - training/runpod_guard.py
+      - training/tests/**
+      - training/colab_compatibility.ipynb
+      - .github/workflows/locomotion-preflight.yml
   workflow_dispatch:
 permissions:
   contents: read

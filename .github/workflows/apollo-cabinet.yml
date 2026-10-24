@@ -5,10 +5,15 @@ on:
     paths:
       - vivacity/apollo_door.py
       - vivacity/cabinet_mechanism.py
+      - vivacity/cabinet_tooling.py
+      - vivacity/cabinet_route.py
+      - vivacity/pickup_planning.py
       - vivacity/humanoid_ik.py
       - vivacity/simulated_tooling.py
       - vivacity/stance_control.py
       - tests/test_apollo_door.py
+      - tests/test_cabinet_tooling.py
+      - tests/test_cabinet_route.py
       - tests/test_joint_reserve_ik.py
       - .github/workflows/apollo-cabinet.yml
   workflow_dispatch:
@@ -30,6 +35,7 @@ jobs:
             vivacity-cabinet:verification python -u -m pytest --noconftest \
             /app/tests/test_apollo_door.py /app/tests/test_joint_reserve_ik.py \
             /app/tests/test_simulated_tooling.py /app/tests/test_cabinet_mechanism.py \
+            /app/tests/test_cabinet_tooling.py /app/tests/test_cabinet_route.py \
             -q --durations=10 --junitxml=/verification/apollo-components.xml
       - uses: actions/upload-artifact@v4
         if: always()
