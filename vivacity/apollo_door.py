@@ -105,7 +105,7 @@ class ApolloToolController:
 
 
 class CabinetDoorPrimitive:
-    version = 'vivacity.apollo-door-primitive/7-experimental'
+    version = 'vivacity.apollo-door-primitive/8-experimental'
 
     def __init__(self, config=None, tooling=None, seed=7, opening_angle_rad=.25):
         if not np.isfinite(opening_angle_rad) or not .25 <= opening_angle_rad <= 1.2:
@@ -142,13 +142,20 @@ class CabinetDoorPrimitive:
             phase_events=[],planning_events=[],stable_samples=0,peak_tilt_rad=0.,peak_contact_force_n=0.,peak_gripper_actuator_force_n=0.,
             peak_swivel_torque_nm=0.,
             phase_start_qpos=self.data.qpos.tolist(),reference=self.model.key_qpos[0].tolist(),
-            goals={},start_goals={},grip_forces={},model_manifest=self.manifest)
+            goals={},start_goals={},grip_forces={},model_manifest=self.manifest,
+            wide_grasp_tracking=None)
 
     def _tool_rotation(self, side, vertical=False):
         # A vertical pinch lets the latch button yaw between the pads while the
         # door swings. Horizontal pinch would demand an unreachable wrist yaw.
         # Native friction/contact still decides whether this grasp is retained.
         return TOOL_ROTATIONS['r'] if side=='l' and (vertical or self.controller.wide_tooling) else TOOL_ROTATIONS[side]
+
+    def _wide_grasp_pose(self, angle):
+        grasp=self.state['wide_grasp_tracking']
+        return {'position':(np.asarray(grasp['hinge_position'])+
+            Rotation.from_rotvec([0.,0.,-angle]).apply(grasp['button_in_door'])+
+            grasp['tcp_offset_world']).tolist(),'rotation':deepcopy(grasp['rotation'])}
 
     def _plan(self, phase):
         x,y = self.config.front_x_m,self.config.center_y_m
@@ -208,6 +215,20 @@ class CabinetDoorPrimitive:
                     goals[side] = {'position':(hinge+rotation @ relative).tolist(),
                         'rotation':(TOOL_ROTATIONS[side] if side=='r' else
                                     rotation @ TOOL_ROTATIONS[side]).tolist()}
+            if phase=='open_wide':
+                # The spring-return latch is no longer at the initial 50 mm
+                # pull after parking. Derive the held grasp from actual native
+                # geometry; using that old offset jumped the target by 46 mm.
+                current=float(self.data.joint('service_door_hinge').qpos[0])
+                button=self.data.geom('service_latch_button').xpos.copy()
+                site=self.data.site('l_service_tcp')
+                self.state['wide_grasp_tracking']={
+                    'hinge_position':hinge.tolist(),
+                    'button_in_door':Rotation.from_rotvec([0.,0.,current]).apply(button-hinge).tolist(),
+                    'tcp_offset_world':(site.xpos-button).tolist(),
+                    'rotation':site.xmat.reshape(3,3).tolist(),
+                    'initial_latch_retraction_m':float(self.data.joint('service_latch_slide').qpos[0])}
+                goals['l']=self._wide_grasp_pose(angle)
         elif phase == 'release_right':
             # Release before moving the wrist. Dragging a loaded upper pad
             # rotates the door into the finger while the other hand holds it.
@@ -234,8 +255,7 @@ class CabinetDoorPrimitive:
                 positions=[site.xpos+[dx,dy,dz] for dx in (-.025,-.05)
                            for dy in (-.03,0.,.03) for dz in (-.03,0.,.03)]
             else:
-                positions=[[x-dx,y+dy,z] for dx in (.25,.30,.35,.40)
-                           for dy in (-.25,-.20,-.15) for z in (1.2,1.3,1.4)]
+                positions=[]  # Parking uses a joint-space route to the rest posture.
             tools=[i for i in range(self.model.ngeom)
                    if ((self.model.geom(i).name or '').startswith('r_service_') or
                        ((self.model.geom(i).name or '').startswith('collision_') and
@@ -498,11 +518,7 @@ class CabinetDoorPrimitive:
             if phase == 'open_wide':
                 angle = self.state['start_door_angle_rad']+blend*(
                     self.state['opening_angle_rad']-self.state['start_door_angle_rad'])
-                hinge = np.array([self.config.front_x_m,self.config.center_y_m+.28,1.1])
-                wrist = self._tool_rotation('l',True)
-                tracking['l'] = {'position':(hinge+Rotation.from_rotvec([0.,0.,-angle]).apply(
-                    [-.085,-.085,.065])+wrist @ np.array([0.,0.,LATCH_TCP_STANDOFF_M])).tolist(),
-                    'rotation':wrist.tolist()}
+                tracking['l']=self._wide_grasp_pose(angle)
         try:
             released = ('r',) if phase in ('release_right','withdraw_right','park_right','open_wide') else (
                 ('l',) if phase in ('release_left','withdraw_left','rotate_left','insert_left') else ())

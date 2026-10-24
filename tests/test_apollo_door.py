@@ -87,6 +87,45 @@ def test_transient_zero_pad_force_is_not_a_physical_release():
     assert not task._grasp_separated('r','l',measured)
 
 
+def test_wide_door_trajectory_starts_at_the_measured_spring_returned_grasp():
+    import mujoco as mj
+
+    from vivacity.cabinet_mechanism import CabinetConfig
+    from vivacity.simulated_tooling import ParallelGripperConfig
+
+    fixture=json.loads((Path(__file__).parent/'fixtures'/'apollo_parked_grasp.json').read_text())
+    task=CabinetDoorPrimitive(CabinetConfig(front_x_m=.65),
+        ParallelGripperConfig(position_stiffness_n_m=2400.),opening_angle_rad=1.1)
+    assert task.artifact.sha256==fixture['model_sha256']
+    # Set independent test initial conditions from the measured native trial.
+    # This is a kinematic regression, not a claim of checkpoint compatibility.
+    task.data.qpos[:]=fixture['qpos']
+    task.data.qvel[:]=fixture['qvel']
+    task.state.update(goals=fixture['goals'],reference=fixture['reference'],phase='park_right')
+    mj.mj_forward(task.model,task.data)
+    before=task.data.qpos.copy()
+    actual=task.data.site('l_service_tcp').xpos.copy()
+    orientation=task.data.site('l_service_tcp').xmat.reshape(3,3).copy()
+    angle=float(task.data.joint('service_door_hinge').qpos[0])
+    retraction=float(task.data.joint('service_latch_slide').qpos[0])
+    assert retraction<.015
+    task._plan('open_wide')
+    assert task.state['status']=='running',task.state.get('failure_detail')
+    target=task._wide_grasp_pose(angle)
+    np.testing.assert_allclose(target['position'],actual,atol=1e-12)
+    np.testing.assert_allclose(target['rotation'],orientation,atol=1e-12)
+    assert task.state['wide_grasp_tracking']['initial_latch_retraction_m']==retraction
+    np.testing.assert_array_equal(task.data.qpos,before)
+    # The terminal reference agrees with independently transformed native
+    # button geometry at the requested angle, retaining the real grasp offset.
+    scratch=mj.MjData(task.model)
+    scratch.qpos[:]=before
+    scratch.joint('service_door_hinge').qpos[0]=1.1
+    mj.mj_forward(task.model,scratch)
+    expected=scratch.geom('service_latch_button').xpos+task.state['wide_grasp_tracking']['tcp_offset_world']
+    np.testing.assert_allclose(task.state['goals']['l']['position'],expected,atol=1e-12)
+
+
 def test_wide_opening_retries_ik_from_prior_command_without_moving_live_state():
     import mujoco as mj
 
