@@ -3,10 +3,13 @@
 **The full directive is incomplete and has not been deployed.** Work remains on
 the isolated `codex/physical-truth-runtime` branch. The opening is unchanged.
 
-The Linux deployment-image suite at `cedf837` passed **485 tests with 3 skips and no failures**.
+The Linux deployment-image suite at `1eedec9` passed **495 tests with 3 skips and no failures**.
+The skips cover visual asset files excluded from the backend image. Executed
+JUnit reports and reasons are in `artifacts/physical-truth-runtime/backend-1eedec9/`.
 Separate constrained-host checks passed **4 general/factory tests and 1 humanoid
 capacity test**. Chromium, Firefox and WebKit passed the contact-lab journey at
-this revision. These results are linked in `docs/PHYSICAL_TRUTH_EXECUTION.md`.
+this revision, with 18 checks per journey and an inspected mobile screenshot.
+These results are linked in `docs/PHYSICAL_TRUTH_EXECUTION.md`.
 
 Each complete G1, Apollo and H1 embodiment passed **20/20 nominal and 100/100
 held-out stationary stabilization trials** at `cedf837`, plus its deliberate instability
@@ -15,8 +18,11 @@ horizontal disturbance and settling. It does not validate walking, carrying or
 cabinet service. Wrench controller v3 also passed 20/20 nominal and 100/100
 held-out stationary G1 contact trials at `8508e31`. Maximum placement error was
 11.591 mm; minimum steady hand share 39.086%. These results do not validate
-walking carry. The v4 constrained G1 cohort is still running; the updated stance
-cohorts have passed. Source hashes in each report define the tested implementation.
+walking carry. Wrench v4 at `cedf837` subsequently passed its own 20/20 nominal
+and 100/100 held-out trials: maximum placement error 11.773 mm, minimum steady
+hand share 39.026%, zero equality constraints and maximum actuator torque fraction
+1.0. Its source hashes match the current G1 implementation. The full report is
+retained in `artifacts/physical-truth-runtime/constrained-cedf837/`.
 
 A Linux-only enum comparison bug had skipped initial joint clamping and predictive
 joint-limit constraints. Integer-normalized comparisons and a near-limit braking
@@ -34,6 +40,12 @@ primitive has not passed the required 20/100 acceptance and is not exposed as
 complete cabinet service. Later wide-opening development runs remain failed
 evidence; their errors are being addressed before acceptance.
 
+The wide-tooling regression at `fa47720` broke two partial-door cases. After
+isolating those model/controller contracts, the Linux cabinet suite at `0b8f00d`
+passed **26 tests, zero failures or skips**, in 134.663 s. R31's actual partial-door
+trial reached 0.229296 rad and 52.347 mm latch retraction with a stable root.
+The wide opening and full service task remain experimental and incomplete.
+
 Model-matched locomotion, independent running, the shared warehouse, complete
 parameter coverage, perception-driven control, paid persistence, production
 release and soak remain open. No GPU or hosting purchase has been made.
@@ -41,9 +53,16 @@ release and soak remain open. No GPU or hosting purchase has been made.
 The isolated training lock now resolves CPU and CUDA dependencies at `c76abe1`.
 The three-step Apollo native/MJX numerical comparison passes. G1 and H1 retain
 explicit CPU MJX unsupported-collision failures. A Runpod A40 pilot is prepared
-with seven passing shutdown-guard tests and Linux shell validation; GPU execution
-is pending payment setup and the requested $2 pilot approval. Account access is
-working; no card information or credentials are stored in this repository.
+with seven passing shutdown-guard tests and Linux shell validation. The user
+subsequently set a **zero-spend** constraint; the paid proposal is not approved.
+The free Colab T4 probe completed: H1/G1 passed three-step native/MJX-Warp
+comparisons; Apollo passed through MJX-JAX with the same unchanged model.
+Apollo/Warp rejected its native contact margin, and that failure remains saved.
+H1 also reports a multi-contact limitation. Full logs, hashes and dependency
+records were exported and verified before the disposable runtime was disconnected.
+These are 6 ms compatibility checks, not trained policies or mobility acceptance.
+Reports: `artifacts/physical-truth-runtime/colab-t4-fa47720/`.
+No card information or credentials are stored in this repository.
 
 ## Earlier development records (superseded where described above)
 

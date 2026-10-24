@@ -1,0 +1,17 @@
+{
+  "date": "2026-10-24",
+  "gpu": "Tesla T4",
+  "memory_mib": 15360,
+  "driver": "580.82.07",
+  "python": "3.13.16",
+  "purchases": 0,
+  "runtime_disconnected_after_export": true,
+  "archive_sha256": "4697aaf1f81996dd69c72962b57bbe86302bac87e468cc689a805bc74291928f",
+  "scope": "Three native/GPU steps per selected robot; no training or task acceptance.",
+  "warnings": [
+    "H1 Warp: CAPSULE/CYLINDER pairs lack multi-contact support; at most one contact.",
+    "Apollo Warp: unchanged contact margin incompatible with MULTICCD. Original failure retained.",
+    "Apollo JAX: CUDA autotuning timer warning; these runs are not throughput benchmarks."
+  ],
+  "transfer": "Browser download did not complete. Public simulation archive transferred through visible notebook output and SHA-256 verified."
+}

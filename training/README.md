@@ -15,10 +15,48 @@ a payment card authorizes a charge.
 to `fa47720a2437fed8687648e6f37f399d36af8987`. It uses a separate virtual environment,
 original collision geometry, a 30-minute subprocess budget and unique evidence
 directories. No Drive mount, SSH, external serving, quota workaround or purchase
-is involved. The JSON and Python cells parse; actual GPU execution is pending.
+is involved. The notebook was executed on a free T4; evidence is recorded below.
 Use only an available free T4 with standard RAM. Download the evidence and
 disconnect afterward. A free runtime is not guaranteed, and this notebook is a
 compatibility probe rather than a trained controller or production host.
+
+## Executed free T4 probe — 2026-10-24
+
+The signed-in Colab session allocated a Tesla T4 (15,360 MiB, driver 580.82.07),
+Python 3.13.16 and standard host RAM. No compute units or paid resource were
+purchased. The disposable runtime was disconnected and deleted after the report
+was exported and its SHA-256 verified locally.
+
+| Exact model | GPU implementation | Three-step comparison | Max absolute qpos difference | Max absolute qvel difference |
+| --- | --- | --- | --- | --- |
+| H1 | MJX-Warp | Passed | 4.584055e-8 | 1.693091e-6 |
+| G1 | MJX-Warp | Passed | 1.329925e-5 | 2.915475e-3 |
+| Apollo | MJX-JAX | Passed | 1.114830e-7 | 1.440514e-6 |
+
+Differences use the model's mixed coordinate/velocity units, not a single linear
+pose-error unit. Each run spans only 6 ms of simulation. Geometry, actuator
+parameters and compiled-model hashes remained unchanged. This is an initial
+compatibility result, not stability, locomotion, batched training or throughput
+acceptance.
+
+Apollo's original Warp trial **failed** on its non-zero contact margin with
+MULTICCD. That rejection is retained in `apollo.json`; no margin was removed.
+H1 Warp warns that capsule/cylinder pairs currently produce at most one contact.
+Apollo JAX reported a CUDA autotuning-timer warning. These limitations require
+longer contact regressions and batch profiling before training.
+
+`artifacts/physical-truth-runtime/colab-t4-fa47720/evidence.tar.gz` contains all
+four attempts, compiled-model manifests, package resolver/freeze records and
+complete command logs. `selected-backends.json` identifies the three passing
+implementations; the original `summary.json` correctly remains `all_passed:false`.
+Archive SHA-256: `4697aaf1f81996dd69c72962b57bbe86302bac87e468cc689a805bc74291928f`.
+
+The initial Colab environment omitted `ensurepip`. The notebook now creates a
+stdlib virtual environment without pip and uses pip's documented
+[`--python` target-interpreter option](https://pip.pypa.io/en/stable/topics/python-option/)
+without changing Colab's installed packages. Native browser downloads did not
+complete in this session; the optional text-export cell transferred only the
+public simulation archive, with its byte count and SHA-256 checked on receipt.
 
 The installed Linux dependency lock was produced by the actual
 [preflight run](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40083924085)
@@ -60,7 +98,8 @@ backend; do not silently remove tooling or collision constraints.
 The supported candidate for the unsupported collision pairs is MJX-Warp. GPU
 extras are separately resolved through `requirements-gpu.in`. On an approved
 NVIDIA instance the probe accepts `--implementation warp`; it fails explicitly
-when no GPU is configured. No successful Warp execution is claimed yet.
+when no GPU is configured. The actual T4 results below now establish a short
+Warp comparison for H1/G1 and a separate JAX comparison for Apollo.
 
 Before paid training: finish the model-matched observation/action contract,
 task/reward/termination and randomization environment, inference export/parity,
@@ -71,7 +110,9 @@ Training and the required native CPU mobility acceptance are separate gates.
 Primary references: [MuJoCo MJX](https://mujoco.readthedocs.io/en/stable/mjx.html)
 and [MuJoCo Playground](https://github.com/google-deepmind/mujoco_playground).
 
-## First paid GPU pilot: prepared, not provisioned
+## Historical paid GPU proposal — not approved
+
+This section is historical. Do not execute it under the current zero-spend constraint.
 
 Observed in the signed-in Runpod dashboard on 2026-10-24: one A40 (48 GB VRAM,
 43 GB host RAM, 9 vCPU), $0.59/hour compute plus $0.007/hour for a 50 GB

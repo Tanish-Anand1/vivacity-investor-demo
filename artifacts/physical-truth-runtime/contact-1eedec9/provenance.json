@@ -1,0 +1,13 @@
+{
+  "source_commit": "1eedec951289d38dcfca9bf79311067b6ad1ec79",
+  "ci_run": "https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40095423159",
+  "browsers": [
+    "chromium",
+    "firefox",
+    "webkit"
+  ],
+  "native_tests": 97,
+  "browser_checks_per_journey": 18,
+  "mobile_screenshot_inspected": true,
+  "production_deployment": false
+}

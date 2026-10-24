@@ -1,0 +1,22 @@
+{
+  "source_commit": "1eedec951289d38dcfca9bf79311067b6ad1ec79",
+  "ci_run": "https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40095423157",
+  "tests": 498,
+  "passed": 495,
+  "failed": 0,
+  "skipped": 3,
+  "skipped_cases": [
+    {
+      "name": "test_exported_frontend_geometry_matches_compiled_model_when_packaged[unitree_g1]",
+      "reason": "Frontend visual assets are shipped by the separate web build, not the backend image"
+    },
+    {
+      "name": "test_exported_frontend_geometry_matches_compiled_model_when_packaged[apptronik_apollo]",
+      "reason": "Frontend visual assets are shipped by the separate web build, not the backend image"
+    },
+    {
+      "name": "test_exported_frontend_geometry_matches_compiled_model_when_packaged[unitree_h1]",
+      "reason": "Frontend visual assets are shipped by the separate web build, not the backend image"
+    }
+  ]
+}

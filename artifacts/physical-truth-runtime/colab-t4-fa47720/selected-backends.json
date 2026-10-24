@@ -1,0 +1,86 @@
+{
+  "scope": "Three-step GPU numerical compatibility only. No policy trained or task accepted.",
+  "source_commit": "fa47720a2437fed8687648e6f37f399d36af8987",
+  "original_warp_summary": "summary.json",
+  "selected_implementations": [
+    {
+      "robot": "h1",
+      "implementation": "warp",
+      "passed": true,
+      "failure_type": null,
+      "failure": null,
+      "native_vs_mjx": [
+        {
+          "step": 1,
+          "qpos_max_abs": 2.786533959131532e-08,
+          "qvel_max_abs": 4.112844109371849e-08
+        },
+        {
+          "step": 2,
+          "qpos_max_abs": 1.2422135986511762e-08,
+          "qvel_max_abs": 8.226769664876343e-08
+        },
+        {
+          "step": 3,
+          "qpos_max_abs": 4.584055046663593e-08,
+          "qvel_max_abs": 1.6930906147905045e-06
+        }
+      ],
+      "compiled_model_sha256": "e82a5440102ed81cd7f8cf126e303362e9cd5401b6a623ec92b4040d6a13498c",
+      "trained_policy": null
+    },
+    {
+      "robot": "g1",
+      "implementation": "warp",
+      "passed": true,
+      "failure_type": null,
+      "failure": null,
+      "native_vs_mjx": [
+        {
+          "step": 1,
+          "qpos_max_abs": 2.8793270727689446e-06,
+          "qvel_max_abs": 0.0014132423574076652
+        },
+        {
+          "step": 2,
+          "qpos_max_abs": 7.4726404661884516e-06,
+          "qvel_max_abs": 0.0022875555796306006
+        },
+        {
+          "step": 3,
+          "qpos_max_abs": 1.329924532522675e-05,
+          "qvel_max_abs": 0.002915475205090034
+        }
+      ],
+      "compiled_model_sha256": "ddb27b2c45ead7ae4fc5f0929a99d9e054a85c4d5ba1317a46c3c23d20d62805",
+      "trained_policy": null
+    },
+    {
+      "robot": "apollo",
+      "implementation": "jax",
+      "passed": true,
+      "failure_type": null,
+      "failure": null,
+      "native_vs_mjx": [
+        {
+          "step": 1,
+          "qpos_max_abs": 7.119548728340419e-08,
+          "qvel_max_abs": 2.170021081626672e-08
+        },
+        {
+          "step": 2,
+          "qpos_max_abs": 1.1148296286123127e-07,
+          "qvel_max_abs": 3.919083738290752e-08
+        },
+        {
+          "step": 3,
+          "qpos_max_abs": 8.171181264948757e-08,
+          "qvel_max_abs": 1.4405139743822737e-06
+        }
+      ],
+      "compiled_model_sha256": "553860047967b74249b3eeea91c723374bfeaee493a96701ab6ec3b092c317d3",
+      "trained_policy": null
+    }
+  ],
+  "all_selected_passed": true
+}

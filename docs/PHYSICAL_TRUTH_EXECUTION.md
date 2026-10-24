@@ -19,7 +19,7 @@ checks. Hardware execution is outside the completion claim.
 | Complete checkpoint, independent controller and simulator forks | New native checkpoint adapter and transactional worker pass local restore/fork/restart tests; legacy services not migrated | Partial |
 | All exposed parameter dependencies and causality | New carton mass/density/inertia and solver-contact definitions pass native causality checks; app-wide inventory/UI generation incomplete | Partial |
 | Whole-body stabilization and constraints | Wrench kernel v4 includes contact unloading. Complete G1, Apollo and H1 each pass 20/20 nominal, 100/100 held-out and deliberate instability in the bounded six-second stationary probe at cedf837. General reach, collision audit and mobility remain open | Bounded stance verified; broader gate partial |
-| Contact-only manipulation and G1 bilateral load sharing | Native-servo baseline and corrected wrench controller v3 each pass 20/20 nominal and 100/100 held-out stationary trials with zero equality constraints. Wrench v4 unloading changes require revalidation; locomotion is not covered | Partial |
+| Contact-only manipulation and G1 bilateral load sharing | Native-servo baseline and corrected wrench controllers v3/v4 each pass 20/20 nominal and 100/100 held-out stationary trials with zero equality constraints. V4 source hashes match the current implementation; locomotion is not covered | Partial |
 | G1/Apollo/H1 model-matched mobility, turns, terrain, carry | H1 short walk only; complete embodiments need training | Open |
 | Apollo cabinet, latch, old/replacement cartridge cycle | Passive fixture and force-limited tooling pass component tests. A development controller physically retracts the latch and opens the door about 0.23 rad; full opening, cartridge service and acceptance remain open | Partial |
 | Shared-world SORT through DISPATCH | Sorting ledger only | Open |
@@ -36,18 +36,21 @@ checks. Hardware execution is outside the completion claim.
 
 Verified Linux baselines (their source hashes remain part of every report):
 
+- [Latest deployment-image suite, 1eedec9](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40095423157): **495 passed, 3 skipped, zero failures**; separate capacity tests 4 + 1 passed. The three skips concern frontend visual asset files excluded from the backend image. Reports: `artifacts/physical-truth-runtime/backend-1eedec9/`.
+
 - [Deployment-image suite, cedf837](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40088346632): **485 passed, 3 skipped, zero failures**; separate capacity probes 4 + 1 passed. JUnit reports are in `artifacts/physical-truth-runtime/backend-cedf837/`.
 - [Complete stationary embodiments, cedf837](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40088346654): each robot **20/20 nominal and 100/100 held-out**, plus correctly rejected deliberate instability. The held-out Wilson 95% interval is [0.9630, 1.0000] for each narrow sampled distribution. Reports and hashes are in `artifacts/physical-truth-runtime/stance-cedf837/`.
 - [Corrected constrained G1, 8508e31](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40080972324): wrench controller v3 **20/20 nominal and 100/100 held-out**. Maximum placement error 11.591 mm; minimum steady vertical hand-support share 39.086%; maximum transport force-balance residual 0.004210 N; median CPU time 31.615 s and maximum 33.285 s. Zero equality attachments. Maximum compliant joint-stop penetration was 0.003474 rad, not zero. The complete report and hashes are in `artifacts/physical-truth-runtime/constrained-8508e31/`.
+- [Constrained G1 v4, cedf837](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40088346604): **20/20 nominal and 100/100 held-out**. Maximum placement error 11.773 mm; minimum steady hand-support share 39.026%; maximum steady force-balance residual 0.003293 N; compliant joint-stop penetration 0.003473 rad. Zero equality attachments; maximum actuator torque fraction 1.0. Median CPU time 43.320 s, maximum 44.354 s. Held-out Wilson 95% interval [0.9630, 1.0000], for this bounded simulation distribution only. Full report and hashes: `artifacts/physical-truth-runtime/constrained-cedf837/`. All three browser journeys passed at that revision.
 - [Three browser engines, 3750125](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40083924018): live frames, pause, fork, comparison, explicit replay, export, network interruption, cancellation, final-state reload. The corrected WebKit native select was inspected in the actual mobile screenshot.
 
 Apollo wide-door development revealed that a release request must remove the old
 handle's predicted support from the optimizer. Wrench v4 adds explicit contact
 unloading while retaining all native collision geometry. Its focused native
 separation test and the three complete-stance cohorts pass. The new constrained
-G1 contact cohort is still running. V3's report is preserved rather than
-relabeled as v4 evidence. Additional uncommitted Apollo development is not
-covered by these baselines.
+G1 v4 contact cohort has now passed independently. V3's report is preserved
+under its own source identity. Experimental Apollo wide-opening development is
+not covered by these baselines.
 
 The maximum measured stance tilt was 0.01849 rad for G1, 0.02712 rad for
 Apollo and 0.00286 rad for H1. Maximum per-trial p95 loaded-foot slip was
@@ -76,7 +79,13 @@ for this release. Training dependencies must remain outside the runtime image.
 
 The latest user constraint is **zero spend** (2026-10-24). There is no funded GPU
 or budget to activate the prior Runpod proposal. The free Colab compatibility
-notebook is prepared; its execution and resource availability must be verified.
+notebook has now executed on a T4. Three-step numerical comparisons passed
+for H1/G1 with MJX-Warp and Apollo with MJX-JAX. Apollo's unchanged margin is
+unsupported by Warp; that failed attempt remains in the evidence. H1 has a
+reported multi-contact limitation, requiring longer regressions. No policy was
+trained. All files and their archive checksum were verified locally, then the
+disposable runtime was disconnected. See `training/README.md` and
+`artifacts/physical-truth-runtime/colab-t4-fa47720/`.
 Paid hosting and training remain unfulfilled release requirements, not implied
 authorizations. The following paid quote is retained only as historical context.
 
@@ -165,9 +174,23 @@ It never substitutes the partial goal when a wide trial fails. Native trial R31
 then completed 8,132 steps, retracted the latch 52.347 mm and reached a door
 angle of 0.229296 rad, with root speed 0.001085 m/s. There were zero equality
 constraints or mocap bodies. This is one successful partial-door trial; the
-full regression rerun and wide-service acceptance remain required.
+Linux regression rerun at `0b8f00d` then passed **26/26 tests** in 134.663 s,
+including the nominal partial door, weak-tool instability, stiff-latch rejection,
+checkpoint independence and the no-substitution check for wide requests.
+JUnit: `artifacts/physical-truth-runtime/apollo-0b8f00d/apollo-components.xml`.
+The wide-service acceptance remains open.
 
 ## Subsequent integration findings
+
+The `fa47720` WebKit journey failed an observation GET with `ECONNRESET`;
+Chromium and Firefox passed. At `1eedec9`, idempotent test observations
+allow two connection-reset retries using Playwright's built-in option.
+HTTP failures and simulation-start mutations are not retried. The first
+failed run remains recorded. The rerun at `1eedec9` passed all three browser
+journeys, each with 18 checks, and 97 native checks. Each completed trial
+executed 9,510 steps with 5.882 mm placement error. The WebKit mobile
+screenshot was inspected. Reports: `artifacts/physical-truth-runtime/contact-1eedec9/`.
+
 
 - The first Linux all-backend run failed one low-friction negative-test assertion.
   The native simulation rejected the trial for insufficient grip contact rather

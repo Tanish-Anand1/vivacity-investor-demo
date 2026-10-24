@@ -1,0 +1,47 @@
+{
+  "source_commit": "cedf837f828d5895d681ee768f3b037b828d28a2",
+  "ci_run": "https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40088346604",
+  "counts": {
+    "nominal": {
+      "trials": 20,
+      "passed": 20
+    },
+    "held_out": {
+      "trials": 100,
+      "passed": 100
+    },
+    "development": {
+      "trials": 0,
+      "passed": 0
+    }
+  },
+  "complete": true,
+  "acceptance_passed": true,
+  "report_sha256": "d1792fef30c9abbfd895b8dd06ddc782c675fc485e472c062391193f1df2d4f0",
+  "controller_sources": {
+    "constrained_bimanual.py": "ffa030d1aa046b99890cd094c81db82d91cabd4167f60fedb866cddb5abbc658",
+    "wrench_dynamics.py": "355ccbd60092d6658a4a7664f9694eb2acb7b5819e60d113e75400842f88cd80"
+  },
+  "task_sources": {
+    "bimanual.py": "50fd7af4ecbec49176cab13b2adc2873a75a7352895f934718658511ac48242d",
+    "contact_evidence.py": "af5e9e729611845091febe09d4050f185e6f0767a91abe56ef4a14fabe3f5ae5",
+    "physical_parameters.py": "93cadc4ac94b7f1242be5585cc6cba2f404daf3e51bf18e9230a6be49d2416c9",
+    "inverse_dynamics.py": "ed77a25192645aebf73652969551b19f2313fa47fe8a43b6bd55c137ce6ab504",
+    "whole_body_contact.py": "cff7879eb8d584df64a02ae5cffe05a5c6f9055a975b6e7e5bcb94cbdf5740a0"
+  },
+  "max_placement_error_m": 0.011772666734435226,
+  "minimum_steady_hand_share": 0.3902595514098345,
+  "maximum_joint_limit_penetration_rad": 0.0034733139835017024,
+  "maximum_steady_force_balance_error_n": 0.0032931430791052207,
+  "maximum_actuator_torque_fraction": 1.0,
+  "equality_constraints": [
+    0
+  ],
+  "median_compute_wall_s": 43.31973313649996,
+  "max_compute_wall_s": 44.354067214,
+  "held_out_wilson_95": [
+    0.9630051925239981,
+    1.0
+  ],
+  "scope": "Deterministic nominal repetitions and bounded simulated samples; not hardware reliability. Stationary short transfer; not carrying locomotion."
+}
