@@ -39,9 +39,9 @@ def run(robot, steps, implementation='jax', report=None):
         report = {}
     report.update({
         'schema_version':'vivacity.mjx-preflight/1', 'robot':robot,
-        'scope':'Exact-embodiment CPU MJX compatibility, not learned locomotion.',
+        'scope':'Exact-embodiment MJX compatibility, not learned locomotion.',
         'hardware_validation':False, 'trained_policy':None,
-        'playground_commit':'12ad7f3842791ced39f27e5ac96d066bbe361653',
+        'playground_commit':'8450aec0d25b6da6bfb84e0530de581c923539cf',
         'compiled_model_sha256':model_hash, 'embodiment':embodiment,
         'versions':{name:importlib.metadata.version(name) for name in
                     ('mujoco','mujoco-mjx','jax','jaxlib','playground','numpy','scipy')},
@@ -53,7 +53,11 @@ def run(robot, steps, implementation='jax', report=None):
     compiled = time.perf_counter()
     # The exact compiled model is shared. In particular, preserve native contact
     # dimensions, solver settings, torque limits and the added grippers' inertia.
-    device_model = mjx_env.put_model(model, impl=implementation)
+    # Preserve the engine's overflow diagnostics. Playground's wrapper at the
+    # pinned revision suppresses some warnings and imports the pre-3.15 standalone
+    # Warp module. The public native MJX entrypoint supports the integrated Warp
+    # implementation without that obsolete import or a second physics package.
+    device_model = mjx.put_model(model, impl=implementation)
     capacities = {'naconmax':2048, 'njmax':8192} if implementation=='warp' else {}
     device_data = mjx.put_data(model, native, impl=implementation, **capacities)
     report['contact_buffer_capacities']=capacities

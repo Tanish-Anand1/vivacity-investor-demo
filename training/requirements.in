@@ -1,6 +1,6 @@
 # Isolated research environment. Never install this into the public API image.
 # The resolver report and resulting freeze must be reviewed before GPU use.
-playground @ git+https://github.com/google-deepmind/mujoco_playground.git@12ad7f3842791ced39f27e5ac96d066bbe361653
+playground @ git+https://github.com/google-deepmind/mujoco_playground.git@8450aec0d25b6da6bfb84e0530de581c923539cf
 mujoco==3.15.0
 mujoco-mjx==3.15.0
 numpy==2.5.3

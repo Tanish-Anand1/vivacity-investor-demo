@@ -11,8 +11,12 @@ not: MJX-JAX rejected G1 cylinder/mesh and H1 cylinder/box collision pairs. Apol
 hit an int32/int64 contact-index mismatch with x64 enabled. The float32 Apollo probe passed three native/MJX steps at `f07a75c`; this is
 compatibility only. G1 still reports unsupported cylinder/mesh collision. The
 GPU resolver then exposed Warp 1.18 versus the MJX 3.15 extra's required 1.17
-pin; the lock now selects 1.17 and requires a fresh install/probe. Original
-geometry is preserved.
+pin. Selecting Warp 1.17 alone then failed Playground's newer 1.18 minimum.
+The current lock selects the upstream Playground revision `8450aec0` that
+explicitly adopted Warp 1.17, paired with MJX 3.15. It requires a fresh resolver
+and execution check. The probe calls the public `mjx.put_model` directly,
+retaining overflow warnings and avoiding that older Playground wrapper's
+standalone `mujoco_warp` import. Original geometry is preserved.
 
 The first gate is whether the exact native models can execute through MJX, with
 unchanged contact geometry, actuator properties and tooling. `preflight.py` uses

@@ -45,7 +45,7 @@ packaging==26.3
 parso==0.8.7
 pexpect==4.9.0
 pillow==13.0.0
-playground @ git+https://github.com/google-deepmind/mujoco_playground.git@12ad7f3842791ced39f27e5ac96d066bbe361653
+playground @ git+https://github.com/google-deepmind/mujoco_playground.git@8450aec0d25b6da6bfb84e0530de581c923539cf
 prometheus_client==0.26.0
 prompt_toolkit==3.0.53
 protobuf==7.36.2
