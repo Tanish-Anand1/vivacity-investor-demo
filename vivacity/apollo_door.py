@@ -40,6 +40,7 @@ class ApolloToolController:
 
     def __init__(self, model):
         self.stance = StanceController(model, 'apollo')
+        self.wide_tooling = abs(float(model.body('l_service_tool').quat[3]))>.5
         self.integrals = {side:np.zeros(3) for side in ('l','r')}
         self.rotation_integrals = {side:np.zeros(3) for side in ('l','r')}
         self.tracking_weights = np.full(model.nu,self.stance.reference_weight)
@@ -65,6 +66,10 @@ class ApolloToolController:
             # Bounded task-space integral compensates static native friction and
             # model mismatch. It changes actuator references, never body poses.
             self.integrals[side] = np.clip(self.integrals[side]+self.dt*.8*error, -.06, .06)
+            if not self.wide_tooling:
+                poses[name] = {**goal,'position':np.asarray(goal['position'])+self.integrals[side],
+                    'weight':10000.}
+                continue
             angular = Rotation.from_matrix(np.asarray(goal['rotation']) @
                 data.site(name).xmat.reshape(3,3).T).as_rotvec()
             correction = self.rotation_integrals[side]+self.dt*.6*angular
@@ -72,6 +77,10 @@ class ApolloToolController:
             poses[name] = {**goal, 'position':np.asarray(goal['position'])+self.integrals[side],
                 'rotation':Rotation.from_rotvec(self.rotation_integrals[side]).as_matrix() @ goal['rotation'],
                 'weight':10000.}
+        if not self.wide_tooling:
+            # Preserve the separately tested 0.25-radian historical primitive.
+            # It is never used as a fallback for a requested wide opening.
+            return self.stance.compute(data,reference,site_targets=poses)
         finger_targets = {}
         for side in ('l','r'):
             for finger in ('positive','negative'):
@@ -133,9 +142,19 @@ class CabinetDoorPrimitive:
                 root.find(".//body[@name='l_service_tool']").set(
                     'quat','.7071067811865476 0 0 -.7071067811865476')
             append_cabinet(root,self.config)
+            if opening_angle_rad == .25:
+                # The historical fixture has a shorter exposed latch button.
+                # Preserve that complete model/controller contract while the
+                # larger opening and opposed mount are developed separately.
+                root.find(".//geom[@name='service_latch_button']").set('pos','-.045 .40 .065')
+                link=root.find(".//geom[@name='service_latch_crossbar_link_0.4']")
+                link.set('pos','-.034 .4 .065')
+                link.set('size','.017 .010 .010')
         self.model,self.data,self.manifest = compile_embodiment('apollo',self.tooling,append_scene=scene)
         if opening_angle_rad > .25:
             self.manifest['identity'] = 'vivacity.apollo-cabinet-opposed-tools/1-experimental'
+        self.manifest['cabinet_fixture_profile'] = (
+            'wide-opening-development' if opening_angle_rad>.25 else 'historical-partial-door')
         self.artifact = ImmutableModelArtifact(self.model)
         self.controller = ApolloToolController(self.model)
         self.rng = np.random.default_rng(seed)
@@ -167,7 +186,9 @@ class CabinetDoorPrimitive:
             for side,goal in goals.items():
                 # The button protrudes from its crossbar. Grasp its exposed
                 # front section without driving the fingertips into the bar.
-                goal['position'][0] = x-(.135 if side=='l' else .10)
+                offset = (.135 if side=='l' else .10) if self.state['opening_angle_rad']>.25 else (
+                    .095 if side=='l' else .08)
+                goal['position'][0] = x-offset
         elif phase == 'latch':
             goals['l']['position'][1] = y+.195
         elif phase in ('open','open_wide'):
@@ -192,6 +213,11 @@ class CabinetDoorPrimitive:
                     position = button+orientation @ np.array([0.,0.,.05])
                 goals[side] = {'position':position.tolist(),
                                'rotation':orientation.tolist()}
+            if phase=='open' and self.state['opening_angle_rad']==.25:
+                for side,relative in (('r',[-.08,-.39,0.]),('l',[-.095,-.085,.065])):
+                    goals[side] = {'position':(hinge+rotation @ relative).tolist(),
+                        'rotation':(TOOL_ROTATIONS[side] if side=='r' else
+                                    rotation @ TOOL_ROTATIONS[side]).tolist()}
         elif phase == 'release_right':
             # Release before moving the wrist. Dragging a loaded upper pad
             # rotates the door into the finger while the other hand holds it.

@@ -9,6 +9,8 @@ from vivacity.apollo_door import CabinetDoorPrimitive, SOURCE_HASHES
 
 def test_door_primitive_checkpoint_preserves_feedback_and_independent_native_state():
     task=CabinetDoorPrimitive()
+    assert task.manifest['cabinet_fixture_profile']=='historical-partial-door'
+    assert not task.controller.wide_tooling
     while task.data.time<5.5 and task.state['status']=='running':
         task.step()
     assert task.state['status']=='running',task.state.get('failure_detail')
@@ -41,6 +43,19 @@ def test_door_primitive_checkpoint_preserves_feedback_and_independent_native_sta
         CabinetDoorPrimitive.from_checkpoint(saved)
     del branch,task
     gc.collect()
+
+
+def test_wide_opening_keeps_its_distinct_model_and_never_substitutes_the_partial_goal():
+    task=CabinetDoorPrimitive(opening_angle_rad=1.1)
+    assert task.manifest['cabinet_fixture_profile']=='wide-opening-development'
+    assert task.manifest['identity']=='vivacity.apollo-cabinet-opposed-tools/1-experimental'
+    assert task.controller.wide_tooling
+    assert task.state['opening_angle_rad']==1.1
+    np.testing.assert_allclose(task.model.geom('service_latch_button').pos,[-.085,.4,.065])
+    task.fail('lost_door_grip')
+    task.step()
+    assert task.state['opening_angle_rad']==1.1
+    assert not task.state['success'] and not task.state['cabinet_service_complete']
 
 
 def test_invalid_cartesian_integral_state_is_rejected():

@@ -157,6 +157,16 @@ they are not passes. The isolated `apollo-cabinet.yml` workflow runs the actual
 partial-door, IK and mechanism regressions in the deployment image on Linux.
 Its executed result is required before accepting these changes.
 
+The first Linux cabinet regression at `fa47720` failed two of 25 tests: the
+wide-tooling changes had altered the existing partial-door plant and feedback.
+The partial path now retains its original latch reach, tool orientation and
+controller, while a wide request keeps the distinct experimental embodiment.
+It never substitutes the partial goal when a wide trial fails. Native trial R31
+then completed 8,132 steps, retracted the latch 52.347 mm and reached a door
+angle of 0.229296 rad, with root speed 0.001085 m/s. There were zero equality
+constraints or mocap bodies. This is one successful partial-door trial; the
+full regression rerun and wide-service acceptance remain required.
+
 ## Subsequent integration findings
 
 - The first Linux all-backend run failed one low-friction negative-test assertion.
