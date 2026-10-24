@@ -1,5 +1,7 @@
 import gc
 from copy import deepcopy
+import json
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -61,6 +63,28 @@ def test_wide_opening_keeps_its_distinct_model_and_never_substitutes_the_partial
     task.step()
     assert task.state['opening_angle_rad']==1.1
     assert not task.state['success'] and not task.state['cabinet_service_complete']
+
+
+def test_transient_zero_pad_force_is_not_a_physical_release():
+    import mujoco as mj
+
+    from vivacity.cabinet_mechanism import CabinetConfig
+    from vivacity.simulated_tooling import ParallelGripperConfig
+
+    fixture=json.loads((Path(__file__).parent/'fixtures'/'apollo_transient_release.json').read_text())
+    task=CabinetDoorPrimitive(CabinetConfig(front_x_m=.65),
+        ParallelGripperConfig(position_stiffness_n_m=2400.),opening_angle_rad=1.1)
+    assert task.artifact.sha256==fixture['model_sha256']
+    task.data.qpos[:]=fixture['qpos']
+    task.state['phase']='release_right'
+    task.state['grip_forces']=fixture['grip_forces_n']
+    mj.mj_forward(task.model,task.data)
+    measured=task.observe()
+    assert max(task.state['grip_forces']['r'].values())==0.
+    assert measured['grasp_surface_clearance_m']['r']==pytest.approx(
+        min(fixture['measured_right_clearance_m'].values()),abs=1e-6)
+    assert measured['grasp_surface_clearance_m']['r']<.005
+    assert not task._grasp_separated('r','l',measured)
 
 
 def test_wide_opening_retries_ik_from_prior_command_without_moving_live_state():

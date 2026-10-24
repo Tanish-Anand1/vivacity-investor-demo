@@ -119,11 +119,15 @@ persistent disk ([Render Free limitations](https://render.com/docs/free)).
 Oracle's [Always Free A1 allowance](https://docs.oracle.com/en-us/iaas/Content/FreeTier/freetier_topic-Always_Free_Resources.htm)
 advertises 2 OCPUs, 12 GB RAM and free block storage; availability depends on
 the account's home region and idle instances can be reclaimed. MuJoCo 3.15.0
-publishes a Linux ARM64 wheel. The manual `.github/workflows/arm64-host-preflight.yml`
-checks whether the unchanged deployment image and native smoke tests work on a
-free public-repository ARM64 runner. That CI check is **not** a production-host
-capacity test, a provisioned Oracle account or a 24-hour soak. No qualifying
-no-cost host has yet been demonstrated.
+publishes a Linux ARM64 wheel. The branch-triggered
+`.github/workflows/arm64-host-preflight.yml` built the unchanged deployment
+image on a free public-repository ARM64 runner at `9776587` and executed
+**30/30 native smoke tests** inside its 8 GB container limit, with zero failures
+or skips ([run 40112768362](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40112768362)).
+This establishes architecture compatibility only. It does **not** establish
+production-host capacity, a provisioned Oracle account, durable recovery,
+memory headroom under the complete-world workload or a 24-hour soak. No
+qualifying no-cost host has yet been demonstrated.
 
 Runpod sign-in is complete. The observed 2026-10-24 quote is one A40 with 48 GB
 VRAM, 43 GB RAM and 9 vCPU: $0.59/hour compute plus $0.007/hour container disk
@@ -264,8 +268,29 @@ The current compiled model is
 it has zero equality constraints and zero mocap bodies. Its controller is
 `vivacity.apollo-cartesian-contact/6-experimental`. After this controller
 change, local `tests/test_apollo_door.py` passed **10/10 in 214.00 s** and
-`tests/test_apollo_execution.py` passed **3/3 in 236.96 s**. A fresh Linux
-regression is still required for this revision.
+`tests/test_apollo_execution.py` passed **3/3 in 236.96 s**. Linux regression at
+`9776587` passed **509/512 backend tests with three skips**, **98/98 contact
+tests**, and the Chromium, Firefox and WebKit contact journeys; the ARM64
+deployment-image preflight passed **30/30 native smoke tests**.
+
+A checkpoint taken at native step 11,083 allowed release candidates to start
+from the same measured integration state. A 40 mm outward and 30 mm lateral
+right-hand goal with a 45 mm finger command avoided the crossbar and reached a
+transient zero right-pad force at simulation time 23.228 s. Native geometry
+distance showed the negative pad was still only **0.959 mm** from the handle.
+The old force-only predicate would have treated this as release; the current
+primitive also requires **5 mm signed separation** from the grasp surfaces.
+`tests/fixtures/apollo_transient_release.json` retains the exact measured
+MuJoCo positions and model hash for this regression. Subsequent tested
+withdrawal paths either struck the latch link or remained within 0.032 mm of
+the handle at timeout; none passed. Shortening both right pads, or only the
+positive pad, lost the negative pad's handle contact before latch completion,
+so both geometry edits were reverted. These are failed development trials,
+not accepted cabinet service or released controller paths.
+The local Apollo door/execution suite passed **14/14 in 590.40 s** with the
+separation check. After limiting signed-distance queries to unloaded hands,
+the focused separation/checkpoint checks passed **2/2 in 37.66 s**. A full
+Linux run of this exact revision is still required.
 
 ## Subsequent integration findings
 

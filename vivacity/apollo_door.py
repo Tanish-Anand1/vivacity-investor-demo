@@ -105,7 +105,7 @@ class ApolloToolController:
 
 
 class CabinetDoorPrimitive:
-    version = 'vivacity.apollo-door-primitive/5-experimental'
+    version = 'vivacity.apollo-door-primitive/6-experimental'
 
     def __init__(self, config=None, tooling=None, seed=7, opening_angle_rad=.25):
         if not np.isfinite(opening_angle_rad) or not .25 <= opening_angle_rad <= 1.2:
@@ -334,7 +334,31 @@ class CabinetDoorPrimitive:
             'speed_rad_s':float(self.data.joint(SWIVEL_JOINT).qvel[0]),
             'actuator_torque_nm':float(self.data.actuator_force[self.model.actuator('l_service_swivel_drive').id])}
             if self.controller.wide_tooling else None)
+        released_side = ('r' if self.state['phase'] in ('release_right','withdraw_right','park_right') else
+                         'l' if self.state['phase'] in ('release_left','withdraw_left','rotate_left','insert_left') else None)
+        # Signed-distance queries are needed only after native contact loads
+        # drop below the release threshold. This keeps the normal control loop
+        # bounded even while a loaded hand holds the handle for many steps.
+        result['grasp_surface_clearance_m'] = ({released_side:self._grasp_clearance(released_side)}
+            if released_side and self.state['grip_forces'] and
+            max(self.state['grip_forces'][released_side].values())<1. else {})
         return result
+
+    def _grasp_clearance(self, side):
+        # A zero contact force can be a momentary unload while a pad remains
+        # alongside the handle. Native signed geom distance is the separation
+        # evidence; this prevents a false release during door motion.
+        return min(float(mj.mj_geomDistance(self.model,self.data,
+            self.model.geom(f'{side}_service_{finger}_pad').id,
+            self.model.geom(surface).id,1.,None))
+            for finger in ('positive','negative') for surface in GRASP_SURFACES[side])
+
+    def _grasp_separated(self, side, other, observation):
+        return (min(float(self.data.joint(f'{side}_service_{finger}_slide').qpos[0])
+                    for finger in ('positive','negative'))>.025 and
+                min(self.state['grip_forces'][other].values())>2. and
+                max(self.state['grip_forces'][side].values())<1. and
+                observation['grasp_surface_clearance_m'].get(side,0.)>=.005)
 
     def _contacts(self):
         grip = {side:{finger:0. for finger in ('positive','negative')} for side in ('l','r')}
@@ -460,25 +484,17 @@ class CabinetDoorPrimitive:
                  (phase=='open' and fraction==1. and observed['door_angle_rad']>.20 and gripped
                     and observed['root_speed_m_s']<.03) or
                  (phase=='release_left' and elapsed>.3 and
-                    min(float(self.data.joint(f'l_service_{finger}_slide').qpos[0])
-                        for finger in ('positive','negative'))>.025 and
-                    min(self.state['grip_forces']['r'].values())>2. and
-                    max(self.state['grip_forces']['l'].values())<1.) or
+                    self._grasp_separated('l','r',observed)) or
                  (phase in ('withdraw_left','rotate_left','insert_left') and fraction==1. and
                     observed['pose_errors']['l']['position_m']<.006 and
                     observed['pose_errors']['l']['angle_rad']<.10 and
-                    min(self.state['grip_forces']['r'].values())>2. and
-                    max(self.state['grip_forces']['l'].values())<1.) or
+                    self._grasp_separated('l','r',observed)) or
                  (phase=='release_right' and elapsed>.3 and
-                    min(float(self.data.joint(f'r_service_{finger}_slide').qpos[0])
-                        for finger in ('positive','negative'))>.025 and
-                    min(self.state['grip_forces']['l'].values())>2. and
-                    max(self.state['grip_forces']['r'].values())<1.) or
+                    self._grasp_separated('r','l',observed)) or
                  (phase in ('withdraw_right','park_right') and fraction==1. and
                     observed['pose_errors']['r']['position_m']<.006 and
                     observed['pose_errors']['r']['angle_rad']<.10 and
-                    min(self.state['grip_forces']['l'].values())>2. and
-                    max(self.state['grip_forces']['r'].values())<1.) or
+                    self._grasp_separated('r','l',observed)) or
                  (phase=='open_wide' and fraction==1. and
                     abs(observed['door_angle_rad']-self.state['opening_angle_rad'])<.05 and
                     abs(observed['door_angular_velocity_rad_s'])<.05 and

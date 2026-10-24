@@ -30,6 +30,23 @@ separate; 10 local Apollo door regressions and 3 shared-execution tests pass
 after the change. See the
 development evidence and reproduction command in `docs/PHYSICAL_TRUTH_EXECUTION.md`.
 
+The latest committed branch `9776587` passed **509/512 Linux backend tests**
+with three skips and zero failures/errors, plus **98/98 contact tests** and the
+Chromium, Firefox and WebKit contact journeys. The unchanged Docker image built
+on the free GitHub ARM64 runner and passed **30/30 native smoke tests** within
+an 8 GB container limit. This is an architecture preflight, not a provisioned
+durable host, complete-world capacity benchmark or 24-hour soak. Production
+still runs the older release.
+
+A measured Apollo handoff fixture showed zero right-pad force while the
+negative pad remained **0.959 mm** from the handle. The experimental release
+predicate now requires at least **5 mm** native geom separation, preventing
+this transient unload from being misreported as a physical release. The local
+Apollo door/execution suite passed **14/14 in 590.40 s** before a query-cost
+optimization; the focused separation and checkpoint checks passed **2/2 in
+37.66 s** after it. The complete cabinet exchange remains unimplemented and
+no wide-door trial has passed.
+
 **The full directive is incomplete and has not been deployed.** Work remains on
 the isolated `codex/physical-truth-runtime` branch. The opening is unchanged.
 
