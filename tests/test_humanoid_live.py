@@ -64,7 +64,9 @@ def test_stream_pause_resume_and_persisted_replay(monkeypatch, tmp_path):
         assert after['sim_time_s'] == before['sim_time_s']
         assert after['steps_completed'] == before['steps_completed']
         assert client.post(prefix+'/resume', headers=OTHER).status_code == 404
-        assert client.post(prefix+'/resume', headers=OWNER).json()['status'] == 'running'
+        resumed = client.post(prefix+'/resume', headers=OWNER)
+        assert resumed.status_code == 200, resumed.text
+        assert resumed.json()['status'] == 'running'
         def finished():
             record = client.get(prefix, headers=OWNER).json()
             return record if record['status'] == 'completed' else None
@@ -151,7 +153,10 @@ def test_pause_resume_preserves_real_mujoco_trace(monkeypatch, tmp_path):
                                 json=request.model_dump())
         assert submitted.status_code == 202
         prefix = f"/v1/robotics/humanoids/experiments/{submitted.json()['id']}"
-        until(lambda: len(client.get(prefix+'/frames', headers=OWNER).json()['frames']) >= 4)
+        # Model compilation is part of this real-physics test and can exceed
+        # three seconds on a constrained runner; synthetic transport tests
+        # above retain the tighter deadline.
+        until(lambda: len(client.get(prefix+'/frames', headers=OWNER).json()['frames']) >= 4, timeout=30)
         assert client.post(prefix+'/pause', headers=OWNER).json()['status'] == 'paused'
         time.sleep(.07)
         before = client.get(prefix+'/frames', headers=OWNER).json()
@@ -160,7 +165,32 @@ def test_pause_resume_preserves_real_mujoco_trace(monkeypatch, tmp_path):
         assert after['steps_completed'] == before['steps_completed']
         assert after['sim_time_s'] == before['sim_time_s']
         assert client.post(prefix+'/resume', headers=OWNER).json()['status'] == 'running'
-        completed = until(lambda: (record if (record := client.get(prefix, headers=OWNER).json())['status'] == 'completed' else None), timeout=5)
+        completed = until(lambda: (record if (record := client.get(prefix, headers=OWNER).json())['status'] == 'completed' else None), timeout=30)
         assert completed['result']['task_success']
         assert completed['result']['frames'] == baseline['frames']
         assert completed['result']['final_integration_state'] == baseline['final_integration_state']
+
+
+def test_pause_during_final_frame_waits_for_resume(monkeypatch, tmp_path):
+    final_frame, return_from_simulator = Event(), Event()
+
+    def simulator(request, *, on_frame, checkpoint):
+        on_frame({'time_s': .01, 'phase': 'final'}, 5)
+        final_frame.set()
+        assert return_from_simulator.wait(5)
+        return {'frames': [], 'task_success': True}
+
+    monkeypatch.setattr(humanoids, 'simulate', simulator)
+    service = humanoids.HumanoidTrialService(humanoids.Store(tmp_path/'final.sqlite3'))
+    try:
+        trial = service.submit('owner', humanoids.HumanoidTrialRequest(robot_id='unitree_g1'))
+        assert final_frame.wait(5)
+        service.control('owner', trial['id'], 'pause')
+        return_from_simulator.set()
+        time.sleep(.05)
+        assert service.get('owner', trial['id'])['status'] == 'paused'
+        service.control('owner', trial['id'], 'resume')
+        until(lambda: service.get('owner', trial['id'])['status'] == 'completed')
+    finally:
+        return_from_simulator.set()
+        service.close()

@@ -1,3 +1,55 @@
+# Physical Truth implementation checkpoint — 2026-10-24
+
+**The full directive remains incomplete and has not been deployed.** The opening
+is unchanged. Work is isolated in `codex/physical-truth-runtime` from production
+baseline `8cea0c708e6be3722616b37b46362b6684c6e459`; historical sorting reference
+`8d785b9` is preserved.
+
+The new local stationary G1 baseline uses two force-bearing hand contacts and
+zero equality constraints. It passed **20/20 nominal and 100/100 held-out trials**
+with continuous transport-retention checks, support transfer, release and settled
+placement. Nominal placement error was **3.209 mm**, minimum steady hand-support
+share **44.609%**. The sampled envelope is narrow and the controller is a native
+position-servo baseline. This does **not** validate the requested whole-body
+controller, 3 m carrying, general grasping or physical hardware.
+
+Implemented locally: full integration/model/controller/FSM/RNG checkpoints;
+transactional frame/state persistence; independent forks; owner-scoped research
+APIs; pause/resume/cancel; restart recovery; comparison/replay/report export;
+bounded admission and execution; native carton parameter definitions and
+causality checks; a separate rendered RGB-D estimator; SQLite-consistent online
+backup and checked restore. The research API is disabled by default.
+
+Actual failures are preserved. Six negative G1 fixtures produced grip slip,
+insufficient grip, failed lift, unreachable target, prohibited collision and
+timeout. The constrained whole-body controller failed its task; three alternate
+solver/preload research trials also lost retention. These failures block release.
+
+The real local HTTP journey verified frames before completion, frozen pause
+checkpoints, matching fork outcomes, comparison, replay/export agreement, and a
+friction change causing a new-world failure. TypeScript checking and the frontend
+production build passed; the build retained existing large-chunk warnings.
+The scoped suites passed **104 distinct test cases, zero failures**. Across the
+120 native G1 trials, maximum placement error was **8.078 mm**, minimum steady
+hand support share **43.634%**, and median local compute time **11.184 s** (maximum
+**77.433 s** under concurrent local work), with **8,510 simulation steps** per
+trial. A **133,169,152-byte** real-experiment database was backed up and restored;
+all three restored trials retained their measured final states. The generated
+[verification summary](artifacts/physical-truth-runtime/verification-summary.json)
+and XML reports contain exact scoped test counts and performance measurements.
+They are not a new full-suite or production-browser certification.
+
+Still open: accepted whole-body stabilization/manipulation, model-matched
+locomotion/carrying/running, Apollo cabinet service, shared-world warehouse
+completion, complete parameter/scenario coverage, perception-driven control,
+hardware-transfer package, new scene frontend/browser integration, paid hosting
+capacity and recovery/soak, both production releases, and the cinematic changes.
+See [the execution ledger](docs/PHYSICAL_TRUTH_EXECUTION.md) and
+[the local API handoff](docs/CONTACT_EXECUTION_HANDOFF.md).
+
+The historical release record below describes earlier functionality and test
+runs; it does not establish completion of these new requirements.
+
 # Live humanoid task release — 2026-10-22
 
 The `/works` lab now runs three separate bounded MuJoCo tasks: G1 stationary

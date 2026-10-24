@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="5" time="25.406" timestamp="2026-10-24T11:32:16.336389+05:30" hostname="DESKTOP-THSIQ49"><testcase classname="tests.test_bimanual" name="test_native_g1_both_hands_carry_and_release_without_attachment" time="10.671" /><testcase classname="tests.test_bimanual" name="test_deliberate_failures_are_measured[config0-expected0]" time="3.567"><failure message="AssertionError: assert 'insufficient_grip_contact' in {'bilateral_load_not_sustained', 'lift_not_clear', 'retention_lost'}">config = BimanualConfig(parcel=BoxPhysics(dimensions_m=(0.18, 0.18, 0.16), mass_mode='mass', mass_kg=0.5, density_kg_m3=100.0, ..._m=(0.4, 0.0), floor_friction=0.8, hand_torque_scale=1.0, gravity_m_s2=9.81, disturbance_n=0.0, seed=7, timeout_s=22.0)
+expected = {'bilateral_load_not_sustained', 'lift_not_clear', 'retention_lost'}
+
+    @pytest.mark.parametrize('config,expected', [
+        (BimanualConfig(parcel=BoxPhysics(sliding_friction=.001, torsional_friction_m=0., rolling_friction_m=0.)),
+         {'lift_not_clear', 'bilateral_load_not_sustained', 'retention_lost'}),
+        (BimanualConfig(hand_torque_scale=.01),
+         {'insufficient_grip_contact', 'lift_not_clear', 'bilateral_load_not_sustained', 'retention_lost'}),
+        (BimanualConfig(source_xy_m=(.68, 0.)), {'unreachable_target'}),
+    ])
+    def test_deliberate_failures_are_measured(config, expected):
+        result = run_bimanual(config)
+        assert not result['task_success']
+&gt;       assert result['failure_reason'] in expected
+E       AssertionError: assert 'insufficient_grip_contact' in {'bilateral_load_not_sustained', 'lift_not_clear', 'retention_lost'}
+
+tests\test_bimanual.py:38: AssertionError</failure></testcase><testcase classname="tests.test_bimanual" name="test_deliberate_failures_are_measured[config1-expected1]" time="3.889" /><testcase classname="tests.test_bimanual" name="test_deliberate_failures_are_measured[config2-expected2]" time="1.455" /><testcase classname="tests.test_bimanual" name="test_contact_task_checkpoint_repeats_physics_and_controller_decisions" time="5.298" /></testsuite></testsuites>

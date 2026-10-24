@@ -1,0 +1,93 @@
+{
+  "backup": {
+    "integrity": "ok",
+    "page_count": 32512,
+    "schema_sha256": "b409b35af5aaa55d552ecbba74422974d7d97da544fc2c075b883cbc9e62f78a",
+    "tables": [
+      "branches",
+      "configuration_runs",
+      "events",
+      "execution_checkpoints",
+      "execution_frames",
+      "execution_jobs",
+      "execution_models",
+      "execution_runs",
+      "experiments",
+      "factory_discoveries",
+      "factory_discovery_points",
+      "factory_relationships",
+      "factory_run_index",
+      "factory_samples",
+      "fulfillment_orders",
+      "generation_keys",
+      "humanoid_trial_frames",
+      "humanoid_trials",
+      "library_items",
+      "session_worlds",
+      "sessions",
+      "sqlite_sequence",
+      "submissions",
+      "trials",
+      "world_versions",
+      "worlds"
+    ],
+    "sha256": "2a32106e60f30d5de231d933fba4096736e749dd5e3933e8e2c9cf24822f73d2",
+    "size_bytes": 133169152
+  },
+  "restore": {
+    "integrity": "ok",
+    "page_count": 32512,
+    "schema_sha256": "b409b35af5aaa55d552ecbba74422974d7d97da544fc2c075b883cbc9e62f78a",
+    "tables": [
+      "branches",
+      "configuration_runs",
+      "events",
+      "execution_checkpoints",
+      "execution_frames",
+      "execution_jobs",
+      "execution_models",
+      "execution_runs",
+      "experiments",
+      "factory_discoveries",
+      "factory_discovery_points",
+      "factory_relationships",
+      "factory_run_index",
+      "factory_samples",
+      "fulfillment_orders",
+      "generation_keys",
+      "humanoid_trial_frames",
+      "humanoid_trials",
+      "library_items",
+      "session_worlds",
+      "sessions",
+      "sqlite_sequence",
+      "submissions",
+      "trials",
+      "world_versions",
+      "worlds"
+    ],
+    "sha256": "d10a838ff3cc724aab03a850130e4df2a5e3d033e342c401fd44121d92fadfe7",
+    "size_bytes": 133169152
+  },
+  "restored_trials": [
+    {
+      "id": "49e28659-2775-4266-86ff-e8f3bdb96e16",
+      "status": "completed",
+      "steps": 8510,
+      "model_sha256": "a982e2f81c2074a16f4b74ae9d598392842b9e391d4650b6881d17c475cccbce"
+    },
+    {
+      "id": "685fb55c-ed39-4400-b969-c6bdfeb6c827",
+      "status": "completed",
+      "steps": 8510,
+      "model_sha256": "a982e2f81c2074a16f4b74ae9d598392842b9e391d4650b6881d17c475cccbce"
+    },
+    {
+      "id": "b398d7d1-8f4e-47fe-9438-3303bfa83a17",
+      "status": "failed",
+      "steps": 3754,
+      "model_sha256": "6813724b71132a6a98d5f267c4f23edbd3f17982de0d2c714ad30ec2e6614415"
+    }
+  ],
+  "wall_s": 10.73975219996646
+}

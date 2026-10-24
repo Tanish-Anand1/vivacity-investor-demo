@@ -1,0 +1,160 @@
+# Contact execution research handoff
+
+This is an opt-in local research slice, not the completed Physical Truth release.
+The existing `/works` UI and historical humanoid endpoints remain unchanged.
+Do not connect the new table scene to the historical stand geometry.
+
+## Run and verify
+
+From the repository root, in PowerShell:
+
+```powershell
+python -m pip install -r requirements-lock.txt
+$env:VIVACITY_EXPERIMENTAL_CONTACT_TASKS = '1'
+$env:VIVACITY_DATABASE = 'data/contact-research.sqlite3'
+python -m uvicorn vivacity.api:app --host 127.0.0.1 --port 8192
+```
+
+In a second terminal:
+
+```powershell
+python -m scripts.verify_contact_http --base-url http://127.0.0.1:8192
+python -m scripts.verify_bimanual --nominal 20 --held-out 100
+python -m scripts.render_contact_evidence
+```
+
+Without the environment flag, capabilities report `enabled: false` and execution
+endpoints return 503. Loading capabilities never creates a trial. The experimental
+constrained controller has not passed task acceptance; the default controller is
+the stationary native position-servo contact baseline.
+
+## Contract
+
+Base: `/v1/robotics/contact`. All trial operations require the same
+`X-Workspace-Token` capability (32–128 ASCII letters, digits, `_` or `-`). Keep it
+in browser-owned storage, send it as a header, and never place it in a URL or log.
+Other owners receive 404. Capability discovery is public.
+
+| Method | Path below base | Operation |
+| --- | --- | --- |
+| GET | `/capabilities` | Experimental status and native parameter definitions |
+| POST | `/experiments` | Validate and queue an independent native world |
+| GET | `/experiments/{id}` | Persisted state, measured progress and outcome |
+| GET | `/experiments/{id}/frames?cursor=0&limit=32` | Ordered committed frames; maximum page size 64 |
+| POST | `/experiments/{id}/pause` | Request pause; wait up to ten seconds for acknowledgement |
+| POST | `/experiments/{id}/resume` | Continue an acknowledged paused state |
+| POST | `/experiments/{id}/cancel` | Cooperative cancellation, retaining measured frames |
+| GET | `/experiments/{id}/checkpoint` | Latest committed full-state checkpoint metadata |
+| POST | `/experiments/{id}/fork` | Independent continuation from latest or named checkpoint |
+| POST | `/compare` | Two to four owner-scoped result records, without inventing a ranking |
+| GET | `/experiments/{id}/replay` | Terminal trace, only fetched when the visitor requests replay |
+| GET | `/experiments/{id}/export` | Terminal JSON report, frames and checkpoint metadata |
+
+Create a nominal trial:
+
+```json
+{
+  "schema_version": "vivacity.contact-request/1",
+  "config": {
+    "source_xy_m": [0.32, 0],
+    "destination_xy_m": [0.40, 0],
+    "parcel": {"mass_mode": "mass", "mass_kg": 0.5,
+               "dimensions_m": [0.18, 0.18, 0.16], "sliding_friction": 0.8},
+    "seed": 7
+  }
+}
+```
+
+POST returns 202 with a `vivacity.checkpoint-job/1` record, a generated `id`,
+`status: queued`, and no result. IDs and measurements in examples must be taken
+from that response. There are no predetermined successful branches.
+
+Fork with `{}` or `{"checkpoint_id":"<owned checkpoint id>"}`. The fork retains
+its parent reference and world version, receives private simulator/controller
+instances, and starts its own frame sequence at zero. It currently continues the
+same intervention. Parameter changes use a **new trial/configuration**, preserving
+the previous result; arbitrary mid-run configuration edits are not implemented.
+
+Compare with `{"ids":["<original id>","<fork id>"]}`. Results report whether world
+versions match. They retain parameters and measurements even when worlds differ.
+
+Frames have this structure (shape only, not fabricated measurement values):
+
+```text
+{
+  schema_version: "vivacity.checkpoint-frames/1",
+  id, status, steps_completed, current_phase, partial_measurements,
+  frames: [{seq, frame: {time_s, qpos, body_transforms,
+                         phase, measurement, steps_completed,
+                         grasp_constraint_active: false, ...}}],
+  next_cursor
+}
+```
+
+Request the next page using `next_cursor`. Do not infer motion beyond received
+frames. `pausing` is a pending request; `paused` means the checkpoint and the
+displayable final frame have been committed and physics/controller state is
+frozen. Terminal statuses are `completed`, `failed`, `cancelled`, `interrupted`.
+`completed` requires the task evaluator to pass; solver or restore errors never
+produce successful substitute animation. A restart resumes a compatible committed
+state. Incompatible task/controller/simulator versions become `interrupted`.
+
+The new contact interface uses HTTP cursor polling, not a new WebSocket protocol.
+The existing general experiment WebSocket contract is unchanged. New contact
+browser integration and cross-browser acceptance remain open.
+
+## Geometry and physical meaning
+
+Native coordinates are right-handed, Z-up, metres. Body transforms are **world**
+transforms; do not apply the native body hierarchy a second time. Quaternions are
+`[w,x,y,z]`; Three.js accepts `(x,y,z,w)`. Geometry-local rotations and positions
+must come from the same compiled model. The model SHA-256 identifies that binary.
+
+The scene contains the licensed G1 with articulated hands, a physical table and
+a free carton. It has zero equality constraints. Object motion comes from contact
+forces, gravity and integration. IK writes only independent planning scratch
+state; execution issues actuator commands.
+
+The new scene's render-asset API/UI integration is not delivered. The verification
+renderer recompiles the same configuration, checks its binary hash, then renders
+the recorded `qpos` values. This is explicitly measured replay, not live execution.
+
+Dimensions are full lengths. In mass mode, resizing preserves mass and changes
+inertia; density mode changes mass with volume. Custom inertia is validated for
+positive principal moments, triangle inequalities and bounded mass distribution.
+Contact parameters map to native MuJoCo `friction`, `condim=6` and positive-format
+`solref`. There are no independent static/dynamic friction or restitution controls.
+
+The tested held-out envelope is deliberately small: source X 0.315–0.325 m,
+source Y ±0.005 m, destination X 0.395–0.405 m, destination Y ±0.005 m, mass
+0.4–0.6 kg and sliding friction 0.7–0.9; dimensions remain 0.18×0.18×0.16 m.
+Broader request bounds allow failure experiments, not guaranteed successful grasps.
+
+## Persistence, limits and backup
+
+Each frame batch, matching full `mjSTATE_INTEGRATION` checkpoint and job progress
+commit in one SQLite transaction. A content-addressed native model binary includes
+model configuration; controller/FSM/RNG/perception/ledger/cursor fields accompany
+the state. The new service shares the existing single humanoid executor. Its
+persistent queue admits two nonterminal trials, with 12 starts per owner/hour and
+24 per network admission key/hour. A trial is limited to 15,000 physics steps and
+120 seconds of measured initialization/step computation. Paused time is excluded.
+An acknowledged pause has a fifteen-minute lease; expiry cancels the trial,
+retains its evidence, and releases the queue. The response exposes its deadline.
+Checkpoint I/O and scheduling latency are not included in that compute metric.
+Admission also reserves 150 MB below a 3 GB database/WAL budget. These are research
+defaults, not a complete app-wide abuse or retention audit.
+
+The JSON export is **not** a portable simulator: the compiled model artifact stays
+in SQLite. A consistent database backup includes it. Run:
+
+```powershell
+python -m scripts.sqlite_backup backup data/contact-research.sqlite3 data/contact-backup.sqlite3
+# Use the checksum returned by the backup command, and a new destination:
+python -m scripts.sqlite_backup restore data/contact-backup.sqlite3 data/contact-restored.sqlite3 --sha256 <returned-sha256>
+```
+
+Backups use SQLite's online backup API; restore verifies checksum and integrity
+and refuses to overwrite an existing database. Persistent disk, production
+capacity, maintenance draining across all legacy services, and 24-hour soak remain
+release gates. No new paid resources or production deployment are implied here.

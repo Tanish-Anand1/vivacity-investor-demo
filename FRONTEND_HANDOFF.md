@@ -1,3 +1,14 @@
+# Physical Truth research update — 2026-10-24
+
+An opt-in contact-only G1 execution API has been implemented locally. It is not
+the full Physical Truth release and is disabled by default. The existing frontend
+and historical tasks below remain unchanged. See
+[the contact execution handoff](docs/CONTACT_EXECUTION_HANDOFF.md) for exact new
+routes, parameters, checkpoint/frames/fork/compare/export contracts and limitations.
+OpenAPI and generated TypeScript declarations include the new interface. New
+contact-scene geometry and browser integration remain open; do not reuse the old
+stand geometry for the new table scene.
+
 # Live humanoid task handoff — 2026-10-22
 
 The `/works` route runs three **bounded MuJoCo tasks**: G1 stationary parcel

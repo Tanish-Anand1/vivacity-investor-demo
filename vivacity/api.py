@@ -25,6 +25,11 @@ def create_app(database=None):
         path=database or os.getenv('VIVACITY_DATABASE', 'data/vivacity.sqlite3')
         app.state.runtime = Runtime(path)
         app.state.humanoids = HumanoidTrialService(app.state.runtime.store)
+        app.state.contact_execution = None
+        if os.getenv('VIVACITY_EXPERIMENTAL_CONTACT_TASKS', '0') == '1':
+            from .execution_service import ExecutionService, BimanualAdapter
+            app.state.contact_execution = ExecutionService(app.state.runtime.store,
+                {'g1_stationary_bimanual': BimanualAdapter()}, executor=app.state.humanoids.executor)
         app.state.imports = app.state.runtime.imports
         from .workspace import WorkspaceService
         app.state.workspace = WorkspaceService(app.state.runtime)
@@ -33,7 +38,10 @@ def create_app(database=None):
         from .fulfillment import FulfillmentService
         app.state.fulfillment = FulfillmentService(app.state.factory)
         yield
-        await asyncio.to_thread(app.state.humanoids.close)
+        shutdowns = [asyncio.to_thread(app.state.humanoids.close)]
+        if app.state.contact_execution is not None:
+            shutdowns.append(asyncio.to_thread(app.state.contact_execution.close))
+        await asyncio.gather(*shutdowns)
         await asyncio.to_thread(app.state.factory.close)
         await asyncio.to_thread(app.state.workspace.close)
         await asyncio.to_thread(app.state.runtime.close)
@@ -69,6 +77,8 @@ def create_app(database=None):
     app.include_router(factory_router)
     from .fulfillment_api import router as fulfillment_router
     app.include_router(fulfillment_router)
+    from .execution_api import router as execution_router
+    app.include_router(execution_router)
 
     @app.exception_handler(PermissionError)
     async def permission(request,exc):

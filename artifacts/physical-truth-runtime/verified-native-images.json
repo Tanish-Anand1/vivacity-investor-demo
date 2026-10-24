@@ -1,0 +1,598 @@
+{
+  "scope": "Render of measured replay poses; not a new execution or live footage.",
+  "model_sha256": "a982e2f81c2074a16f4b74ae9d598392842b9e391d4650b6881d17c475cccbce",
+  "frames": [
+    {
+      "phase": "approach",
+      "time_s": 5.999999999999561,
+      "path": "verified-native-approach.png",
+      "measurement": {
+        "parcel_position_m": [
+          0.31999999999691114,
+          -1.1082800846390528e-09,
+          0.8199770699043174
+        ],
+        "parcel_clearance_m": -2.2930106198471023e-05,
+        "parcel_speed_m_s": 2.230618481192252e-10,
+        "base_height_m": 0.7912809622890338,
+        "base_tilt_rad": 0.03187065970834797,
+        "joint_limit_error_rad": 9.552135393042782e-05,
+        "prohibited_contacts": [],
+        "loads": {
+          "left": {
+            "force_world_n": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "torque_world_nm": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "normal_force_n": 0.0,
+            "contact_count": 0
+          },
+          "right": {
+            "force_world_n": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "torque_world_nm": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "normal_force_n": 0.0,
+            "contact_count": 0
+          },
+          "other": {
+            "force_world_n": [
+              4.927502850193832e-13,
+              1.7668919660707161e-10,
+              4.904999999999988
+            ],
+            "torque_world_nm": [
+              1.3269020188166891e-09,
+              -3.697056549789579e-12,
+              -6.994405049697189e-18
+            ],
+            "normal_force_n": 4.904999999999988,
+            "contact_count": 4
+          }
+        },
+        "support": {
+          "left_vertical_n": 0.0,
+          "right_vertical_n": 0.0,
+          "other_vertical_n": 4.904999999999988,
+          "expected_vertical_n": 4.904999999999989,
+          "force_balance_error_n": -8.881784197001252e-16,
+          "left_fraction": null,
+          "right_fraction": null,
+          "bilateral_load": false,
+          "unsupported_by_environment": false
+        },
+        "destination_error_m": 0.08000000000308888
+      }
+    },
+    {
+      "phase": "grip",
+      "time_s": 7.499999999999396,
+      "path": "verified-native-grip.png",
+      "measurement": {
+        "parcel_position_m": [
+          0.327038186853312,
+          -1.0569970372624557e-05,
+          0.8199752856803886
+        ],
+        "parcel_clearance_m": -4.380603600184774e-05,
+        "parcel_speed_m_s": 0.004341303407229154,
+        "base_height_m": 0.7912824350226915,
+        "base_tilt_rad": 0.03206893944608072,
+        "joint_limit_error_rad": 0.00317858161995499,
+        "prohibited_contacts": [],
+        "loads": {
+          "left": {
+            "force_world_n": [
+              1.426461836466921,
+              -32.856234184907365,
+              -1.545627490299342
+            ],
+            "torque_world_nm": [
+              -0.29373086552204497,
+              0.0643338713120751,
+              -1.637511230891228
+            ],
+            "normal_force_n": 32.86148994463233,
+            "contact_count": 4
+          },
+          "right": {
+            "force_world_n": [
+              1.3954220142285234,
+              32.85250518372806,
+              -1.4575945838681186
+            ],
+            "torque_world_nm": [
+              0.2977269750947799,
+              0.059936005993857,
+              1.634619461299869
+            ],
+            "normal_force_n": 32.84849604371668,
+            "contact_count": 4
+          },
+          "other": {
+            "force_world_n": [
+              -2.8307485929133724,
+              0.003675738547296187,
+              7.907549353914197
+            ],
+            "torque_world_nm": [
+              -0.003993109461128019,
+              -0.12436079777982023,
+              0.002890456626853888
+            ],
+            "normal_force_n": 7.907549353914197,
+            "contact_count": 4
+          }
+        },
+        "support": {
+          "left_vertical_n": -1.545627490299342,
+          "right_vertical_n": -1.4575945838681186,
+          "other_vertical_n": 7.907549353914197,
+          "expected_vertical_n": 4.904327279746737,
+          "force_balance_error_n": -8.881784197001252e-16,
+          "left_fraction": null,
+          "right_fraction": null,
+          "bilateral_load": false,
+          "unsupported_by_environment": false
+        },
+        "destination_error_m": 0.0729618139123233
+      }
+    },
+    {
+      "phase": "lift",
+      "time_s": 9.499999999999842,
+      "path": "verified-native-lift.png",
+      "measurement": {
+        "parcel_position_m": [
+          0.39126645694422935,
+          -0.003921544196564972,
+          0.8847275944812656
+        ],
+        "parcel_clearance_m": 0.04304632451928436,
+        "parcel_speed_m_s": 0.012736315076522148,
+        "base_height_m": 0.7910072486791785,
+        "base_tilt_rad": 0.05330157125112114,
+        "joint_limit_error_rad": 0.003148320282681416,
+        "prohibited_contacts": [],
+        "loads": {
+          "left": {
+            "force_world_n": [
+              -0.1008322730426456,
+              -32.12753669987358,
+              2.2104722320969032
+            ],
+            "torque_world_nm": [
+              2.128498793661727,
+              -0.007188829609174109,
+              -0.015268902330814418
+            ],
+            "normal_force_n": 32.14233051762649,
+            "contact_count": 4
+          },
+          "right": {
+            "force_world_n": [
+              0.11561991341628707,
+              32.146697358464365,
+              2.693789303907408
+            ],
+            "torque_world_nm": [
+              -2.125747792282376,
+              0.006952264362908484,
+              0.015850846429617097
+            ],
+            "normal_force_n": 32.12153591630572,
+            "contact_count": 4
+          },
+          "other": {
+            "force_world_n": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "torque_world_nm": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "normal_force_n": 0.0,
+            "contact_count": 0
+          }
+        },
+        "support": {
+          "left_vertical_n": 2.2104722320969032,
+          "right_vertical_n": 2.693789303907408,
+          "other_vertical_n": 0.0,
+          "expected_vertical_n": 4.904261536004319,
+          "force_balance_error_n": -7.993605777301127e-15,
+          "left_fraction": 0.45072478616176315,
+          "right_fraction": 0.5492752138382369,
+          "bilateral_load": true,
+          "unsupported_by_environment": true
+        },
+        "destination_error_m": 0.009573572122912774
+      }
+    },
+    {
+      "phase": "hold",
+      "time_s": 10.500000000000176,
+      "path": "verified-native-hold.png",
+      "measurement": {
+        "parcel_position_m": [
+          0.3943471475133248,
+          -0.0032800239506851053,
+          0.8799013049452177
+        ],
+        "parcel_clearance_m": 0.037206110884160704,
+        "parcel_speed_m_s": 0.006235540624051168,
+        "base_height_m": 0.7909426569558458,
+        "base_tilt_rad": 0.05703745640620148,
+        "joint_limit_error_rad": 0.0031085861950315152,
+        "prohibited_contacts": [],
+        "loads": {
+          "left": {
+            "force_world_n": [
+              -0.20538905523466314,
+              -32.02522741941237,
+              2.366974766978497
+            ],
+            "torque_world_nm": [
+              2.233188471109431,
+              -0.01445425683915079,
+              0.009939069359424289
+            ],
+            "normal_force_n": 32.038595815028096,
+            "contact_count": 4
+          },
+          "right": {
+            "force_world_n": [
+              0.20648301818752782,
+              32.01991492794735,
+              2.536625927403796
+            ],
+            "torque_world_nm": [
+              -2.2344866546245363,
+              0.014758369766696387,
+              -0.01043643680462054
+            ],
+            "normal_force_n": 32.002725935224134,
+            "contact_count": 4
+          },
+          "other": {
+            "force_world_n": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "torque_world_nm": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "normal_force_n": 0.0,
+            "contact_count": 0
+          }
+        },
+        "support": {
+          "left_vertical_n": 2.366974766978497,
+          "right_vertical_n": 2.536625927403796,
+          "other_vertical_n": 0.0,
+          "expected_vertical_n": 4.903600694382292,
+          "force_balance_error_n": 8.881784197001252e-16,
+          "left_fraction": 0.48270136874932984,
+          "right_fraction": 0.5172986312506701,
+          "bilateral_load": true,
+          "unsupported_by_environment": true
+        },
+        "destination_error_m": 0.006535541167583476
+      }
+    },
+    {
+      "phase": "transfer",
+      "time_s": 12.500000000000844,
+      "path": "verified-native-transfer.png",
+      "measurement": {
+        "parcel_position_m": [
+          0.4021403368229756,
+          0.00270147297423209,
+          0.8729192369678489
+        ],
+        "parcel_clearance_m": 0.02970354461091773,
+        "parcel_speed_m_s": 0.0028014668974762126,
+        "base_height_m": 0.7909027310144535,
+        "base_tilt_rad": 0.05929650355879503,
+        "joint_limit_error_rad": 0.0030309367365386475,
+        "prohibited_contacts": [],
+        "loads": {
+          "left": {
+            "force_world_n": [
+              0.0789908349406036,
+              -31.829198061297323,
+              2.5047443734330477
+            ],
+            "torque_world_nm": [
+              2.4303929662189736,
+              0.005883635602238578,
+              0.002512682637385924
+            ],
+            "normal_force_n": 31.845594137356372,
+            "contact_count": 4
+          },
+          "right": {
+            "force_world_n": [
+              -0.07781757218564722,
+              31.829259479381886,
+              2.39977281344239
+            ],
+            "torque_world_nm": [
+              -2.4303921435797236,
+              -0.00592440389471305,
+              -0.002511636906226862
+            ],
+            "normal_force_n": 31.829689674378645,
+            "contact_count": 4
+          },
+          "other": {
+            "force_world_n": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "torque_world_nm": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "normal_force_n": 0.0,
+            "contact_count": 0
+          }
+        },
+        "support": {
+          "left_vertical_n": 2.5047443734330477,
+          "right_vertical_n": 2.39977281344239,
+          "other_vertical_n": 0.0,
+          "expected_vertical_n": 4.904517186875436,
+          "force_balance_error_n": 1.7763568394002505e-15,
+          "left_fraction": 0.5107015182117786,
+          "right_fraction": 0.48929848178822133,
+          "bilateral_load": true,
+          "unsupported_by_environment": true
+        },
+        "destination_error_m": 0.0034465922222235174
+      }
+    },
+    {
+      "phase": "lower",
+      "time_s": 14.500000000001512,
+      "path": "verified-native-lower.png",
+      "measurement": {
+        "parcel_position_m": [
+          0.39093259540633324,
+          -0.007012057923350969,
+          0.8429505592894542
+        ],
+        "parcel_clearance_m": -4.422128686187854e-05,
+        "parcel_speed_m_s": 0.006028176493586783,
+        "base_height_m": 0.7910975025613197,
+        "base_tilt_rad": 0.04704663943367585,
+        "joint_limit_error_rad": 0.0030249925616170348,
+        "prohibited_contacts": [],
+        "loads": {
+          "left": {
+            "force_world_n": [
+              -1.118357402469485,
+              -31.70466412250989,
+              -0.9494611103130959
+            ],
+            "torque_world_nm": [
+              2.130160525563191,
+              -0.08240098518434306,
+              0.11288075383207406
+            ],
+            "normal_force_n": 31.72157651497963,
+            "contact_count": 4
+          },
+          "right": {
+            "force_world_n": [
+              -1.279142411376697,
+              31.62896091734238,
+              -0.9444979173777331
+            ],
+            "torque_world_nm": [
+              -2.1363580310486663,
+              -0.09196987441265654,
+              -0.1037847852932585
+            ],
+            "normal_force_n": 31.660765962938086,
+            "contact_count": 4
+          },
+          "other": {
+            "force_world_n": [
+              2.412881719188179,
+              0.07595742311003804,
+              6.788579234815108
+            ],
+            "torque_world_nm": [
+              0.006178556307478655,
+              0.17514020304592762,
+              -0.009091881239008295
+            ],
+            "normal_force_n": 6.788579234815108,
+            "contact_count": 2
+          }
+        },
+        "support": {
+          "left_vertical_n": -0.9494611103130959,
+          "right_vertical_n": -0.9444979173777331,
+          "other_vertical_n": 6.788579234815108,
+          "expected_vertical_n": 4.894620207124283,
+          "force_balance_error_n": -3.552713678800501e-15,
+          "left_fraction": null,
+          "right_fraction": null,
+          "bilateral_load": false,
+          "unsupported_by_environment": false
+        },
+        "destination_error_m": 0.0114624073555985
+      }
+    },
+    {
+      "phase": "release",
+      "time_s": 16.00000000000201,
+      "path": "verified-native-release.png",
+      "measurement": {
+        "parcel_position_m": [
+          0.398520918110126,
+          -0.002847925272442129,
+          0.8299770699048069
+        ],
+        "parcel_clearance_m": -2.293010061893419e-05,
+        "parcel_speed_m_s": 1.5445356427081744e-10,
+        "base_height_m": 0.7911742751618603,
+        "base_tilt_rad": 0.041553634203757996,
+        "joint_limit_error_rad": 9.557499043366668e-05,
+        "prohibited_contacts": [],
+        "loads": {
+          "left": {
+            "force_world_n": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "torque_world_nm": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "normal_force_n": 0.0,
+            "contact_count": 0
+          },
+          "right": {
+            "force_world_n": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "torque_world_nm": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "normal_force_n": 0.0,
+            "contact_count": 0
+          },
+          "other": {
+            "force_world_n": [
+              5.57450685612082e-10,
+              7.293687875886691e-12,
+              4.904999999976036
+            ],
+            "torque_world_nm": [
+              1.641839442179105e-12,
+              -8.815149998842031e-11,
+              7.640311242748007e-19
+            ],
+            "normal_force_n": 4.904999999976036,
+            "contact_count": 4
+          }
+        },
+        "support": {
+          "left_vertical_n": 0.0,
+          "right_vertical_n": 0.0,
+          "other_vertical_n": 4.904999999976036,
+          "expected_vertical_n": 4.904999999976035,
+          "force_balance_error_n": 8.881784197001252e-16,
+          "left_fraction": null,
+          "right_fraction": null,
+          "bilateral_load": false,
+          "unsupported_by_environment": false
+        },
+        "destination_error_m": 0.003209106042867362
+      }
+    },
+    {
+      "phase": "settle",
+      "time_s": 17.020000000001446,
+      "path": "verified-native-settle.png",
+      "measurement": {
+        "parcel_position_m": [
+          0.39852091787827604,
+          -0.00284792531124546,
+          0.829977069904317
+        ],
+        "parcel_clearance_m": -2.2930108600882626e-05,
+        "parcel_speed_m_s": 2.373039672727895e-10,
+        "base_height_m": 0.7911349332143048,
+        "base_tilt_rad": 0.044471412715857805,
+        "joint_limit_error_rad": 9.570264293490283e-05,
+        "prohibited_contacts": [],
+        "loads": {
+          "left": {
+            "force_world_n": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "torque_world_nm": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "normal_force_n": 0.0,
+            "contact_count": 0
+          },
+          "right": {
+            "force_world_n": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "torque_world_nm": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "normal_force_n": 0.0,
+            "contact_count": 0
+          },
+          "other": {
+            "force_world_n": [
+              3.335834830586748e-10,
+              -2.7774704758343207e-11,
+              4.904999999999955
+            ],
+            "torque_world_nm": [
+              2.860440079244242e-10,
+              -2.797756193384515e-10,
+              1.1457859046378379e-17
+            ],
+            "normal_force_n": 4.904999999999955,
+            "contact_count": 4
+          }
+        },
+        "support": {
+          "left_vertical_n": 0.0,
+          "right_vertical_n": 0.0,
+          "other_vertical_n": 4.904999999999955,
+          "expected_vertical_n": 4.904999999999955,
+          "force_balance_error_n": 0.0,
+          "left_fraction": null,
+          "right_fraction": null,
+          "bilateral_load": false,
+          "unsupported_by_environment": false
+        },
+        "destination_error_m": 0.003209106184163446
+      }
+    }
+  ]
+}

@@ -840,6 +840,9 @@ class HumanoidTrialService:
                     self._save(owner, record)
             gate.checkpoint()
             result = simulate(request, on_frame=on_frame, checkpoint=gate.checkpoint)
+            # A pause can arrive during the final frame callback. Honor it at
+            # the completion boundary too, rather than completing a paused run.
+            gate.checkpoint()
             flush()
             with self.lock:
                 record.update(status='completed', result=result)

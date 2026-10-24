@@ -1,0 +1,15 @@
+*
+!.gitignore
+!README.md
+!verification-summary.json
+!backup-restore-verification.json
+!*-tests.xml
+!bimanual-final-acceptance.json.gz
+!http-journey.json.gz
+!failure-fixtures.json
+!g1-whole-body-task.json.gz
+!g1-clarabel-research.json.gz
+!g1-clarabel-load-25-research.json.gz
+!g1-clarabel-load-25-torque-1-research.json.gz
+!verified-native-contact-sheet.png
+!verified-native-images.json

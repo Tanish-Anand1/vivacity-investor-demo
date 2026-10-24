@@ -1,0 +1,4344 @@
+{
+  "scope": "Native stationary G1 negative fixtures; classifications are measured outcomes, not assumed causes.",
+  "trials": [
+    {
+      "fixture": "low_friction",
+      "schema_version": "vivacity.g1-frictional-carton/1",
+      "controller": "vivacity.g1-native-position-contact/1",
+      "status": "failed",
+      "task_success": false,
+      "failure_reason": "grip_slipped",
+      "parameters": {
+        "parcel": {
+          "dimensions_m": [
+            0.18,
+            0.18,
+            0.16
+          ],
+          "mass_mode": "mass",
+          "mass_kg": 0.5,
+          "density_kg_m3": 100.0,
+          "custom_inertia_kg_m2": null,
+          "sliding_friction": 0.001,
+          "torsional_friction_m": 0.0,
+          "rolling_friction_m": 0.0,
+          "contact_time_constant_s": 0.02,
+          "contact_damping_ratio": 1.0
+        },
+        "controller": "native_position",
+        "source_xy_m": [
+          0.32,
+          0.0
+        ],
+        "destination_xy_m": [
+          0.4,
+          0.0
+        ],
+        "floor_friction": 0.8,
+        "hand_torque_scale": 1.0,
+        "gravity_m_s2": 9.81,
+        "disturbance_n": 0.0,
+        "seed": 7,
+        "timeout_s": 22.0
+      },
+      "world_version": "8127de70b556f75b296ef3aae401f1a42977ff40d8c086181463fc69188421d9",
+      "simulator_version": "3.15.0",
+      "model_sha256": "6813724b71132a6a98d5f267c4f23edbd3f17982de0d2c714ad30ec2e6614415",
+      "source_sha256": {
+        "bimanual.py": "50fd7af4ecbec49176cab13b2adc2873a75a7352895f934718658511ac48242d",
+        "contact_evidence.py": "af5e9e729611845091febe09d4050f185e6f0767a91abe56ef4a14fabe3f5ae5",
+        "physical_parameters.py": "93cadc4ac94b7f1242be5585cc6cba2f404daf3e51bf18e9230a6be49d2416c9",
+        "inverse_dynamics.py": "18dad10cfdeb4b4c592a0301eb6a51069572def9c841c0e96005160401abbead",
+        "whole_body_contact.py": "cff7879eb8d584df64a02ae5cffe05a5c6f9055a975b6e7e5bcb94cbdf5740a0"
+      },
+      "equality_constraints": 0,
+      "measurements": {
+        "source_sha256": {
+          "bimanual.py": "50fd7af4ecbec49176cab13b2adc2873a75a7352895f934718658511ac48242d",
+          "contact_evidence.py": "af5e9e729611845091febe09d4050f185e6f0767a91abe56ef4a14fabe3f5ae5",
+          "physical_parameters.py": "93cadc4ac94b7f1242be5585cc6cba2f404daf3e51bf18e9230a6be49d2416c9",
+          "inverse_dynamics.py": "18dad10cfdeb4b4c592a0301eb6a51069572def9c841c0e96005160401abbead",
+          "whole_body_contact.py": "cff7879eb8d584df64a02ae5cffe05a5c6f9055a975b6e7e5bcb94cbdf5740a0"
+        },
+        "phase": "grip",
+        "phase_start_s": 6.005999999999561,
+        "steps": 3754,
+        "next_frame_seq": 152,
+        "status": "failed",
+        "failure": "grip_slipped",
+        "events": [
+          {
+            "phase": "raise",
+            "time_s": 0.0,
+            "measurement": {}
+          },
+          {
+            "phase": "above",
+            "time_s": 2.002000000000001,
+            "measurement": {
+              "parcel_position_m": [
+                0.3199999999967154,
+                -1.8610366600822415e-12,
+                0.8199999999781401
+              ],
+              "parcel_clearance_m": -2.1859958287961945e-11,
+              "parcel_speed_m_s": 1.6861573578252147e-14,
+              "base_height_m": 0.7914169364758294,
+              "base_tilt_rad": 0.004602036893994289,
+              "joint_limit_error_rad": 9.653588732772e-05,
+              "prohibited_contacts": [],
+              "loads": {
+                "left": {
+                  "force_world_n": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "torque_world_nm": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "normal_force_n": 0.0,
+                  "contact_count": 0
+                },
+                "right": {
+                  "force_world_n": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "torque_world_nm": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "normal_force_n": 0.0,
+                  "contact_count": 0
+                },
+                "other": {
+                  "force_world_n": [
+                    -1.4510614931850796e-15,
+                    3.517117153073457e-14,
+                    4.905
+                  ],
+                  "torque_world_nm": [
+                    -2.1371793224034263e-15,
+                    -1.3877787807814457e-16,
+                    -2.636779683237013e-21
+                  ],
+                  "normal_force_n": 4.905,
+                  "contact_count": 4
+                }
+              },
+              "support": {
+                "left_vertical_n": 0.0,
+                "right_vertical_n": 0.0,
+                "other_vertical_n": 4.905,
+                "expected_vertical_n": 4.905,
+                "force_balance_error_n": 0.0,
+                "left_fraction": null,
+                "right_fraction": null,
+                "bilateral_load": false,
+                "unsupported_by_environment": false
+              },
+              "destination_error_m": 0.08000000000328461
+            }
+          },
+          {
+            "phase": "approach",
+            "time_s": 4.003999999999781,
+            "measurement": {
+              "parcel_position_m": [
+                0.3200398021725501,
+                2.6817931041932547e-05,
+                0.8199380307466344
+              ],
+              "parcel_clearance_m": -0.00013185264647408435,
+              "parcel_speed_m_s": 0.002016471521029693,
+              "base_height_m": 0.7909463095352336,
+              "base_tilt_rad": 0.057015510255783754,
+              "joint_limit_error_rad": 9.883921716435928e-05,
+              "prohibited_contacts": [],
+              "loads": {
+                "left": {
+                  "force_world_n": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "torque_world_nm": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "normal_force_n": 0.0,
+                  "contact_count": 0
+                },
+                "right": {
+                  "force_world_n": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "torque_world_nm": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "normal_force_n": 0.0,
+                  "contact_count": 0
+                },
+                "other": {
+                  "force_world_n": [
+                    -0.004878774328772653,
+                    0.0,
+                    4.8787743287726535
+                  ],
+                  "torque_world_nm": [
+                    -4.389226704390459e-05,
+                    0.0007372258568299483,
+                    -4.389226704391413e-08
+                  ],
+                  "normal_force_n": 4.8787743287726535,
+                  "contact_count": 2
+                }
+              },
+              "support": {
+                "left_vertical_n": 0.0,
+                "right_vertical_n": 0.0,
+                "other_vertical_n": 4.8787743287726535,
+                "expected_vertical_n": 4.878774252291134,
+                "force_balance_error_n": 7.648151978401074e-08,
+                "left_fraction": null,
+                "right_fraction": null,
+                "bilateral_load": false,
+                "unsupported_by_environment": false
+              },
+              "destination_error_m": 0.07996020232469618
+            }
+          },
+          {
+            "phase": "grip",
+            "time_s": 6.005999999999561,
+            "measurement": {
+              "parcel_position_m": [
+                0.3197361982859697,
+                0.00047567143016361913,
+                0.8199474981384247
+              ],
+              "parcel_clearance_m": -0.00015545396077221163,
+              "parcel_speed_m_s": 0.0013378673157751657,
+              "base_height_m": 0.7912788017434798,
+              "base_tilt_rad": 0.03207707656487753,
+              "joint_limit_error_rad": 9.55341007113919e-05,
+              "prohibited_contacts": [],
+              "loads": {
+                "left": {
+                  "force_world_n": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "torque_world_nm": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "normal_force_n": 0.0,
+                  "contact_count": 0
+                },
+                "right": {
+                  "force_world_n": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "torque_world_nm": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "normal_force_n": 0.0,
+                  "contact_count": 0
+                },
+                "other": {
+                  "force_world_n": [
+                    -0.002579479680326884,
+                    0.002321946760882386,
+                    4.90142644120927
+                  ],
+                  "torque_world_nm": [
+                    0.0004335021811961437,
+                    0.0004071512174337877,
+                    3.520332985030737e-08
+                  ],
+                  "normal_force_n": 4.90142644120927,
+                  "contact_count": 2
+                }
+              },
+              "support": {
+                "left_vertical_n": 0.0,
+                "right_vertical_n": 0.0,
+                "other_vertical_n": 4.90142644120927,
+                "expected_vertical_n": 4.901426441209039,
+                "force_balance_error_n": 2.3092638912203256e-13,
+                "left_fraction": null,
+                "right_fraction": null,
+                "bilateral_load": false,
+                "unsupported_by_environment": false
+              },
+              "destination_error_m": 0.08026521119948946
+            }
+          }
+        ],
+        "home": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.2,
+          0.2,
+          0.0,
+          1.28,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.2,
+          -0.2,
+          0.0,
+          1.28,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "start": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -0.04336020016826947,
+          0.15438822023235999,
+          -0.02696075831228445,
+          0.489387257066062,
+          -0.17649364630478692,
+          -0.5270956234100151,
+          -0.043896601663355794,
+          0.0,
+          1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -0.04345162919042503,
+          -0.15429894901003072,
+          0.026813078599015217,
+          0.4896612189737751,
+          0.17655210179538927,
+          -0.527254399075496,
+          0.0441122573392741,
+          0.0,
+          -1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "goal": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -0.14101915107629612,
+          -0.01807504933092449,
+          -0.12657341149368356,
+          0.615619501637764,
+          0.007258160529822272,
+          -0.5277731045583128,
+          0.17034485082631254,
+          0.0,
+          1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -0.1410619118651669,
+          0.018149851836782884,
+          0.12639517907388306,
+          0.6158028127015913,
+          -0.007223230346959972,
+          -0.5279267133562847,
+          -0.17016294358719947,
+          0.0,
+          -1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "previous_targets": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -0.14101915107629612,
+          -0.018075049330924492,
+          -0.12657341149368356,
+          0.615619501637764,
+          0.007258160529822283,
+          -0.5277731045583128,
+          0.17034485082631254,
+          0.0,
+          1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -0.1410619118651669,
+          0.018149851836782888,
+          0.12639517907388306,
+          0.6158028127015913,
+          -0.007223230346959986,
+          -0.5279267133562847,
+          -0.17016294358719947,
+          0.0,
+          -1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "minimum_base_height_m": 0.79,
+        "maximum_base_tilt_rad": 0.07402861133175528,
+        "maximum_parcel_clearance_m": 0.5764376934336295,
+        "maximum_joint_limit_error_rad": 0.01994143877464505,
+        "bilateral_hold_samples": 0,
+        "hold_samples": 0,
+        "minimum_hold_share": 1.0,
+        "maximum_hold_force_balance_error_n": 0.0,
+        "support_before_release": false,
+        "unsupported_transport_samples": 0,
+        "retained_transport_samples": 0,
+        "maximum_transport_force_balance_error_n": 0.0,
+        "grip_contact_observed": true,
+        "maximum_grip_slip_m": 0.26089341482955564,
+        "release_time_s": null,
+        "prohibited_contacts": [],
+        "last_measurement": {
+          "parcel_position_m": [
+            0.4010086759404131,
+            0.2479979199989543,
+            0.937155363345605
+          ],
+          "parcel_clearance_m": 0.07037756303902076,
+          "parcel_speed_m_s": 0.9912430627301757,
+          "base_height_m": 0.7910294515322058,
+          "base_tilt_rad": 0.04919377199476653,
+          "joint_limit_error_rad": 9.71820715394145e-05,
+          "prohibited_contacts": [],
+          "loads": {
+            "left": {
+              "force_world_n": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "torque_world_nm": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "normal_force_n": 0.0,
+              "contact_count": 0
+            },
+            "right": {
+              "force_world_n": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "torque_world_nm": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "normal_force_n": 0.0,
+              "contact_count": 0
+            },
+            "other": {
+              "force_world_n": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "torque_world_nm": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "normal_force_n": 0.0,
+              "contact_count": 0
+            }
+          },
+          "support": {
+            "left_vertical_n": 0.0,
+            "right_vertical_n": 0.0,
+            "other_vertical_n": 0.0,
+            "expected_vertical_n": 0.0,
+            "force_balance_error_n": 0.0,
+            "left_fraction": null,
+            "right_fraction": null,
+            "bilateral_load": false,
+            "unsupported_by_environment": true
+          },
+          "destination_error_m": 0.2479999712720961
+        },
+        "planning": [
+          {
+            "phase": "raise",
+            "errors": {
+              "left": {
+                "position_m": 9.620488806872724e-05,
+                "rotation_rad": 7.353318147153793e-05
+              },
+              "right": {
+                "position_m": 9.597634572866877e-05,
+                "rotation_rad": 7.343493914875958e-05
+              }
+            }
+          },
+          {
+            "phase": "above",
+            "errors": {
+              "left": {
+                "position_m": 2.19771619393924e-06,
+                "rotation_rad": 5.732149532093552e-06
+              },
+              "right": {
+                "position_m": 2.189849815513521e-06,
+                "rotation_rad": 5.711880384769272e-06
+              }
+            }
+          },
+          {
+            "phase": "approach",
+            "errors": {
+              "left": {
+                "position_m": 7.018111476565135e-05,
+                "rotation_rad": 0.00017821954909510166
+              },
+              "right": {
+                "position_m": 7.05666621812313e-05,
+                "rotation_rad": 0.000178368421369876
+              }
+            }
+          },
+          {
+            "phase": "grip",
+            "errors": {
+              "left": {
+                "position_m": 2.345291541595043e-06,
+                "rotation_rad": 4.831225525065747e-06
+              },
+              "right": {
+                "position_m": 2.342928394022864e-06,
+                "rotation_rad": 4.825544590406582e-06
+              }
+            }
+          }
+        ],
+        "hand_tasks": {
+          "left": {
+            "start_position": [
+              0.20420174643907657,
+              0.18472904257447165,
+              0.8243178453439082
+            ],
+            "start_rotation": [
+              [
+                0.9998477866136147,
+                -0.0016877900314346186,
+                -0.01736533813842568
+              ],
+              [
+                0.0017212812616338334,
+                0.9999966871605891,
+                0.0019138596243773703
+              ],
+              [
+                0.017362050416653556,
+                -0.0019434589404624888,
+                0.9998473794398187
+              ]
+            ],
+            "position": [
+              0.22,
+              0.11499999999999999,
+              0.82
+            ],
+            "rotation": [
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          },
+          "right": {
+            "start_position": [
+              0.20420445663481437,
+              -0.1847259764563076,
+              0.824318044044374
+            ],
+            "start_rotation": [
+              [
+                0.9998478150646682,
+                0.0016702788104765724,
+                -0.01736539314558372
+              ],
+              [
+                -0.0017038277602701444,
+                0.9999967104075228,
+                -0.0019173275913500422
+              ],
+              [
+                0.017362133548868522,
+                0.0019466234418839966,
+                0.999847371840224
+              ]
+            ],
+            "position": [
+              0.22,
+              -0.11499999999999999,
+              0.82
+            ],
+            "rotation": [
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          }
+        }
+      },
+      "scope": "Experimental stationary frictional carton transfer using native G1 finger and arm servos. No weld, locomotion, camera perception, or hardware validation.",
+      "compute_wall_s": 6.66719639999792
+    },
+    {
+      "fixture": "weak_hand_actuators",
+      "schema_version": "vivacity.g1-frictional-carton/1",
+      "controller": "vivacity.g1-native-position-contact/1",
+      "status": "failed",
+      "task_success": false,
+      "failure_reason": "insufficient_grip_contact",
+      "parameters": {
+        "parcel": {
+          "dimensions_m": [
+            0.18,
+            0.18,
+            0.16
+          ],
+          "mass_mode": "mass",
+          "mass_kg": 0.5,
+          "density_kg_m3": 100.0,
+          "custom_inertia_kg_m2": null,
+          "sliding_friction": 0.8,
+          "torsional_friction_m": 0.005,
+          "rolling_friction_m": 0.0001,
+          "contact_time_constant_s": 0.02,
+          "contact_damping_ratio": 1.0
+        },
+        "controller": "native_position",
+        "source_xy_m": [
+          0.32,
+          0.0
+        ],
+        "destination_xy_m": [
+          0.4,
+          0.0
+        ],
+        "floor_friction": 0.8,
+        "hand_torque_scale": 0.01,
+        "gravity_m_s2": 9.81,
+        "disturbance_n": 0.0,
+        "seed": 7,
+        "timeout_s": 22.0
+      },
+      "world_version": "78c53d983127c485802f3657678de379f8faba5543826654981e04948f7112c3",
+      "simulator_version": "3.15.0",
+      "model_sha256": "930a98e4e2445b62b772f08857245426b3ada8e50a93c483d3c6752fed166ddb",
+      "source_sha256": {
+        "bimanual.py": "50fd7af4ecbec49176cab13b2adc2873a75a7352895f934718658511ac48242d",
+        "contact_evidence.py": "af5e9e729611845091febe09d4050f185e6f0767a91abe56ef4a14fabe3f5ae5",
+        "physical_parameters.py": "93cadc4ac94b7f1242be5585cc6cba2f404daf3e51bf18e9230a6be49d2416c9",
+        "inverse_dynamics.py": "18dad10cfdeb4b4c592a0301eb6a51069572def9c841c0e96005160401abbead",
+        "whole_body_contact.py": "cff7879eb8d584df64a02ae5cffe05a5c6f9055a975b6e7e5bcb94cbdf5740a0"
+      },
+      "equality_constraints": 0,
+      "measurements": {
+        "source_sha256": {
+          "bimanual.py": "50fd7af4ecbec49176cab13b2adc2873a75a7352895f934718658511ac48242d",
+          "contact_evidence.py": "af5e9e729611845091febe09d4050f185e6f0767a91abe56ef4a14fabe3f5ae5",
+          "physical_parameters.py": "93cadc4ac94b7f1242be5585cc6cba2f404daf3e51bf18e9230a6be49d2416c9",
+          "inverse_dynamics.py": "18dad10cfdeb4b4c592a0301eb6a51069572def9c841c0e96005160401abbead",
+          "whole_body_contact.py": "cff7879eb8d584df64a02ae5cffe05a5c6f9055a975b6e7e5bcb94cbdf5740a0"
+        },
+        "phase": "grip",
+        "phase_start_s": 6.005999999999561,
+        "steps": 3754,
+        "next_frame_seq": 152,
+        "status": "failed",
+        "failure": "insufficient_grip_contact",
+        "events": [
+          {
+            "phase": "raise",
+            "time_s": 0.0,
+            "measurement": {}
+          },
+          {
+            "phase": "above",
+            "time_s": 2.002000000000001,
+            "measurement": {
+              "parcel_position_m": [
+                0.31999999999946904,
+                -1.908267003961973e-10,
+                0.8199770699043174
+              ],
+              "parcel_clearance_m": -2.293010621368108e-05,
+              "parcel_speed_m_s": 2.191178170290932e-10,
+              "base_height_m": 0.7913863117991081,
+              "base_tilt_rad": 0.014375700632062453,
+              "joint_limit_error_rad": 0.0002387934190897223,
+              "prohibited_contacts": [],
+              "loads": {
+                "left": {
+                  "force_world_n": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "torque_world_nm": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "normal_force_n": 0.0,
+                  "contact_count": 0
+                },
+                "right": {
+                  "force_world_n": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "torque_world_nm": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "normal_force_n": 0.0,
+                  "contact_count": 0
+                },
+                "other": {
+                  "force_world_n": [
+                    -1.4963585925897862e-13,
+                    -5.377019940411287e-11,
+                    4.904999999999996
+                  ],
+                  "torque_world_nm": [
+                    1.0217203472162595e-09,
+                    -2.8477914471025656e-12,
+                    1.276756480396575e-18
+                  ],
+                  "normal_force_n": 4.904999999999996,
+                  "contact_count": 4
+                }
+              },
+              "support": {
+                "left_vertical_n": 0.0,
+                "right_vertical_n": 0.0,
+                "other_vertical_n": 4.904999999999996,
+                "expected_vertical_n": 4.904999999999993,
+                "force_balance_error_n": 2.6645352591003757e-15,
+                "left_fraction": null,
+                "right_fraction": null,
+                "bilateral_load": false,
+                "unsupported_by_environment": false
+              },
+              "destination_error_m": 0.08000000000053098
+            }
+          },
+          {
+            "phase": "approach",
+            "time_s": 4.003999999999781,
+            "measurement": {
+              "parcel_position_m": [
+                0.3199999999981897,
+                -6.49760831967581e-10,
+                0.8199770699043174
+              ],
+              "parcel_clearance_m": -2.293010653242611e-05,
+              "parcel_speed_m_s": 2.2433937096122782e-10,
+              "base_height_m": 0.791092821459595,
+              "base_tilt_rad": 0.04799752864118551,
+              "joint_limit_error_rad": 0.00024323807949500065,
+              "prohibited_contacts": [],
+              "loads": {
+                "left": {
+                  "force_world_n": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "torque_world_nm": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "normal_force_n": 0.0,
+                  "contact_count": 0
+                },
+                "right": {
+                  "force_world_n": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "torque_world_nm": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "normal_force_n": 0.0,
+                  "contact_count": 0
+                },
+                "other": {
+                  "force_world_n": [
+                    -3.858802166689657e-13,
+                    -1.381337599859478e-10,
+                    4.905000000000008
+                  ],
+                  "torque_world_nm": [
+                    8.31231972142632e-10,
+                    -2.3171881080585877e-12,
+                    -2.1371793281904595e-18
+                  ],
+                  "normal_force_n": 4.905000000000008,
+                  "contact_count": 4
+                }
+              },
+              "support": {
+                "left_vertical_n": 0.0,
+                "right_vertical_n": 0.0,
+                "other_vertical_n": 4.905000000000008,
+                "expected_vertical_n": 4.9050000000000065,
+                "force_balance_error_n": 1.7763568394002505e-15,
+                "left_fraction": null,
+                "right_fraction": null,
+                "bilateral_load": false,
+                "unsupported_by_environment": false
+              },
+              "destination_error_m": 0.08000000000181035
+            }
+          },
+          {
+            "phase": "grip",
+            "time_s": 6.005999999999561,
+            "measurement": {
+              "parcel_position_m": [
+                0.3199999999969075,
+                -1.1096180577574736e-09,
+                0.8199770699043174
+              ],
+              "parcel_clearance_m": -2.293010649734306e-05,
+              "parcel_speed_m_s": 2.2374239608888049e-10,
+              "base_height_m": 0.7912517676957892,
+              "base_tilt_rad": 0.03477494811080854,
+              "joint_limit_error_rad": 0.00023391081852630613,
+              "prohibited_contacts": [],
+              "loads": {
+                "left": {
+                  "force_world_n": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "torque_world_nm": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "normal_force_n": 0.0,
+                  "contact_count": 0
+                },
+                "right": {
+                  "force_world_n": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "torque_world_nm": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "normal_force_n": 0.0,
+                  "contact_count": 0
+                },
+                "other": {
+                  "force_world_n": [
+                    -3.900324507810638e-13,
+                    -1.4010450577472968e-10,
+                    4.904999999999994
+                  ],
+                  "torque_world_nm": [
+                    6.671310170958122e-10,
+                    -1.858804776766476e-12,
+                    -5.0653925464918555e-18
+                  ],
+                  "normal_force_n": 4.904999999999994,
+                  "contact_count": 4
+                }
+              },
+              "support": {
+                "left_vertical_n": 0.0,
+                "right_vertical_n": 0.0,
+                "other_vertical_n": 4.904999999999994,
+                "expected_vertical_n": 4.904999999999994,
+                "force_balance_error_n": 0.0,
+                "left_fraction": null,
+                "right_fraction": null,
+                "bilateral_load": false,
+                "unsupported_by_environment": false
+              },
+              "destination_error_m": 0.08000000000309254
+            }
+          }
+        ],
+        "home": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.2,
+          0.2,
+          0.0,
+          1.28,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.2,
+          -0.2,
+          0.0,
+          1.28,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "start": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -0.07802826431623557,
+          0.13074054922928158,
+          0.014565005071451226,
+          0.5412412696754345,
+          -0.15070409666944362,
+          -0.5296285481387464,
+          -0.07003528480146476,
+          0.0,
+          1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -0.07839664981682506,
+          -0.1303172206693225,
+          -0.01500784220944501,
+          0.5417638506739246,
+          0.1503688319578652,
+          -0.5297651291943112,
+          0.0705738843550412,
+          0.0,
+          -1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "goal": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -0.12985797176602856,
+          -0.03022023899864036,
+          -0.10676622417817626,
+          0.5973067606341925,
+          0.02519188997024347,
+          -0.5224746749259266,
+          0.15713219635302741,
+          0.0,
+          1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -0.1300582674345967,
+          0.030987470238891965,
+          0.10564665907105303,
+          0.5977506497986095,
+          -0.025985818894998788,
+          -0.522688536327908,
+          -0.15624536229637093,
+          0.0,
+          -1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "previous_targets": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -0.12985797176602856,
+          -0.030220238998640347,
+          -0.10676622417817626,
+          0.5973067606341925,
+          0.025191889970243464,
+          -0.5224746749259266,
+          0.15713219635302741,
+          0.0,
+          1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -0.1300582674345967,
+          0.03098747023889198,
+          0.10564665907105303,
+          0.5977506497986095,
+          -0.02598581889499879,
+          -0.522688536327908,
+          -0.15624536229637093,
+          0.0,
+          -1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "minimum_base_height_m": 0.79,
+        "maximum_base_tilt_rad": 0.06957366737431839,
+        "maximum_parcel_clearance_m": 0.0,
+        "maximum_joint_limit_error_rad": 0.002789410902614531,
+        "bilateral_hold_samples": 0,
+        "hold_samples": 0,
+        "minimum_hold_share": 1.0,
+        "maximum_hold_force_balance_error_n": 0.0,
+        "support_before_release": false,
+        "unsupported_transport_samples": 0,
+        "retained_transport_samples": 0,
+        "maximum_transport_force_balance_error_n": 0.0,
+        "grip_contact_observed": true,
+        "maximum_grip_slip_m": 0.007369939394718743,
+        "release_time_s": null,
+        "prohibited_contacts": [],
+        "last_measurement": {
+          "parcel_position_m": [
+            0.32736046402588675,
+            0.0003735987225009101,
+            0.819977651608413
+          ],
+          "parcel_clearance_m": -2.9780477883378786e-05,
+          "parcel_speed_m_s": 0.0015557008146963858,
+          "base_height_m": 0.7912031026153343,
+          "base_tilt_rad": 0.03911429011735858,
+          "joint_limit_error_rad": 0.0004724533310862533,
+          "prohibited_contacts": [],
+          "loads": {
+            "left": {
+              "force_world_n": [
+                0.7615622146467517,
+                -1.2740485159448964,
+                -0.35770999054880653
+              ],
+              "torque_world_nm": [
+                -0.04062197168756758,
+                0.012543235634386342,
+                -0.13115609105062936
+              ],
+              "normal_force_n": 1.3135743827750956,
+              "contact_count": 2
+            },
+            "right": {
+              "force_world_n": [
+                0.5654411363987304,
+                1.1651667667121635,
+                -0.34243282385401885
+              ],
+              "torque_world_nm": [
+                0.0391527647783464,
+                0.012844152979545817,
+                0.10816182454932102
+              ],
+              "normal_force_n": 1.1939119229101918,
+              "contact_count": 1
+            },
+            "other": {
+              "force_world_n": [
+                -1.3236208453737819,
+                0.10486071631517901,
+                5.605125204273025
+              ],
+              "torque_world_nm": [
+                0.0014903998973768706,
+                -0.025352905747064156,
+                0.02281925434256939
+              ],
+              "normal_force_n": 5.605125204273025,
+              "contact_count": 4
+            }
+          },
+          "support": {
+            "left_vertical_n": -0.35770999054880653,
+            "right_vertical_n": -0.34243282385401885,
+            "other_vertical_n": 5.605125204273025,
+            "expected_vertical_n": 4.9049823898702005,
+            "force_balance_error_n": -8.881784197001252e-16,
+            "left_fraction": null,
+            "right_fraction": null,
+            "bilateral_load": false,
+            "unsupported_by_environment": false
+          },
+          "destination_error_m": 0.07264049671182012
+        },
+        "planning": [
+          {
+            "phase": "raise",
+            "errors": {
+              "left": {
+                "position_m": 9.620488806872724e-05,
+                "rotation_rad": 7.353318147153793e-05
+              },
+              "right": {
+                "position_m": 9.597634572866877e-05,
+                "rotation_rad": 7.343493914875958e-05
+              }
+            }
+          },
+          {
+            "phase": "above",
+            "errors": {
+              "left": {
+                "position_m": 2.3440794906484517e-05,
+                "rotation_rad": 2.308323770961176e-05
+              },
+              "right": {
+                "position_m": 2.4413356207431757e-05,
+                "rotation_rad": 2.325127161443772e-05
+              }
+            }
+          },
+          {
+            "phase": "approach",
+            "errors": {
+              "left": {
+                "position_m": 4.885387431362373e-06,
+                "rotation_rad": 9.631046556327295e-06
+              },
+              "right": {
+                "position_m": 4.917728088924625e-06,
+                "rotation_rad": 9.68919054657568e-06
+              }
+            }
+          },
+          {
+            "phase": "grip",
+            "errors": {
+              "left": {
+                "position_m": 6.73236730214854e-05,
+                "rotation_rad": 0.0002842580136377079
+              },
+              "right": {
+                "position_m": 6.742513824711509e-05,
+                "rotation_rad": 0.00029755640403045464
+              }
+            }
+          }
+        ],
+        "hand_tasks": {
+          "left": {
+            "start_position": [
+              0.21062603623771398,
+              0.1847434862425554,
+              0.82122347993619
+            ],
+            "start_rotation": [
+              [
+                0.9990195709802776,
+                -0.04421458064864582,
+                -0.0022288240056924724
+              ],
+              [
+                0.044219634959038204,
+                0.999019250379992,
+                0.0022718394068160642
+              ],
+              [
+                0.002126189660722382,
+                -0.0023681698134531332,
+                0.9999949355318072
+              ]
+            ],
+            "position": [
+              0.22,
+              0.11499999999999999,
+              0.82
+            ],
+            "rotation": [
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          },
+          "right": {
+            "start_position": [
+              0.21063059799693518,
+              -0.18473731737790816,
+              0.8212236046600209
+            ],
+            "start_rotation": [
+              [
+                0.9990831715312589,
+                0.042753414772469016,
+                -0.0022275296483757812
+              ],
+              [
+                -0.04275846040488503,
+                0.9990828623198482,
+                -0.002268982719920105
+              ],
+              [
+                0.0021284799376652913,
+                0.002362148190238184,
+                0.9999949449017642
+              ]
+            ],
+            "position": [
+              0.22,
+              -0.11499999999999999,
+              0.82
+            ],
+            "rotation": [
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          }
+        }
+      },
+      "scope": "Experimental stationary frictional carton transfer using native G1 finger and arm servos. No weld, locomotion, camera perception, or hardware validation.",
+      "compute_wall_s": 5.194213300012052
+    },
+    {
+      "fixture": "heavy_carton",
+      "schema_version": "vivacity.g1-frictional-carton/1",
+      "controller": "vivacity.g1-native-position-contact/1",
+      "status": "failed",
+      "task_success": false,
+      "failure_reason": "lift_not_clear",
+      "parameters": {
+        "parcel": {
+          "dimensions_m": [
+            0.18,
+            0.18,
+            0.16
+          ],
+          "mass_mode": "mass",
+          "mass_kg": 20.0,
+          "density_kg_m3": 100.0,
+          "custom_inertia_kg_m2": null,
+          "sliding_friction": 0.8,
+          "torsional_friction_m": 0.005,
+          "rolling_friction_m": 0.0001,
+          "contact_time_constant_s": 0.02,
+          "contact_damping_ratio": 1.0
+        },
+        "controller": "native_position",
+        "source_xy_m": [
+          0.32,
+          0.0
+        ],
+        "destination_xy_m": [
+          0.4,
+          0.0
+        ],
+        "floor_friction": 0.8,
+        "hand_torque_scale": 1.0,
+        "gravity_m_s2": 9.81,
+        "disturbance_n": 0.0,
+        "seed": 7,
+        "timeout_s": 22.0
+      },
+      "world_version": "43e85b6844cecd484315914a05e99763d2e4256556ec2d57f38143c5c5831de3",
+      "simulator_version": "3.15.0",
+      "model_sha256": "535bab26adc81c7d4475de36e62cce8d59a5cc1d326bcd5e3e1a657854779b00",
+      "source_sha256": {
+        "bimanual.py": "50fd7af4ecbec49176cab13b2adc2873a75a7352895f934718658511ac48242d",
+        "contact_evidence.py": "af5e9e729611845091febe09d4050f185e6f0767a91abe56ef4a14fabe3f5ae5",
+        "physical_parameters.py": "93cadc4ac94b7f1242be5585cc6cba2f404daf3e51bf18e9230a6be49d2416c9",
+        "inverse_dynamics.py": "18dad10cfdeb4b4c592a0301eb6a51069572def9c841c0e96005160401abbead",
+        "whole_body_contact.py": "cff7879eb8d584df64a02ae5cffe05a5c6f9055a975b6e7e5bcb94cbdf5740a0"
+      },
+      "equality_constraints": 0,
+      "measurements": {
+        "source_sha256": {
+          "bimanual.py": "50fd7af4ecbec49176cab13b2adc2873a75a7352895f934718658511ac48242d",
+          "contact_evidence.py": "af5e9e729611845091febe09d4050f185e6f0767a91abe56ef4a14fabe3f5ae5",
+          "physical_parameters.py": "93cadc4ac94b7f1242be5585cc6cba2f404daf3e51bf18e9230a6be49d2416c9",
+          "inverse_dynamics.py": "18dad10cfdeb4b4c592a0301eb6a51069572def9c841c0e96005160401abbead",
+          "whole_body_contact.py": "cff7879eb8d584df64a02ae5cffe05a5c6f9055a975b6e7e5bcb94cbdf5740a0"
+        },
+        "phase": "lift",
+        "phase_start_s": 7.507999999999395,
+        "steps": 4755,
+        "next_frame_seq": 192,
+        "status": "failed",
+        "failure": "lift_not_clear",
+        "events": [
+          {
+            "phase": "raise",
+            "time_s": 0.0,
+            "measurement": {}
+          },
+          {
+            "phase": "above",
+            "time_s": 2.002000000000001,
+            "measurement": {
+              "parcel_position_m": [
+                0.3200000000403557,
+                2.051166589648769e-10,
+                0.8199770699043185
+              ],
+              "parcel_clearance_m": -2.293010822018715e-05,
+              "parcel_speed_m_s": 2.3445222305542544e-10,
+              "base_height_m": 0.7914169364758294,
+              "base_tilt_rad": 0.004602036893994289,
+              "joint_limit_error_rad": 9.653588732772e-05,
+              "prohibited_contacts": [],
+              "loads": {
+                "left": {
+                  "force_world_n": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "torque_world_nm": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "normal_force_n": 0.0,
+                  "contact_count": 0
+                },
+                "right": {
+                  "force_world_n": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "torque_world_nm": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "normal_force_n": 0.0,
+                  "contact_count": 0
+                },
+                "other": {
+                  "force_world_n": [
+                    -3.780976953748905e-09,
+                    -1.921732319942748e-08,
+                    196.2
+                  ],
+                  "torque_world_nm": [
+                    -1.2173932972814328e-08,
+                    2.3952129168947067e-09,
+                    1.27897692514573e-16
+                  ],
+                  "normal_force_n": 196.2,
+                  "contact_count": 4
+                }
+              },
+              "support": {
+                "left_vertical_n": 0.0,
+                "right_vertical_n": 0.0,
+                "other_vertical_n": 196.2,
+                "expected_vertical_n": 196.20000000000002,
+                "force_balance_error_n": -2.842170943040401e-14,
+                "left_fraction": null,
+                "right_fraction": null,
+                "bilateral_load": false,
+                "unsupported_by_environment": false
+              },
+              "destination_error_m": 0.0799999999596443
+            }
+          },
+          {
+            "phase": "approach",
+            "time_s": 4.003999999999781,
+            "measurement": {
+              "parcel_position_m": [
+                0.320000000129002,
+                6.55670977015762e-10,
+                0.8199770699043185
+              ],
+              "parcel_clearance_m": -2.293010766907244e-05,
+              "parcel_speed_m_s": 2.2779886356739573e-10,
+              "base_height_m": 0.7909463095352336,
+              "base_tilt_rad": 0.057015510255783754,
+              "joint_limit_error_rad": 9.883921716435928e-05,
+              "prohibited_contacts": [],
+              "loads": {
+                "left": {
+                  "force_world_n": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "torque_world_nm": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "normal_force_n": 0.0,
+                  "contact_count": 0
+                },
+                "right": {
+                  "force_world_n": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "torque_world_nm": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "normal_force_n": 0.0,
+                  "contact_count": 0
+                },
+                "other": {
+                  "force_world_n": [
+                    -4.9996891959835926e-09,
+                    -2.5411798532104514e-08,
+                    196.19999999999993
+                  ],
+                  "torque_world_nm": [
+                    -9.029234249169349e-09,
+                    1.7764776316653297e-09,
+                    -1.2345680020514133e-16
+                  ],
+                  "normal_force_n": 196.19999999999993,
+                  "contact_count": 4
+                }
+              },
+              "support": {
+                "left_vertical_n": 0.0,
+                "right_vertical_n": 0.0,
+                "other_vertical_n": 196.19999999999993,
+                "expected_vertical_n": 196.19999999999993,
+                "force_balance_error_n": 0.0,
+                "left_fraction": null,
+                "right_fraction": null,
+                "bilateral_load": false,
+                "unsupported_by_environment": false
+              },
+              "destination_error_m": 0.07999999987099804
+            }
+          },
+          {
+            "phase": "grip",
+            "time_s": 6.005999999999561,
+            "measurement": {
+              "parcel_position_m": [
+                0.32000000021767044,
+                1.1063437105303923e-09,
+                0.8199770699043185
+              ],
+              "parcel_clearance_m": -2.2930107520191534e-05,
+              "parcel_speed_m_s": 2.3042596450929595e-10,
+              "base_height_m": 0.7912788017434798,
+              "base_tilt_rad": 0.03207707656487753,
+              "joint_limit_error_rad": 9.55341007113919e-05,
+              "prohibited_contacts": [],
+              "loads": {
+                "left": {
+                  "force_world_n": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "torque_world_nm": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "normal_force_n": 0.0,
+                  "contact_count": 0
+                },
+                "right": {
+                  "force_world_n": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "torque_world_nm": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "normal_force_n": 0.0,
+                  "contact_count": 0
+                },
+                "other": {
+                  "force_world_n": [
+                    -7.021159120768062e-09,
+                    -3.5686336019580266e-08,
+                    196.20000000000005
+                  ],
+                  "torque_world_nm": [
+                    -6.351287495931501e-09,
+                    1.2495986467797593e-09,
+                    -4.440891999238953e-18
+                  ],
+                  "normal_force_n": 196.20000000000005,
+                  "contact_count": 4
+                }
+              },
+              "support": {
+                "left_vertical_n": 0.0,
+                "right_vertical_n": 0.0,
+                "other_vertical_n": 196.20000000000005,
+                "expected_vertical_n": 196.2,
+                "force_balance_error_n": 5.684341886080802e-14,
+                "left_fraction": null,
+                "right_fraction": null,
+                "bilateral_load": false,
+                "unsupported_by_environment": false
+              },
+              "destination_error_m": 0.07999999978232958
+            }
+          },
+          {
+            "phase": "lift",
+            "time_s": 7.507999999999395,
+            "measurement": {
+              "parcel_position_m": [
+                0.3201283637823455,
+                -1.8491014909734435e-07,
+                0.8199770762034467
+              ],
+              "parcel_clearance_m": -2.3800859902056715e-05,
+              "parcel_speed_m_s": 0.00018775739189054704,
+              "base_height_m": 0.7913597653884638,
+              "base_tilt_rad": 0.023076975309936205,
+              "joint_limit_error_rad": 0.00309674805028215,
+              "prohibited_contacts": [],
+              "loads": {
+                "left": {
+                  "force_world_n": [
+                    4.374490130434625,
+                    -33.45587335171465,
+                    -0.020012652437080572
+                  ],
+                  "torque_world_nm": [
+                    -0.11982059320983574,
+                    -0.015129258176773314,
+                    -1.9251425074091437
+                  ],
+                  "normal_force_n": 33.4457966566315,
+                  "contact_count": 4
+                },
+                "right": {
+                  "force_world_n": [
+                    4.288235765410972,
+                    33.435320463085034,
+                    0.010063208602810708
+                  ],
+                  "torque_world_nm": [
+                    0.12807845675691754,
+                    -0.01756282994208784,
+                    1.9182253705748973
+                  ],
+                  "normal_force_n": 33.41531726729464,
+                  "contact_count": 4
+                },
+                "other": {
+                  "force_world_n": [
+                    -8.663871831324165,
+                    0.02055666232317819,
+                    196.20994719827883
+                  ],
+                  "torque_world_nm": [
+                    -0.00825786049793198,
+                    0.032692217579827876,
+                    0.006917488696894458
+                  ],
+                  "normal_force_n": 196.20994719827883,
+                  "contact_count": 4
+                }
+              },
+              "support": {
+                "left_vertical_n": -0.020012652437080572,
+                "right_vertical_n": 0.010063208602810708,
+                "other_vertical_n": 196.20994719827883,
+                "expected_vertical_n": 196.19999775444458,
+                "force_balance_error_n": -2.842170943040401e-14,
+                "left_fraction": null,
+                "right_fraction": null,
+                "bilateral_load": false,
+                "unsupported_by_environment": false
+              },
+              "destination_error_m": 0.07987163621786857
+            }
+          }
+        ],
+        "home": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.2,
+          0.2,
+          0.0,
+          1.28,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.2,
+          -0.2,
+          0.0,
+          1.28,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "start": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -0.14101915107629565,
+          -0.018075049330924298,
+          -0.1265734114936838,
+          0.6156195016377621,
+          0.007258160529822005,
+          -0.5277731045583116,
+          0.17034485082631257,
+          0.0,
+          1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -0.14106191186516803,
+          0.018149851836782915,
+          0.12639517907388295,
+          0.615802812701593,
+          -0.007223230346959902,
+          -0.5279267133562853,
+          -0.17016294358719955,
+          0.0,
+          -1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "goal": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -0.2964891171627042,
+          0.5622015654651261,
+          -0.5371528953642798,
+          -0.3828716679071901,
+          -0.6330083358794146,
+          0.25005055229075557,
+          0.7525030582363421,
+          0.0,
+          1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -0.2962499442465901,
+          -0.5628328843768766,
+          0.537191268534398,
+          -0.3829642213903319,
+          0.6334499814425532,
+          0.2494644267256445,
+          -0.7527761118460518,
+          0.0,
+          -1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "previous_targets": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -0.2964891171627042,
+          0.5622015654651261,
+          -0.5371528953642798,
+          -0.3828716679071902,
+          -0.6330083358794146,
+          0.25005055229075557,
+          0.7525030582363421,
+          0.0,
+          1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -0.2962499442465901,
+          -0.5628328843768766,
+          0.537191268534398,
+          -0.3829642213903319,
+          0.6334499814425532,
+          0.2494644267256445,
+          -0.7527761118460518,
+          0.0,
+          -1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "minimum_base_height_m": 0.789724253141112,
+        "maximum_base_tilt_rad": 0.10536308125011586,
+        "maximum_parcel_clearance_m": 0.0,
+        "maximum_joint_limit_error_rad": 0.0033700543791885806,
+        "bilateral_hold_samples": 0,
+        "hold_samples": 0,
+        "minimum_hold_share": 1.0,
+        "maximum_hold_force_balance_error_n": 0.0,
+        "support_before_release": false,
+        "unsupported_transport_samples": 0,
+        "retained_transport_samples": 0,
+        "maximum_transport_force_balance_error_n": 0.0,
+        "grip_contact_observed": true,
+        "maximum_grip_slip_m": 0.0001283639155284796,
+        "release_time_s": null,
+        "prohibited_contacts": [],
+        "last_measurement": {
+          "parcel_position_m": [
+            0.32050685589793276,
+            5.070021883106709e-06,
+            0.819977069904857
+          ],
+          "parcel_clearance_m": -2.2930095868289868e-05,
+          "parcel_speed_m_s": 4.126814852256634e-11,
+          "base_height_m": 0.7910421847968742,
+          "base_tilt_rad": 0.052331567064591133,
+          "joint_limit_error_rad": 9.77278813858451e-05,
+          "prohibited_contacts": [],
+          "loads": {
+            "left": {
+              "force_world_n": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "torque_world_nm": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "normal_force_n": 0.0,
+              "contact_count": 0
+            },
+            "right": {
+              "force_world_n": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "torque_world_nm": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "normal_force_n": 0.0,
+              "contact_count": 0
+            },
+            "other": {
+              "force_world_n": [
+                -3.720389329942009e-08,
+                1.4854205687697686e-08,
+                196.2000000281521
+              ],
+              "torque_world_nm": [
+                -1.3220118333379105e-09,
+                -3.3111176023226108e-09,
+                -1.9184544379152365e-16
+              ],
+              "normal_force_n": 196.2000000281521,
+              "contact_count": 4
+            }
+          },
+          "support": {
+            "left_vertical_n": 0.0,
+            "right_vertical_n": 0.0,
+            "other_vertical_n": 196.2000000281521,
+            "expected_vertical_n": 196.2000000281521,
+            "force_balance_error_n": 0.0,
+            "left_fraction": null,
+            "right_fraction": null,
+            "bilateral_load": false,
+            "unsupported_by_environment": false
+          },
+          "destination_error_m": 0.07949314426374864
+        },
+        "planning": [
+          {
+            "phase": "raise",
+            "errors": {
+              "left": {
+                "position_m": 9.620488806872724e-05,
+                "rotation_rad": 7.353318147153793e-05
+              },
+              "right": {
+                "position_m": 9.597634572866877e-05,
+                "rotation_rad": 7.343493914875958e-05
+              }
+            }
+          },
+          {
+            "phase": "above",
+            "errors": {
+              "left": {
+                "position_m": 2.19771619393924e-06,
+                "rotation_rad": 5.732149532093552e-06
+              },
+              "right": {
+                "position_m": 2.189849815513521e-06,
+                "rotation_rad": 5.711880384769272e-06
+              }
+            }
+          },
+          {
+            "phase": "approach",
+            "errors": {
+              "left": {
+                "position_m": 7.018111476568477e-05,
+                "rotation_rad": 0.0001782195490950874
+              },
+              "right": {
+                "position_m": 7.056666218111799e-05,
+                "rotation_rad": 0.00017836842136976776
+              }
+            }
+          },
+          {
+            "phase": "grip",
+            "errors": {
+              "left": {
+                "position_m": 2.345291541811093e-06,
+                "rotation_rad": 4.8312255246911554e-06
+              },
+              "right": {
+                "position_m": 2.342928393926022e-06,
+                "rotation_rad": 4.825544590312538e-06
+              }
+            }
+          },
+          {
+            "phase": "lift",
+            "errors": {
+              "left": {
+                "position_m": 7.416746427106902e-06,
+                "rotation_rad": 7.615028672826491e-06
+              },
+              "right": {
+                "position_m": 7.442018207275651e-06,
+                "rotation_rad": 7.652605318333696e-06
+              }
+            }
+          }
+        ],
+        "hand_tasks": {
+          "left": {
+            "start_position": [
+              0.20917419307723437,
+              0.12502067709126538,
+              0.8168048797173895
+            ],
+            "start_rotation": [
+              [
+                0.9771087041595962,
+                -0.21179474952389882,
+                0.020039070079891766
+              ],
+              [
+                0.21206853707307205,
+                0.9771725997981117,
+                -0.012674611926603518
+              ],
+              [
+                -0.01689721394919675,
+                0.016634129911476718,
+                0.9997188554202859
+              ]
+            ],
+            "position": [
+              0.22,
+              0.11499999999999999,
+              0.96
+            ],
+            "rotation": [
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          },
+          "right": {
+            "start_position": [
+              0.20921777114890022,
+              -0.12495075490376573,
+              0.816810867726243
+            ],
+            "start_rotation": [
+              [
+                0.9769584766258618,
+                0.21248769664405331,
+                0.020027823740506726
+              ],
+              [
+                -0.2127621702374381,
+                0.9770211700664083,
+                0.01272368491916389
+              ],
+              [
+                -0.016863981283535855,
+                -0.0166916750798569,
+                0.9997184574260382
+              ]
+            ],
+            "position": [
+              0.22,
+              -0.11499999999999999,
+              0.96
+            ],
+            "rotation": [
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          }
+        }
+      },
+      "scope": "Experimental stationary frictional carton transfer using native G1 finger and arm servos. No weld, locomotion, camera perception, or hardware validation.",
+      "compute_wall_s": 7.195442600001115
+    },
+    {
+      "fixture": "unreachable_source",
+      "schema_version": "vivacity.g1-frictional-carton/1",
+      "controller": "vivacity.g1-native-position-contact/1",
+      "status": "failed",
+      "task_success": false,
+      "failure_reason": "unreachable_target",
+      "parameters": {
+        "parcel": {
+          "dimensions_m": [
+            0.18,
+            0.18,
+            0.16
+          ],
+          "mass_mode": "mass",
+          "mass_kg": 0.5,
+          "density_kg_m3": 100.0,
+          "custom_inertia_kg_m2": null,
+          "sliding_friction": 0.8,
+          "torsional_friction_m": 0.005,
+          "rolling_friction_m": 0.0001,
+          "contact_time_constant_s": 0.02,
+          "contact_damping_ratio": 1.0
+        },
+        "controller": "native_position",
+        "source_xy_m": [
+          0.68,
+          0.0
+        ],
+        "destination_xy_m": [
+          0.4,
+          0.0
+        ],
+        "floor_friction": 0.8,
+        "hand_torque_scale": 1.0,
+        "gravity_m_s2": 9.81,
+        "disturbance_n": 0.0,
+        "seed": 7,
+        "timeout_s": 22.0
+      },
+      "world_version": "49a1a5b740c86856488ea59b52029067676b2d3574feabecd8ad356bf830b5c5",
+      "simulator_version": "3.15.0",
+      "model_sha256": "dcdb06ba07c79d714187d47639183bcdc98491b6bb17b0ccf978a93f37eaf427",
+      "source_sha256": {
+        "bimanual.py": "50fd7af4ecbec49176cab13b2adc2873a75a7352895f934718658511ac48242d",
+        "contact_evidence.py": "af5e9e729611845091febe09d4050f185e6f0767a91abe56ef4a14fabe3f5ae5",
+        "physical_parameters.py": "93cadc4ac94b7f1242be5585cc6cba2f404daf3e51bf18e9230a6be49d2416c9",
+        "inverse_dynamics.py": "18dad10cfdeb4b4c592a0301eb6a51069572def9c841c0e96005160401abbead",
+        "whole_body_contact.py": "cff7879eb8d584df64a02ae5cffe05a5c6f9055a975b6e7e5bcb94cbdf5740a0"
+      },
+      "equality_constraints": 0,
+      "measurements": {
+        "source_sha256": {
+          "bimanual.py": "50fd7af4ecbec49176cab13b2adc2873a75a7352895f934718658511ac48242d",
+          "contact_evidence.py": "af5e9e729611845091febe09d4050f185e6f0767a91abe56ef4a14fabe3f5ae5",
+          "physical_parameters.py": "93cadc4ac94b7f1242be5585cc6cba2f404daf3e51bf18e9230a6be49d2416c9",
+          "inverse_dynamics.py": "18dad10cfdeb4b4c592a0301eb6a51069572def9c841c0e96005160401abbead",
+          "whole_body_contact.py": "cff7879eb8d584df64a02ae5cffe05a5c6f9055a975b6e7e5bcb94cbdf5740a0"
+        },
+        "phase": "above",
+        "phase_start_s": 2.002000000000001,
+        "steps": 1001,
+        "next_frame_seq": 42,
+        "status": "failed",
+        "failure": "unreachable_target",
+        "events": [
+          {
+            "phase": "raise",
+            "time_s": 0.0,
+            "measurement": {}
+          },
+          {
+            "phase": "above",
+            "time_s": 2.002000000000001,
+            "measurement": {
+              "parcel_position_m": [
+                0.6800082534687464,
+                2.0418410429931407e-11,
+                0.8199752030197498
+              ],
+              "parcel_clearance_m": -3.321208040096835e-05,
+              "parcel_speed_m_s": 3.9686967128259936e-07,
+              "base_height_m": 0.7914169364758294,
+              "base_tilt_rad": 0.004602036893994289,
+              "joint_limit_error_rad": 9.653588732772e-05,
+              "prohibited_contacts": [],
+              "loads": {
+                "left": {
+                  "force_world_n": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "torque_world_nm": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "normal_force_n": 0.0,
+                  "contact_count": 0
+                },
+                "right": {
+                  "force_world_n": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "torque_world_nm": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "normal_force_n": 0.0,
+                  "contact_count": 0
+                },
+                "other": {
+                  "force_world_n": [
+                    -1.0188673204279165e-10,
+                    -1.5673469714659683e-10,
+                    4.9050000001854865
+                  ],
+                  "torque_world_nm": [
+                    -2.125075948544719e-10,
+                    1.9063681189201986e-11,
+                    4.375677865103633e-12
+                  ],
+                  "normal_force_n": 4.904999978742854,
+                  "contact_count": 4
+                }
+              },
+              "support": {
+                "left_vertical_n": 0.0,
+                "right_vertical_n": 0.0,
+                "other_vertical_n": 4.9050000001854865,
+                "expected_vertical_n": 4.905000000185486,
+                "force_balance_error_n": 8.881784197001252e-16,
+                "left_fraction": null,
+                "right_fraction": null,
+                "bilateral_load": false,
+                "unsupported_by_environment": false
+              },
+              "destination_error_m": 0.28000825346874636
+            }
+          }
+        ],
+        "home": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.2,
+          0.2,
+          0.0,
+          1.28,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.2,
+          -0.2,
+          0.0,
+          1.28,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "start": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.2047633850924386,
+          1.1218731441152365,
+          0.24018626660810197,
+          -0.828706275435618,
+          -0.8345160527446153,
+          -0.5251012514459242,
+          0.37555270824906895,
+          0.0,
+          1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.2047756497848592,
+          -1.1218391805712742,
+          -0.24023735023886353,
+          -0.8286691511219815,
+          0.8345687019532635,
+          -0.5250990684940416,
+          -0.3754674968684337,
+          0.0,
+          -1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "goal": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -1.1960934835154473,
+          0.32946729189898877,
+          1.144439073800881,
+          1.4625848918558229,
+          0.7246680946327003,
+          -0.2386938069707103,
+          -0.031091921492451186,
+          0.0,
+          1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -1.196081152989009,
+          -0.332639742251279,
+          -1.1401095613798573,
+          1.4624107459992552,
+          -0.7148468206475715,
+          -0.24545727307715304,
+          0.031079620796344215,
+          0.0,
+          -1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "previous_targets": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.2047633850924386,
+          1.1218731441152365,
+          0.24018626660810197,
+          -0.828706275435618,
+          -0.8345160527446153,
+          -0.5251012514459242,
+          0.37555270824906895,
+          0.0,
+          1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.2047756497848592,
+          -1.1218391805712742,
+          -0.24023735023886353,
+          -0.8286691511219815,
+          0.8345687019532635,
+          -0.5250990684940416,
+          -0.3754674968684337,
+          0.0,
+          -1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "minimum_base_height_m": 0.79,
+        "maximum_base_tilt_rad": 0.009191461056571655,
+        "maximum_parcel_clearance_m": 0.0,
+        "maximum_joint_limit_error_rad": 0.0026368080342427103,
+        "bilateral_hold_samples": 0,
+        "hold_samples": 0,
+        "minimum_hold_share": 1.0,
+        "maximum_hold_force_balance_error_n": 0.0,
+        "support_before_release": false,
+        "unsupported_transport_samples": 0,
+        "retained_transport_samples": 0,
+        "maximum_transport_force_balance_error_n": 0.0,
+        "grip_contact_observed": false,
+        "maximum_grip_slip_m": 0.0,
+        "release_time_s": null,
+        "prohibited_contacts": [],
+        "last_measurement": {
+          "parcel_position_m": [
+            0.6800082534687464,
+            2.0418410429931407e-11,
+            0.8199752030197498
+          ],
+          "parcel_clearance_m": -3.321208040096835e-05,
+          "parcel_speed_m_s": 3.9686967128259936e-07,
+          "base_height_m": 0.7914169364758294,
+          "base_tilt_rad": 0.004602036893994289,
+          "joint_limit_error_rad": 9.653588732772e-05,
+          "prohibited_contacts": [],
+          "loads": {
+            "left": {
+              "force_world_n": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "torque_world_nm": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "normal_force_n": 0.0,
+              "contact_count": 0
+            },
+            "right": {
+              "force_world_n": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "torque_world_nm": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "normal_force_n": 0.0,
+              "contact_count": 0
+            },
+            "other": {
+              "force_world_n": [
+                -1.0188673204279165e-10,
+                -1.5673469714659683e-10,
+                4.9050000001854865
+              ],
+              "torque_world_nm": [
+                -2.125075948544719e-10,
+                1.9063681189201986e-11,
+                4.375677865103633e-12
+              ],
+              "normal_force_n": 4.904999978742854,
+              "contact_count": 4
+            }
+          },
+          "support": {
+            "left_vertical_n": 0.0,
+            "right_vertical_n": 0.0,
+            "other_vertical_n": 4.9050000001854865,
+            "expected_vertical_n": 4.905000000185486,
+            "force_balance_error_n": 8.881784197001252e-16,
+            "left_fraction": null,
+            "right_fraction": null,
+            "bilateral_load": false,
+            "unsupported_by_environment": false
+          },
+          "destination_error_m": 0.28000825346874636
+        },
+        "planning": [
+          {
+            "phase": "raise",
+            "errors": {
+              "left": {
+                "position_m": 9.620488806872724e-05,
+                "rotation_rad": 7.353318147153793e-05
+              },
+              "right": {
+                "position_m": 9.597634572866877e-05,
+                "rotation_rad": 7.343493914875958e-05
+              }
+            }
+          },
+          {
+            "phase": "above",
+            "errors": {
+              "left": {
+                "position_m": 0.23037276925710334,
+                "rotation_rad": 0.3441012590073126
+              },
+              "right": {
+                "position_m": 0.23046319845113944,
+                "rotation_rad": 0.34508941183056574
+              }
+            }
+          }
+        ],
+        "hand_tasks": {
+          "left": {
+            "start_position": [
+              0.04334191332429919,
+              0.240336672073545,
+              1.0003466758231432
+            ],
+            "start_rotation": [
+              [
+                0.999929903235892,
+                -0.004510104718778288,
+                0.010947491497416419
+              ],
+              [
+                0.004501030631941542,
+                0.9999895061859584,
+                0.0008533705023815247
+              ],
+              [
+                -0.010951225406806075,
+                -0.0008040356892979314,
+                0.9999397102769249
+              ]
+            ],
+            "position": [
+              0.5800000000000001,
+              0.185,
+              0.98
+            ],
+            "rotation": [
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          },
+          "right": {
+            "start_position": [
+              0.04334103740419677,
+              -0.24031568134254924,
+              1.0003744349312866
+            ],
+            "start_rotation": [
+              [
+                0.9999298918489945,
+                0.004513060432916439,
+                0.010947313478045713
+              ],
+              [
+                -0.0045052495101761065,
+                0.9999895789447042,
+                -0.000738057480238142
+              ],
+              [
+                -0.010950530293497898,
+                0.0006886853577081571,
+                0.9999398039876046
+              ]
+            ],
+            "position": [
+              0.5800000000000001,
+              -0.185,
+              0.98
+            ],
+            "rotation": [
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          }
+        }
+      },
+      "scope": "Experimental stationary frictional carton transfer using native G1 finger and arm servos. No weld, locomotion, camera perception, or hardware validation.",
+      "compute_wall_s": 2.0331289999885485
+    },
+    {
+      "fixture": "large_disturbance",
+      "schema_version": "vivacity.g1-frictional-carton/1",
+      "controller": "vivacity.g1-native-position-contact/1",
+      "status": "failed",
+      "task_success": false,
+      "failure_reason": "prohibited_collision",
+      "parameters": {
+        "parcel": {
+          "dimensions_m": [
+            0.18,
+            0.18,
+            0.16
+          ],
+          "mass_mode": "mass",
+          "mass_kg": 0.5,
+          "density_kg_m3": 100.0,
+          "custom_inertia_kg_m2": null,
+          "sliding_friction": 0.8,
+          "torsional_friction_m": 0.005,
+          "rolling_friction_m": 0.0001,
+          "contact_time_constant_s": 0.02,
+          "contact_damping_ratio": 1.0
+        },
+        "controller": "native_position",
+        "source_xy_m": [
+          0.32,
+          0.0
+        ],
+        "destination_xy_m": [
+          0.4,
+          0.0
+        ],
+        "floor_friction": 0.8,
+        "hand_torque_scale": 1.0,
+        "gravity_m_s2": 9.81,
+        "disturbance_n": 150.0,
+        "seed": 7,
+        "timeout_s": 22.0
+      },
+      "world_version": "6adde9bcf7fd22a76f25c52cae662659e463170f2bee84a57b0e8ee825971a13",
+      "simulator_version": "3.15.0",
+      "model_sha256": "a982e2f81c2074a16f4b74ae9d598392842b9e391d4650b6881d17c475cccbce",
+      "source_sha256": {
+        "bimanual.py": "50fd7af4ecbec49176cab13b2adc2873a75a7352895f934718658511ac48242d",
+        "contact_evidence.py": "af5e9e729611845091febe09d4050f185e6f0767a91abe56ef4a14fabe3f5ae5",
+        "physical_parameters.py": "93cadc4ac94b7f1242be5585cc6cba2f404daf3e51bf18e9230a6be49d2416c9",
+        "inverse_dynamics.py": "18dad10cfdeb4b4c592a0301eb6a51069572def9c841c0e96005160401abbead",
+        "whole_body_contact.py": "cff7879eb8d584df64a02ae5cffe05a5c6f9055a975b6e7e5bcb94cbdf5740a0"
+      },
+      "equality_constraints": 0,
+      "measurements": {
+        "source_sha256": {
+          "bimanual.py": "50fd7af4ecbec49176cab13b2adc2873a75a7352895f934718658511ac48242d",
+          "contact_evidence.py": "af5e9e729611845091febe09d4050f185e6f0767a91abe56ef4a14fabe3f5ae5",
+          "physical_parameters.py": "93cadc4ac94b7f1242be5585cc6cba2f404daf3e51bf18e9230a6be49d2416c9",
+          "inverse_dynamics.py": "18dad10cfdeb4b4c592a0301eb6a51069572def9c841c0e96005160401abbead",
+          "whole_body_contact.py": "cff7879eb8d584df64a02ae5cffe05a5c6f9055a975b6e7e5bcb94cbdf5740a0"
+        },
+        "phase": "lift",
+        "phase_start_s": 7.507999999999395,
+        "steps": 4108,
+        "next_frame_seq": 166,
+        "status": "failed",
+        "failure": "prohibited_collision",
+        "events": [
+          {
+            "phase": "raise",
+            "time_s": 0.0,
+            "measurement": {}
+          },
+          {
+            "phase": "above",
+            "time_s": 2.002000000000001,
+            "measurement": {
+              "parcel_position_m": [
+                0.31999999999946904,
+                -1.908267003961973e-10,
+                0.8199770699043174
+              ],
+              "parcel_clearance_m": -2.293010621368108e-05,
+              "parcel_speed_m_s": 2.191178170290932e-10,
+              "base_height_m": 0.7914169364758294,
+              "base_tilt_rad": 0.004602036893994289,
+              "joint_limit_error_rad": 9.653588732772e-05,
+              "prohibited_contacts": [],
+              "loads": {
+                "left": {
+                  "force_world_n": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "torque_world_nm": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "normal_force_n": 0.0,
+                  "contact_count": 0
+                },
+                "right": {
+                  "force_world_n": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "torque_world_nm": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "normal_force_n": 0.0,
+                  "contact_count": 0
+                },
+                "other": {
+                  "force_world_n": [
+                    -1.4963585925897862e-13,
+                    -5.377019940411287e-11,
+                    4.904999999999996
+                  ],
+                  "torque_world_nm": [
+                    1.0217203472162595e-09,
+                    -2.8477914471025656e-12,
+                    1.276756480396575e-18
+                  ],
+                  "normal_force_n": 4.904999999999996,
+                  "contact_count": 4
+                }
+              },
+              "support": {
+                "left_vertical_n": 0.0,
+                "right_vertical_n": 0.0,
+                "other_vertical_n": 4.904999999999996,
+                "expected_vertical_n": 4.904999999999993,
+                "force_balance_error_n": 2.6645352591003757e-15,
+                "left_fraction": null,
+                "right_fraction": null,
+                "bilateral_load": false,
+                "unsupported_by_environment": false
+              },
+              "destination_error_m": 0.08000000000053098
+            }
+          },
+          {
+            "phase": "approach",
+            "time_s": 4.003999999999781,
+            "measurement": {
+              "parcel_position_m": [
+                0.3199999999981897,
+                -6.49760831967581e-10,
+                0.8199770699043174
+              ],
+              "parcel_clearance_m": -2.293010653242611e-05,
+              "parcel_speed_m_s": 2.2433937096122782e-10,
+              "base_height_m": 0.7909463095352336,
+              "base_tilt_rad": 0.057015510255783754,
+              "joint_limit_error_rad": 9.883921716435928e-05,
+              "prohibited_contacts": [],
+              "loads": {
+                "left": {
+                  "force_world_n": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "torque_world_nm": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "normal_force_n": 0.0,
+                  "contact_count": 0
+                },
+                "right": {
+                  "force_world_n": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "torque_world_nm": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "normal_force_n": 0.0,
+                  "contact_count": 0
+                },
+                "other": {
+                  "force_world_n": [
+                    -3.858802166689657e-13,
+                    -1.381337599859478e-10,
+                    4.905000000000008
+                  ],
+                  "torque_world_nm": [
+                    8.31231972142632e-10,
+                    -2.3171881080585877e-12,
+                    -2.1371793281904595e-18
+                  ],
+                  "normal_force_n": 4.905000000000008,
+                  "contact_count": 4
+                }
+              },
+              "support": {
+                "left_vertical_n": 0.0,
+                "right_vertical_n": 0.0,
+                "other_vertical_n": 4.905000000000008,
+                "expected_vertical_n": 4.9050000000000065,
+                "force_balance_error_n": 1.7763568394002505e-15,
+                "left_fraction": null,
+                "right_fraction": null,
+                "bilateral_load": false,
+                "unsupported_by_environment": false
+              },
+              "destination_error_m": 0.08000000000181035
+            }
+          },
+          {
+            "phase": "grip",
+            "time_s": 6.005999999999561,
+            "measurement": {
+              "parcel_position_m": [
+                0.3199999999969075,
+                -1.1096180577574736e-09,
+                0.8199770699043174
+              ],
+              "parcel_clearance_m": -2.293010649734306e-05,
+              "parcel_speed_m_s": 2.2374239608888049e-10,
+              "base_height_m": 0.7912788017434798,
+              "base_tilt_rad": 0.03207707656487753,
+              "joint_limit_error_rad": 9.55341007113919e-05,
+              "prohibited_contacts": [],
+              "loads": {
+                "left": {
+                  "force_world_n": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "torque_world_nm": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "normal_force_n": 0.0,
+                  "contact_count": 0
+                },
+                "right": {
+                  "force_world_n": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "torque_world_nm": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "normal_force_n": 0.0,
+                  "contact_count": 0
+                },
+                "other": {
+                  "force_world_n": [
+                    -3.900324507810638e-13,
+                    -1.4010450577472968e-10,
+                    4.904999999999994
+                  ],
+                  "torque_world_nm": [
+                    6.671310170958122e-10,
+                    -1.858804776766476e-12,
+                    -5.0653925464918555e-18
+                  ],
+                  "normal_force_n": 4.904999999999994,
+                  "contact_count": 4
+                }
+              },
+              "support": {
+                "left_vertical_n": 0.0,
+                "right_vertical_n": 0.0,
+                "other_vertical_n": 4.904999999999994,
+                "expected_vertical_n": 4.904999999999994,
+                "force_balance_error_n": 0.0,
+                "left_fraction": null,
+                "right_fraction": null,
+                "bilateral_load": false,
+                "unsupported_by_environment": false
+              },
+              "destination_error_m": 0.08000000000309254
+            }
+          },
+          {
+            "phase": "lift",
+            "time_s": 7.507999999999395,
+            "measurement": {
+              "parcel_position_m": [
+                0.3270722211749158,
+                -1.056553733369739e-05,
+                0.8199751896914543
+              ],
+              "parcel_clearance_m": -4.429879187206609e-05,
+              "parcel_speed_m_s": 0.004203408959263285,
+              "base_height_m": 0.7912816773265877,
+              "base_tilt_rad": 0.03213995828985906,
+              "joint_limit_error_rad": 0.0031756447271988897,
+              "prohibited_contacts": [],
+              "loads": {
+                "left": {
+                  "force_world_n": [
+                    1.3982086301382821,
+                    -32.83297681340879,
+                    -1.5403076354504108
+                  ],
+                  "torque_world_nm": [
+                    -0.2936610921076929,
+                    0.06423237404668813,
+                    -1.6343626953082948
+                  ],
+                  "normal_force_n": 32.83837860789876,
+                  "contact_count": 4
+                },
+                "right": {
+                  "force_world_n": [
+                    1.366431812866324,
+                    32.82923587387642,
+                    -1.4512323518502386
+                  ],
+                  "torque_world_nm": [
+                    0.2975636972852953,
+                    0.05979981875658264,
+                    1.631411587977236
+                  ],
+                  "normal_force_n": 32.82547858058174,
+                  "contact_count": 4
+                },
+                "other": {
+                  "force_world_n": [
+                    -2.7728640731933396,
+                    0.003696523025844759,
+                    7.896050710533844
+                  ],
+                  "torque_world_nm": [
+                    -0.003900045785072137,
+                    -0.1241014929137623,
+                    0.002949830611159554
+                  ],
+                  "normal_force_n": 7.896050710533844,
+                  "contact_count": 4
+                }
+              },
+              "support": {
+                "left_vertical_n": -1.5403076354504108,
+                "right_vertical_n": -1.4512323518502386,
+                "other_vertical_n": 7.896050710533844,
+                "expected_vertical_n": 4.904510723233199,
+                "force_balance_error_n": -4.440892098500626e-15,
+                "left_fraction": null,
+                "right_fraction": null,
+                "bilateral_load": false,
+                "unsupported_by_environment": false
+              },
+              "destination_error_m": 0.07292777959043441
+            }
+          }
+        ],
+        "home": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.2,
+          0.2,
+          0.0,
+          1.28,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.2,
+          -0.2,
+          0.0,
+          1.28,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "start": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -0.14101915107629565,
+          -0.018075049330924298,
+          -0.1265734114936838,
+          0.6156195016377621,
+          0.007258160529822005,
+          -0.5277731045583116,
+          0.17034485082631257,
+          0.0,
+          1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -0.14106191186516803,
+          0.018149851836782915,
+          0.12639517907388295,
+          0.615802812701593,
+          -0.007223230346959902,
+          -0.5279267133562853,
+          -0.17016294358719955,
+          0.0,
+          -1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "goal": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -0.2703073346658136,
+          0.5745463255826528,
+          -0.5393783343599144,
+          -0.4312714049784262,
+          -0.6268246051223636,
+          0.2567619151364088,
+          0.7705535214453887,
+          0.0,
+          1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -0.27021993855061155,
+          -0.5746623492069192,
+          0.5393445366866898,
+          -0.43119072960461186,
+          0.6269377274181095,
+          0.25649872113128686,
+          -0.7704584444853442,
+          0.0,
+          -1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "previous_targets": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -0.19432215562615546,
+          0.22625122215305088,
+          -0.29676485568322986,
+          0.184006733871306,
+          -0.2541618362879411,
+          -0.20432456840220115,
+          0.41779921682196697,
+          0.0,
+          1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -0.1943112552539112,
+          -0.22625509355071444,
+          0.29664617090142775,
+          0.1841477302355251,
+          0.25422900355878053,
+          -0.2045233570505915,
+          -0.41765310801881117,
+          0.0,
+          -1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "minimum_base_height_m": 0.79,
+        "maximum_base_tilt_rad": 0.1542013130780799,
+        "maximum_parcel_clearance_m": 0.0006683466274669536,
+        "maximum_joint_limit_error_rad": 0.0033940207243785547,
+        "bilateral_hold_samples": 0,
+        "hold_samples": 0,
+        "minimum_hold_share": 1.0,
+        "maximum_hold_force_balance_error_n": 0.0,
+        "support_before_release": false,
+        "unsupported_transport_samples": 0,
+        "retained_transport_samples": 0,
+        "maximum_transport_force_balance_error_n": 0.0,
+        "grip_contact_observed": true,
+        "maximum_grip_slip_m": 0.007072229067098045,
+        "release_time_s": null,
+        "prohibited_contacts": [
+          "bimanual_table:pelvis"
+        ],
+        "last_measurement": {
+          "parcel_position_m": [
+            0.4642400414161233,
+            0.00022715194262825638,
+            0.8434292839147376
+          ],
+          "parcel_clearance_m": 5.452676591854999e-05,
+          "parcel_speed_m_s": 0.9210962467780919,
+          "base_height_m": 0.7954597661003608,
+          "base_tilt_rad": 0.1542013130780799,
+          "joint_limit_error_rad": 0.0014336065203546244,
+          "prohibited_contacts": [
+            "bimanual_table:pelvis"
+          ],
+          "loads": {
+            "left": {
+              "force_world_n": [
+                0.4155042285650633,
+                -17.416096639918155,
+                1.2729513891984077
+              ],
+              "torque_world_nm": [
+                0.20146978035053112,
+                -0.08287203405639297,
+                -0.879632659993457
+              ],
+              "normal_force_n": 17.349963876662592,
+              "contact_count": 4
+            },
+            "right": {
+              "force_world_n": [
+                0.4727739552040536,
+                17.347794100940355,
+                1.4206874243944114
+              ],
+              "torque_world_nm": [
+                -0.19710653956101812,
+                -0.0907031319676305,
+                0.8802464023246693
+              ],
+              "normal_force_n": 17.262505935327418,
+              "contact_count": 4
+            },
+            "other": {
+              "force_world_n": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "torque_world_nm": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "normal_force_n": 0.0,
+              "contact_count": 0
+            }
+          },
+          "support": {
+            "left_vertical_n": 1.2729513891984077,
+            "right_vertical_n": 1.4206874243944114,
+            "other_vertical_n": 0.0,
+            "expected_vertical_n": 2.693638813592819,
+            "force_balance_error_n": 0.0,
+            "left_fraction": 0.4725768661985252,
+            "right_fraction": 0.5274231338014749,
+            "bilateral_load": true,
+            "unsupported_by_environment": true
+          },
+          "destination_error_m": 0.06424044301801066
+        },
+        "planning": [
+          {
+            "phase": "raise",
+            "errors": {
+              "left": {
+                "position_m": 9.620488806872724e-05,
+                "rotation_rad": 7.353318147153793e-05
+              },
+              "right": {
+                "position_m": 9.597634572866877e-05,
+                "rotation_rad": 7.343493914875958e-05
+              }
+            }
+          },
+          {
+            "phase": "above",
+            "errors": {
+              "left": {
+                "position_m": 2.19771619393924e-06,
+                "rotation_rad": 5.732149532093552e-06
+              },
+              "right": {
+                "position_m": 2.189849815513521e-06,
+                "rotation_rad": 5.711880384769272e-06
+              }
+            }
+          },
+          {
+            "phase": "approach",
+            "errors": {
+              "left": {
+                "position_m": 7.018111476568477e-05,
+                "rotation_rad": 0.0001782195490950874
+              },
+              "right": {
+                "position_m": 7.056666218111799e-05,
+                "rotation_rad": 0.00017836842136976776
+              }
+            }
+          },
+          {
+            "phase": "grip",
+            "errors": {
+              "left": {
+                "position_m": 2.345291541811093e-06,
+                "rotation_rad": 4.8312255246911554e-06
+              },
+              "right": {
+                "position_m": 2.342928393926022e-06,
+                "rotation_rad": 4.825544590312538e-06
+              }
+            }
+          },
+          {
+            "phase": "lift",
+            "errors": {
+              "left": {
+                "position_m": 6.886253166033339e-07,
+                "rotation_rad": 4.5106414893578075e-07
+              },
+              "right": {
+                "position_m": 7.000593227475073e-07,
+                "rotation_rad": 4.5628974048548766e-07
+              }
+            }
+          }
+        ],
+        "hand_tasks": {
+          "left": {
+            "start_position": [
+              0.21635215853385045,
+              0.12470983999955844,
+              0.8160427794770904
+            ],
+            "start_rotation": [
+              [
+                0.9769064712504422,
+                -0.21247688616267024,
+                0.022523749146787696
+              ],
+              [
+                0.21277839795901243,
+                0.9770275928881308,
+                -0.011934659493414806
+              ],
+              [
+                -0.019470485125129514,
+                0.016451613350771582,
+                0.9996750695236686
+              ]
+            ],
+            "position": [
+              0.22,
+              0.11499999999999999,
+              0.96
+            ],
+            "rotation": [
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          },
+          "right": {
+            "start_position": [
+              0.21633578160865846,
+              -0.12471317104426331,
+              0.8160261191694536
+            ],
+            "start_rotation": [
+              [
+                0.9767984638332078,
+                0.21295957294789492,
+                0.02264909143735305
+              ],
+              [
+                -0.21326421154608627,
+                0.9769210394525053,
+                0.011985772760424934
+              ],
+              [
+                -0.019573888901123156,
+                -0.016537925047859277,
+                0.999671626039471
+              ]
+            ],
+            "position": [
+              0.22,
+              -0.11499999999999999,
+              0.96
+            ],
+            "rotation": [
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          }
+        }
+      },
+      "scope": "Experimental stationary frictional carton transfer using native G1 finger and arm servos. No weld, locomotion, camera perception, or hardware validation.",
+      "compute_wall_s": 6.1593207999831066
+    },
+    {
+      "fixture": "insufficient_time_budget",
+      "schema_version": "vivacity.g1-frictional-carton/1",
+      "controller": "vivacity.g1-native-position-contact/1",
+      "status": "failed",
+      "task_success": false,
+      "failure_reason": "task_timeout",
+      "parameters": {
+        "parcel": {
+          "dimensions_m": [
+            0.18,
+            0.18,
+            0.16
+          ],
+          "mass_mode": "mass",
+          "mass_kg": 0.5,
+          "density_kg_m3": 100.0,
+          "custom_inertia_kg_m2": null,
+          "sliding_friction": 0.8,
+          "torsional_friction_m": 0.005,
+          "rolling_friction_m": 0.0001,
+          "contact_time_constant_s": 0.02,
+          "contact_damping_ratio": 1.0
+        },
+        "controller": "native_position",
+        "source_xy_m": [
+          0.32,
+          0.0
+        ],
+        "destination_xy_m": [
+          0.4,
+          0.0
+        ],
+        "floor_friction": 0.8,
+        "hand_torque_scale": 1.0,
+        "gravity_m_s2": 9.81,
+        "disturbance_n": 0.0,
+        "seed": 7,
+        "timeout_s": 8.0
+      },
+      "world_version": "52106162b668c42ef93e9ed97607a5d039cb241f08c2931075dba1a5cd135896",
+      "simulator_version": "3.15.0",
+      "model_sha256": "a982e2f81c2074a16f4b74ae9d598392842b9e391d4650b6881d17c475cccbce",
+      "source_sha256": {
+        "bimanual.py": "50fd7af4ecbec49176cab13b2adc2873a75a7352895f934718658511ac48242d",
+        "contact_evidence.py": "af5e9e729611845091febe09d4050f185e6f0767a91abe56ef4a14fabe3f5ae5",
+        "physical_parameters.py": "93cadc4ac94b7f1242be5585cc6cba2f404daf3e51bf18e9230a6be49d2416c9",
+        "inverse_dynamics.py": "18dad10cfdeb4b4c592a0301eb6a51069572def9c841c0e96005160401abbead",
+        "whole_body_contact.py": "cff7879eb8d584df64a02ae5cffe05a5c6f9055a975b6e7e5bcb94cbdf5740a0"
+      },
+      "equality_constraints": 0,
+      "measurements": {
+        "source_sha256": {
+          "bimanual.py": "50fd7af4ecbec49176cab13b2adc2873a75a7352895f934718658511ac48242d",
+          "contact_evidence.py": "af5e9e729611845091febe09d4050f185e6f0767a91abe56ef4a14fabe3f5ae5",
+          "physical_parameters.py": "93cadc4ac94b7f1242be5585cc6cba2f404daf3e51bf18e9230a6be49d2416c9",
+          "inverse_dynamics.py": "18dad10cfdeb4b4c592a0301eb6a51069572def9c841c0e96005160401abbead",
+          "whole_body_contact.py": "cff7879eb8d584df64a02ae5cffe05a5c6f9055a975b6e7e5bcb94cbdf5740a0"
+        },
+        "phase": "lift",
+        "phase_start_s": 7.507999999999395,
+        "steps": 4001,
+        "next_frame_seq": 162,
+        "status": "failed",
+        "failure": "task_timeout",
+        "events": [
+          {
+            "phase": "raise",
+            "time_s": 0.0,
+            "measurement": {}
+          },
+          {
+            "phase": "above",
+            "time_s": 2.002000000000001,
+            "measurement": {
+              "parcel_position_m": [
+                0.31999999999946904,
+                -1.908267003961973e-10,
+                0.8199770699043174
+              ],
+              "parcel_clearance_m": -2.293010621368108e-05,
+              "parcel_speed_m_s": 2.191178170290932e-10,
+              "base_height_m": 0.7914169364758294,
+              "base_tilt_rad": 0.004602036893994289,
+              "joint_limit_error_rad": 9.653588732772e-05,
+              "prohibited_contacts": [],
+              "loads": {
+                "left": {
+                  "force_world_n": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "torque_world_nm": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "normal_force_n": 0.0,
+                  "contact_count": 0
+                },
+                "right": {
+                  "force_world_n": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "torque_world_nm": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "normal_force_n": 0.0,
+                  "contact_count": 0
+                },
+                "other": {
+                  "force_world_n": [
+                    -1.4963585925897862e-13,
+                    -5.377019940411287e-11,
+                    4.904999999999996
+                  ],
+                  "torque_world_nm": [
+                    1.0217203472162595e-09,
+                    -2.8477914471025656e-12,
+                    1.276756480396575e-18
+                  ],
+                  "normal_force_n": 4.904999999999996,
+                  "contact_count": 4
+                }
+              },
+              "support": {
+                "left_vertical_n": 0.0,
+                "right_vertical_n": 0.0,
+                "other_vertical_n": 4.904999999999996,
+                "expected_vertical_n": 4.904999999999993,
+                "force_balance_error_n": 2.6645352591003757e-15,
+                "left_fraction": null,
+                "right_fraction": null,
+                "bilateral_load": false,
+                "unsupported_by_environment": false
+              },
+              "destination_error_m": 0.08000000000053098
+            }
+          },
+          {
+            "phase": "approach",
+            "time_s": 4.003999999999781,
+            "measurement": {
+              "parcel_position_m": [
+                0.3199999999981897,
+                -6.49760831967581e-10,
+                0.8199770699043174
+              ],
+              "parcel_clearance_m": -2.293010653242611e-05,
+              "parcel_speed_m_s": 2.2433937096122782e-10,
+              "base_height_m": 0.7909463095352336,
+              "base_tilt_rad": 0.057015510255783754,
+              "joint_limit_error_rad": 9.883921716435928e-05,
+              "prohibited_contacts": [],
+              "loads": {
+                "left": {
+                  "force_world_n": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "torque_world_nm": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "normal_force_n": 0.0,
+                  "contact_count": 0
+                },
+                "right": {
+                  "force_world_n": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "torque_world_nm": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "normal_force_n": 0.0,
+                  "contact_count": 0
+                },
+                "other": {
+                  "force_world_n": [
+                    -3.858802166689657e-13,
+                    -1.381337599859478e-10,
+                    4.905000000000008
+                  ],
+                  "torque_world_nm": [
+                    8.31231972142632e-10,
+                    -2.3171881080585877e-12,
+                    -2.1371793281904595e-18
+                  ],
+                  "normal_force_n": 4.905000000000008,
+                  "contact_count": 4
+                }
+              },
+              "support": {
+                "left_vertical_n": 0.0,
+                "right_vertical_n": 0.0,
+                "other_vertical_n": 4.905000000000008,
+                "expected_vertical_n": 4.9050000000000065,
+                "force_balance_error_n": 1.7763568394002505e-15,
+                "left_fraction": null,
+                "right_fraction": null,
+                "bilateral_load": false,
+                "unsupported_by_environment": false
+              },
+              "destination_error_m": 0.08000000000181035
+            }
+          },
+          {
+            "phase": "grip",
+            "time_s": 6.005999999999561,
+            "measurement": {
+              "parcel_position_m": [
+                0.3199999999969075,
+                -1.1096180577574736e-09,
+                0.8199770699043174
+              ],
+              "parcel_clearance_m": -2.293010649734306e-05,
+              "parcel_speed_m_s": 2.2374239608888049e-10,
+              "base_height_m": 0.7912788017434798,
+              "base_tilt_rad": 0.03207707656487753,
+              "joint_limit_error_rad": 9.55341007113919e-05,
+              "prohibited_contacts": [],
+              "loads": {
+                "left": {
+                  "force_world_n": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "torque_world_nm": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "normal_force_n": 0.0,
+                  "contact_count": 0
+                },
+                "right": {
+                  "force_world_n": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "torque_world_nm": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "normal_force_n": 0.0,
+                  "contact_count": 0
+                },
+                "other": {
+                  "force_world_n": [
+                    -3.900324507810638e-13,
+                    -1.4010450577472968e-10,
+                    4.904999999999994
+                  ],
+                  "torque_world_nm": [
+                    6.671310170958122e-10,
+                    -1.858804776766476e-12,
+                    -5.0653925464918555e-18
+                  ],
+                  "normal_force_n": 4.904999999999994,
+                  "contact_count": 4
+                }
+              },
+              "support": {
+                "left_vertical_n": 0.0,
+                "right_vertical_n": 0.0,
+                "other_vertical_n": 4.904999999999994,
+                "expected_vertical_n": 4.904999999999994,
+                "force_balance_error_n": 0.0,
+                "left_fraction": null,
+                "right_fraction": null,
+                "bilateral_load": false,
+                "unsupported_by_environment": false
+              },
+              "destination_error_m": 0.08000000000309254
+            }
+          },
+          {
+            "phase": "lift",
+            "time_s": 7.507999999999395,
+            "measurement": {
+              "parcel_position_m": [
+                0.3270722211749158,
+                -1.056553733369739e-05,
+                0.8199751896914543
+              ],
+              "parcel_clearance_m": -4.429879187206609e-05,
+              "parcel_speed_m_s": 0.004203408959263285,
+              "base_height_m": 0.7912816773265877,
+              "base_tilt_rad": 0.03213995828985906,
+              "joint_limit_error_rad": 0.0031756447271988897,
+              "prohibited_contacts": [],
+              "loads": {
+                "left": {
+                  "force_world_n": [
+                    1.3982086301382821,
+                    -32.83297681340879,
+                    -1.5403076354504108
+                  ],
+                  "torque_world_nm": [
+                    -0.2936610921076929,
+                    0.06423237404668813,
+                    -1.6343626953082948
+                  ],
+                  "normal_force_n": 32.83837860789876,
+                  "contact_count": 4
+                },
+                "right": {
+                  "force_world_n": [
+                    1.366431812866324,
+                    32.82923587387642,
+                    -1.4512323518502386
+                  ],
+                  "torque_world_nm": [
+                    0.2975636972852953,
+                    0.05979981875658264,
+                    1.631411587977236
+                  ],
+                  "normal_force_n": 32.82547858058174,
+                  "contact_count": 4
+                },
+                "other": {
+                  "force_world_n": [
+                    -2.7728640731933396,
+                    0.003696523025844759,
+                    7.896050710533844
+                  ],
+                  "torque_world_nm": [
+                    -0.003900045785072137,
+                    -0.1241014929137623,
+                    0.002949830611159554
+                  ],
+                  "normal_force_n": 7.896050710533844,
+                  "contact_count": 4
+                }
+              },
+              "support": {
+                "left_vertical_n": -1.5403076354504108,
+                "right_vertical_n": -1.4512323518502386,
+                "other_vertical_n": 7.896050710533844,
+                "expected_vertical_n": 4.904510723233199,
+                "force_balance_error_n": -4.440892098500626e-15,
+                "left_fraction": null,
+                "right_fraction": null,
+                "bilateral_load": false,
+                "unsupported_by_environment": false
+              },
+              "destination_error_m": 0.07292777959043441
+            }
+          }
+        ],
+        "home": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.2,
+          0.2,
+          0.0,
+          1.28,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.2,
+          -0.2,
+          0.0,
+          1.28,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "start": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -0.14101915107629565,
+          -0.018075049330924298,
+          -0.1265734114936838,
+          0.6156195016377621,
+          0.007258160529822005,
+          -0.5277731045583116,
+          0.17034485082631257,
+          0.0,
+          1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -0.14106191186516803,
+          0.018149851836782915,
+          0.12639517907388295,
+          0.615802812701593,
+          -0.007223230346959902,
+          -0.5279267133562853,
+          -0.17016294358719955,
+          0.0,
+          -1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "goal": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -0.2703073346658136,
+          0.5745463255826528,
+          -0.5393783343599144,
+          -0.4312714049784262,
+          -0.6268246051223636,
+          0.2567619151364088,
+          0.7705535214453887,
+          0.0,
+          1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -0.27021993855061155,
+          -0.5746623492069192,
+          0.5393445366866898,
+          -0.43119072960461186,
+          0.6269377274181095,
+          0.25649872113128686,
+          -0.7704584444853442,
+          0.0,
+          -1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "previous_targets": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -0.17017578993203425,
+          0.11557094156183761,
+          -0.21966779738199743,
+          0.37952816491919367,
+          -0.1357380645657838,
+          -0.35084739020576433,
+          0.3057019032765583,
+          0.0,
+          1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -0.17018919817111194,
+          -0.11553917352676987,
+          0.21952213740329074,
+          0.3796883299254,
+          0.1357906283724886,
+          -0.35102571229322854,
+          -0.30553957771164203,
+          0.0,
+          -1.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "minimum_base_height_m": 0.79,
+        "maximum_base_tilt_rad": 0.07402861133175528,
+        "maximum_parcel_clearance_m": 5.701208696906601e-05,
+        "maximum_joint_limit_error_rad": 0.0033940207243785547,
+        "bilateral_hold_samples": 0,
+        "hold_samples": 0,
+        "minimum_hold_share": 1.0,
+        "maximum_hold_force_balance_error_n": 0.0,
+        "support_before_release": false,
+        "unsupported_transport_samples": 0,
+        "retained_transport_samples": 0,
+        "maximum_transport_force_balance_error_n": 0.0,
+        "grip_contact_observed": true,
+        "maximum_grip_slip_m": 0.007072229067098045,
+        "release_time_s": null,
+        "prohibited_contacts": [],
+        "last_measurement": {
+          "parcel_position_m": [
+            0.3521510864622328,
+            -0.0009773430287473464,
+            0.8384556000818384
+          ],
+          "parcel_clearance_m": 1.9906824804127865e-06,
+          "parcel_speed_m_s": 0.11480306349840172,
+          "base_height_m": 0.7910522429791361,
+          "base_tilt_rad": 0.05019083933077977,
+          "joint_limit_error_rad": 0.0028061378319901298,
+          "prohibited_contacts": [],
+          "loads": {
+            "left": {
+              "force_world_n": [
+                0.3659181125763722,
+                -29.538639750503368,
+                2.1812849271014683
+              ],
+              "torque_world_nm": [
+                0.2959918723733067,
+                -0.06698578389998519,
+                -1.4487716953960188
+              ],
+              "normal_force_n": 29.397927049546244,
+              "contact_count": 4
+            },
+            "right": {
+              "force_world_n": [
+                -0.21879489525439705,
+                29.91915247399333,
+                1.8010346087227314
+              ],
+              "torque_world_nm": [
+                -0.2983734876853107,
+                -0.05873142736906048,
+                1.4376050782006664
+              ],
+              "normal_force_n": 29.90209365507438,
+              "contact_count": 3
+            },
+            "other": {
+              "force_world_n": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "torque_world_nm": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "normal_force_n": 0.0,
+              "contact_count": 0
+            }
+          },
+          "support": {
+            "left_vertical_n": 2.1812849271014683,
+            "right_vertical_n": 1.8010346087227314,
+            "other_vertical_n": 0.0,
+            "expected_vertical_n": 3.9823195358242005,
+            "force_balance_error_n": -8.881784197001252e-16,
+            "left_fraction": 0.5477423163759307,
+            "right_fraction": 0.4522576836240693,
+            "bilateral_load": true,
+            "unsupported_by_environment": true
+          },
+          "destination_error_m": 0.04785889390845304
+        },
+        "planning": [
+          {
+            "phase": "raise",
+            "errors": {
+              "left": {
+                "position_m": 9.620488806872724e-05,
+                "rotation_rad": 7.353318147153793e-05
+              },
+              "right": {
+                "position_m": 9.597634572866877e-05,
+                "rotation_rad": 7.343493914875958e-05
+              }
+            }
+          },
+          {
+            "phase": "above",
+            "errors": {
+              "left": {
+                "position_m": 2.19771619393924e-06,
+                "rotation_rad": 5.732149532093552e-06
+              },
+              "right": {
+                "position_m": 2.189849815513521e-06,
+                "rotation_rad": 5.711880384769272e-06
+              }
+            }
+          },
+          {
+            "phase": "approach",
+            "errors": {
+              "left": {
+                "position_m": 7.018111476568477e-05,
+                "rotation_rad": 0.0001782195490950874
+              },
+              "right": {
+                "position_m": 7.056666218111799e-05,
+                "rotation_rad": 0.00017836842136976776
+              }
+            }
+          },
+          {
+            "phase": "grip",
+            "errors": {
+              "left": {
+                "position_m": 2.345291541811093e-06,
+                "rotation_rad": 4.8312255246911554e-06
+              },
+              "right": {
+                "position_m": 2.342928393926022e-06,
+                "rotation_rad": 4.825544590312538e-06
+              }
+            }
+          },
+          {
+            "phase": "lift",
+            "errors": {
+              "left": {
+                "position_m": 6.886253166033339e-07,
+                "rotation_rad": 4.5106414893578075e-07
+              },
+              "right": {
+                "position_m": 7.000593227475073e-07,
+                "rotation_rad": 4.5628974048548766e-07
+              }
+            }
+          }
+        ],
+        "hand_tasks": {
+          "left": {
+            "start_position": [
+              0.21635215853385045,
+              0.12470983999955844,
+              0.8160427794770904
+            ],
+            "start_rotation": [
+              [
+                0.9769064712504422,
+                -0.21247688616267024,
+                0.022523749146787696
+              ],
+              [
+                0.21277839795901243,
+                0.9770275928881308,
+                -0.011934659493414806
+              ],
+              [
+                -0.019470485125129514,
+                0.016451613350771582,
+                0.9996750695236686
+              ]
+            ],
+            "position": [
+              0.22,
+              0.11499999999999999,
+              0.96
+            ],
+            "rotation": [
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          },
+          "right": {
+            "start_position": [
+              0.21633578160865846,
+              -0.12471317104426331,
+              0.8160261191694536
+            ],
+            "start_rotation": [
+              [
+                0.9767984638332078,
+                0.21295957294789492,
+                0.02264909143735305
+              ],
+              [
+                -0.21326421154608627,
+                0.9769210394525053,
+                0.011985772760424934
+              ],
+              [
+                -0.019573888901123156,
+                -0.016537925047859277,
+                0.999671626039471
+              ]
+            ],
+            "position": [
+              0.22,
+              -0.11499999999999999,
+              0.96
+            ],
+            "rotation": [
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          }
+        }
+      },
+      "scope": "Experimental stationary frictional carton transfer using native G1 finger and arm servos. No weld, locomotion, camera perception, or hardware validation.",
+      "compute_wall_s": 5.302701700013131
+    }
+  ],
+  "all_failed_physically": true
+}

@@ -3704,6 +3704,648 @@
         }
       }
     },
+    "/v1/robotics/contact/capabilities": {
+      "get": {
+        "tags": [
+          "Experimental contact execution"
+        ],
+        "summary": "Capabilities",
+        "operationId": "capabilities_v1_robotics_contact_capabilities_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/robotics/contact/experiments": {
+      "post": {
+        "tags": [
+          "Experimental contact execution"
+        ],
+        "summary": "Start",
+        "operationId": "start_v1_robotics_contact_experiments_post",
+        "parameters": [
+          {
+            "name": "x-workspace-token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 32,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "title": "X-Workspace-Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/robotics/contact/experiments/{identifier}": {
+      "get": {
+        "tags": [
+          "Experimental contact execution"
+        ],
+        "summary": "Status",
+        "operationId": "status_v1_robotics_contact_experiments__identifier__get",
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Identifier"
+            }
+          },
+          {
+            "name": "x-workspace-token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 32,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "title": "X-Workspace-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/robotics/contact/experiments/{identifier}/frames": {
+      "get": {
+        "tags": [
+          "Experimental contact execution"
+        ],
+        "summary": "Frames",
+        "operationId": "frames_v1_robotics_contact_experiments__identifier__frames_get",
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Identifier"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Cursor"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 64,
+              "minimum": 1,
+              "default": 32,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "x-workspace-token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 32,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "title": "X-Workspace-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FramesResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/robotics/contact/experiments/{identifier}/pause": {
+      "post": {
+        "tags": [
+          "Experimental contact execution"
+        ],
+        "summary": "Pause",
+        "operationId": "pause_v1_robotics_contact_experiments__identifier__pause_post",
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Identifier"
+            }
+          },
+          {
+            "name": "x-workspace-token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 32,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "title": "X-Workspace-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/robotics/contact/experiments/{identifier}/resume": {
+      "post": {
+        "tags": [
+          "Experimental contact execution"
+        ],
+        "summary": "Resume",
+        "operationId": "resume_v1_robotics_contact_experiments__identifier__resume_post",
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Identifier"
+            }
+          },
+          {
+            "name": "x-workspace-token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 32,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "title": "X-Workspace-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/robotics/contact/experiments/{identifier}/cancel": {
+      "post": {
+        "tags": [
+          "Experimental contact execution"
+        ],
+        "summary": "Cancel",
+        "operationId": "cancel_v1_robotics_contact_experiments__identifier__cancel_post",
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Identifier"
+            }
+          },
+          {
+            "name": "x-workspace-token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 32,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "title": "X-Workspace-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/robotics/contact/experiments/{identifier}/checkpoint": {
+      "get": {
+        "tags": [
+          "Experimental contact execution"
+        ],
+        "summary": "Checkpoint",
+        "operationId": "checkpoint_v1_robotics_contact_experiments__identifier__checkpoint_get",
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Identifier"
+            }
+          },
+          {
+            "name": "x-workspace-token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 32,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "title": "X-Workspace-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Checkpoint"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/robotics/contact/experiments/{identifier}/fork": {
+      "post": {
+        "tags": [
+          "Experimental contact execution"
+        ],
+        "summary": "Fork",
+        "operationId": "fork_v1_robotics_contact_experiments__identifier__fork_post",
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Identifier"
+            }
+          },
+          {
+            "name": "x-workspace-token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 32,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "title": "X-Workspace-Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ForkRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/robotics/contact/compare": {
+      "post": {
+        "tags": [
+          "Experimental contact execution"
+        ],
+        "summary": "Compare",
+        "operationId": "compare_v1_robotics_contact_compare_post",
+        "parameters": [
+          {
+            "name": "x-workspace-token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 32,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "title": "X-Workspace-Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompareRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/robotics/contact/experiments/{identifier}/export": {
+      "get": {
+        "tags": [
+          "Experimental contact execution"
+        ],
+        "summary": "Export",
+        "operationId": "export_v1_robotics_contact_experiments__identifier__export_get",
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Identifier"
+            }
+          },
+          {
+            "name": "x-workspace-token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 32,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "title": "X-Workspace-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/robotics/contact/experiments/{identifier}/replay": {
+      "get": {
+        "tags": [
+          "Experimental contact execution"
+        ],
+        "summary": "Replay",
+        "operationId": "replay_v1_robotics_contact_experiments__identifier__replay_get",
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Identifier"
+            }
+          },
+          {
+            "name": "x-workspace-token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 32,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "title": "X-Workspace-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/health": {
       "get": {
         "summary": "Health",
@@ -5869,6 +6511,103 @@
         ],
         "title": "BenchmarkRequest"
       },
+      "BimanualConfig": {
+        "properties": {
+          "parcel": {
+            "$ref": "#/components/schemas/BoxPhysics"
+          },
+          "controller": {
+            "type": "string",
+            "enum": [
+              "native_position",
+              "inverse_dynamics_experimental"
+            ],
+            "title": "Controller",
+            "default": "native_position"
+          },
+          "source_xy_m": {
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "type": "array",
+            "maxItems": 2,
+            "minItems": 2,
+            "title": "Source Xy M",
+            "default": [
+              0.32,
+              0.0
+            ]
+          },
+          "destination_xy_m": {
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "type": "array",
+            "maxItems": 2,
+            "minItems": 2,
+            "title": "Destination Xy M",
+            "default": [
+              0.4,
+              0.0
+            ]
+          },
+          "floor_friction": {
+            "type": "number",
+            "maximum": 1.5,
+            "minimum": 0.1,
+            "title": "Floor Friction",
+            "default": 0.8
+          },
+          "hand_torque_scale": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.01,
+            "title": "Hand Torque Scale",
+            "default": 1.0
+          },
+          "gravity_m_s2": {
+            "type": "number",
+            "maximum": 15.0,
+            "minimum": 1.0,
+            "title": "Gravity M S2",
+            "default": 9.81
+          },
+          "disturbance_n": {
+            "type": "number",
+            "maximum": 150.0,
+            "minimum": 0.0,
+            "title": "Disturbance N",
+            "default": 0.0
+          },
+          "seed": {
+            "type": "integer",
+            "maximum": 2147483647.0,
+            "minimum": 0.0,
+            "title": "Seed",
+            "default": 7
+          },
+          "timeout_s": {
+            "type": "number",
+            "maximum": 30.0,
+            "minimum": 8.0,
+            "title": "Timeout S",
+            "default": 22.0
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "BimanualConfig"
+      },
       "BodyTransform": {
         "properties": {
           "name": {
@@ -5902,6 +6641,126 @@
           "quaternion_wxyz"
         ],
         "title": "BodyTransform"
+      },
+      "BoxPhysics": {
+        "properties": {
+          "dimensions_m": {
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "type": "array",
+            "maxItems": 3,
+            "minItems": 3,
+            "title": "Dimensions M",
+            "default": [
+              0.18,
+              0.18,
+              0.16
+            ]
+          },
+          "mass_mode": {
+            "type": "string",
+            "enum": [
+              "mass",
+              "density"
+            ],
+            "title": "Mass Mode",
+            "default": "mass"
+          },
+          "mass_kg": {
+            "type": "number",
+            "maximum": 20.0,
+            "minimum": 0.01,
+            "title": "Mass Kg",
+            "default": 0.5
+          },
+          "density_kg_m3": {
+            "type": "number",
+            "maximum": 20000.0,
+            "minimum": 1.0,
+            "title": "Density Kg M3",
+            "default": 100.0
+          },
+          "custom_inertia_kg_m2": {
+            "anyOf": [
+              {
+                "prefixItems": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ],
+                "type": "array",
+                "maxItems": 6,
+                "minItems": 6
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom Inertia Kg M2"
+          },
+          "sliding_friction": {
+            "type": "number",
+            "maximum": 2.0,
+            "minimum": 0.001,
+            "title": "Sliding Friction",
+            "default": 0.8
+          },
+          "torsional_friction_m": {
+            "type": "number",
+            "maximum": 0.05,
+            "minimum": 0.0,
+            "title": "Torsional Friction M",
+            "default": 0.005
+          },
+          "rolling_friction_m": {
+            "type": "number",
+            "maximum": 0.02,
+            "minimum": 0.0,
+            "title": "Rolling Friction M",
+            "default": 0.0001
+          },
+          "contact_time_constant_s": {
+            "type": "number",
+            "maximum": 0.1,
+            "minimum": 0.004,
+            "title": "Contact Time Constant S",
+            "default": 0.02
+          },
+          "contact_damping_ratio": {
+            "type": "number",
+            "maximum": 4.0,
+            "minimum": 0.1,
+            "title": "Contact Damping Ratio",
+            "default": 1.0
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "BoxPhysics"
       },
       "BranchExport": {
         "properties": {
@@ -6284,6 +7143,118 @@
         ],
         "title": "Carton"
       },
+      "Checkpoint": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "title": "Schema Version",
+            "default": "vivacity.execution-checkpoint/1"
+          },
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "world_version": {
+            "type": "string",
+            "title": "World Version"
+          },
+          "model_sha256": {
+            "type": "string",
+            "title": "Model Sha256"
+          },
+          "simulator_version": {
+            "type": "string",
+            "title": "Simulator Version"
+          },
+          "state_spec": {
+            "type": "integer",
+            "title": "State Spec",
+            "default": 16383
+          },
+          "integration_state": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array",
+            "title": "Integration State"
+          },
+          "controller_version": {
+            "type": "string",
+            "title": "Controller Version"
+          },
+          "controller_state": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Controller State"
+          },
+          "previous_action": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array",
+            "title": "Previous Action"
+          },
+          "task_state": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Task State"
+          },
+          "random_state": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Random State"
+          },
+          "perception_state": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Perception State"
+          },
+          "order_ledger": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Order Ledger"
+          },
+          "next_frame_seq": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Next Frame Seq"
+          },
+          "steps_completed": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Steps Completed"
+          },
+          "parent_checkpoint_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parent Checkpoint Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "world_version",
+          "model_sha256",
+          "simulator_version",
+          "integration_state",
+          "controller_version",
+          "controller_state",
+          "previous_action",
+          "task_state",
+          "random_state",
+          "perception_state",
+          "order_ledger",
+          "next_frame_seq",
+          "steps_completed"
+        ],
+        "title": "Checkpoint"
+      },
       "ClothConfig": {
         "properties": {
           "robot_model": {
@@ -6356,6 +7327,25 @@
           "branch_id"
         ],
         "title": "CommitRequest"
+      },
+      "CompareRequest": {
+        "properties": {
+          "ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 4,
+            "minItems": 2,
+            "title": "Ids"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "ids"
+        ],
+        "title": "CompareRequest"
       },
       "ConditionChanges": {
         "properties": {
@@ -6454,6 +7444,22 @@
           "sha256"
         ],
         "title": "ConfigurationResponse"
+      },
+      "ContactRequest": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "const": "vivacity.contact-request/1",
+            "title": "Schema Version",
+            "default": "vivacity.contact-request/1"
+          },
+          "config": {
+            "$ref": "#/components/schemas/BimanualConfig"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "ContactRequest"
       },
       "CreateWorld": {
         "properties": {
@@ -8586,6 +9592,104 @@
         "type": "object",
         "title": "FactorySettings"
       },
+      "ForkRequest": {
+        "properties": {
+          "checkpoint_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Checkpoint Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "ForkRequest"
+      },
+      "FrameEntry": {
+        "properties": {
+          "seq": {
+            "type": "integer",
+            "title": "Seq"
+          },
+          "frame": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Frame"
+          }
+        },
+        "type": "object",
+        "required": [
+          "seq",
+          "frame"
+        ],
+        "title": "FrameEntry"
+      },
+      "FramesResponse": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "const": "vivacity.checkpoint-frames/1",
+            "title": "Schema Version",
+            "default": "vivacity.checkpoint-frames/1"
+          },
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "frames": {
+            "items": {
+              "$ref": "#/components/schemas/FrameEntry"
+            },
+            "type": "array",
+            "title": "Frames"
+          },
+          "next_cursor": {
+            "type": "integer",
+            "title": "Next Cursor"
+          },
+          "steps_completed": {
+            "type": "integer",
+            "title": "Steps Completed"
+          },
+          "current_phase": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Phase"
+          },
+          "partial_measurements": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Partial Measurements"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "status",
+          "frames",
+          "next_cursor",
+          "steps_completed",
+          "current_phase",
+          "partial_measurements"
+        ],
+        "title": "FramesResponse"
+      },
       "FulfillmentOrderResponse": {
         "properties": {
           "schema_version": {
@@ -9497,6 +10601,180 @@
           "diagnostics"
         ],
         "title": "ImportResponse"
+      },
+      "JobResponse": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "const": "vivacity.checkpoint-job/1",
+            "title": "Schema Version",
+            "default": "vivacity.checkpoint-job/1"
+          },
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "task": {
+            "type": "string",
+            "title": "Task"
+          },
+          "adapter_version": {
+            "type": "string",
+            "title": "Adapter Version"
+          },
+          "config": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Config"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "pausing",
+              "paused",
+              "cancelling",
+              "cancelled",
+              "suspended",
+              "completed",
+              "failed",
+              "interrupted"
+            ],
+            "title": "Status"
+          },
+          "created_unix_s": {
+            "type": "number",
+            "title": "Created Unix S"
+          },
+          "run_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Run Id"
+          },
+          "parent_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parent Id"
+          },
+          "checkpoint_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Checkpoint Id"
+          },
+          "world_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "World Version"
+          },
+          "next_cursor": {
+            "type": "integer",
+            "title": "Next Cursor"
+          },
+          "steps_completed": {
+            "type": "integer",
+            "title": "Steps Completed"
+          },
+          "current_phase": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Phase"
+          },
+          "partial_measurements": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Partial Measurements"
+          },
+          "compute_wall_s": {
+            "type": "number",
+            "title": "Compute Wall S"
+          },
+          "result": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Result"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "pause_deadline_unix_s": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pause Deadline Unix S"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "task",
+          "adapter_version",
+          "config",
+          "status",
+          "created_unix_s",
+          "run_id",
+          "parent_id",
+          "checkpoint_id",
+          "world_version",
+          "next_cursor",
+          "steps_completed",
+          "current_phase",
+          "partial_measurements",
+          "compute_wall_s",
+          "result",
+          "error"
+        ],
+        "title": "JobResponse"
       },
       "JsonValue": {},
       "LibraryWorld": {

@@ -915,6 +915,210 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/robotics/contact/capabilities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Capabilities */
+        get: operations["capabilities_v1_robotics_contact_capabilities_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/robotics/contact/experiments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Start */
+        post: operations["start_v1_robotics_contact_experiments_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/robotics/contact/experiments/{identifier}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Status */
+        get: operations["status_v1_robotics_contact_experiments__identifier__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/robotics/contact/experiments/{identifier}/frames": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Frames */
+        get: operations["frames_v1_robotics_contact_experiments__identifier__frames_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/robotics/contact/experiments/{identifier}/pause": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Pause */
+        post: operations["pause_v1_robotics_contact_experiments__identifier__pause_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/robotics/contact/experiments/{identifier}/resume": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Resume */
+        post: operations["resume_v1_robotics_contact_experiments__identifier__resume_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/robotics/contact/experiments/{identifier}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Cancel */
+        post: operations["cancel_v1_robotics_contact_experiments__identifier__cancel_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/robotics/contact/experiments/{identifier}/checkpoint": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Checkpoint */
+        get: operations["checkpoint_v1_robotics_contact_experiments__identifier__checkpoint_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/robotics/contact/experiments/{identifier}/fork": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Fork */
+        post: operations["fork_v1_robotics_contact_experiments__identifier__fork_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/robotics/contact/compare": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Compare */
+        post: operations["compare_v1_robotics_contact_compare_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/robotics/contact/experiments/{identifier}/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Export */
+        get: operations["export_v1_robotics_contact_experiments__identifier__export_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/robotics/contact/experiments/{identifier}/replay": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Replay */
+        get: operations["replay_v1_robotics_contact_experiments__identifier__replay_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/health": {
         parameters: {
             query?: never;
@@ -1733,6 +1937,68 @@ export interface components {
             held_out_repeats: number;
             changes: components["schemas"]["ConditionChanges"];
         };
+        /** BimanualConfig */
+        BimanualConfig: {
+            parcel?: components["schemas"]["BoxPhysics"];
+            /**
+             * Controller
+             * @default native_position
+             * @enum {string}
+             */
+            controller: "native_position" | "inverse_dynamics_experimental";
+            /**
+             * Source Xy M
+             * @default [
+             *       0.32,
+             *       0
+             *     ]
+             */
+            source_xy_m: [
+                number,
+                number
+            ];
+            /**
+             * Destination Xy M
+             * @default [
+             *       0.4,
+             *       0
+             *     ]
+             */
+            destination_xy_m: [
+                number,
+                number
+            ];
+            /**
+             * Floor Friction
+             * @default 0.8
+             */
+            floor_friction: number;
+            /**
+             * Hand Torque Scale
+             * @default 1
+             */
+            hand_torque_scale: number;
+            /**
+             * Gravity M S2
+             * @default 9.81
+             */
+            gravity_m_s2: number;
+            /**
+             * Disturbance N
+             * @default 0
+             */
+            disturbance_n: number;
+            /**
+             * Seed
+             * @default 7
+             */
+            seed: number;
+            /**
+             * Timeout S
+             * @default 22
+             */
+            timeout_s: number;
+        };
         /** BodyTransform */
         BodyTransform: {
             /** Name */
@@ -1743,6 +2009,72 @@ export interface components {
             quaternion_wxyz: number[];
         } & {
             [key: string]: unknown;
+        };
+        /** BoxPhysics */
+        BoxPhysics: {
+            /**
+             * Dimensions M
+             * @default [
+             *       0.18,
+             *       0.18,
+             *       0.16
+             *     ]
+             */
+            dimensions_m: [
+                number,
+                number,
+                number
+            ];
+            /**
+             * Mass Mode
+             * @default mass
+             * @enum {string}
+             */
+            mass_mode: "mass" | "density";
+            /**
+             * Mass Kg
+             * @default 0.5
+             */
+            mass_kg: number;
+            /**
+             * Density Kg M3
+             * @default 100
+             */
+            density_kg_m3: number;
+            /** Custom Inertia Kg M2 */
+            custom_inertia_kg_m2?: [
+                number,
+                number,
+                number,
+                number,
+                number,
+                number
+            ] | null;
+            /**
+             * Sliding Friction
+             * @default 0.8
+             */
+            sliding_friction: number;
+            /**
+             * Torsional Friction M
+             * @default 0.005
+             */
+            torsional_friction_m: number;
+            /**
+             * Rolling Friction M
+             * @default 0.0001
+             */
+            rolling_friction_m: number;
+            /**
+             * Contact Time Constant S
+             * @default 0.02
+             */
+            contact_time_constant_s: number;
+            /**
+             * Contact Damping Ratio
+             * @default 1
+             */
+            contact_damping_ratio: number;
         };
         /** BranchExport */
         BranchExport: {
@@ -1904,6 +2236,59 @@ export interface components {
         } & {
             [key: string]: unknown;
         };
+        /** Checkpoint */
+        Checkpoint: {
+            /**
+             * Schema Version
+             * @default vivacity.execution-checkpoint/1
+             */
+            schema_version: string;
+            /** Id */
+            id?: string;
+            /** World Version */
+            world_version: string;
+            /** Model Sha256 */
+            model_sha256: string;
+            /** Simulator Version */
+            simulator_version: string;
+            /**
+             * State Spec
+             * @default 16383
+             */
+            state_spec: number;
+            /** Integration State */
+            integration_state: number[];
+            /** Controller Version */
+            controller_version: string;
+            /** Controller State */
+            controller_state: {
+                [key: string]: unknown;
+            };
+            /** Previous Action */
+            previous_action: number[];
+            /** Task State */
+            task_state: {
+                [key: string]: unknown;
+            };
+            /** Random State */
+            random_state: {
+                [key: string]: unknown;
+            };
+            /** Perception State */
+            perception_state: {
+                [key: string]: unknown;
+            };
+            /** Order Ledger */
+            order_ledger: {
+                [key: string]: unknown;
+            };
+            /** Next Frame Seq */
+            next_frame_seq: number;
+            /** Steps Completed */
+            steps_completed: number;
+            /** Parent Checkpoint Id */
+            parent_checkpoint_id?: string | null;
+        };
         /** ClothConfig */
         ClothConfig: {
             /**
@@ -1943,6 +2328,11 @@ export interface components {
             /** Branch Id */
             branch_id: string;
         };
+        /** CompareRequest */
+        CompareRequest: {
+            /** Ids */
+            ids: string[];
+        };
         /** ConditionChanges */
         ConditionChanges: {
             /** Carton Mass Kg */
@@ -1974,6 +2364,16 @@ export interface components {
              * @default false
              */
             deleted: boolean;
+        };
+        /** ContactRequest */
+        ContactRequest: {
+            /**
+             * Schema Version
+             * @default vivacity.contact-request/1
+             * @constant
+             */
+            schema_version: "vivacity.contact-request/1";
+            config?: components["schemas"]["BimanualConfig"];
         };
         /** CreateWorld */
         CreateWorld: {
@@ -2925,6 +3325,45 @@ export interface components {
              */
             gripper_force_scale: number;
         };
+        /** ForkRequest */
+        ForkRequest: {
+            /** Checkpoint Id */
+            checkpoint_id?: string | null;
+        };
+        /** FrameEntry */
+        FrameEntry: {
+            /** Seq */
+            seq: number;
+            /** Frame */
+            frame: {
+                [key: string]: unknown;
+            };
+        };
+        /** FramesResponse */
+        FramesResponse: {
+            /**
+             * Schema Version
+             * @default vivacity.checkpoint-frames/1
+             * @constant
+             */
+            schema_version: "vivacity.checkpoint-frames/1";
+            /** Id */
+            id: string;
+            /** Status */
+            status: string;
+            /** Frames */
+            frames: components["schemas"]["FrameEntry"][];
+            /** Next Cursor */
+            next_cursor: number;
+            /** Steps Completed */
+            steps_completed: number;
+            /** Current Phase */
+            current_phase: string | null;
+            /** Partial Measurements */
+            partial_measurements: {
+                [key: string]: unknown;
+            };
+        };
         /** FulfillmentOrderResponse */
         FulfillmentOrderResponse: {
             /** Schema Version */
@@ -3331,6 +3770,60 @@ export interface components {
             } | null;
             /** Configured World Id */
             configured_world_id?: string | null;
+        };
+        /** JobResponse */
+        JobResponse: {
+            /**
+             * Schema Version
+             * @default vivacity.checkpoint-job/1
+             * @constant
+             */
+            schema_version: "vivacity.checkpoint-job/1";
+            /** Id */
+            id: string;
+            /** Task */
+            task: string;
+            /** Adapter Version */
+            adapter_version: string;
+            /** Config */
+            config: {
+                [key: string]: unknown;
+            };
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "queued" | "running" | "pausing" | "paused" | "cancelling" | "cancelled" | "suspended" | "completed" | "failed" | "interrupted";
+            /** Created Unix S */
+            created_unix_s: number;
+            /** Run Id */
+            run_id: string | null;
+            /** Parent Id */
+            parent_id: string | null;
+            /** Checkpoint Id */
+            checkpoint_id: string | null;
+            /** World Version */
+            world_version: string | null;
+            /** Next Cursor */
+            next_cursor: number;
+            /** Steps Completed */
+            steps_completed: number;
+            /** Current Phase */
+            current_phase: string | null;
+            /** Partial Measurements */
+            partial_measurements: {
+                [key: string]: unknown;
+            };
+            /** Compute Wall S */
+            compute_wall_s: number;
+            /** Result */
+            result: {
+                [key: string]: unknown;
+            } | null;
+            /** Error */
+            error: string | null;
+            /** Pause Deadline Unix S */
+            pause_deadline_unix_s?: number | null;
         };
         JsonValue: unknown;
         /** LibraryWorld */
@@ -6804,6 +7297,400 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["FulfillmentOrderResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    capabilities_v1_robotics_contact_capabilities_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    start_v1_robotics_contact_experiments_post: {
+        parameters: {
+            query?: never;
+            header: {
+                "x-workspace-token": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ContactRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JobResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    status_v1_robotics_contact_experiments__identifier__get: {
+        parameters: {
+            query?: never;
+            header: {
+                "x-workspace-token": string;
+            };
+            path: {
+                identifier: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JobResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    frames_v1_robotics_contact_experiments__identifier__frames_get: {
+        parameters: {
+            query?: {
+                cursor?: number;
+                limit?: number;
+            };
+            header: {
+                "x-workspace-token": string;
+            };
+            path: {
+                identifier: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FramesResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    pause_v1_robotics_contact_experiments__identifier__pause_post: {
+        parameters: {
+            query?: never;
+            header: {
+                "x-workspace-token": string;
+            };
+            path: {
+                identifier: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JobResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    resume_v1_robotics_contact_experiments__identifier__resume_post: {
+        parameters: {
+            query?: never;
+            header: {
+                "x-workspace-token": string;
+            };
+            path: {
+                identifier: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JobResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    cancel_v1_robotics_contact_experiments__identifier__cancel_post: {
+        parameters: {
+            query?: never;
+            header: {
+                "x-workspace-token": string;
+            };
+            path: {
+                identifier: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JobResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    checkpoint_v1_robotics_contact_experiments__identifier__checkpoint_get: {
+        parameters: {
+            query?: never;
+            header: {
+                "x-workspace-token": string;
+            };
+            path: {
+                identifier: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Checkpoint"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    fork_v1_robotics_contact_experiments__identifier__fork_post: {
+        parameters: {
+            query?: never;
+            header: {
+                "x-workspace-token": string;
+            };
+            path: {
+                identifier: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ForkRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JobResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    compare_v1_robotics_contact_compare_post: {
+        parameters: {
+            query?: never;
+            header: {
+                "x-workspace-token": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CompareRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    export_v1_robotics_contact_experiments__identifier__export_get: {
+        parameters: {
+            query?: never;
+            header: {
+                "x-workspace-token": string;
+            };
+            path: {
+                identifier: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    replay_v1_robotics_contact_experiments__identifier__replay_get: {
+        parameters: {
+            query?: never;
+            header: {
+                "x-workspace-token": string;
+            };
+            path: {
+                identifier: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
                 };
             };
             /** @description Validation Error */
