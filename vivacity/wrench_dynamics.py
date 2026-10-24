@@ -82,7 +82,7 @@ class WrenchSolution:
 
 
 class WrenchInverseDynamics:
-    version = 'vivacity.wrench-inverse-dynamics/3-experimental'
+    version = 'vivacity.wrench-inverse-dynamics/4-experimental'
 
     def __init__(self, model):
         self.model = model
@@ -125,10 +125,13 @@ class WrenchInverseDynamics:
 
     def compute(self, data, target_qpos, *, torque_reference=None, command_reference=None, torque_weight=10.,
                 extra_tasks=(), acceleration_limits=(), clearance_pairs=(),
-                normal_force_targets=None):
+                normal_force_targets=None, unloaded_contact_indices=()):
         started = time.perf_counter()
         model, nv, nu = self.model, self.model.nv, self.model.nu
         basis = contact_basis(model, data)
+        unloaded = set(unloaded_contact_indices)
+        if any(not isinstance(i, (int, np.integer)) or not 0 <= i < data.ncon for i in unloaded):
+            raise ValueError('unloaded contact indices must refer to current native contacts')
         nf = sum(c.dim for c in basis)
         n = nv+nu+nf
         jac = np.vstack([c.jacobian for c in basis]) if basis else np.zeros((0, nv))
@@ -147,8 +150,16 @@ class WrenchInverseDynamics:
             contact_desired = -30.*(jac @ data.qvel)
             for c in basis:
                 contact_desired[c.start] -= 600.*min(float(data.contact[c.contact_index].dist), 0.)
-            hessian[:nv, :nv] += 4.*jac.T @ jac
-            gradient[:nv] -= 4.*jac.T @ contact_desired
+            # A released finger must not be stabilized against the old object
+            # or use its reaction force to satisfy an unrelated posture task.
+            # Native collision geometry remains active throughout separation.
+            active_rows = np.ones(nf, dtype=bool)
+            for c in basis:
+                if c.contact_index in unloaded:
+                    active_rows[c.start:c.start+c.dim] = False
+            active_jac = jac[active_rows]
+            hessian[:nv, :nv] += 4.*active_jac.T @ active_jac
+            gradient[:nv] -= 4.*active_jac.T @ contact_desired[active_rows]
         for task_jac, task_acc, weight in extra_tasks:
             hessian[:nv, :nv] += weight*task_jac.T @ task_jac
             gradient[:nv] -= weight*task_jac.T @ task_acc
@@ -212,6 +223,12 @@ class WrenchInverseDynamics:
             start = nv+nu+c.start
             block[:, start:start+c.dim] = facets
             bounds(block, 0., np.inf)
+            if c.contact_index in unloaded:
+                row = np.zeros((1, n))
+                row[0, start] = 1.
+                # Zero normal plus the friction cone gives zero force/moment.
+                # This is a prediction constraint, not altered measured force.
+                bounds(row, 0., 0.)
             for zero in zeros:
                 row = np.zeros((1, n))
                 row[0, start+zero] = 1.

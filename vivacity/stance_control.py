@@ -37,7 +37,8 @@ class StanceController:
         self.center = scratch.subtree_com[self.root].copy()
         self.center[:2] = np.mean([value['position'][:2] for value in self.feet.values()], axis=0)
 
-    def compute(self, data, target_qpos=None, *, site_targets=None):
+    def compute(self, data, target_qpos=None, *, site_targets=None, joint_targets=None, released_geoms=(),
+                clearance_pairs=()):
         if self.steps % 5 == 0:
             model = self.model
             target = self.target if target_qpos is None else np.asarray(target_qpos)
@@ -73,13 +74,26 @@ class StanceController:
                 if not np.isfinite(weight) or not 1. <= weight <= 10000.:
                     raise ValueError('site tracking weight must be finite and bounded')
                 tasks.append((jac,150.*error-25.*(jac @ data.qvel),weight))
+            for name, position in (joint_targets or {}).items():
+                joint = model.joint(name).id
+                if (joint not in self.joints or not np.isfinite(position) or
+                        not model.jnt_range[joint,0] <= position <= model.jnt_range[joint,1]):
+                    raise ValueError('joint task must target a bounded actuator-driven joint')
+                dof, qadr = model.jnt_dofadr[joint], model.jnt_qposadr[joint]
+                jac = np.zeros((1,model.nv))
+                jac[0,dof] = 1.
+                acceleration = np.clip(300.*(position-data.qpos[qadr])-35.*data.qvel[dof],-20.,20.)
+                tasks.append((jac,np.array([acceleration]),1000.))
             native_bias = (model.actuator_biasprm[:, 0]+model.actuator_biasprm[:, 1]*data.actuator_length
                            +model.actuator_biasprm[:, 2]*data.actuator_velocity)
             servo = model.actuator_biastype == mj.mjtBias.mjBIAS_AFFINE
             pd = 100.*(target[self.qadr]-data.qpos[self.qadr])-4.*data.qvel[self.dofs]
             force_reference = np.where(servo, model.actuator_gainprm[:, 0]*target[self.qadr]+native_bias, pd)
             solution = self.solver.compute(data, target, torque_reference=force_reference,
-                torque_weight=self.reference_weight, extra_tasks=tasks, acceleration_limits=limits)
+                torque_weight=self.reference_weight, extra_tasks=tasks, acceleration_limits=limits,
+                clearance_pairs=clearance_pairs,
+                unloaded_contact_indices=[i for i,c in enumerate(data.contact[:data.ncon])
+                    if c.geom1 in released_geoms or c.geom2 in released_geoms])
             self.commands = solution.commands
         self.steps += 1
         return self.commands.copy()

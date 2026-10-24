@@ -120,6 +120,34 @@ def test_friction_facets_keep_torque_units_and_zero_coefficients():
     assert zeros.tolist() == [4]
 
 
+def test_released_contact_cannot_supply_predicted_support_and_native_separation_occurs():
+    model = mj.MjModel.from_xml_string('''<mujoco><option timestep=".001"/>
+    <worldbody><geom type="plane" size="2 2 .1"/>
+    <body pos="0 0 .0499"><joint name="slide" type="slide" axis="0 0 1" range="0 .2"/>
+    <geom type="sphere" size=".05" mass="1" condim="6"/></body></worldbody>
+    <actuator><motor joint="slide" ctrlrange="-40 40"/></actuator></mujoco>''')
+    data = mj.MjData(model)
+    mj.mj_forward(model,data)
+    solver = WrenchInverseDynamics(model)
+    assert data.ncon > 0
+    original_contacts = data.contact[:data.ncon].dist.copy()
+    result = solver.compute(data,np.array([.02]),torque_weight=.0001,
+        unloaded_contact_indices=range(data.ncon))
+    np.testing.assert_allclose(result.wrenches,0.,atol=1e-6)
+    assert result.actuator_forces[0] > 9.81
+    np.testing.assert_array_equal(data.contact[:data.ncon].dist,original_contacts)
+    for _ in range(350):
+        result = solver.compute(data,np.array([.02]),torque_weight=.0001,
+            unloaded_contact_indices=range(data.ncon))
+        data.ctrl[:] = result.commands
+        mj.mj_step(model,data)
+        mj.mj_forward(model,data)
+    assert data.qpos[0] > .015
+    assert data.ncon == 0
+    with pytest.raises(ValueError,match='current native contacts'):
+        solver.compute(data,np.array([.02]),unloaded_contact_indices=[-1])
+
+
 def test_clearance_constraint_stops_a_driven_slider_before_obstacle():
     model = mj.MjModel.from_xml_string('''<mujoco><option timestep=".001" gravity="0 0 0"/>
     <worldbody><geom name="wall" type="box" pos=".4 0 0" size=".05 .5 .5"/>
