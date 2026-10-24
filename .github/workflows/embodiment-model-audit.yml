@@ -1,0 +1,47 @@
+name: Complete embodiment model audit
+on:
+  push:
+    branches: [codex/physical-truth-runtime]
+    paths:
+      - vivacity/humanoid_embodiments.py
+      - tests/test_humanoid_embodiments.py
+      - .github/workflows/embodiment-model-audit.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  model-audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: requirements-lock.txt
+      - run: python -m pip install -r requirements-lock.txt
+      - name: Inspect compiled initial joint limits on Linux
+        run: |
+          python -u - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          import mujoco as mj
+          import numpy as np
+          from vivacity.humanoid_embodiments import compile_embodiment
+          print('versions', mj.__version__, np.__version__)
+          print('source', hashlib.sha256(Path('vivacity/humanoid_embodiments.py').read_bytes()).hexdigest())
+          for robot in ('g1', 'apollo', 'h1'):
+              model, data, manifest = compile_embodiment(robot)
+              print(robot, json.dumps(manifest['initial_pose_adjustments']))
+              for joint in range(model.njnt):
+                  if model.jnt_limited[joint]:
+                      address = int(model.jnt_qposadr[joint])
+                      if 'thumb' in model.joint(joint).name or not model.jnt_range[joint,0] <= data.qpos[address] <= model.jnt_range[joint,1]:
+                          print(model.joint(joint).name, int(model.jnt_type[joint]),
+                                model.jnt_type[joint] in (mj.mjtJoint.mjJNT_HINGE, mj.mjtJoint.mjJNT_SLIDE),
+                                model.jnt_range[joint].tolist(), float(data.qpos[address]),
+                                float(model.key_qpos[0,address]))
+              del data, model
+          PY
+      - run: python -m pytest tests/test_humanoid_embodiments.py -k complete_model -q

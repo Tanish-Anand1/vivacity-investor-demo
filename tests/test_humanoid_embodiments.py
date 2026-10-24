@@ -31,7 +31,12 @@ def test_complete_model_has_native_joint_mapping_force_limits_and_declared_tooli
     for joint in manifest['joints']:
         if joint['limited']:
             angle = data.qpos[joint['qpos_address']]
-            assert joint['range'][0]-1e-8 <= angle <= joint['range'][1]+1e-8
+            assert joint['range'][0]-1e-8 <= angle <= joint['range'][1]+1e-8, {
+                'joint':joint, 'actual':float(angle),
+                'reset_key':float(model.key_qpos[0,joint['qpos_address']]),
+                'adjustments':manifest['initial_pose_adjustments'],
+                'type_matches_hinge':bool(model.jnt_type[model.joint(joint['name']).id] == mj.mjtJoint.mjJNT_HINGE),
+            }
     floor = model.geom('floor').id
     assert min((contact.dist for contact in data.contact[:data.ncon]
                 if floor in (contact.geom1, contact.geom2)), default=0.) >= -1e-6
