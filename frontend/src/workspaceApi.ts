@@ -15,8 +15,11 @@ export function workspaceToken(){
   return token;
 }
 async function request<T>(path:string,method='GET',body?:unknown,extra:Record<string,string>={}):Promise<T>{
+  // Read-only calls have their own bounded transport retries. A shorter
+  // outer deadline would abort those retries while a cold runtime starts.
+  const signal=method==='GET'||method==='HEAD'?undefined:AbortSignal.timeout(60000);
   const r=await fetchRuntime(API+'/v1/workspace'+path,{method,headers:{'X-Workspace-Token':workspaceToken(),...(body!==undefined?{'Content-Type':'application/json'}:{}),...extra},
-    ...(body!==undefined?{body:JSON.stringify(body)}:{}),signal:AbortSignal.timeout(60000)});
+    ...(body!==undefined?{body:JSON.stringify(body)}:{}),...(signal?{signal}:{})});
   const value=await r.json().catch(()=>null);
   if(!r.ok)throw new APIError(r.status,value?.detail??'Workspace request could not complete.');
   if(value===null)throw new Error('Workspace returned an unreadable response.');
@@ -61,7 +64,7 @@ export type Run={robustness?:Robustness;session_id:string;configuration_id:strin
 export type PhysicsValidation=components['schemas']['PhysicsValidationResponse'];
 export type RoboticsProgram={id:string;category:'robotic_arms'|'humanoids';name:string;robot_type:string;environment_id:string;task_id:string;status:'executable'|'not_implemented';scope:string;missing_capability:string|null;default_configuration:Configuration|null};
 export async function roboticsPrograms():Promise<RoboticsProgram[]>{
-  const response=await fetchRuntime(API+'/v1/robotics/programs',{signal:AbortSignal.timeout(15000)});
+  const response=await fetchRuntime(API+'/v1/robotics/programs');
   const value=await response.json().catch(()=>null);
   if(!response.ok)throw new APIError(response.status,value?.detail??'Robotics programs are unavailable.');
   if(value?.schema_version!=='vivacity.v-robotics.catalog/1.0'||!Array.isArray(value.programs))throw new Error('Unreadable robotics program catalogue.');
