@@ -250,14 +250,27 @@ class CheckpointStore:
             if transaction_hook is not None:
                 transaction_hook(db)
 
+    def _metadata(self, db, run_id, owner, checkpoint_id):
+        _, latest = self._owned(db, run_id, owner)
+        row = db.execute('SELECT payload FROM execution_checkpoints WHERE id=? AND run_id=?',
+                         (checkpoint_id or latest, run_id)).fetchone()
+        if row is None:
+            raise KeyError(checkpoint_id or run_id)
+        checkpoint = Checkpoint.model_validate_json(row[0])
+        if db.execute('SELECT 1 FROM execution_models WHERE sha256=?',
+                      (checkpoint.model_sha256,)).fetchone() is None:
+            raise IncompatibleCheckpoint('model artifact missing')
+        return checkpoint
+
+    def metadata(self, run_id, owner, checkpoint_id=None):
+        # Inspection must not inflate a large native mesh/model artifact.
+        # Full binaries are needed only when actually restoring a simulator.
+        with self.store.connect() as db:
+            return self._metadata(db, run_id, owner, checkpoint_id)
+
     def load(self, run_id, owner, checkpoint_id=None):
         with self.store.connect() as db:
-            _, latest = self._owned(db, run_id, owner)
-            row = db.execute('SELECT payload FROM execution_checkpoints WHERE id=? AND run_id=?',
-                             (checkpoint_id or latest, run_id)).fetchone()
-            if row is None:
-                raise KeyError(checkpoint_id or run_id)
-            checkpoint = Checkpoint.model_validate_json(row[0])
+            checkpoint = self._metadata(db, run_id, owner, checkpoint_id)
             binary = db.execute('SELECT compressed_binary FROM execution_models WHERE sha256=?',
                                 (checkpoint.model_sha256,)).fetchone()
             if binary is None:
@@ -274,8 +287,7 @@ class CheckpointStore:
                 (run_id, cursor, limit))]
 
     def fork(self, run_id, owner, checkpoint_id=None, *, transaction_hook=None):
-        bundle = self.load(run_id, owner, checkpoint_id)
-        parent = bundle.checkpoint
+        parent = self.metadata(run_id, owner, checkpoint_id)
         checkpoint = parent.model_copy(update={'id': str(uuid.uuid4()), 'next_frame_seq': 0,
                                                'parent_checkpoint_id': parent.id}, deep=True)
         branch = str(uuid.uuid4())

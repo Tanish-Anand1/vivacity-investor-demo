@@ -45,8 +45,20 @@ test('real contact task: live state, pause, fork, compare, replay, changed geome
   const frozen=await read(first.id,'/checkpoint');
   await page.waitForTimeout(250);
   expect(await read(first.id,'/checkpoint')).toEqual(frozen);
+  const pausedFrames=await read(first.id,`/frames?cursor=${frozen.next_frame_seq-1}`);
+  await expect.poll(async()=>parseFloat(await page.getByTestId('contact-time').innerText()))
+    .toBeCloseTo(pausedFrames.frames[0].frame.time_s,2);
   await renderedScene();await page.evaluate(()=>window.scrollTo(0,0));
   await page.screenshot({path:path.join(folder,`contact-${browserName}-paused.png`),fullPage:true});
+  const writesBeforeReconnect=writes.length;
+  await page.route('**/v1/robotics/contact/experiments/*/frames?*',r=>r.abort('failed'));
+  await expect(page.getByRole('alert')).toContainText(/connection was interrupted|taking too long/);
+  await page.unroute('**/v1/robotics/contact/experiments/*/frames?*');
+  await page.getByRole('button',{name:'Reconnect',exact:true}).click();
+  await expect(page.getByRole('alert')).toHaveCount(0);
+  await renderedScene();
+  expect(writes.length).toBe(writesBeforeReconnect);
+  expect(await read(first.id,'/checkpoint')).toEqual(frozen);
   const forked=page.waitForResponse(r=>r.url().endsWith(`${route}/experiments/${first.id}/fork`));
   await page.getByRole('button',{name:'Fork paused snapshot'}).click();
   const branchResponse=await forked;expect(branchResponse.status()).toBe(202);
@@ -99,6 +111,13 @@ test('real contact task: live state, pause, fork, compare, replay, changed geome
   await expect(page.locator('[data-model-hash]')).toHaveAttribute('data-model-hash',scene.model_hash);
   await renderedScene();
   expect(writes.length).toBe(beforeReload);
+  const cancelStart=page.waitForResponse(r=>r.url().endsWith(route+'/experiments')&&r.request().method()==='POST');
+  await start.click();const cancelling=await (await cancelStart).json();
+  await page.getByRole('button',{name:'Cancel',exact:true}).click();
+  await expect(page.getByTestId('contact-result')).toContainText('Trial cancelled');
+  expect((await read(cancelling.id)).status).toBe('cancelled');
+  await expect(page.locator('[data-model-hash]')).toHaveAttribute('data-model-hash',/^[a-f0-9]{64}$/);
+  await renderedScene();
   await page.emulateMedia({reducedMotion:'reduce'});
   await page.setViewportSize({width:390,height:844});
   await expect(start).toBeVisible();
@@ -109,12 +128,13 @@ test('real contact task: live state, pause, fork, compare, replay, changed geome
   await page.screenshot({path:path.join(folder,`contact-${browserName}-mobile.png`),fullPage:true});
   expect(errors).toEqual([]);
   await fs.writeFile(path.join(folder,`contact-${browserName}-journey.json`),JSON.stringify({
-    first_id:first.id,fork_id:branch.id,failure_id:changed.id,controller:original.result.controller,
+    first_id:first.id,fork_id:branch.id,failure_id:changed.id,cancelled_id:cancelling.id,controller:original.result.controller,
     model_sha256:original.result.model_sha256,steps:original.steps_completed,
     minimum_hand_share:original.result.measurements.minimum_hold_share,
     placement_error_m:original.result.measurements.last_measurement.destination_error_m,
     failure_reason:failed.result.failure_reason,initial_load_started_experiments:false,
     reload_started_experiments:false,checks:['live_before_terminal','complete_pause_snapshot','independent_fork',
       'matching_final_measurement','explicit_replay','export_matches_cursor','changed_geometry','genuine_failure',
-      'reload_recovery','mobile_reflow','keyboard_focus','reduced_motion','webgl2_rendering','no_page_errors']},null,2));
+      'reload_recovery','network_recovery_without_duplicate_start','cancellation','displayed_pause_matches_checkpoint',
+      'mobile_reflow','keyboard_focus','reduced_motion','webgl2_rendering','no_page_errors']},null,2));
 });

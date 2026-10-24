@@ -55,6 +55,21 @@ def snap(model, data, controller, rng, **kwargs):
     return capture(model, data, controller, rng=rng, **defaults)
 
 
+def test_metadata_and_fork_do_not_decompress_native_model_and_keep_owner_checks(tmp_path, monkeypatch):
+    bundle = snap(*fixture())
+    store = CheckpointStore(Store(tmp_path/'metadata.sqlite3'))
+    run = store.create('owner-a', 'world-v1')
+    store.commit(run, 'owner-a', bundle, [{'time_s':.075}], expected_checkpoint_id=None)
+    def unexpected_decompression(*args):
+        raise AssertionError('metadata read inflated a native model')
+    monkeypatch.setattr('vivacity.execution_checkpoint.zlib.decompress', unexpected_decompression)
+    assert store.metadata(run, 'owner-a') == bundle.checkpoint
+    with pytest.raises(KeyError):
+        store.metadata(run, 'owner-b')
+    branch = store.fork(run, 'owner-a')
+    assert store.metadata(branch, 'owner-a').parent_checkpoint_id == bundle.checkpoint.id
+
+
 def test_restart_restores_model_full_state_controller_rng_and_continuation():
     model, data, controller, rng = fixture()
     model.opt.gravity[:] = [0., 0., -7.]

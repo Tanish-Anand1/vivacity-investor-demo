@@ -215,7 +215,7 @@ class ExecutionService:
         record = self.get(owner, identifier)
         if not record['checkpoint_id']:
             raise ValueError('No checkpoint has been committed yet')
-        return self.checkpoints.load(record['run_id'], owner, record['checkpoint_id']).checkpoint
+        return self.checkpoints.metadata(record['run_id'], owner, record['checkpoint_id'])
 
     def fork(self, owner, admission_key, identifier, checkpoint_id=None):
         with self.condition:

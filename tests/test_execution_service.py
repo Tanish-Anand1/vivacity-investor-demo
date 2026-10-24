@@ -199,6 +199,23 @@ def test_storage_admission_reserves_native_model_headroom(tmp_path):
         worker.close()
 
 
+def test_scene_cache_and_checkpoint_inspection_do_not_reload_native_models(tmp_path, monkeypatch):
+    worker = service(tmp_path/'scene-cache.sqlite3')
+    try:
+        identifier = worker.submit('owner','network','pendulum',{})['id']
+        until(lambda:worker.get('owner',identifier)['status']=='completed')
+        first = worker.scene('owner',identifier)
+        def unexpected_load(*args):
+            raise AssertionError('cached scene reloaded its native model')
+        monkeypatch.setattr(worker.checkpoints, 'load', unexpected_load)
+        assert worker.scene('owner',identifier) == first
+        assert worker.checkpoint('owner',identifier).model_sha256 == first[0]['model_hash']
+        with pytest.raises(KeyError):
+            worker.scene('another-owner',identifier)
+    finally:
+        worker.close()
+
+
 def test_expired_pause_releases_compute_capacity_and_preserves_evidence(tmp_path):
     worker = service(tmp_path/'pause-lease.sqlite3', pause_lease_s=.2)
     try:
