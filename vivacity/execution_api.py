@@ -15,6 +15,7 @@ from .bimanual import BimanualConfig
 from .execution_checkpoint import Checkpoint
 from .execution_service import AdmissionRejected
 from .physical_parameters import parameter_manifest
+from .contact_parameters import contact_parameter_manifest
 from .workspace import owner
 
 
@@ -148,7 +149,7 @@ def capabilities(request: Request):
                       {'id':'g1_constrained_carton', 'embodiment':'unitree_g1_with_hands',
                        'tooling':'native articulated hands', 'motion_source':'native MuJoCo steps',
                        'scope':'Experimental constrained contact-wrench controller using the unchanged native actuator model. Full robustness, locomotion, camera control and hardware release gates remain open.'}],
-            'parcel_parameters': parameter_manifest()}
+            'parcel_parameters': parameter_manifest(), 'task_parameters':contact_parameter_manifest()}
 
 
 @router.post('/experiments', response_model=JobResponse, status_code=202)

@@ -1,5 +1,6 @@
 import {useEffect,useRef,useState,type FormEvent} from 'react';
 import {Canvas} from '@react-three/fiber';
+import {PCFShadowMap} from 'three';
 import {API,errorMessage} from './api';
 import {fetchRuntime} from './apiTransport';
 import {readAPIResponse} from './apiResponse';
@@ -23,6 +24,8 @@ type Delta={status:string;frames:Entries;next_cursor:number;steps_completed:numb
 type Scene=Manifest&{mesh_buffer_sha256:string;initial_frame?:Frame;mesh_buffer_url?:string;world_version?:string};
 type Comparison={same_world_version:boolean;trials:Job[]};
 type Config={source_xy_m:[number,number];destination_xy_m:[number,number];parcel:{mass_kg:number;sliding_friction:number;dimensions_m:[number,number,number]};seed:number};
+type ParameterDefinitions={parameters:Record<string,{axes?:{label:string;minimum:number;maximum:number}[]}>;
+  parcel:{parameters:Record<string,{bounds?:[number,number]}>}};
 const initialConfig:Config={source_xy_m:[.32,0],destination_xy_m:[.4,0],parcel:{mass_kg:.5,sliding_friction:.8,dimensions_m:[.18,.18,.16]},seed:7};
 const storageKey='vivacity-contact-last-trial-v1';
 const wait=(ms:number)=>new Promise(resolve=>setTimeout(resolve,ms));
@@ -46,6 +49,7 @@ export default function ContactLab(){
   const [config,setConfig]=useState<Config>(initialConfig),[task,setTask]=useState('g1_constrained_carton');
   const [job,setJob]=useState<Job|null>(null),[history,setHistory]=useState<Job[]>([]),[selected,setSelected]=useState<string[]>([]);
   const [comparison,setComparison]=useState<Comparison|null>(null);
+  const [definitions,setDefinitions]=useState<ParameterDefinitions|null>(null);
   const [assets,setAssets]=useState<Assets|null>(null),[sceneFor,setSceneFor]=useState(''),[frames,setFrames]=useState<Frame[]>([]);
   const [replaying,setReplaying]=useState(false),[time,setTime]=useState(0);
   const cursor=useRef(0),liveFrames=useRef<Frame[]>([]),currentJob=useRef<Job|null>(job);
@@ -62,8 +66,8 @@ export default function ContactLab(){
   useEffect(()=>{const controller=new AbortController();let cancelled=false;
     async function load(){try{
       setLoading(true);
-      const caps=await request<{enabled:boolean}>('/capabilities','GET',undefined,controller.signal);
-      if(cancelled)return;setEnabled(caps.enabled);
+      const caps=await request<{enabled:boolean;task_parameters:ParameterDefinitions}>('/capabilities','GET',undefined,controller.signal);
+      if(cancelled)return;setEnabled(caps.enabled);setDefinitions(caps.task_parameters);
       if(caps.enabled){
         const items=await request<Job[]>('/experiments','GET',undefined,controller.signal);
         if(cancelled)return;setHistory(items);
@@ -176,7 +180,7 @@ export default function ContactLab(){
     {!loading&&!enabled&&<p role="status">Contact research is disabled on this runtime. No simulation will start.</p>}
     <div className="humanoid-layout"><div className="humanoid-primary">
       <div className="humanoid-viewport" role="region" aria-label="Native G1 and carton physical scene" data-model-hash={readyScene?assets?.manifest.model_hash:undefined}>
-        {readyScene&&<SceneBoundary><Canvas frameloop="demand" shadows dpr={[1,1.5]} camera={{position:[2,-2,1.65],up:[0,0,1],fov:43}}>
+        {readyScene&&<SceneBoundary key={sceneFor}><Canvas frameloop="demand" shadows={{type:PCFShadowMap}} dpr={[1,1.5]} camera={{position:[2,-2,1.65],up:[0,0,1],fov:43}}>
           <ModelScene assets={assets!} frames={frames} cursor={cursor} playing={replaying||(busy&&!paused)} robotId="unitree_g1" time={time}/>
         </Canvas></SceneBoundary>}
       </div>
@@ -195,15 +199,14 @@ export default function ContactLab(){
       </div>
     </div><form className="humanoid-controls contact-controls" onSubmit={run}>
       <h2>Configure the next trial</h2><p className="humanoid-scope">Edits create a new world when you run. Existing results retain their original conditions. Wider settings can produce a measured failure.</p>
-      <fieldset disabled={busy||mutating||!enabled}><legend>Controller and parcel</legend>
+      <fieldset disabled={busy||mutating||!enabled||!definitions}><legend>Controller and parcel</legend>
         <label>Controller<select value={task} onChange={e=>setTask(e.target.value)}><option value="g1_constrained_carton">Constrained contact control</option><option value="g1_stationary_bimanual">Native servo baseline</option></select></label>
-        {(['source_xy_m','destination_xy_m'] as const).map(kind=>[0,1].map(index=><label key={kind+index}>{kind==='source_xy_m'?'Source':'Destination'} {index?'Y':'X'} (m)
-          <input type="number" required step=".005" min={index?-.3:.18} max={index?.3:.7} value={inputValue(config[kind][index])} onChange={e=>location(kind,index,e.target.valueAsNumber)}/></label>))}
-        <label>Parcel mass (kg)<input type="number" required min=".01" max="20" step=".01" value={inputValue(config.parcel.mass_kg)} onChange={e=>setConfig(v=>({...v,parcel:{...v.parcel,mass_kg:e.target.valueAsNumber}}))}/></label>
-        <label>Sliding friction<input type="number" required min=".001" max="2" step=".001" value={inputValue(config.parcel.sliding_friction)} onChange={e=>setConfig(v=>({...v,parcel:{...v.parcel,sliding_friction:e.target.valueAsNumber}}))}/></label>
-        <details><summary>Carton dimensions</summary><p>Full lengths. Mass stays fixed; geometry and inertia are rebuilt.</p>{['X','Y','Z'].map((axis,index)=><label key={axis}>Dimension {axis} (m)<input type="number" required min=".04" max=".5" step=".01" value={inputValue(config.parcel.dimensions_m[index])} onChange={e=>dimension(index,e.target.valueAsNumber)}/></label>)}</details>
+        {(['source_xy_m','destination_xy_m'] as const).map(kind=>(definitions?.parameters[kind].axes??[]).map((axis,index)=><label key={kind+index}>{axis.label}
+          <input type="number" required step=".005" min={axis.minimum} max={axis.maximum} value={inputValue(config[kind][index])} onChange={e=>location(kind,index,e.target.valueAsNumber)}/></label>))}
+        {([{key:'mass_kg',label:'Parcel mass (kg)',step:.01},{key:'sliding_friction',label:'Sliding friction',step:.001}] as const).map(field=><label key={field.key}>{field.label}<input type="number" required min={definitions?.parcel.parameters[field.key].bounds?.[0]} max={definitions?.parcel.parameters[field.key].bounds?.[1]} step={field.step} value={inputValue(config.parcel[field.key])} onChange={e=>setConfig(v=>({...v,parcel:{...v.parcel,[field.key]:e.target.valueAsNumber}}))}/></label>)}
+        <details><summary>Carton dimensions</summary><p>Full lengths. Mass stays fixed; geometry and inertia are rebuilt.</p>{['X','Y','Z'].map((axis,index)=><label key={axis}>Dimension {axis} (m)<input type="number" required min={definitions?.parcel.parameters.dimensions_m.bounds?.[0]} max={definitions?.parcel.parameters.dimensions_m.bounds?.[1]} step=".01" value={inputValue(config.parcel.dimensions_m[index])} onChange={e=>dimension(index,e.target.valueAsNumber)}/></label>)}</details>
       </fieldset>
-      <div className="humanoid-actions"><button className="primary" type="submit" disabled={busy||mutating||loading||!enabled}>Run physical trial</button>
+      <div className="humanoid-actions"><button className="primary" type="submit" disabled={busy||mutating||loading||!enabled||!definitions}>Run physical trial</button>
         {busy&&<><button className="secondary" type="button" disabled={mutating||['pausing','cancelling'].includes(job!.status)} onClick={()=>control(paused?'resume':'pause')}>{paused?'Resume physics':'Pause physics'}</button>
           <button className="secondary" type="button" disabled={mutating||job!.status==='cancelling'} onClick={()=>control('cancel')}>Cancel</button></>}
         <button className="secondary" type="button" disabled={!paused||mutating} onClick={fork}>Fork paused snapshot</button>

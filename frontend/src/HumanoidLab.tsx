@@ -53,7 +53,9 @@ export function ModelScene({assets,frames,cursor,playing,robotId,time}:{assets:A
       qb.set(to.quaternion_wxyz[1],to.quaternion_wxyz[2],to.quaternion_wxyz[3],to.quaternion_wxyz[0]);
       group.quaternion.copy(qa.slerp(qb,alpha));
     }
-    if(playing)invalidate();
+    // While a live worker is slower than playback, keep the last received pose
+    // without repeatedly drawing an identical GPU frame.
+    if(playing&&cursor.current<(frames.at(-1)?.time_s??0))invalidate();
   });
   const target=robotId==='unitree_h1'?[.35,0,.85]:robotId==='unitree_g1'?[.22,0,.72]:[.25,0,1.0];
   const darkShell=robotId==='unitree_h1';

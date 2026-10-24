@@ -12,10 +12,19 @@ test('real contact task: live state, pause, fork, compare, replay, changed geome
   const writes:string[]=[];
   page.on('request',r=>{if(r.method()==='POST'&&/\/v1\/(sessions|worlds|robotics\/contact\/experiments)$/.test(r.url()))writes.push(r.url());});
   await page.goto('/contact-lab');
+  const renderedScene=async()=>{
+    const canvas=page.locator('.contact-lab canvas');
+    await expect(canvas).toBeVisible();
+    await expect.poll(async()=>canvas.evaluate((node:HTMLCanvasElement)=>{
+      const gl=node.getContext('webgl2');return !!gl&&!gl.isContextLost();
+    })).toBe(true);
+    await expect(page.getByText(/3D rendering is unavailable/)).toHaveCount(0);
+  };
   const start=page.getByRole('button',{name:'Run physical trial',exact:true});
   await expect(start).toBeEnabled();
   await expect(page.locator('[data-model-hash]')).toHaveAttribute('data-model-hash',/^[a-f0-9]{64}$/);
   await expect(page.getByTestId('contact-result')).toContainText('No experiment has started');
+  await renderedScene();
   expect(writes).toEqual([]);
   const folder=path.resolve('../artifacts/physical-truth-runtime');
   await page.screenshot({path:path.join(folder,`contact-${browserName}-initial.png`),fullPage:true});
@@ -36,6 +45,7 @@ test('real contact task: live state, pause, fork, compare, replay, changed geome
   const frozen=await read(first.id,'/checkpoint');
   await page.waitForTimeout(250);
   expect(await read(first.id,'/checkpoint')).toEqual(frozen);
+  await renderedScene();await page.evaluate(()=>window.scrollTo(0,0));
   await page.screenshot({path:path.join(folder,`contact-${browserName}-paused.png`),fullPage:true});
   const forked=page.waitForResponse(r=>r.url().endsWith(`${route}/experiments/${first.id}/fork`));
   await page.getByRole('button',{name:'Fork paused snapshot'}).click();
@@ -86,6 +96,8 @@ test('real contact task: live state, pause, fork, compare, replay, changed geome
   await expect(page.locator('[data-model-hash]')).toHaveAttribute('data-model-hash',scene.model_hash);
   const beforeReload=writes.length;await page.reload();
   await expect(page.getByTestId('contact-result')).toContainText('Trial failed:');
+  await expect(page.locator('[data-model-hash]')).toHaveAttribute('data-model-hash',scene.model_hash);
+  await renderedScene();
   expect(writes.length).toBe(beforeReload);
   await page.emulateMedia({reducedMotion:'reduce'});
   await page.setViewportSize({width:390,height:844});
@@ -93,6 +105,7 @@ test('real contact task: live state, pause, fork, compare, replay, changed geome
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
   await page.keyboard.press('Tab');
   expect(await page.evaluate(()=>document.activeElement?.tagName)).not.toBe('BODY');
+  await page.evaluate(()=>window.scrollTo(0,0));
   await page.screenshot({path:path.join(folder,`contact-${browserName}-mobile.png`),fullPage:true});
   expect(errors).toEqual([]);
   await fs.writeFile(path.join(folder,`contact-${browserName}-journey.json`),JSON.stringify({
@@ -103,5 +116,5 @@ test('real contact task: live state, pause, fork, compare, replay, changed geome
     failure_reason:failed.result.failure_reason,initial_load_started_experiments:false,
     reload_started_experiments:false,checks:['live_before_terminal','complete_pause_snapshot','independent_fork',
       'matching_final_measurement','explicit_replay','export_matches_cursor','changed_geometry','genuine_failure',
-      'reload_recovery','mobile_reflow','keyboard_focus','reduced_motion','no_page_errors']},null,2));
+      'reload_recovery','mobile_reflow','keyboard_focus','reduced_motion','webgl2_rendering','no_page_errors']},null,2));
 });

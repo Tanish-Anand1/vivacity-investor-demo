@@ -8,6 +8,6 @@ export default defineConfig({
   use:{baseURL:process.env.VIVACITY_CONTACT_UI??'http://127.0.0.1:5186',headless:true,
     viewport:{width:1440,height:1050},screenshot:'only-on-failure',trace:'off'},
   projects:[{name:'chromium',use:{browserName:'chromium'}},
-            {name:'firefox',use:{browserName:'firefox'}},
+            {name:'firefox',use:{browserName:'firefox',launchOptions:{firefoxUserPrefs:{'webgl.force-enabled':true}}}},
             {name:'webkit',use:{browserName:'webkit'}}],
 });
