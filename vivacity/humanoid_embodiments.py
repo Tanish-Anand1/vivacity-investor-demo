@@ -115,7 +115,10 @@ def compile_embodiment(identity, tooling=None, *, append_scene=None):
             home[model.jnt_qposadr[index]] = .09
     adjustments = []
     for index in range(model.njnt):
-        if model.jnt_limited[index] and model.jnt_type[index] in (mj.mjtJoint.mjJNT_HINGE, mj.mjtJoint.mjJNT_SLIDE):
+        # pybind enum equality with NumPy integers is asymmetric on Linux.
+        # Tuple membership calls the enum's comparison first; normalize both.
+        if model.jnt_limited[index] and int(model.jnt_type[index]) in (
+                int(mj.mjtJoint.mjJNT_HINGE), int(mj.mjtJoint.mjJNT_SLIDE)):
             address = model.jnt_qposadr[index]
             bounded = float(np.clip(home[address], *model.jnt_range[index]))
             if home[address] != bounded:

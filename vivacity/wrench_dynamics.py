@@ -82,7 +82,7 @@ class WrenchSolution:
 
 
 class WrenchInverseDynamics:
-    version = 'vivacity.wrench-inverse-dynamics/2-experimental'
+    version = 'vivacity.wrench-inverse-dynamics/3-experimental'
 
     def __init__(self, model):
         self.model = model
@@ -197,7 +197,8 @@ class WrenchInverseDynamics:
             # force. An actuator-style constant-acceleration braking barrier
             # incorrectly declares that valid motion infeasible. Its native
             # stops remain enabled; enforce command viability on driven joints.
-            if jid not in self.controlled_joints or not model.jnt_limited[jid] or model.jnt_type[jid] not in (mj.mjtJoint.mjJNT_HINGE, mj.mjtJoint.mjJNT_SLIDE):
+            if jid not in self.controlled_joints or not model.jnt_limited[jid] or int(model.jnt_type[jid]) not in (
+                    int(mj.mjtJoint.mjJNT_HINGE), int(mj.mjtJoint.mjJNT_SLIDE)):
                 continue
             dof, qadr = model.jnt_dofadr[jid], model.jnt_qposadr[jid]
             horizon = .08

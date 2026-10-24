@@ -2,7 +2,7 @@ import mujoco as mj
 import numpy as np
 import pytest
 
-from vivacity.inverse_dynamics import ControllerInfeasible
+from vivacity.inverse_dynamics import ConstrainedInverseDynamics, ControllerInfeasible
 from vivacity.wrench_dynamics import WrenchInverseDynamics, contact_basis, friction_facets
 
 
@@ -15,6 +15,24 @@ def motor_scene(limit=10.):
     data = mj.MjData(model)
     mj.mj_forward(model, data)
     return model, data
+
+
+@pytest.mark.parametrize('controller_class', [WrenchInverseDynamics, ConstrainedInverseDynamics])
+def test_joint_stop_barrier_brakes_before_the_native_limit(controller_class):
+    model = mj.MjModel.from_xml_string('''<mujoco><option gravity="0 0 0"/>
+    <worldbody><body><joint name="slide" type="slide" axis="1 0 0" range="0 1"/>
+    <geom type="sphere" size=".05" mass="1"/></body></worldbody>
+    <actuator><motor joint="slide" ctrlrange="-30 30"/></actuator></mujoco>''')
+    data = mj.MjData(model)
+    data.qpos[0], data.qvel[0] = .98, .5
+    mj.mj_forward(model, data)
+    result = controller_class(model).compute(data, np.array([1.]),
+        torque_reference=np.array([30.]), torque_weight=100.)
+    # At this speed a non-braking command would cross the upper joint limit.
+    # This fails when NumPy/native-enum membership skips the barrier on Linux.
+    assert result.acceleration[0] <= -6.25+.001
+    assert result.commands[0] <= -6.25+.001
+    assert .98+.08*.5+.5*.08**2*result.acceleration[0] <= 1.+1e-5
 
 
 def test_wrench_solver_holds_load_through_bounded_motor_and_restores_memory():

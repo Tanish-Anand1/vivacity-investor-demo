@@ -38,7 +38,7 @@ class ConstrainedInverseDynamics:
     detect actual limit/collision violations. No solver output is a success
     certificate. Infeasibility stops the task instead of changing body poses.
     """
-    version = 'vivacity.constrained-inverse-dynamics/1'
+    version = 'vivacity.constrained-inverse-dynamics/2'
 
     def __init__(self, model: mj.MjModel):
         self.model = model
@@ -126,7 +126,8 @@ class ConstrainedInverseDynamics:
 
         joint_rows, joint_low, joint_high = [], [], []
         for jid in range(model.njnt):
-            if not model.jnt_limited[jid] or model.jnt_type[jid] not in (mj.mjtJoint.mjJNT_HINGE, mj.mjtJoint.mjJNT_SLIDE):
+            if not model.jnt_limited[jid] or int(model.jnt_type[jid]) not in (
+                    int(mj.mjtJoint.mjJNT_HINGE), int(mj.mjtJoint.mjJNT_SLIDE)):
                 continue
             dof, qadr = int(model.jnt_dofadr[jid]), int(model.jnt_qposadr[jid])
             horizon = .08

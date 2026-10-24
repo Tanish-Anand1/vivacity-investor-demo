@@ -118,3 +118,21 @@ certificate.
   controller's constant-acceleration braking barrier. Wrench kernel v2 applies
   that barrier to driven joints; passive stops remain in native MuJoCo. A native
   regression reproduces the prior infeasibility and verifies passive settling.
+# Linux joint-limit audit, 2026-10-24
+
+The deployment-image run at `8df5d91` failed the complete G1 model's initial
+thumb limits (89 focused tests passed; one failed). A separate Linux diagnostic
+at `1d938e9` reproduced the cause: tuple membership between MuJoCo's native
+joint enums and NumPy integers returned false for a hinge. The same expression
+also skipped predictive joint-stop constraints in both experimental inverse
+dynamics implementations. Native MuJoCo stops still existed; the optimization
+barriers were not active. Previous Linux trials therefore cannot certify those
+controller constraints, regardless of their measured task outcome.
+
+The correction explicitly converts joint types and constants to Python integers,
+bumps controller versions, and tests a fast approaching slider that must command
+at least 6.25 m/s² of braking before the native stop. Prior in-flight constrained
+and complete-stance cohorts were cancelled as superseded. Partial reports are
+historical development evidence, not completed acceptance. Fresh Linux cohorts
+are required for the corrected controller and compiled model identities.
+
