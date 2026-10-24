@@ -1,5 +1,16 @@
 name: ARM64 no-cost host preflight
 on:
+  push:
+    branches: [codex/physical-truth-runtime]
+    paths:
+      - .github/workflows/arm64-host-preflight.yml
+      - Dockerfile
+      - requirements-lock.txt
+      - vivacity/**
+      - tests/test_execution_checkpoint.py
+      - tests/test_cabinet_mechanism.py
+      - tests/test_apollo_execution.py
+      - tests/test_api.py
   workflow_dispatch:
 permissions:
   contents: read
