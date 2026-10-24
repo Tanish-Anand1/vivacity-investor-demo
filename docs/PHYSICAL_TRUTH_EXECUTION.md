@@ -69,11 +69,18 @@ The latest full trial passes the intermediate handoff phases but **fails**
 19,068 native steps / 38.136 simulated seconds. The loaded-hand pads measured
 31.199 N and 0 N; root tilt was 0.007875 rad. A further three explicit research
 overrides tested jaw centering and bounded angle feedback: two lost grip and
-one timed out at 0.515302 rad despite retaining both pad loads. These are failed
+one timed out at 0.515302 rad despite retaining both pad loads. A separate
+45-second-budget continuation still timed out at 0.413105 rad (41.192 N and
+25.111 N pad loads; 218.840 s wall time). Nine independent scratch IK solves
+found eight feasible poses, including a partially door-aligned wrist at the
+1.1-radian goal. This does not establish collision clearance. Native execution
+of that partial-rotation candidate instead failed `prohibited_collision` at
+0.594816 rad: the left palm contacted `service_old_tray_wall_-1` at 17.981 N.
+It retained both gripping contacts until that collision. These are failed
 independent continuations, not accepted application controllers or cabinet
 service. No failure predicate was relaxed to make the result pass.
 
-The local records retain all six full development trials, three research
+The local records retain all six full development trials, five research
 continuations, exact source archives, ordered measured frames, the last two
 trials' full integration/controller checkpoints and the native failed-state
 render. See `artifacts/physical-truth-runtime/apollo-withdrawal-20261025/`.
@@ -94,6 +101,14 @@ Current code verification (overlapping suites must not be summed):
 - [Contact integration and browsers, a14c619](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40127257696): **98/98 native checks passed**, 216.819 s; Chromium, Firefox and WebKit jobs passed.
 - [ARM64 deployment-image preflight, a14c619](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40127257772): passed. Architecture compatibility is not hosting provisioning, durability, full-world capacity or a 24-hour soak.
 - Local `tests/test_tool_withdrawal.py tests/test_cabinet_route.py tests/test_joint_reserve_ik.py`: **21/21 passed in 2.16 s**. The measured-grasp regression passed separately under host memory pressure.
+
+The subsequent checkpoint-CLI/evidence revision `9b8b4a2` also passed the
+[backend workflow](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40128819826)
+and [contact/browser workflow](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40128819955).
+The runtime, frontend and test sources are unchanged from `a14c619`; the new
+checkpoint CLI was additionally exercised against 6,338 native continuation
+steps locally. Later commits in this slice contain only archived research
+results and documentation, not a promoted controller candidate.
 
 Read-only production checks returned HTTP 200 for `https://demo.tryvivacity.com/`
 and `status: ok` from `https://isabella-labs-runtime.onrender.com/health` after

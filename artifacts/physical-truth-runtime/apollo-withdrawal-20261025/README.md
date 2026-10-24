@@ -31,13 +31,32 @@ speed 0.002403 m/s. Local wall times include planning and runtime work; memory
 contention affected the last measurement. They are not production latency or
 CPU-only measurements. No nominal or held-out cabinet acceptance rate is claimed.
 
-Three separately identified research continuations restore the same version-8
+Five separately identified research continuations restore the same version-8
 checkpoint and change actuator-goal feedback on that independent instance.
 Their source and parent checkpoint hashes are preserved. Jaw centering alone
 loses grip at 0.631479 rad; a slower bounded command retains both contacts but
 times out at 0.515302 rad; additional angle lookahead loses grip at 0.689440 rad.
-They are not application-controller acceptance. None changes simulator poses
-during stepping or changes the failure thresholds.
+A separate trial declares a longer 45-second phase budget before it starts;
+it still times out at 0.413105 rad with both pad loads retained (41.192 N and
+25.111 N). It executes 22,502 further steps from the common checkpoint and
+takes 218.840 s wall time. This tests the hypothesis that the original timeout
+alone explains failure; it does not establish task completion.
+
+The final continuation rotates the wrist by half the commanded door rotation
+and follows a rigid door-relative TCP arc, with the original 12-second budget.
+It fails `prohibited_collision` at 0.594816 rad, after 1,541 additional steps:
+the left palm hits `service_old_tray_wall_-1` at 17.981 N. Both finger loads are
+still present. This is a physical path conflict, not a successful grasp-to-goal
+trial. Its compute time is 17.363 s.
+
+None of these research continuations changes simulator poses during stepping.
+The longer budget is explicitly recorded; contact, collision, torque, posture
+and success criteria are unchanged. No variant is application acceptance.
+
+`rotation-ik.json` records nine scratch IK solves, of which eight pass the pose
+tolerances. The full-rotation 1.1-radian goal does not pass that solver attempt.
+The half-rotation goal does, but its native execution subsequently collides as
+described above. Kinematic feasibility is not collision or physics acceptance.
 
 `measured-grasp.png` is a native MuJoCo render of the failed terminal state,
 not camera-perception evidence or a live-browser capture.
@@ -58,6 +77,9 @@ Overlapping suites must not be added together as independent test counts.
 
 Executed JUnit files are retained in `tests/` in this evidence directory.
 Runtime source and report hashes are recorded in `index.json` and the reports.
+The repeated backend and contact/browser workflows also passed at `9b8b4a2`,
+which adds the exercised checkpoint CLI and evidence without changing the
+runtime, frontend or regression-test source. See the execution ledger for links.
 The downloaded WebKit journey records 18 checks, 9,510 native steps, 5.882 mm
 placement error and a correctly rejected `grip_slipped` trial. Its mobile
 screenshot was inspected: the native scene, cancelled final state, parameter

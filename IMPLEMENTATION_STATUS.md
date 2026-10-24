@@ -13,9 +13,12 @@ reached **0.560305 rad after 19,068 steps / 38.136 simulated seconds**, then
 correctly failed `lost_door_grip`. One left pad measured 31.199 N and the other
 0 N. Release, withdrawal and parking completed first. The run took 335.496 s
 wall time under local memory contention; this is not a production latency
-benchmark. Six complete development trials and three independent experimental
+benchmark. Six complete development trials and five independent experimental
 continuations are retained, all failed. No nominal/held-out cabinet acceptance
-rate is claimed.
+rate is claimed. A 45-second research budget still timed out at 0.413105 rad
+with both contacts retained. Partial wrist rotation instead reached 0.594816
+rad before the palm hit the old-cartridge tray wall at 17.981 N. These variants
+were not promoted to the application controller.
 
 Verification for the exact runtime source at `a14c619`:
 

@@ -502,6 +502,80 @@
         }
       },
       "acceptance_for_application_controller": false
+    },
+    {
+      "name": "centered-long-wide",
+      "report_sha256": "3de4975a2f0c3ca62052e1003d1234f14f4db3c8573c4a2b273a59c42b1ed838",
+      "source_sha256": "51422698401fac26eade975079219ee2c934e5ef09ffe41e83ee83f6e805231a",
+      "source_file": "centered-long-wide-source.py",
+      "settings": {
+        "centering": true,
+        "rate_rad_s": 0.08,
+        "lookahead_rad": 0.04,
+        "phase_timeout_s": 45.0
+      },
+      "status": "failed",
+      "failure": "door_opening_timeout",
+      "failure_detail": null,
+      "steps_completed": 40265,
+      "time_s": 80.52999999999372,
+      "wall_s": 218.83950010000262,
+      "door_angle_rad": 0.41310457039725557,
+      "grip_forces_n": {
+        "l": {
+          "positive": 41.19244675727191,
+          "negative": 25.111375206559302
+        },
+        "r": {
+          "positive": 0.0,
+          "negative": 0.0
+        }
+      },
+      "acceptance_for_application_controller": false
+    },
+    {
+      "name": "half-rotation-wide",
+      "report_sha256": "8a9dd7ba2482ebc440f59b1720e91d5e1d49a1bc1aee21c4ec59d1268caaab60",
+      "source_sha256": "4ac3910aaf5a50dbba55b8e988b1297838f950e76740f5cb2c357abd60c484de",
+      "source_file": "half-rotation-wide-source.py",
+      "settings": {
+        "centering": true,
+        "wrist_rotation_fraction": 0.5,
+        "rigid_door_tcp_path": true,
+        "phase_timeout_s": 12.0
+      },
+      "status": "failed",
+      "failure": "prohibited_collision",
+      "failure_detail": {
+        "geoms": [
+          "service_old_tray_wall_-1",
+          "l_service_palm"
+        ],
+        "normal_force_n": 17.980538714756698
+      },
+      "steps_completed": 19304,
+      "time_s": 38.60800000000122,
+      "wall_s": 17.36294479999924,
+      "door_angle_rad": 0.5948156167371211,
+      "grip_forces_n": {
+        "l": {
+          "positive": 40.743404593487085,
+          "negative": 12.341907641691998
+        },
+        "r": {
+          "positive": 0.0,
+          "negative": 0.0
+        }
+      },
+      "acceptance_for_application_controller": false
     }
-  ]
+  ],
+  "kinematic_diagnostic": {
+    "report_file": "rotation-ik.json",
+    "source_file": "rotation-ik-source.py",
+    "source_sha256": "d717fe0d57c53e9752ddce9d059158f4f5e23aa19fbab3513145c50fe1fc1202",
+    "poses": 9,
+    "feasible": 8,
+    "scope": "Kinematic diagnostic only; not collision clearance, executed motion or cabinet success."
+  }
 }
