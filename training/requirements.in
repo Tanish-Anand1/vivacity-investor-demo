@@ -6,4 +6,3 @@ mujoco-mjx==3.15.0
 numpy==2.5.3
 scipy==1.18.1
 pydantic==2.14.0
-

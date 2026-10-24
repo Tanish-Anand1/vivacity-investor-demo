@@ -25,13 +25,16 @@ jobs:
         with:
           python-version: '3.12'
           cache: pip
-          cache-dependency-path: training/requirements.in
+          cache-dependency-path: training/requirements-linux-lock.txt
       - name: Resolve separate research environment
         run: |
           mkdir -p artifacts/locomotion-preflight
-          python -m pip install -r training/requirements.in --report artifacts/locomotion-preflight/resolver.json
+          python -m pip install -r training/requirements-linux-lock.txt --report artifacts/locomotion-preflight/resolver.json
           python -m pip check
           python -m pip freeze > artifacts/locomotion-preflight/requirements-linux.txt
+      - name: Resolve GPU additions without provisioning or using a GPU
+        if: matrix.robot == 'h1'
+        run: python -m pip install --dry-run -r training/requirements-gpu.in --report artifacts/locomotion-preflight/gpu-resolver.json
       - name: Compare exact native and MJX models without training
         run: |
           timeout 1200 python -u -m training.preflight --robot ${{ matrix.robot }} --steps 3 --output artifacts/locomotion-preflight/${{ matrix.robot }}.json

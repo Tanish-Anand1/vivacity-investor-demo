@@ -1,0 +1,5 @@
+# Resolve and review the CUDA additions before provisioning. CPU packages below
+# were installed and checked by workflow 40083924085, revision 3750125.
+-r requirements-linux-lock.txt
+jax[cuda12]==0.12.0.1
+mujoco-mjx[warp]==3.15.0
