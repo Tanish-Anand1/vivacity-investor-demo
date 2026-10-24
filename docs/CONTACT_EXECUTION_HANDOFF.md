@@ -39,12 +39,15 @@ Other owners receive 404. Capability discovery is public.
 | --- | --- | --- |
 | GET | `/capabilities` | Experimental status and native parameter definitions |
 | POST | `/experiments` | Validate and queue an independent native world |
+| GET | `/experiments?limit=20` | Owner-scoped saved trials, newest first |
 | GET | `/experiments/{id}` | Persisted state, measured progress and outcome |
 | GET | `/experiments/{id}/frames?cursor=0&limit=32` | Ordered committed frames; maximum page size 64 |
 | POST | `/experiments/{id}/pause` | Request pause; wait up to ten seconds for acknowledgement |
 | POST | `/experiments/{id}/resume` | Continue an acknowledged paused state |
 | POST | `/experiments/{id}/cancel` | Cooperative cancellation, retaining measured frames |
 | GET | `/experiments/{id}/checkpoint` | Latest committed full-state checkpoint metadata |
+| GET | `/experiments/{id}/scene` | Exact compiled geometry, native model hash and world version |
+| GET | `/experiments/{id}/meshes` | Little-endian float32 vertices and uint32 indices; verify manifest SHA-256 |
 | POST | `/experiments/{id}/fork` | Independent continuation from latest or named checkpoint |
 | POST | `/compare` | Two to four owner-scoped result records, without inventing a ranking |
 | GET | `/experiments/{id}/replay` | Terminal trace, only fetched when the visitor requests replay |
@@ -55,6 +58,7 @@ Create a nominal trial:
 ```json
 {
   "schema_version": "vivacity.contact-request/1",
+  "task": "g1_stationary_bimanual",
   "config": {
     "source_xy_m": [0.32, 0],
     "destination_xy_m": [0.40, 0],
@@ -99,9 +103,18 @@ frozen. Terminal statuses are `completed`, `failed`, `cancelled`, `interrupted`.
 produce successful substitute animation. A restart resumes a compatible committed
 state. Incompatible task/controller/simulator versions become `interrupted`.
 
+Select `task: "g1_constrained_carton"` to test the new native-actuator constrained
+controller. Its failed nominal acceptance run is retained; it is experimental.
+The default API task remains the independently measured native-servo baseline.
+`partial_measurements` is the latest measurement object (for example `support`
+and `destination_error_m`), whereas terminal `result.measurements` contains the
+whole task ledger with `last_measurement` and aggregate counters.
+
 The new contact interface uses HTTP cursor polling, not a new WebSocket protocol.
-The existing general experiment WebSocket contract is unchanged. New contact
-browser integration and cross-browser acceptance remain open.
+The existing general experiment WebSocket contract is unchanged. `/contact-lab`
+implements live polling, pause/resume/cancel, fork, history, comparison, explicit
+replay, export and changed-condition trials. Full cross-browser acceptance is
+still open. Loading the route makes read-only requests only.
 
 ## Geometry and physical meaning
 
@@ -115,9 +128,27 @@ a free carton. It has zero equality constraints. Object motion comes from contac
 forces, gravity and integration. IK writes only independent planning scratch
 state; execution issues actuator commands.
 
-The new scene's render-asset API/UI integration is not delivered. The verification
-renderer recompiles the same configuration, checks its binary hash, then renders
-the recorded `qpos` values. This is explicitly measured replay, not live execution.
+The scene API reads the persisted compiled model binary. Geometry records carry
+body IDs, local position, `quaternion_wxyz`, MuJoCo half-sizes, RGBA, collision
+masks and mesh IDs. Mesh ranges specify byte offsets and scalar counts. Vertices
+are little-endian float32 triples; faces are little-endian uint32 indices.
+The browser verifies the mesh-buffer SHA-256 before constructing geometry and
+applies received world body transforms without duplicating the body hierarchy.
+The static preview is explicitly a native keyframe; it never starts physics.
+
+Local UI command (after starting the API above):
+
+```powershell
+cd frontend
+$env:VITE_API_BASE_URL = 'http://127.0.0.1:8192'
+npm run dev -- --port 5186
+# Open http://127.0.0.1:5186/contact-lab
+npx playwright test --config playwright.contact.config.ts
+```
+
+Configure `VIVACITY_CORS_ORIGINS=http://127.0.0.1:5186` on the local API.
+Use separate processes for offline acceptance and browser checks on small PCs.
+The hosted browser workflow uses the built frontend and its real HTTP proxy.
 
 Dimensions are full lengths. In mass mode, resizing preserves mass and changes
 inertia; density mode changes mass with volume. Custom inertia is validated for

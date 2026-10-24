@@ -18,16 +18,16 @@ checks. Hardware execution is outside the completion claim.
 | --- | --- | --- |
 | Complete checkpoint, independent controller and simulator forks | New native checkpoint adapter and transactional worker pass local restore/fork/restart tests; legacy services not migrated | Partial |
 | All exposed parameter dependencies and causality | New carton mass/density/inertia and solver-contact definitions pass native causality checks; app-wide inventory/UI generation incomplete | Partial |
-| Whole-body stabilization and constraints | Experimental inverse dynamics passes pendulum constraints but fails the G1 task; alternate QP solver loses retention | Failed gate |
+| Whole-body stabilization and constraints | New native-actuator wrench controller completes stationary G1 trials, but its first nominal gate failed 19/20 due to a wall-clock solver cutoff. Revised deterministic iteration budget awaits complete acceptance | Failed gate / revision under test |
 | Contact-only manipulation and G1 bilateral load sharing | Stationary native-servo baseline passes 20/20 nominal and 100/100 held-out trials, with zero equality constraints and continuous retention checks; whole-body controller not accepted | Partial |
 | G1/Apollo/H1 model-matched mobility, turns, terrain, carry | H1 short walk only; complete embodiments need training | Open |
 | Apollo cabinet, latch, old/replacement cartridge cycle | Physical switch demonstration only | Open |
 | Shared-world SORT through DISPATCH | Sorting ledger only | Open |
 | Independent H1 running at 2 m/s | No validated running controller | Open |
 | RGB-D pose estimation without privileged controller inputs | Separate image/depth estimator passes five rendered-image tests; not driving robot control or validated over the complete envelope | Partial |
-| Hardware-transfer manifests, calibration and watchdog procedure | Not yet validated as a package | Open |
+| Hardware-transfer manifests, calibration and watchdog procedure | Offline G1 manifest, 382 simulated sensor samples, calibration procedure and fail-closed dry-run watchdog implemented; no transport or hardware validation | Partial |
 | Transactional recovery, owner-scoped fork/compare/export | New opt-in contact API passes real HTTP pause/fork/compare/replay/export; abrupt process-exit recovery tested on real small MuJoCo dynamics | Partial |
-| Browser journeys, three engines, all failure states | Prior release checks cannot validate new capabilities | Open |
+| Browser journeys, three engines, all failure states | New opt-in `/contact-lab` renders compiled native geometry; complete browser journey not yet accepted. Hosted Chromium/Firefox/WebKit verification prepared | Open |
 | Paid persistence, backups/restore, full-world capacity | SQLite-consistent backup/restore passes concurrent-WAL tests; paid hosting and complete-world capacity remain open | Partial |
 | Production deployment and 24-hour soak | Not started for this release | Open |
 | Break the Frame cinematic release | Deliberately deferred until physics release passes | Deferred |
@@ -66,11 +66,28 @@ Six negative fixtures were executed: low friction → `grip_slipped`; weak finge
 → `task_timeout`. These are measured failure classifications, not independent
 certification of their inferred root causes.
 
-The constrained whole-body controller is explicitly unsuccessful. Its original
-QP stops on nonconvergence; a research-only Clarabel adapter progresses farther
-but loses retention. Increasing the objective's requested normal load to 25 N per
-hand also failed, as did a subsequent increase in torque-reference objective
-weight from 0.01 to 1. None is substituted for the native-servo result.
+Earlier whole-body attempts remain failed evidence. The new experimental
+`constrained_bimanual.py` and `wrench_dynamics.py` preserve the original native
+actuator gains, velocity bias, force limits and model hash. They optimize joint
+acceleration, actuator forces and contact-dimensional wrenches with support,
+friction, joint and fixture-clearance constraints. They do not provide complete
+self-collision avoidance or validated general stabilization.
+
+One development nominal trial completed 9,510 native steps with minimum steady
+hand share 43.952%, placement error 7.063 mm and no actuator torque-limit excess.
+Five development corner trials passed. These are development results, not the
+required acceptance sample. A subsequent 20-trial nominal run passed 19 and failed
+one with `MaxTime` under concurrent browser load. That run remains failed; the
+100 held-out trials were not completed. The revised solver uses 150 iterations
+and one solver thread instead of a scheduling-dependent 250 ms cutoff. The worker
+retains its separate 120-second computation budget. New source hashes require a
+separate acceptance report.
+
+Local concurrent browser/controller testing encountered memory pressure: about
+270 MB free on an 8 GB PC. Those interrupted checks are not passes. The dedicated
+`physical-truth-contact.yml` workflow executes native gates and the real browser
+journey on standard public-repository runners, without production credentials or
+deployment steps. Its completed reports, not its configuration, determine status.
 
 No new GPU training, paid resource activation, production deployment, 24-hour
 soak or opening modification has occurred. This ledger is not a completion

@@ -1,0 +1,117 @@
+name: Physical Truth contact gates
+
+on:
+  push:
+    branches: [codex/physical-truth-runtime]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: physical-truth-contact-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  native-acceptance:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build --tag vivacity-contact:verification .
+      - name: Native controller and persistence checks
+        run: |
+          mkdir -p artifacts/contact-ci
+          docker run --rm --memory=4g --memory-swap=4g \
+            -v "$PWD/tests:/app/tests:ro" -v "$PWD/scripts:/app/scripts:ro" \
+            -v "$PWD/artifacts/contact-ci:/verification" \
+            vivacity-contact:verification python -m pytest \
+            /app/tests/test_wrench_dynamics.py /app/tests/test_constrained_bimanual.py \
+            /app/tests/test_execution_checkpoint.py /app/tests/test_execution_service.py \
+            /app/tests/test_execution_api.py /app/tests/test_render_geometry.py \
+            /app/tests/test_hardware_transfer.py /app/tests/test_rgbd_perception.py \
+            -q --junitxml=/verification/contact-tests.xml
+      - name: Twenty nominal and one hundred preplanned held-out native trials
+        run: |
+          docker run --rm --memory=4g --memory-swap=4g \
+            -v "$PWD/scripts:/app/scripts:ro" -v "$PWD/artifacts/contact-ci:/verification" \
+            vivacity-contact:verification python -u -m scripts.verify_constrained_envelope \
+            --nominal 20 --held-out 100 --seed 20261025 \
+            --output /verification/constrained-acceptance.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: contact-native-evidence
+          path: artifacts/contact-ci
+          retention-days: 14
+
+  browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    env:
+      MUJOCO_GL: osmesa
+      LP_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      VIVACITY_EXPERIMENTAL_CONTACT_TASKS: '1'
+      VIVACITY_DATABASE: data/contact-browser.sqlite3
+      VIVACITY_CORS_ORIGINS: http://127.0.0.1:5186
+      VITE_API_BASE_URL: http://127.0.0.1:8192
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: requirements-lock.txt
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: sudo apt-get update && sudo apt-get install -y libosmesa6 libgl1
+      - run: python -m pip install -r requirements-lock.txt
+      - run: npm ci
+        working-directory: frontend
+      - run: npx playwright install --with-deps ${{ matrix.browser }}
+        working-directory: frontend
+      - run: npm run build
+        working-directory: frontend
+      - name: Start isolated backend and built frontend
+        run: |
+          mkdir -p data artifacts/physical-truth-runtime
+          python -m uvicorn vivacity.api:app --host 127.0.0.1 --port 8192 > data/contact-api.log 2>&1 &
+          (cd frontend && node node_modules/vite/bin/vite.js preview --host 127.0.0.1 --port 5186 --strictPort > ../data/contact-ui.log 2>&1) &
+          python - <<'PY'
+          import time, urllib.request
+          for url in ('http://127.0.0.1:8192/health', 'http://127.0.0.1:5186/contact-lab'):
+              for attempt in range(120):
+                  try:
+                      with urllib.request.urlopen(url, timeout=2) as response:
+                          assert response.status == 200
+                      break
+                  except Exception:
+                      time.sleep(.5)
+              else:
+                  raise RuntimeError('Local test service did not start: '+url)
+          PY
+      - run: npx playwright test --config playwright.contact.config.ts --project ${{ matrix.browser }}
+        working-directory: frontend
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: contact-browser-${{ matrix.browser }}
+          path: |
+            artifacts/physical-truth-runtime/contact-${{ matrix.browser }}-*.png
+            artifacts/physical-truth-runtime/contact-${{ matrix.browser }}-journey.json
+            artifacts/physical-truth-runtime/contact-browser-tests.json
+            data/contact-browser-output/**/test-failed-*.png
+            data/contact-browser-output/**/error-context.md
+            data/contact-api.log
+            data/contact-ui.log
+          retention-days: 14

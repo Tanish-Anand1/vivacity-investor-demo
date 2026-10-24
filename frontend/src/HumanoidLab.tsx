@@ -10,7 +10,7 @@ import SceneBoundary from './SceneBoundary';
 import './humanoidLab.css';
 
 type Pose={name:string;position:number[];quaternion_wxyz:number[]};
-type Frame={time_s:number;base_position_m:number[];qpos:number[];body_transforms:Pose[];contacts:number;phase?:string;parcel_position_m?:number[];grasp_active?:boolean};
+export type Frame={time_s:number;base_position_m:number[];qpos:number[];body_transforms:Pose[];contacts:number;phase?:string;parcel_position_m?:number[];grasp_active?:boolean};
 type Model={robot_id:string;name:string;environment_id:string;dof:number;actuators:number;mesh_count:number;model_hash:string;initial_frame:Frame;task_scope:string};
 type Measurements={observed_floor_sliding_friction_range?:number[]|null;simulation_steps:number;simulation_duration_s:number;compute_wall_s:number;minimum_base_height_m:number;maximum_base_tilt_rad:number;peak_joint_delta_rad:number;minimum_hand_goal_distance_m:number|null;task_contact_samples:number;maximum_parcel_height_m:number|null;maximum_switch_angle_rad:number|null;maximum_switch_angle_after_hand_contact_rad:number|null;switch_activation_time_s:number|null;maximum_foot_slip_m_s:number|null;final_base_position_m:number[];fallen:boolean;final_parcel_position_m?:number[];destination_error_m?:number;maximum_joint_limit_violation_rad?:number;final_support_contact?:boolean;grasp_constraint_active_final?:boolean;grasp_constraint_pose_jump_m?:number|null;contact_force_peak_n?:{left:number;right:number};prohibited_contacts?:string[];p95_support_foot_slip_m_s?:number;goal_error_m?:number;stable_stop_duration_s?:number;machine_shaft_travel_rad?:number;peak_machine_shaft_speed_rad_s?:number;peak_hand_switch_contact_force_n?:number;final_hand_switch_distance_m?:number};
 type Result={effective_physics?:{floor_sliding_friction:number;parcel_mass_kg?:number;switch_stiffness_n_m_rad?:number};robot_id:string;action:string;frames:Frame[];task_success:boolean;failure_reason:string|null;model_hash:string;scene_geometry_hash?:string;measurements:Measurements;parameters:Settings;environment_id:string;simulator_version:string;scope:string;events?:{phase:string;time_s:number;evidence:Record<string,unknown>}[];planning:{method:string;target_position_m?:number[];hand_position_error_m?:number;hand_position_errors_m?:{left:number;right:number};feasible:boolean}|null};
@@ -31,7 +31,7 @@ async function read<T>(path:string,init:RequestInit={}):Promise<T>{
   return value as T;
 }
 
-function ModelScene({assets,frames,cursor,playing,robotId,time}:{assets:Assets;frames:Frame[];cursor:React.RefObject<number>;playing:boolean;robotId:string;time:number}){
+export function ModelScene({assets,frames,cursor,playing,robotId,time}:{assets:Assets;frames:Frame[];cursor:React.RefObject<number>;playing:boolean;robotId:string;time:number}){
   const groups=useRef(new Map<string,Group>());
   const {invalidate}=useThree();
   const vecA=useMemo(()=>new Vector3(),[]),vecB=useMemo(()=>new Vector3(),[]);

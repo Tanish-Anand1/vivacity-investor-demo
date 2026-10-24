@@ -20,3 +20,5 @@ cases; overlapping suites must not be added together as independent test counts.
 SQLite files, owner capabilities, scratch renders, build logs, and temporary
 uncompressed reports are not published. No hardware test, GPU training, paid
 hosting purchase, production soak, or cinematic update is represented here.
+
+`constrained-cutoff-failed-acceptance.json.gz` retains the failed 19/20 nominal run of the first native-actuator wrench controller. Its wall-clock solver cutoff returned MaxTime under host contention. Revised source has a different hash and requires a separate acceptance report; this failed sample is never merged into it.

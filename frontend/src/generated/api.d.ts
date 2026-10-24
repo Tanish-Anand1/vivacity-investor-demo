@@ -939,7 +939,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /** History */
+        get: operations["history_v1_robotics_contact_experiments_get"];
         put?: never;
         /** Start */
         post: operations["start_v1_robotics_contact_experiments_post"];
@@ -1043,6 +1044,40 @@ export interface paths {
         };
         /** Checkpoint */
         get: operations["checkpoint_v1_robotics_contact_experiments__identifier__checkpoint_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/robotics/contact/experiments/{identifier}/scene": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Scene */
+        get: operations["scene_v1_robotics_contact_experiments__identifier__scene_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/robotics/contact/experiments/{identifier}/meshes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Meshes */
+        get: operations["meshes_v1_robotics_contact_experiments__identifier__meshes_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2182,6 +2217,13 @@ export interface components {
                 [key: string]: unknown;
             };
         };
+        /** BufferRange */
+        BufferRange: {
+            /** Byte Offset */
+            byte_offset: number;
+            /** Count */
+            count: number;
+        };
         /** CaptureReference */
         CaptureReference: {
             /** Capture Id */
@@ -2333,6 +2375,37 @@ export interface components {
             /** Ids */
             ids: string[];
         };
+        /** CompiledSceneResponse */
+        CompiledSceneResponse: {
+            /**
+             * Schema Version
+             * @constant
+             */
+            schema_version: "vivacity.compiled-render-geometry/1";
+            /** Model Hash */
+            model_hash: string;
+            /** World Version */
+            world_version: string;
+            /** Simulator Version */
+            simulator_version: string;
+            /**
+             * Source
+             * @constant
+             */
+            source: "compiled_mujoco_model";
+            /** Coordinates */
+            coordinates: string;
+            /** Bodies */
+            bodies: components["schemas"]["SceneBody"][];
+            /** Geoms */
+            geoms: components["schemas"]["SceneGeom"][];
+            /** Meshes */
+            meshes: components["schemas"]["SceneMesh"][];
+            /** Mesh Buffer Sha256 */
+            mesh_buffer_sha256: string;
+            /** Mesh Buffer Bytes */
+            mesh_buffer_bytes: number;
+        };
         /** ConditionChanges */
         ConditionChanges: {
             /** Carton Mass Kg */
@@ -2373,6 +2446,12 @@ export interface components {
              * @constant
              */
             schema_version: "vivacity.contact-request/1";
+            /**
+             * Task
+             * @default g1_stationary_bimanual
+             * @enum {string}
+             */
+            task: "g1_stationary_bimanual" | "g1_constrained_carton";
             config?: components["schemas"]["BimanualConfig"];
         };
         /** CreateWorld */
@@ -4457,6 +4536,67 @@ export interface components {
             mode: "conveyor" | "production";
             /** Creator Label */
             creator_label?: string | null;
+        };
+        /** SceneBody */
+        SceneBody: {
+            /** Id */
+            id: number;
+            /** Name */
+            name: string;
+            /** Parent Id */
+            parent_id: number;
+        };
+        /** SceneGeom */
+        SceneGeom: {
+            /** Id */
+            id: number;
+            /** Name */
+            name: string;
+            /** Body Id */
+            body_id: number;
+            /** Type */
+            type: string;
+            /** Group */
+            group: number;
+            /** Mesh Id */
+            mesh_id: number | null;
+            /** Position */
+            position: [
+                number,
+                number,
+                number
+            ];
+            /** Quaternion Wxyz */
+            quaternion_wxyz: [
+                number,
+                number,
+                number,
+                number
+            ];
+            /** Size */
+            size: [
+                number,
+                number,
+                number
+            ];
+            /** Rgba */
+            rgba: [
+                number,
+                number,
+                number,
+                number
+            ];
+            /** Contype */
+            contype: number;
+            /** Conaffinity */
+            conaffinity: number;
+        };
+        /** SceneMesh */
+        SceneMesh: {
+            /** Id */
+            id: number;
+            positions: components["schemas"]["BufferRange"];
+            indices: components["schemas"]["BufferRange"];
         };
         /**
          * ScienceConfig
@@ -7330,6 +7470,39 @@ export interface operations {
             };
         };
     };
+    history_v1_robotics_contact_experiments_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+            };
+            header: {
+                "x-workspace-token": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JobResponse"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     start_v1_robotics_contact_experiments_post: {
         parameters: {
             query?: never;
@@ -7553,6 +7726,72 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Checkpoint"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    scene_v1_robotics_contact_experiments__identifier__scene_get: {
+        parameters: {
+            query?: never;
+            header: {
+                "x-workspace-token": string;
+            };
+            path: {
+                identifier: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompiledSceneResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    meshes_v1_robotics_contact_experiments__identifier__meshes_get: {
+        parameters: {
+            query?: never;
+            header: {
+                "x-workspace-token": string;
+            };
+            path: {
+                identifier: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/octet-stream": string;
                 };
             };
             /** @description Validation Error */

@@ -1,0 +1,810 @@
+{
+  "schema_version": "vivacity.hardware-transfer/1",
+  "status": "offline_package_only",
+  "hardware_validated": false,
+  "transport_implemented": false,
+  "simulator": {
+    "name": "MuJoCo",
+    "version": "3.15.0",
+    "model_sha256": "a982e2f81c2074a16f4b74ae9d598392842b9e391d4650b6881d17c475cccbce"
+  },
+  "controller": {
+    "version": "vivacity.g1-wrench-carton/1-experimental",
+    "source_sha256": {
+      "constrained_bimanual.py": "ffa030d1aa046b99890cd094c81db82d91cabd4167f60fedb866cddb5abbc658",
+      "wrench_dynamics.py": "41da8a182383eb3e208cf95991af3f7efde7263f596884d51375e371dc84ab64"
+    },
+    "task_source_sha256": {
+      "bimanual.py": "50fd7af4ecbec49176cab13b2adc2873a75a7352895f934718658511ac48242d",
+      "contact_evidence.py": "af5e9e729611845091febe09d4050f185e6f0767a91abe56ef4a14fabe3f5ae5",
+      "physical_parameters.py": "93cadc4ac94b7f1242be5585cc6cba2f404daf3e51bf18e9230a6be49d2416c9",
+      "inverse_dynamics.py": "18dad10cfdeb4b4c592a0301eb6a51069572def9c841c0e96005160401abbead",
+      "whole_body_contact.py": "cff7879eb8d584df64a02ae5cffe05a5c6f9055a975b6e7e5bcb94cbdf5740a0"
+    },
+    "policy": "constrained native servo references; no learned policy"
+  },
+  "coordinates": {
+    "handedness": "right",
+    "world_up": "+Z",
+    "position_unit": "metre",
+    "joint_unit": "radian",
+    "quaternion_order": "wxyz",
+    "body_transforms": "world poses, not parent-relative"
+  },
+  "watchdog_s": 0.1,
+  "command_mode": "position_reference_with_native_servo_gains",
+  "commissioning_rate_limit_note": "2 rad/s is an offline software ceiling, not a verified hardware rating.",
+  "joints": [
+    {
+      "actuator_id": 0,
+      "joint": "left_hip_pitch_joint",
+      "qpos_index": 7,
+      "qvel_index": 6,
+      "position_bounds_rad": [
+        -2.5307,
+        2.8798
+      ],
+      "torque_bounds_nm": [
+        -88.0,
+        88.0
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 10.32051688269471,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 1,
+      "joint": "left_hip_roll_joint",
+      "qpos_index": 8,
+      "qvel_index": 7,
+      "position_bounds_rad": [
+        -0.5236000000000001,
+        2.9671
+      ],
+      "torque_bounds_nm": [
+        -139.0,
+        139.0
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 15.801330621089788,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 2,
+      "joint": "left_hip_yaw_joint",
+      "qpos_index": 9,
+      "qvel_index": 8,
+      "position_bounds_rad": [
+        -2.7576,
+        2.7576
+      ],
+      "torque_bounds_nm": [
+        -88.0,
+        88.0
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 5.783206759460352,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 3,
+      "joint": "left_knee_joint",
+      "qpos_index": 10,
+      "qvel_index": 9,
+      "position_bounds_rad": [
+        -0.0872670000000002,
+        2.8798
+      ],
+      "torque_bounds_nm": [
+        -139.0,
+        139.0
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 9.079688743210514,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 4,
+      "joint": "left_ankle_pitch_joint",
+      "qpos_index": 11,
+      "qvel_index": 10,
+      "position_bounds_rad": [
+        -0.87267,
+        0.5236
+      ],
+      "torque_bounds_nm": [
+        -50.0,
+        50.0
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 4.923872393090813,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 5,
+      "joint": "left_ankle_roll_joint",
+      "qpos_index": 12,
+      "qvel_index": 11,
+      "position_bounds_rad": [
+        -0.2618,
+        0.2618
+      ],
+      "torque_bounds_nm": [
+        -50.0,
+        50.0
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 4.544355291717478,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 6,
+      "joint": "right_hip_pitch_joint",
+      "qpos_index": 13,
+      "qvel_index": 12,
+      "position_bounds_rad": [
+        -2.5307,
+        2.8798
+      ],
+      "torque_bounds_nm": [
+        -88.0,
+        88.0
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 10.32088037993799,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 7,
+      "joint": "right_hip_roll_joint",
+      "qpos_index": 14,
+      "qvel_index": 13,
+      "position_bounds_rad": [
+        -2.9671,
+        0.5236000000000001
+      ],
+      "torque_bounds_nm": [
+        -139.0,
+        139.0
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 15.806504937664352,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 8,
+      "joint": "right_hip_yaw_joint",
+      "qpos_index": 15,
+      "qvel_index": 14,
+      "position_bounds_rad": [
+        -2.7576,
+        2.7576
+      ],
+      "torque_bounds_nm": [
+        -88.0,
+        88.0
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 5.783872423087974,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 9,
+      "joint": "right_knee_joint",
+      "qpos_index": 16,
+      "qvel_index": 15,
+      "position_bounds_rad": [
+        -0.0872670000000002,
+        2.8798
+      ],
+      "torque_bounds_nm": [
+        -139.0,
+        139.0
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 9.079653037627354,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 10,
+      "joint": "right_ankle_pitch_joint",
+      "qpos_index": 17,
+      "qvel_index": 16,
+      "position_bounds_rad": [
+        -0.87267,
+        0.5236
+      ],
+      "torque_bounds_nm": [
+        -50.0,
+        50.0
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 4.923873901927356,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 11,
+      "joint": "right_ankle_roll_joint",
+      "qpos_index": 18,
+      "qvel_index": 17,
+      "position_bounds_rad": [
+        -0.2618,
+        0.2618
+      ],
+      "torque_bounds_nm": [
+        -50.0,
+        50.0
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 4.544361865718643,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 12,
+      "joint": "waist_yaw_joint",
+      "qpos_index": 19,
+      "qvel_index": 18,
+      "position_bounds_rad": [
+        -2.618,
+        2.618
+      ],
+      "torque_bounds_nm": [
+        -88.0,
+        88.0
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 10.300887670318078,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 13,
+      "joint": "waist_roll_joint",
+      "qpos_index": 20,
+      "qvel_index": 19,
+      "position_bounds_rad": [
+        -0.52,
+        0.52
+      ],
+      "torque_bounds_nm": [
+        -50.0,
+        50.0
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 16.219578212055367,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 14,
+      "joint": "waist_pitch_joint",
+      "qpos_index": 21,
+      "qvel_index": 20,
+      "position_bounds_rad": [
+        -0.52,
+        0.52
+      ],
+      "torque_bounds_nm": [
+        -50.0,
+        50.0
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 9.285139935426983,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 15,
+      "joint": "left_shoulder_pitch_joint",
+      "qpos_index": 22,
+      "qvel_index": 21,
+      "position_bounds_rad": [
+        -3.0892,
+        2.6704
+      ],
+      "torque_bounds_nm": [
+        -25.0,
+        25.0
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 11.299389396825696,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 16,
+      "joint": "left_shoulder_roll_joint",
+      "qpos_index": 23,
+      "qvel_index": 22,
+      "position_bounds_rad": [
+        -1.5882,
+        2.2515
+      ],
+      "torque_bounds_nm": [
+        -25.0,
+        25.0
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 10.133629418698389,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 17,
+      "joint": "left_shoulder_yaw_joint",
+      "qpos_index": 24,
+      "qvel_index": 23,
+      "position_bounds_rad": [
+        -2.618,
+        2.618
+      ],
+      "torque_bounds_nm": [
+        -25.0,
+        25.0
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 8.334214107298429,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 18,
+      "joint": "left_elbow_joint",
+      "qpos_index": 25,
+      "qvel_index": 24,
+      "position_bounds_rad": [
+        -1.0471999999999997,
+        2.0944
+      ],
+      "torque_bounds_nm": [
+        -25.0,
+        25.0
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 7.647631845677429,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 19,
+      "joint": "left_wrist_roll_joint",
+      "qpos_index": 26,
+      "qvel_index": 25,
+      "position_bounds_rad": [
+        -1.97222,
+        1.97222
+      ],
+      "torque_bounds_nm": [
+        -25.0,
+        25.0
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 4.693068874767923,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 20,
+      "joint": "left_wrist_pitch_joint",
+      "qpos_index": 27,
+      "qvel_index": 26,
+      "position_bounds_rad": [
+        -1.61443,
+        1.61443
+      ],
+      "torque_bounds_nm": [
+        -5.0,
+        5.0
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 5.419874386727952,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 21,
+      "joint": "left_wrist_yaw_joint",
+      "qpos_index": 28,
+      "qvel_index": 27,
+      "position_bounds_rad": [
+        -1.61443,
+        1.61443
+      ],
+      "torque_bounds_nm": [
+        -5.0,
+        5.0
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 5.187160348206369,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 22,
+      "joint": "left_hand_thumb_0_joint",
+      "qpos_index": 29,
+      "qvel_index": 28,
+      "position_bounds_rad": [
+        -1.0472,
+        1.0472
+      ],
+      "torque_bounds_nm": [
+        -2.45,
+        2.45
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 4.47730782145291,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 23,
+      "joint": "left_hand_thumb_1_joint",
+      "qpos_index": 30,
+      "qvel_index": 29,
+      "position_bounds_rad": [
+        -0.7243120000000001,
+        1.0472
+      ],
+      "torque_bounds_nm": [
+        -1.4,
+        1.4
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 4.514067138113609,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 24,
+      "joint": "left_hand_thumb_2_joint",
+      "qpos_index": 31,
+      "qvel_index": 30,
+      "position_bounds_rad": [
+        0.0,
+        1.74533
+      ],
+      "torque_bounds_nm": [
+        -1.4,
+        1.4
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 4.4760612795211285,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 25,
+      "joint": "left_hand_middle_0_joint",
+      "qpos_index": 32,
+      "qvel_index": 31,
+      "position_bounds_rad": [
+        -1.5708,
+        0.0
+      ],
+      "torque_bounds_nm": [
+        -1.4,
+        1.4
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 4.5102262382489995,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 26,
+      "joint": "left_hand_middle_1_joint",
+      "qpos_index": 33,
+      "qvel_index": 32,
+      "position_bounds_rad": [
+        -1.74533,
+        0.0
+      ],
+      "torque_bounds_nm": [
+        -1.4,
+        1.4
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 4.475962787308177,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 27,
+      "joint": "left_hand_index_0_joint",
+      "qpos_index": 34,
+      "qvel_index": 33,
+      "position_bounds_rad": [
+        -1.5708,
+        0.0
+      ],
+      "torque_bounds_nm": [
+        -1.4,
+        1.4
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 4.509907112925662,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 28,
+      "joint": "left_hand_index_1_joint",
+      "qpos_index": 35,
+      "qvel_index": 34,
+      "position_bounds_rad": [
+        -1.74533,
+        0.0
+      ],
+      "torque_bounds_nm": [
+        -1.4,
+        1.4
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 4.4759545778411285,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 29,
+      "joint": "right_shoulder_pitch_joint",
+      "qpos_index": 36,
+      "qvel_index": 35,
+      "position_bounds_rad": [
+        -3.0892,
+        2.6704
+      ],
+      "torque_bounds_nm": [
+        -25.0,
+        25.0
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 11.29136186879123,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 30,
+      "joint": "right_shoulder_roll_joint",
+      "qpos_index": 37,
+      "qvel_index": 36,
+      "position_bounds_rad": [
+        -2.2515,
+        1.5882
+      ],
+      "torque_bounds_nm": [
+        -25.0,
+        25.0
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 10.133645367447988,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 31,
+      "joint": "right_shoulder_yaw_joint",
+      "qpos_index": 38,
+      "qvel_index": 37,
+      "position_bounds_rad": [
+        -2.618,
+        2.618
+      ],
+      "torque_bounds_nm": [
+        -25.0,
+        25.0
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 8.334801661375884,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 32,
+      "joint": "right_elbow_joint",
+      "qpos_index": 39,
+      "qvel_index": 38,
+      "position_bounds_rad": [
+        -1.0471999999999997,
+        2.0944
+      ],
+      "torque_bounds_nm": [
+        -25.0,
+        25.0
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 7.6453352267791015,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 33,
+      "joint": "right_wrist_roll_joint",
+      "qpos_index": 40,
+      "qvel_index": 39,
+      "position_bounds_rad": [
+        -1.97222,
+        1.97222
+      ],
+      "torque_bounds_nm": [
+        -25.0,
+        25.0
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 4.693068796361173,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 34,
+      "joint": "right_wrist_pitch_joint",
+      "qpos_index": 41,
+      "qvel_index": 40,
+      "position_bounds_rad": [
+        -1.61443,
+        1.61443
+      ],
+      "torque_bounds_nm": [
+        -5.0,
+        5.0
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 5.4197857958712525,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 35,
+      "joint": "right_wrist_yaw_joint",
+      "qpos_index": 42,
+      "qvel_index": 41,
+      "position_bounds_rad": [
+        -1.61443,
+        1.61443
+      ],
+      "torque_bounds_nm": [
+        -5.0,
+        5.0
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 5.1871719547510455,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 36,
+      "joint": "right_hand_thumb_0_joint",
+      "qpos_index": 43,
+      "qvel_index": 42,
+      "position_bounds_rad": [
+        -1.0472,
+        1.0472
+      ],
+      "torque_bounds_nm": [
+        -2.45,
+        2.45
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 4.477307820655547,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 37,
+      "joint": "right_hand_thumb_1_joint",
+      "qpos_index": 44,
+      "qvel_index": 43,
+      "position_bounds_rad": [
+        -1.0472,
+        0.7243120000000001
+      ],
+      "torque_bounds_nm": [
+        -1.4,
+        1.4
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 4.5140671151990315,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 38,
+      "joint": "right_hand_thumb_2_joint",
+      "qpos_index": 45,
+      "qvel_index": 44,
+      "position_bounds_rad": [
+        -1.74533,
+        0.0
+      ],
+      "torque_bounds_nm": [
+        -1.4,
+        1.4
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 4.476061279032265,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 39,
+      "joint": "right_hand_index_0_joint",
+      "qpos_index": 48,
+      "qvel_index": 47,
+      "position_bounds_rad": [
+        0.0,
+        1.5708
+      ],
+      "torque_bounds_nm": [
+        -1.4,
+        1.4
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 4.509907133522357,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 40,
+      "joint": "right_hand_index_1_joint",
+      "qpos_index": 49,
+      "qvel_index": 48,
+      "position_bounds_rad": [
+        0.0,
+        1.74533
+      ],
+      "torque_bounds_nm": [
+        -1.4,
+        1.4
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 4.475954578268298,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 41,
+      "joint": "right_hand_middle_0_joint",
+      "qpos_index": 46,
+      "qvel_index": 45,
+      "position_bounds_rad": [
+        0.0,
+        1.5708
+      ],
+      "torque_bounds_nm": [
+        -1.4,
+        1.4
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 4.510226247725778,
+      "commissioning_rate_limit_rad_s": 2.0
+    },
+    {
+      "actuator_id": 42,
+      "joint": "right_hand_middle_1_joint",
+      "qpos_index": 47,
+      "qvel_index": 46,
+      "position_bounds_rad": [
+        0.0,
+        1.74533
+      ],
+      "torque_bounds_nm": [
+        -1.4,
+        1.4
+      ],
+      "kp_nm_rad": 500.0,
+      "kd_nm_s_rad": 4.475962787473674,
+      "commissioning_rate_limit_rad_s": 2.0
+    }
+  ],
+  "sensor_replay": {
+    "samples": 382,
+    "last_timestamp_s": 19.020000000000337,
+    "hardware_validation": false
+  },
+  "simulation_task_success": true,
+  "simulation_failure": null,
+  "parameters": {
+    "parcel": {
+      "dimensions_m": [
+        0.18,
+        0.18,
+        0.16
+      ],
+      "mass_mode": "mass",
+      "mass_kg": 0.5,
+      "density_kg_m3": 100.0,
+      "custom_inertia_kg_m2": null,
+      "sliding_friction": 0.8,
+      "torsional_friction_m": 0.005,
+      "rolling_friction_m": 0.0001,
+      "contact_time_constant_s": 0.02,
+      "contact_damping_ratio": 1.0
+    },
+    "controller": "inverse_dynamics_experimental",
+    "source_xy_m": [
+      0.32,
+      0.0
+    ],
+    "destination_xy_m": [
+      0.4,
+      0.0
+    ],
+    "floor_friction": 0.8,
+    "hand_torque_scale": 1.0,
+    "gravity_m_s2": 9.81,
+    "disturbance_n": 0.0,
+    "seed": 7,
+    "timeout_s": 22.0
+  }
+}

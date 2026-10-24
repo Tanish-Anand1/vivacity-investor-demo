@@ -33,6 +33,7 @@ const ImportWorld=lazy(()=>import('./ImportWorld'));
 const WorldLibrary=lazy(()=>import('./WorldLibrary'));
 const ExperimentLibrary=lazy(()=>import('./ExperimentLibrary'));
 const HumanoidLab=lazy(()=>import('./HumanoidLab'));
+const ContactLab=lazy(()=>import('./ContactLab'));
 const PhysicalWorldEditor=lazy(()=>import('./PhysicalWorldEditor'));
 
 export default function App(){
@@ -41,8 +42,8 @@ export default function App(){
   const [guidedAutostart,setGuidedAutostart]=useState(()=>new URLSearchParams(window.location.search).get('guided')==='1');
   const [activeTemplate,setActiveTemplate]=useState<{selection:Selection;backend:Backend;config:Record<string,unknown>;key?:string;name?:string;configurationId?:string}>({selection:DEFAULT_SELECTION,backend:'mujoco',config:defaultWorkcell,key:'curated-warehouse-v1',name:'Franka Panda / Industrial warehouse / Pick and place'});
   const [draft,setDraft]=useState<Configuration>(defaultConfiguration('warehouse'));
-  type Page='home'|'laboratory'|'discovery'|'factory'|'workspace'|'worlds'|'experiments'|'results'|'settings'|'import';
-  const routePage=(path:string):Page=>path==='/laboratory'?'laboratory':path==='/discovery'?'discovery':path==='/lab'?'factory':path==='/workspace'||path==='/works'?'workspace':path==='/worlds'?'worlds':path==='/experiments'?'experiments':path==='/settings'?'settings':path==='/import'?'import':'home';
+  type Page='home'|'laboratory'|'discovery'|'factory'|'workspace'|'worlds'|'experiments'|'results'|'settings'|'import'|'contact';
+  const routePage=(path:string):Page=>path==='/contact-lab'?'contact':path==='/laboratory'?'laboratory':path==='/discovery'?'discovery':path==='/lab'?'factory':path==='/workspace'||path==='/works'?'workspace':path==='/worlds'?'worlds':path==='/experiments'?'experiments':path==='/settings'?'settings':path==='/import'?'import':'home';
   const [page,setPage]=useState<Page>(()=>routePage(window.location.pathname));
   const navigate=useCallback((next:Page,path:string,guided=false)=>{window.history.pushState({},'',path);setGuidedAutostart(guided);setPage(next);window.scrollTo(0,0);},[]);
   const navigateFromLink=(event:MouseEvent<HTMLAnchorElement>,next:Page,path:string)=>{
@@ -67,7 +68,7 @@ export default function App(){
     return()=>{active=false;};
   },[page,draft.environment_id,visualWorld]);
   const backend=activeTemplate.backend,cloth=backend==='cloth';
-  const rt=useRuntime(backend,activeTemplate.key??selectionKey(activeTemplate.selection),activeTemplate.config,activeTemplate.configurationId,page!=='factory'&&page!=='home'&&page!=='laboratory'&&page!=='discovery'&&robotCategory!=='humanoids'&&!selectedHumanoid);
+  const rt=useRuntime(backend,activeTemplate.key??selectionKey(activeTemplate.selection),activeTemplate.config,activeTemplate.configurationId,page!=='contact'&&page!=='factory'&&page!=='home'&&page!=='laboratory'&&page!=='discovery'&&robotCategory!=='humanoids'&&!selectedHumanoid);
   const [branchId,setBranchId]=useState<string|null>(null),[editing,setEditing]=useState(false),[downloadError,setDownloadError]=useState<string|null>(null);
   const [editorSelection,setEditorSelection]=useState('object');
   const compatible=rt.world?.backend===backend&&(rt.world.config.robot_model??'panda')===(activeTemplate.config.robot_model??'panda'),branches=compatible?rt.branches:[];
@@ -169,7 +170,8 @@ export default function App(){
       <a className="nav-settings" href="/settings" aria-label="Runtime settings" aria-current={page==='settings'?'page':undefined} aria-disabled={rt.mutating} onClick={event=>navigateFromLink(event,'settings','/settings')}><SlidersHorizontal size={18}/></a>
     </header>
     <main className="platform-main" id="workspace" tabIndex={-1}>
-      {page==='laboratory'?<Suspense fallback={<p role="status">Opening the laboratory…</p>}><LabIndex openScience={()=>navigate('discovery','/discovery')} openRobotics={()=>navigate('factory','/lab')} openWorlds={()=>navigate('worlds','/worlds')}/></Suspense>:
+      {page==='contact'?<Suspense fallback={<p role="status">Loading the contact research lab…</p>}><ContactLab/></Suspense>:
+       page==='laboratory'?<Suspense fallback={<p role="status">Opening the laboratory…</p>}><LabIndex openScience={()=>navigate('discovery','/discovery')} openRobotics={()=>navigate('factory','/lab')} openWorlds={()=>navigate('worlds','/worlds')}/></Suspense>:
        page==='discovery'?<Suspense fallback={<p role="status">Preparing numerical laboratory…</p>}><ScienceLab/></Suspense>:
        page==='factory'?<Suspense fallback={<p role="status" className="lab-entry-status">Preparing the physical world…</p>}><FactoryWorkspace startGuided={guidedAutostart}/></Suspense>:
        page==='worlds'?<Suspense fallback={<p>Loading world library…</p>}><WorldLibrary choose={chooseWorld} nativeImport={async()=>{await rt.stop();navigate('import','/import');}}/></Suspense>:

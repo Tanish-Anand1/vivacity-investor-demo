@@ -4,3 +4,6 @@ vivacity/contact_evidence.py text eol=lf
 vivacity/physical_parameters.py text eol=lf
 vivacity/inverse_dynamics.py text eol=lf
 vivacity/whole_body_contact.py text eol=lf
+vivacity/constrained_bimanual.py text eol=lf
+vivacity/wrench_dynamics.py text eol=lf
+hardware-transfer/g1-carton/manifest.json text eol=lf

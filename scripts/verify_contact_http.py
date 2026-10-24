@@ -16,9 +16,10 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--base-url', default='http://127.0.0.1:8192')
     parser.add_argument('--output', default='artifacts/physical-truth-runtime/http-journey.json')
+    parser.add_argument('--task', choices=['g1_stationary_bimanual','g1_constrained_carton'], default='g1_stationary_bimanual')
     args = parser.parse_args()
     prefix = '/v1/robotics/contact'
-    evidence = {'base_url':args.base_url,'started_unix_s':time.time(),'checks':[]}
+    evidence = {'base_url':args.base_url,'task':args.task,'started_unix_s':time.time(),'checks':[]}
     with httpx.Client(base_url=args.base_url, headers={'X-Workspace-Token':secrets.token_urlsafe(40)},timeout=90.) as client:
         def call(method,path,**kwargs):
             response=client.request(method,path,**kwargs)
@@ -34,7 +35,7 @@ def main():
             raise TimeoutError(payload)
         assert call('GET','/health')['status']=='ok'
         assert call('GET',prefix+'/capabilities')['enabled']
-        job=call('POST',prefix+'/experiments',json={})
+        job=call('POST',prefix+'/experiments',json={'task':args.task})
         path=prefix+'/experiments/'+job['id']
         frames=wait(path+'/frames',lambda p:len(p['frames'])>=2)
         assert frames['status']=='running'
@@ -57,11 +58,12 @@ def main():
         evidence['export']=call('GET',path+'/export')
         assert evidence['replay']['frames']==evidence['export']['frames']
         evidence['checks'].append('replay_matches_exported_authoritative_frames')
-        failed=call('POST',prefix+'/experiments',json={'config':{'parcel':{
+        failed=call('POST',prefix+'/experiments',json={'task':args.task,'config':{'parcel':{
             'sliding_friction':.001,'torsional_friction_m':0.,'rolling_friction_m':0.}}})
         failed=wait(prefix+'/experiments/'+failed['id'],lambda p:p['status'] in ('failed','completed'))
         assert failed['status']=='failed' and not failed['result']['task_success']
-        assert failed['result']['failure_reason'] in ('grip_slipped','retention_lost','lift_not_clear','bilateral_load_not_sustained')
+        assert failed['result']['failure_reason'] in ('grip_slipped','retention_lost','lift_not_clear','bilateral_load_not_sustained',
+                                                     'insufficient_grip_contact','controller_infeasible')
         evidence['failure_trial']=failed
         evidence['checks'].append('changed_friction_produces_measured_failure')
         assert failed['world_version']!=completed['world_version']

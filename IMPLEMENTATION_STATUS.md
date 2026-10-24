@@ -1,3 +1,7 @@
+## Physical Truth contact revision (verification in progress)
+
+The isolated contact-only G1 research slice now includes a native-actuator constrained wrench controller, compiled-model scene/mesh APIs, owner-scoped history, an opt-in `/contact-lab` UI, and an offline hardware-transfer package. No new production release or opening change has occurred. The constrained controller first passed development trials but failed its nominal gate (19/20, optimizer wall-clock cutoff). The cutoff has been replaced with an iteration bound; complete revalidation is pending. Local concurrent checks encountered 8 GB memory pressure and were interrupted; they are not passes. See `docs/PHYSICAL_TRUTH_EXECUTION.md` and the hosted `Physical Truth contact gates` reports for exact current evidence.
+
 # Physical Truth implementation checkpoint — 2026-10-24
 
 **The full directive remains incomplete and has not been deployed.** The opening

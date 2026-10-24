@@ -23,6 +23,7 @@ RUN python -m pip install --no-cache-dir -r requirements-lock.txt
 COPY vivacity ./vivacity
 COPY assets ./assets
 COPY fixtures/imports ./fixtures/imports
+COPY hardware-transfer ./hardware-transfer
 COPY scripts/build_humanoid_models.py ./scripts/build_humanoid_models.py
 RUN python -m scripts.build_humanoid_models --output /app/precompiled_humanoids
 ENV VIVACITY_HUMANOID_MODEL_DIR=/app/precompiled_humanoids

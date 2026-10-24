@@ -25,6 +25,7 @@ Token = Annotated[str, Header(min_length=32, max_length=128, pattern=r'^[A-Za-z0
 class ContactRequest(BaseModel):
     model_config = ConfigDict(extra='forbid')
     schema_version: Literal['vivacity.contact-request/1'] = 'vivacity.contact-request/1'
+    task: Literal['g1_stationary_bimanual', 'g1_constrained_carton'] = 'g1_stationary_bimanual'
     config: BimanualConfig = Field(default_factory=BimanualConfig)
 
 
@@ -76,6 +77,52 @@ class CompareRequest(BaseModel):
     ids: list[str] = Field(min_length=2, max_length=4)
 
 
+class BufferRange(BaseModel):
+    byte_offset: int
+    count: int
+
+
+class SceneMesh(BaseModel):
+    id: int
+    positions: BufferRange
+    indices: BufferRange
+
+
+class SceneBody(BaseModel):
+    id: int
+    name: str
+    parent_id: int
+
+
+class SceneGeom(BaseModel):
+    id: int
+    name: str
+    body_id: int
+    type: str
+    group: int
+    mesh_id: int | None
+    position: tuple[float, float, float]
+    quaternion_wxyz: tuple[float, float, float, float]
+    size: tuple[float, float, float]
+    rgba: tuple[float, float, float, float]
+    contype: int
+    conaffinity: int
+
+
+class CompiledSceneResponse(BaseModel):
+    schema_version: Literal['vivacity.compiled-render-geometry/1']
+    model_hash: str
+    world_version: str
+    simulator_version: str
+    source: Literal['compiled_mujoco_model']
+    coordinates: str
+    bodies: list[SceneBody]
+    geoms: list[SceneGeom]
+    meshes: list[SceneMesh]
+    mesh_buffer_sha256: str
+    mesh_buffer_bytes: int
+
+
 def runtime(request: Request):
     service = getattr(request.app.state, 'contact_execution', None)
     if service is None:
@@ -97,16 +144,24 @@ def capabilities(request: Request):
             'release_status': 'experimental', 'observation_modes': ['simulator_state'],
             'tasks': [{'id': 'g1_stationary_bimanual', 'embodiment': 'unitree_g1_with_hands',
                        'tooling': 'native articulated hands', 'motion_source': 'native MuJoCo steps',
-                       'scope': 'Stationary contact-only carton transfer. Whole-body inverse dynamics, locomotion, camera-controlled operation and hardware validation have not passed release gates.'}],
+                       'scope': 'Stationary contact-only carton transfer. Whole-body inverse dynamics, locomotion, camera-controlled operation and hardware validation have not passed release gates.'},
+                      {'id':'g1_constrained_carton', 'embodiment':'unitree_g1_with_hands',
+                       'tooling':'native articulated hands', 'motion_source':'native MuJoCo steps',
+                       'scope':'Experimental constrained contact-wrench controller using the unchanged native actuator model. Full robustness, locomotion, camera control and hardware release gates remain open.'}],
             'parcel_parameters': parameter_manifest()}
 
 
 @router.post('/experiments', response_model=JobResponse, status_code=202)
 def start(body: ContactRequest, request: Request, x_workspace_token: Token, service=Depends(runtime)):
     try:
-        return service.submit(owner(x_workspace_token), admission_key(request), 'g1_stationary_bimanual', body.config.model_dump())
+        return service.submit(owner(x_workspace_token), admission_key(request), body.task, body.config.model_dump())
     except AdmissionRejected as exc:
         raise HTTPException(429, str(exc), headers={'Retry-After':'60'}) from exc
+
+
+@router.get('/experiments', response_model=list[JobResponse])
+def history(x_workspace_token: Token, limit: int=Query(default=20,ge=1,le=20), service=Depends(runtime)):
+    return service.history(owner(x_workspace_token), limit)
 
 
 @router.get('/experiments/{identifier}', response_model=JobResponse)
@@ -138,6 +193,26 @@ def cancel(identifier: str, x_workspace_token: Token, service=Depends(runtime)):
 @router.get('/experiments/{identifier}/checkpoint', response_model=Checkpoint)
 def checkpoint(identifier: str, x_workspace_token: Token, service=Depends(runtime)):
     return service.checkpoint(owner(x_workspace_token), identifier)
+
+
+@router.get('/experiments/{identifier}/scene', response_model=CompiledSceneResponse)
+def scene(identifier: str, x_workspace_token: Token, service=Depends(runtime)):
+    try:
+        return service.scene(owner(x_workspace_token), identifier)[0]
+    except ValueError as exc:
+        raise HTTPException(409, str(exc)) from exc
+
+
+@router.get('/experiments/{identifier}/meshes', response_class=Response,
+            responses={200:{'content':{'application/octet-stream':{'schema':{'type':'string','format':'binary'}}}}})
+def meshes(identifier: str, x_workspace_token: Token, service=Depends(runtime)):
+    try:
+        manifest, binary = service.scene(owner(x_workspace_token), identifier)
+    except ValueError as exc:
+        raise HTTPException(409, str(exc)) from exc
+    return Response(binary, media_type='application/octet-stream', headers={
+        'ETag':'"'+manifest['mesh_buffer_sha256']+'"', 'Cache-Control':'private, max-age=3600',
+        'X-Content-Type-Options':'nosniff'})
 
 
 @router.post('/experiments/{identifier}/fork', response_model=JobResponse, status_code=202)

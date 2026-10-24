@@ -27,9 +27,10 @@ def create_app(database=None):
         app.state.humanoids = HumanoidTrialService(app.state.runtime.store)
         app.state.contact_execution = None
         if os.getenv('VIVACITY_EXPERIMENTAL_CONTACT_TASKS', '0') == '1':
-            from .execution_service import ExecutionService, BimanualAdapter
+            from .execution_service import ExecutionService, BimanualAdapter, ConstrainedBimanualAdapter
             app.state.contact_execution = ExecutionService(app.state.runtime.store,
-                {'g1_stationary_bimanual': BimanualAdapter()}, executor=app.state.humanoids.executor)
+                {'g1_stationary_bimanual': BimanualAdapter(), 'g1_constrained_carton': ConstrainedBimanualAdapter()},
+                executor=app.state.humanoids.executor)
         app.state.imports = app.state.runtime.imports
         from .workspace import WorkspaceService
         app.state.workspace = WorkspaceService(app.state.runtime)

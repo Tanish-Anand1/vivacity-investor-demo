@@ -5,8 +5,18 @@ import {objectHalfSizes} from './pickupWorkspace';
 import Workbench from './Workbench';
 type MeshSpec = { id: number; positions: { byte_offset: number; count: number }; indices: { byte_offset: number; count: number } };
 type Geom = { id: number; name: string; body_id: number; type: string; group: number; mesh_id: number | null; position: Vec3; quaternion_wxyz: number[]; size: Vec3; rgba: number[] };
-type Manifest = { model_hash:string; bodies: {id: number; name: string}[]; geoms: Geom[]; meshes: MeshSpec[] };
+export type Manifest = { model_hash:string; bodies: {id: number; name: string}[]; geoms: Geom[]; meshes: MeshSpec[] };
 export type Assets = { manifest: Manifest; geometry: Map<number,BufferGeometry> };
+export function buildAssets(manifest:Manifest,buffer:ArrayBuffer):Assets {
+  const geometry = new Map<number,BufferGeometry>();
+  for(const mesh of manifest.meshes){
+    const g=new BufferGeometry();
+    g.setAttribute('position',new BufferAttribute(new Float32Array(buffer,mesh.positions.byte_offset,mesh.positions.count),3));
+    g.setIndex(new BufferAttribute(new Uint32Array(buffer,mesh.indices.byte_offset,mesh.indices.count),1));
+    g.computeVertexNormals();g.computeBoundingSphere();geometry.set(mesh.id,g);
+  }
+  return {manifest,geometry};
+}
 const assetPromises=new Map<string,Promise<Assets>>();
 export function loadAssets(robot='panda',version='') {
   const key=`${robot}:${version}`;
@@ -62,6 +72,7 @@ export function GeomMesh({ geom, assets, config }: { geom: Geom; assets: Assets;
   if(geom.name==='table'&&geom.size.every((v,i)=>Math.abs(v-[.7,.65,.04][i])<1e-6)&&geom.position.every((v,i)=>Math.abs(v-[.4,0,-.04][i])<1e-6))return <Workbench/>;
   return <mesh position={geom.position} quaternion={q} geometry={geom.mesh_id !== null ? assets.geometry.get(geom.mesh_id) : undefined} castShadow={geom.type !== 'plane'} receiveShadow>
     {geom.type === 'box' && <boxGeometry args={[size[0]*2,size[1]*2,size[2]*2]} />}
+    {geom.type === 'sphere' && <sphereGeometry args={[size[0],24,16]} />}
     {geom.type === 'plane' && <planeGeometry args={[6,6]} />}
     {geom.type === 'cylinder' && <cylinderGeometry args={[size[0],size[0],size[1]*2,36]} />}
     {geom.type === 'capsule' && <capsuleGeometry args={[size[0],size[1]*2,8,20]} />}

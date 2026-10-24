@@ -1,3 +1,7 @@
+## Experimental Physical Truth contact interface
+
+The new opt-in `/contact-lab` route and exact scene/mesh/history contract are documented in `docs/CONTACT_EXECUTION_HANDOFF.md`. Production remains unchanged. The new complete browser journey must pass Chromium, Firefox and WebKit before release.
+
 # Physical Truth research update — 2026-10-24
 
 An opt-in contact-only G1 execution API has been implemented locally. It is not

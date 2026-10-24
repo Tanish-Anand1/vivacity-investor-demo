@@ -7,6 +7,7 @@ It does not certify the capabilities of a task or replace its physical evaluator
 from __future__ import annotations
 
 from concurrent.futures import ThreadPoolExecutor
+from collections import OrderedDict
 from copy import deepcopy
 import json
 import threading
@@ -66,6 +67,8 @@ class ExecutionService:
         self.pause_lease_s = pause_lease_s
         self.futures = []
         self.requested = {}
+        self.render_cache = OrderedDict()
+        self.render_lock = threading.Lock()
         with store.connect() as db:
             db.execute('CREATE TABLE IF NOT EXISTS execution_jobs('
                        'id TEXT PRIMARY KEY, owner TEXT NOT NULL, admission_key TEXT NOT NULL, '
@@ -101,6 +104,32 @@ class ExecutionService:
     def get(self, owner, identifier):
         with self.store.connect() as db:
             return self._get(db, owner, identifier)
+
+    def history(self, owner, limit=20):
+        if not 1 <= limit <= 20:
+            raise ValueError('history limit must lie in [1,20]')
+        with self.store.connect() as db:
+            return [json.loads(row[0]) for row in db.execute(
+                'SELECT payload FROM execution_jobs WHERE owner=? ORDER BY created DESC,id LIMIT ?', (owner,limit))]
+
+    def scene(self, owner, identifier):
+        import mujoco as mj
+        from .render_geometry import render_geometry
+        record = self.get(owner, identifier)  # Authorize even on a cache hit.
+        if record['run_id'] is None or record['checkpoint_id'] is None:
+            raise ValueError('The compiled scene is not ready yet')
+        checkpoint = self.checkpoint(owner, identifier)
+        digest = checkpoint['model_sha256'] if isinstance(checkpoint, dict) else checkpoint.model_sha256
+        with self.render_lock:
+            if digest not in self.render_cache:
+                bundle = self.checkpoints.load(record['run_id'], owner, record['checkpoint_id'])
+                model = mj.MjModel.from_binary_path('scene.mjb', assets={'scene.mjb':bundle.model_binary})
+                self.render_cache[digest] = render_geometry(model, digest)
+                while len(self.render_cache) > 2:
+                    self.render_cache.popitem(last=False)
+            self.render_cache.move_to_end(digest)
+            manifest, binary = self.render_cache[digest]
+            return dict(manifest, world_version=record['world_version']), binary
 
     def _admit(self, db, owner, admission_key):
         occupied = sum(path.stat().st_size for path in
@@ -359,3 +388,16 @@ class BimanualAdapter:
     def restore(self, checkpoint):
         from .bimanual import BimanualTask
         return BimanualTask.from_checkpoint(checkpoint)
+
+
+class ConstrainedBimanualAdapter(BimanualAdapter):
+    version = 'vivacity.constrained-g1-contact-adapter/1-experimental'
+
+    def create(self, config):
+        from .bimanual import BimanualConfig
+        from .constrained_bimanual import ConstrainedBimanualTask
+        return ConstrainedBimanualTask(BimanualConfig.model_validate(config))
+
+    def restore(self, checkpoint):
+        from .constrained_bimanual import ConstrainedBimanualTask
+        return ConstrainedBimanualTask.from_checkpoint(checkpoint)

@@ -1,4 +1,5 @@
 import time
+import hashlib
 
 from fastapi.testclient import TestClient
 
@@ -72,3 +73,42 @@ def test_real_g1_live_pause_fork_compare_replay_and_export(monkeypatch,tmp_path)
         assert all(not f['frame']['grasp_constraint_active'] for f in replay['frames'])
         assert client.get(path+'/export',headers=OTHER).status_code == 404
         assert client.get(path+'/checkpoint',headers=OTHER).status_code == 404
+
+
+def test_constrained_task_runs_through_the_same_live_checkpoint_contract(monkeypatch,tmp_path):
+    monkeypatch.setenv('VIVACITY_EXPERIMENTAL_CONTACT_TASKS','1')
+    with TestClient(create_app(tmp_path/'constrained.sqlite3')) as client:
+        invalid = client.post(PREFIX+'/experiments',headers=OWNER,json={'task':'pretend_robot'})
+        assert invalid.status_code == 422
+        created = client.post(PREFIX+'/experiments',headers=OWNER,json={'task':'g1_constrained_carton'})
+        assert created.status_code == 202, created.text
+        path = PREFIX+'/experiments/'+created.json()['id']
+        live = wait_for(client,path+'/frames',lambda p:len(p['frames'])>=2)
+        assert live['status'] == 'running'
+        client.post(path+'/pause',headers=OWNER).raise_for_status()
+        wait_for(client,path,lambda p:p['status']=='paused')
+        checkpoint = client.get(path+'/checkpoint',headers=OWNER).json()
+        assert checkpoint['controller_version'] == 'vivacity.g1-wrench-carton/1-experimental'
+        assert checkpoint['task_state']['state']['controller_source_sha256']
+        scene = client.get(path+'/scene',headers=OWNER).json()
+        assert scene['model_hash'] == checkpoint['model_sha256']
+        assert scene['world_version'] == checkpoint['world_version']
+        table = next(g for g in scene['geoms'] if g['name'] == 'bimanual_table')
+        assert table['size'] == [.28,.45,.02]
+        meshes = client.get(path+'/meshes',headers=OWNER)
+        assert meshes.status_code == 200
+        assert hashlib.sha256(meshes.content).hexdigest() == scene['mesh_buffer_sha256']
+        assert client.get(path+'/scene',headers=OTHER).status_code == 404
+        assert client.get(path+'/meshes',headers=OTHER).status_code == 404
+        assert client.get(PREFIX+'/experiments',headers=OTHER).json() == []
+        history = client.get(PREFIX+'/experiments',headers=OWNER).json()
+        assert created.json()['id'] in [item['id'] for item in history]
+        time.sleep(.1)
+        assert client.get(path+'/checkpoint',headers=OWNER).json() == checkpoint
+        client.post(path+'/resume',headers=OWNER).raise_for_status()
+        result = wait_for(client,path,lambda p:p['status']=='completed')
+        assert result['result']['task_success']
+        assert result['result']['measurements']['maximum_actuator_torque_fraction'] <= 1.00001
+        replay = client.get(path+'/replay',headers=OWNER).json()
+        export = client.get(path+'/export',headers=OWNER).json()
+        assert replay['frames'] == export['frames']

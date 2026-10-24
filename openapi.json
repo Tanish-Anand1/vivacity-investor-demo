@@ -3776,6 +3776,65 @@
             }
           }
         }
+      },
+      "get": {
+        "tags": [
+          "Experimental contact execution"
+        ],
+        "summary": "History",
+        "operationId": "history_v1_robotics_contact_experiments_get",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 20,
+              "minimum": 1,
+              "default": 20,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "x-workspace-token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 32,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "title": "X-Workspace-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/JobResponse"
+                  },
+                  "title": "Response History V1 Robotics Contact Experiments Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/v1/robotics/contact/experiments/{identifier}": {
@@ -4108,6 +4167,115 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Checkpoint"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/robotics/contact/experiments/{identifier}/scene": {
+      "get": {
+        "tags": [
+          "Experimental contact execution"
+        ],
+        "summary": "Scene",
+        "operationId": "scene_v1_robotics_contact_experiments__identifier__scene_get",
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Identifier"
+            }
+          },
+          {
+            "name": "x-workspace-token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 32,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "title": "X-Workspace-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompiledSceneResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/robotics/contact/experiments/{identifier}/meshes": {
+      "get": {
+        "tags": [
+          "Experimental contact execution"
+        ],
+        "summary": "Meshes",
+        "operationId": "meshes_v1_robotics_contact_experiments__identifier__meshes_get",
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Identifier"
+            }
+          },
+          {
+            "name": "x-workspace-token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 32,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "title": "X-Workspace-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
                 }
               }
             }
@@ -6982,6 +7150,24 @@
         ],
         "title": "BranchResponse"
       },
+      "BufferRange": {
+        "properties": {
+          "byte_offset": {
+            "type": "integer",
+            "title": "Byte Offset"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          }
+        },
+        "type": "object",
+        "required": [
+          "byte_offset",
+          "count"
+        ],
+        "title": "BufferRange"
+      },
       "CaptureReference": {
         "properties": {
           "capture_id": {
@@ -7347,6 +7533,80 @@
         ],
         "title": "CompareRequest"
       },
+      "CompiledSceneResponse": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "const": "vivacity.compiled-render-geometry/1",
+            "title": "Schema Version"
+          },
+          "model_hash": {
+            "type": "string",
+            "title": "Model Hash"
+          },
+          "world_version": {
+            "type": "string",
+            "title": "World Version"
+          },
+          "simulator_version": {
+            "type": "string",
+            "title": "Simulator Version"
+          },
+          "source": {
+            "type": "string",
+            "const": "compiled_mujoco_model",
+            "title": "Source"
+          },
+          "coordinates": {
+            "type": "string",
+            "title": "Coordinates"
+          },
+          "bodies": {
+            "items": {
+              "$ref": "#/components/schemas/SceneBody"
+            },
+            "type": "array",
+            "title": "Bodies"
+          },
+          "geoms": {
+            "items": {
+              "$ref": "#/components/schemas/SceneGeom"
+            },
+            "type": "array",
+            "title": "Geoms"
+          },
+          "meshes": {
+            "items": {
+              "$ref": "#/components/schemas/SceneMesh"
+            },
+            "type": "array",
+            "title": "Meshes"
+          },
+          "mesh_buffer_sha256": {
+            "type": "string",
+            "title": "Mesh Buffer Sha256"
+          },
+          "mesh_buffer_bytes": {
+            "type": "integer",
+            "title": "Mesh Buffer Bytes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "schema_version",
+          "model_hash",
+          "world_version",
+          "simulator_version",
+          "source",
+          "coordinates",
+          "bodies",
+          "geoms",
+          "meshes",
+          "mesh_buffer_sha256",
+          "mesh_buffer_bytes"
+        ],
+        "title": "CompiledSceneResponse"
+      },
       "ConditionChanges": {
         "properties": {
           "carton_mass_kg": {
@@ -7452,6 +7712,15 @@
             "const": "vivacity.contact-request/1",
             "title": "Schema Version",
             "default": "vivacity.contact-request/1"
+          },
+          "task": {
+            "type": "string",
+            "enum": [
+              "g1_stationary_bimanual",
+              "g1_constrained_carton"
+            ],
+            "title": "Task",
+            "default": "g1_stationary_bimanual"
           },
           "config": {
             "$ref": "#/components/schemas/BimanualConfig"
@@ -12162,6 +12431,183 @@
         "additionalProperties": false,
         "type": "object",
         "title": "RunRequest"
+      },
+      "SceneBody": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "parent_id": {
+            "type": "integer",
+            "title": "Parent Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "parent_id"
+        ],
+        "title": "SceneBody"
+      },
+      "SceneGeom": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "body_id": {
+            "type": "integer",
+            "title": "Body Id"
+          },
+          "type": {
+            "type": "string",
+            "title": "Type"
+          },
+          "group": {
+            "type": "integer",
+            "title": "Group"
+          },
+          "mesh_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mesh Id"
+          },
+          "position": {
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "type": "array",
+            "maxItems": 3,
+            "minItems": 3,
+            "title": "Position"
+          },
+          "quaternion_wxyz": {
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "type": "array",
+            "maxItems": 4,
+            "minItems": 4,
+            "title": "Quaternion Wxyz"
+          },
+          "size": {
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "type": "array",
+            "maxItems": 3,
+            "minItems": 3,
+            "title": "Size"
+          },
+          "rgba": {
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "type": "array",
+            "maxItems": 4,
+            "minItems": 4,
+            "title": "Rgba"
+          },
+          "contype": {
+            "type": "integer",
+            "title": "Contype"
+          },
+          "conaffinity": {
+            "type": "integer",
+            "title": "Conaffinity"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "body_id",
+          "type",
+          "group",
+          "mesh_id",
+          "position",
+          "quaternion_wxyz",
+          "size",
+          "rgba",
+          "contype",
+          "conaffinity"
+        ],
+        "title": "SceneGeom"
+      },
+      "SceneMesh": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "positions": {
+            "$ref": "#/components/schemas/BufferRange"
+          },
+          "indices": {
+            "$ref": "#/components/schemas/BufferRange"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "positions",
+          "indices"
+        ],
+        "title": "SceneMesh"
       },
       "ScienceConfig": {
         "properties": {

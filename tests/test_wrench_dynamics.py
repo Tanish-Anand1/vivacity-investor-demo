@@ -1,0 +1,124 @@
+import mujoco as mj
+import numpy as np
+import pytest
+
+from vivacity.inverse_dynamics import ControllerInfeasible
+from vivacity.wrench_dynamics import WrenchInverseDynamics, contact_basis, friction_facets
+
+
+def motor_scene(limit=10.):
+    model = mj.MjModel.from_xml_string(f'''<mujoco><option timestep=".001"/>
+    <worldbody><body pos="0 0 1"><joint name="hinge" axis="0 1 0" range="-70 70"/>
+    <geom type="capsule" fromto="0 0 0 .5 0 0" size=".025" mass="1"/>
+    </body></worldbody><actuator><motor joint="hinge" ctrlrange="-{limit} {limit}"/>
+    </actuator></mujoco>''')
+    data = mj.MjData(model)
+    mj.mj_forward(model, data)
+    return model, data
+
+
+def test_wrench_solver_holds_load_through_bounded_motor_and_restores_memory():
+    model, data = motor_scene()
+    control = WrenchInverseDynamics(model)
+    target = data.qpos.copy()
+    for _ in range(300):
+        solution = control.compute(data, target, torque_weight=.0001)
+        assert solution.constraint_violation < .0001
+        data.ctrl[:] = solution.commands
+        mj.mj_step(model, data)
+        mj.mj_forward(model, data)
+    assert abs(data.qpos[0]) < .001
+    assert abs(data.ctrl[0]) == pytest.approx(9.81*.25, rel=.02)
+    branch = WrenchInverseDynamics(model)
+    branch.restore(control.snapshot())
+    np.testing.assert_array_equal(control.compute(data, target).commands,
+                                  branch.compute(data, target).commands)
+
+
+def test_unpowered_load_falls_or_reports_infeasibility():
+    model, data = motor_scene(.1)
+    control = WrenchInverseDynamics(model)
+    target = data.qpos.copy()
+    for _ in range(300):
+        try:
+            solution = control.compute(data, target)
+        except ControllerInfeasible:
+            break
+        assert abs(solution.commands[0]) <= .10001
+        data.ctrl[:] = solution.commands
+        mj.mj_step(model, data)
+        mj.mj_forward(model, data)
+    assert abs(data.qpos[0]) > .1
+
+
+@pytest.mark.parametrize('dim', [1, 3, 4, 6])
+def test_contact_basis_maps_native_measured_wrench_to_generalized_force(dim):
+    model = mj.MjModel.from_xml_string(f'''<mujoco><option cone="elliptic"/>
+    <default><geom condim="{dim}" friction=".8 .01 .002"/></default>
+    <worldbody><geom type="plane" size="2 2 .1"/>
+    <body pos="0 0 .049"><freejoint/><geom type="sphere" size=".05" mass="1"/>
+    </body></worldbody></mujoco>''')
+    data = mj.MjData(model)
+    data.qvel[:] = [.1, -.05, 0., .3, -.2, .5]
+    mj.mj_forward(model, data)
+    total = np.zeros(model.nv)
+    for basis in contact_basis(model, data):
+        assert basis.dim == dim
+        force = np.zeros(6)
+        mj.mj_contactForce(model, data, basis.contact_index, force)
+        total += basis.jacobian.T @ force[:dim]
+    np.testing.assert_allclose(total, data.qfrc_constraint, atol=1e-8)
+
+
+def test_friction_facets_keep_torque_units_and_zero_coefficients():
+    facets, zeros = friction_facets([.8, .8, .01, 0., .002])
+    assert np.all(facets @ np.array([10., 1., 1., .01, 0., .001]) >= 0)
+    assert np.min(facets @ np.array([10., 0., 0., .11, 0., 0.])) < 0
+    assert zeros.tolist() == [4]
+
+
+def test_clearance_constraint_stops_a_driven_slider_before_obstacle():
+    model = mj.MjModel.from_xml_string('''<mujoco><option timestep=".001" gravity="0 0 0"/>
+    <worldbody><geom name="wall" type="box" pos=".4 0 0" size=".05 .5 .5"/>
+    <body><joint name="slide" type="slide" axis="1 0 0" range="0 1" damping="2"/>
+    <geom name="robot" type="sphere" size=".05" mass="1"/></body></worldbody>
+    <actuator><motor joint="slide" ctrlrange="-30 30"/></actuator></mujoco>''')
+    data = mj.MjData(model)
+    control = WrenchInverseDynamics(model)
+    minimum = 1.
+    for _ in range(1200):
+        mj.mj_forward(model, data)
+        result = control.compute(data, np.array([.5]), torque_weight=.0001,
+            clearance_pairs=[(model.geom('robot').id, model.geom('wall').id, .01)])
+        data.ctrl[:] = result.commands
+        mj.mj_step(model, data)
+        minimum = min(minimum, .3-data.qpos[0])
+    assert data.qpos[0] > .2
+    assert minimum >= .009
+
+
+def test_impossible_support_acceleration_is_rejected():
+    model, data = motor_scene(.1)
+    control = WrenchInverseDynamics(model)
+    with pytest.raises(ControllerInfeasible):
+        control.compute(data, data.qpos.copy(), acceleration_limits=[(np.ones((1, 1)), [0.], [0.])])
+
+
+@pytest.mark.parametrize('position,velocity', [(0., 10.), (1.1, 0.)])
+def test_servo_damping_remains_inside_the_total_actuator_force_limit(position, velocity):
+    model = mj.MjModel.from_xml_string('''<mujoco><worldbody>
+    <body><joint name="hinge" actuatorfrcrange="-2 2"/>
+    <geom type="sphere" size=".1" mass="1"/></body></worldbody>
+    <actuator><position joint="hinge" kp="500" kv="5" ctrlrange="-1 1"/></actuator></mujoco>''')
+    data = mj.MjData(model)
+    data.qpos[0] = position
+    data.qvel[0] = velocity
+    mj.mj_forward(model, data)
+    controller = WrenchInverseDynamics(model)
+    result = controller.compute(data, np.array([1.]), torque_reference=[100.], command_reference=[1.], torque_weight=1e6)
+    data.ctrl[:] = result.commands
+    mj.mj_forward(model, data)
+    np.testing.assert_allclose(data.qfrc_actuator, result.actuator_forces, atol=1e-8)
+    assert abs(data.qfrc_actuator[0]) <= 2.00001
+    assert model.dof_damping[0] == 0.
+    assert result.commands[0] == pytest.approx(1., abs=1e-5)
