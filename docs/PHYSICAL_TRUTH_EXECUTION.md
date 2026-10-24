@@ -18,6 +18,10 @@ cabinet mechanism tests pass locally, including the new compiled-contact check.
 After the fixture source changed, the combined Apollo adapter and original door
 regression passed 12/12 in 297.57 seconds. The existing generic checkpoint/API
 regression passed 11/11 in 129.58 seconds, and the frontend build passed.
+At `5c270e7`, the Linux deployment-image suite passed **508/511 tests with 3
+skips**, zero failures or errors; the isolated Apollo suite passed **39/39** and
+the contact suite passed **98/98**. These runs verify that commit, not the
+subsequent wide-door development changes. The complete release gates remain open.
 
 ## Release order and acceptance
 
@@ -34,7 +38,7 @@ checks. Hardware execution is outside the completion claim.
 | Whole-body stabilization and constraints | Wrench kernel v4 includes contact unloading. Complete G1, Apollo and H1 each pass 20/20 nominal, 100/100 held-out and deliberate instability in the bounded six-second stationary probe at cedf837. General reach, collision audit and mobility remain open | Bounded stance verified; broader gate partial |
 | Contact-only manipulation and G1 bilateral load sharing | Native-servo baseline and corrected wrench controllers v3/v4 each pass 20/20 nominal and 100/100 held-out stationary trials with zero equality constraints. V4 source hashes match the current implementation; locomotion is not covered | Partial |
 | G1/Apollo/H1 model-matched mobility, turns, terrain, carry | H1 short walk only; complete embodiments need training | Open |
-| Apollo cabinet, latch, old/replacement cartridge cycle | Passive fixture and force-limited tooling pass component tests. A development controller physically retracts the latch and opens the door about 0.23 rad; full opening, cartridge service and acceptance remain open | Partial |
+| Apollo cabinet, latch, old/replacement cartridge cycle | Passive fixture and force-limited tooling pass component tests. A development controller physically retracts the latch and opens the door about 0.26 rad, but a right-pad/crossbar collision stops the wide trial before cartridge service | Partial |
 | Shared-world SORT through DISPATCH | Sorting ledger only | Open |
 | Independent H1 running at 2 m/s | No validated running controller | Open |
 | RGB-D pose estimation without privileged controller inputs | Separate image/depth estimator passes five rendered-image tests; not driving robot control or validated over the complete envelope | Partial |
@@ -50,6 +54,8 @@ checks. Hardware execution is outside the completion claim.
 Verified Linux baselines (their source hashes remain part of every report):
 
 - [Deployment image, 9591541](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40102744073): **502 passed, 3 skipped, zero failures/errors**; separate 512 MB host checks 4 + 1 passed. Reports: `artifacts/physical-truth-runtime/backend-9591541/`.
+- [Deployment image, 5c270e7](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40108497076): **508 passed, 3 skipped, zero failures/errors** across three shards. The JUnit suites reported 129, 166 and 216 tests. Separate constrained-host checks passed. This verifies the Apollo execution adapter and friction change before later controller development.
+- [Apollo components, 5c270e7](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40108497010): **39 passed**, zero skips/failures, 133.905 s. [Contact integration, 5c270e7](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40108497012): **98 passed**, zero skips/failures, 147.779 s; its Chromium, Firefox and WebKit jobs also passed. These are component/contact checks, not full cabinet or warehouse acceptance.
 - [Apollo components, 9591541](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40102744097): **33 passed**, zero skips/failures, 77.732 s. Includes native partial-door success and negative fixtures, swivel torque/overload, collision routing, IK and checkpoint independence. This is not wide-service acceptance. Report: `artifacts/physical-truth-runtime/apollo-9591541/`.
 - [Contact integration, 9591541](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40102744206): **97 native checks passed** in 161.907 s; Chromium, Firefox and WebKit each passed the 18-check actual browser journey. The three runs each executed 9,510 steps and measured 5.882 mm placement error. The mobile WebKit screenshot was inspected. Reports: `artifacts/physical-truth-runtime/contact-9591541/`.
 - [Native locomotion contract, a31613c](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40102370744): **23 passed**, zero skips/failures, 16.402 s. New complete-embodiment mappings, sensor-only actor inputs, bounded native actions, measured failure/reward and checkpoint continuation. No trained policy or mobility acceptance. Report: `artifacts/physical-truth-runtime/native-contract-a31613c/`.
@@ -220,6 +226,34 @@ The final local cabinet/mechanism/tooling/IK/routing/checkpoint regression run
 passed **35 tests in 193.91 s**, with no failures or skips. This includes the
 preserved partial-door nominal and negative cases. Its JUnit report is
 `artifacts/physical-truth-runtime/apollo-final-regression-tests.xml`.
+
+The next wide-tooling controller trial used the same 0.65 m fixture, 40 N
+fingers at 2,400 N/m, 300 N/m latch and a requested 1.1 rad opening. Reducing
+only the wide-tooling stance reference penalty from 10 to 1 let real contact
+retract the latch to 38.706 mm, but the door-opening IK initially failed from
+the contact-displaced arm state. The previously commanded whole-body pose was
+a feasible scratch-planning seed; no live pose was overwritten. A regression
+using the measured arm/root configuration verifies this local-minimum retry.
+
+With that retry and a measured-pose right-hand release, one native trial
+reached the `release_right` phase after 11,551 steps. The door angle was
+0.258087 rad on entering release; the latch had reached 51.4 mm during the
+preceding open phase. The trial then **failed** `prohibited_collision` when the
+opening right pad struck the physical latch crossbar at 8.949 N. Final door
+angle was 0.241583 rad and final latch retraction 26.136 mm. There were no
+attachments or kinematic body writes. A bounded 20 mm retreat was also tried;
+it hit the same crossbar at 9.665 N and was removed. Wide opening, cartridge
+exchange and acceptance are still open. Reproduce this development condition
+with `python scripts/verify_apollo_door.py --front-x .65 --finger-stiffness 2400
+--opening-angle 1.1 --output <report.json>`; the verifier preserves the failed
+result and source/model hashes.
+The current compiled model is
+`192c7e6acc3f52aac147a2498f77dca8609df526e4202343e5a10d1ce6691463`;
+it has zero equality constraints and zero mocap bodies. Its controller is
+`vivacity.apollo-cartesian-contact/6-experimental`. After this controller
+change, local `tests/test_apollo_door.py` passed **10/10 in 214.00 s** and
+`tests/test_apollo_execution.py` passed **3/3 in 236.96 s**. A fresh Linux
+regression is still required for this revision.
 
 ## Subsequent integration findings
 

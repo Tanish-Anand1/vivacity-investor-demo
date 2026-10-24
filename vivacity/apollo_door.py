@@ -41,11 +41,16 @@ SOURCE_HASHES = {name:hashlib.sha256(Path(__file__).with_name(name).read_bytes()
 
 
 class ApolloToolController:
-    version = 'vivacity.apollo-cartesian-contact/5-experimental'
+    version = 'vivacity.apollo-cartesian-contact/6-experimental'
 
     def __init__(self, model):
         self.stance = StanceController(model, 'apollo')
         self.wide_tooling = mj.mj_name2id(model,mj.mjtObj.mjOBJ_JOINT,SWIVEL_JOINT)>=0
+        if self.wide_tooling:
+            # The opposed tool needs more arm motion to unload the latch than
+            # the historical 0.25-rad probe. Keep native torque/contact bounds;
+            # the wider task still succeeds only on measured physics.
+            self.stance.reference_weight = 1.
         self.integrals = {side:np.zeros(3) for side in ('l','r')}
         self.rotation_integrals = {side:np.zeros(3) for side in ('l','r')}
         self.dt = float(model.opt.timestep)
@@ -100,7 +105,7 @@ class ApolloToolController:
 
 
 class CabinetDoorPrimitive:
-    version = 'vivacity.apollo-door-primitive/4-experimental'
+    version = 'vivacity.apollo-door-primitive/5-experimental'
 
     def __init__(self, config=None, tooling=None, seed=7, opening_angle_rad=.25):
         if not np.isfinite(opening_angle_rad) or not .25 <= opening_angle_rad <= 1.2:
@@ -204,9 +209,14 @@ class CabinetDoorPrimitive:
         elif phase == 'release_right':
             # Release before moving the wrist. Dragging a loaded upper pad
             # rotates the door into the finger while the other hand holds it.
-            # A small outward clearance motion accommodates the passive door's
-            # rotation while the pads unload; it does not carry the handle.
-            goals['r']['position'][0] -= .02
+            # Hold the measured pose while the pads unload; withdrawal follows
+            # only after both fingers have actually separated from the handle.
+            if self.controller.wide_tooling:
+                site = self.data.site('r_service_tcp')
+                goals['r'] = {'position':site.xpos.tolist(),
+                              'rotation':site.xmat.reshape(3,3).tolist()}
+            else:
+                goals['r']['position'][0] -= .02
         elif phase == 'withdraw_right':
             goals['r']['position'][0] -= .08
             goals['r']['position'][2] -= .07
@@ -220,13 +230,29 @@ class CabinetDoorPrimitive:
             joints = [side+'_'+part for part in ARM_PARTS]
             if side=='l' and self.controller.wide_tooling:
                 joints.append(SWIVEL_JOINT)
-            for margin in ((.08,.04,.01) if self.controller.wide_tooling else (None,)):
-                plan = site_pose(self.model,planning_state,side+'_service_tcp',
-                    joints,goal['position'],goal['rotation'],joint_margin=margin)
-                self.state['planning_events'].append({'phase':phase,'hand':side,
-                    'joint_reserve_rad':margin,'feasible':bool(plan.feasible),
-                    'position_error_m':float(plan.position_error_m),
-                    'angular_error_rad':float(plan.angular_error_rad)})
+            seeds = [('measured',planning_state)]
+            if self.controller.wide_tooling:
+                # Native contact can displace a loaded arm from its feasible
+                # IK basin. The stance controller is restoring the nominal
+                # floating-base pose, so its previous full command supplies a
+                # second kinematic seed. Neither seed changes live MjData;
+                # native execution must still realize the planned pose.
+                previous = np.asarray(self.state['reference'])
+                if not np.array_equal(previous,planning_state):
+                    seeds.append(('previous_command',previous))
+            for initialization,seed in seeds:
+                margins = ((None,) if phase=='release_right' and side=='r' and self.controller.wide_tooling
+                           else (.08,.04,.01) if self.controller.wide_tooling else (None,))
+                for margin in margins:
+                    plan = site_pose(self.model,seed,side+'_service_tcp',
+                        joints,goal['position'],goal['rotation'],joint_margin=margin)
+                    self.state['planning_events'].append({'phase':phase,'hand':side,
+                        'initialization':initialization,'joint_reserve_rad':margin,
+                        'feasible':bool(plan.feasible),
+                        'position_error_m':float(plan.position_error_m),
+                        'angular_error_rad':float(plan.angular_error_rad)})
+                    if plan.feasible:
+                        break
                 if plan.feasible:
                     break
             if not plan.feasible:
@@ -280,7 +306,8 @@ class CabinetDoorPrimitive:
             start_door_angle_rad=float(self.data.joint('service_door_hinge').qpos[0]),
             phase_start_qpos=start_reference.tolist(),reference=reference.tolist(),goals=goals,
             start_goals={side:(deepcopy(self.state['goals'][side])
-                if self.controller.wide_tooling and side in self.state['goals'] else
+                if self.controller.wide_tooling and side in self.state['goals'] and
+                not (phase=='release_right' and side=='r') else
                 {'position':self.data.site(side+'_service_tcp').xpos.tolist(),
                  'rotation':self.data.site(side+'_service_tcp').xmat.reshape(3,3).tolist()}) for side in goals})
         self.state['phase_events'].append({'from':previous,'to':phase,'time_s':float(self.data.time),

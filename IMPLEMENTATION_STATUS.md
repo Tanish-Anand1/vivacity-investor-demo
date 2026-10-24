@@ -19,6 +19,17 @@ After that source change, the combined Apollo execution and original door
 regression passed **12/12 in 297.57 seconds**; generic checkpoint/API regressions
 passed **11/11 in 129.58 seconds**. The frontend production build passed.
 
+Linux CI for `5c270e7` passed **508/511 backend tests with 3 skips and zero
+failures**, **39/39 Apollo component tests**, and **98/98 contact tests**.
+The subsequent experimental wide-door controller now escapes a measured IK
+local minimum and physically reaches a roughly 0.26 rad door opening after
+latch release. Its 1.1 rad trial still **fails**: the opening right pad collides
+with the latch crossbar at 8.949 N during handoff. A 20 mm retreat also failed
+that collision and was removed. The old 0.25 rad controller path remains
+separate; 10 local Apollo door regressions and 3 shared-execution tests pass
+after the change. See the
+development evidence and reproduction command in `docs/PHYSICAL_TRUTH_EXECUTION.md`.
+
 **The full directive is incomplete and has not been deployed.** Work remains on
 the isolated `codex/physical-truth-runtime` branch. The opening is unchanged.
 

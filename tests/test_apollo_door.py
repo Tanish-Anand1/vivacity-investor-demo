@@ -11,6 +11,7 @@ def test_door_primitive_checkpoint_preserves_feedback_and_independent_native_sta
     task=CabinetDoorPrimitive()
     assert task.manifest['cabinet_fixture_profile']=='historical-partial-door'
     assert not task.controller.wide_tooling
+    assert task.controller.stance.reference_weight==10.
     while task.data.time<5.5 and task.state['status']=='running':
         task.step()
     assert task.state['status']=='running',task.state.get('failure_detail')
@@ -53,12 +54,62 @@ def test_wide_opening_keeps_its_distinct_model_and_never_substitutes_the_partial
     assert task.manifest['cabinet_tooling']['torque_range_nm']==[-3.,3.]
     assert not task.manifest['cabinet_tooling']['hardware_validation']
     assert task.controller.wide_tooling
+    assert task.controller.stance.reference_weight==1.
     assert task.state['opening_angle_rad']==1.1
     np.testing.assert_allclose(task.model.geom('service_latch_button').pos,[-.085,.4,.065])
     task.fail('lost_door_grip')
     task.step()
     assert task.state['opening_angle_rad']==1.1
     assert not task.state['success'] and not task.state['cabinet_service_complete']
+
+
+def test_wide_opening_retries_ik_from_prior_command_without_moving_live_state():
+    import mujoco as mj
+
+    from vivacity.apollo_door import ARM_PARTS, SWIVEL_JOINT
+    from vivacity.cabinet_mechanism import CabinetConfig
+    from vivacity.simulated_tooling import ParallelGripperConfig
+
+    task=CabinetDoorPrimitive(CabinetConfig(front_x_m=.65),
+        ParallelGripperConfig(position_stiffness_n_m=2400.),opening_angle_rad=1.1)
+    # The 14 arm coordinates are from a native latch trial at 18.83 s. Its
+    # loaded right arm had moved out of the local IK basin, though the earlier
+    # actuator command still provided a feasible opening-plan seed.
+    measured={
+        'r':[.041202339368,.223937298936,.049474145214,-2.077885181163,
+             -1.310039139928,-.405799005238,-.519666713934],
+        'l':[.136756014179,-.098348296425,.001058620228,-2.145041858299,
+             -.973889093848,.668846028271,-.274115888446],
+    }
+    commanded={
+        'r':[.042172998334,.229692071093,.081321058652,-2.071793828137,
+             -1.317256465015,-.413368663698,-.476390521970],
+        'l':[.156475389402,-.093772226595,.055402624849,-2.168256646062,
+             -.949296603820,.618,-.177458682380],
+    }
+    reference=task.model.key_qpos[0].copy()
+    task.data.qpos[:7]=[.012502222897,-.001838378179,1.015644288499,
+        .999997671565,.000952565200,.001711853243,-.000905010135]
+    for side in ('r','l'):
+        addresses=[task.model.joint(f'{side}_{part}').qposadr[0] for part in ARM_PARTS]
+        task.data.qpos[addresses]=measured[side]
+        reference[addresses]=commanded[side]
+    swivel=task.model.joint(SWIVEL_JOINT).qposadr[0]
+    task.data.qpos[swivel]=-.642758288294
+    reference[swivel]=-.622672393266
+    task.state['reference']=reference.tolist()
+    task.state['phase']='latch'
+    mj.mj_forward(task.model,task.data)
+    before=task.data.qpos.copy()
+
+    task._plan('open')
+
+    assert task.state['status']=='running',task.state.get('failure_detail')
+    assert task.state['phase']=='open'
+    events=[event for event in task.state['planning_events'] if event['phase']=='open' and event['hand']=='r']
+    assert any(event['initialization']=='measured' and not event['feasible'] for event in events)
+    assert any(event['initialization']=='previous_command' and event['feasible'] for event in events)
+    np.testing.assert_array_equal(task.data.qpos,before)
 
 
 def test_invalid_cartesian_integral_state_is_rejected():

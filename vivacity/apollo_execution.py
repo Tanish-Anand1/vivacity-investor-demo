@@ -97,7 +97,7 @@ class ApolloDoorExecutable:
 
 
 class ApolloDoorAdapter:
-    version = 'vivacity.apollo-door-checkpoint-adapter/1-experimental'
+    version = 'vivacity.apollo-door-checkpoint-adapter/2-experimental'
 
     def validate(self, config):
         return ApolloDoorSettings.model_validate(config).model_dump()
