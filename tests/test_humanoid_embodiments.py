@@ -113,3 +113,17 @@ def test_apollo_cabinet_compiles_with_both_visible_tools_and_free_cartridge_iden
         mj.mj_step(model, data)
     assert data.qpos[2] > .95
     assert not measure(model, data, config)['mechanism_ready']
+
+
+def test_posture_weight_override_preserves_default_and_rejects_invalid_before_mutation(embodiment):
+    identity,model,data,_ = embodiment
+    original=StanceController(model,identity)
+    weighted=StanceController(model,identity)
+    np.testing.assert_array_equal(original.compute(data),weighted.compute(data,
+        posture_weights=np.full(model.nu,original.reference_weight)))
+    before=weighted.snapshot()
+    for invalid in (np.ones(model.nu+1),np.full(model.nu,np.nan),
+                    np.zeros(model.nu),np.full(model.nu,101.)):
+        with pytest.raises(ValueError,match='posture weights'):
+            weighted.compute(data,posture_weights=invalid)
+        assert weighted.snapshot()==before

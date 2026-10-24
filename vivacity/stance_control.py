@@ -38,7 +38,12 @@ class StanceController:
         self.center[:2] = np.mean([value['position'][:2] for value in self.feet.values()], axis=0)
 
     def compute(self, data, target_qpos=None, *, site_targets=None, joint_targets=None, released_geoms=(),
-                clearance_pairs=()):
+                clearance_pairs=(), posture_weights=None):
+        if posture_weights is not None:
+            posture_weights=np.asarray(posture_weights,dtype=float)
+            if (posture_weights.shape!=(self.model.nu,) or not np.isfinite(posture_weights).all()
+                    or np.any(posture_weights<=0.) or np.any(posture_weights>100.)):
+                raise ValueError('posture weights must be positive bounded actuator weights')
         if self.steps % 5 == 0:
             model = self.model
             target = self.target if target_qpos is None else np.asarray(target_qpos)
@@ -90,7 +95,8 @@ class StanceController:
             pd = 100.*(target[self.qadr]-data.qpos[self.qadr])-4.*data.qvel[self.dofs]
             force_reference = np.where(servo, model.actuator_gainprm[:, 0]*target[self.qadr]+native_bias, pd)
             solution = self.solver.compute(data, target, torque_reference=force_reference,
-                torque_weight=self.reference_weight, extra_tasks=tasks, acceleration_limits=limits,
+                torque_weight=self.reference_weight if posture_weights is None else posture_weights,
+                extra_tasks=tasks, acceleration_limits=limits,
                 clearance_pairs=clearance_pairs,
                 unloaded_contact_indices=[i for i,c in enumerate(data.contact[:data.ncon])
                     if c.geom1 in released_geoms or c.geom2 in released_geoms])

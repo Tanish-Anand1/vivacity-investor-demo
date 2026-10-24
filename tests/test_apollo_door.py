@@ -49,6 +49,12 @@ def test_invalid_cartesian_integral_state_is_rejected():
     state['integrals']['l']=[float('nan'),0.,0.]
     with pytest.raises(ValueError,match='integral'):
         task.controller.restore(state)
+    state=deepcopy(task.controller.snapshot())
+    state['rotation_integrals']['l']=[.2,0.,0.]
+    before=task.controller.snapshot()
+    with pytest.raises(ValueError,match='angular integral'):
+        task.controller.restore(state)
+    assert task.controller.snapshot()==before
 
 
 def test_failed_primitive_freezes_the_measured_state_and_is_not_a_service_success():

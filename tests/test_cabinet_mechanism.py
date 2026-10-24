@@ -22,7 +22,7 @@ def step(model, data, seconds):
 def with_ram(config, target):
     root = fixture_tree(config)
     x, y = config.front_x_m, config.center_y_m
-    position, axis, force = ((x-.045, y+.09, 1.165), '0 1 0', 30.) if target == 'latch' else (
+    position, axis, force = ((x-.085, y+.09, 1.165), '0 1 0', 30.) if target == 'latch' else (
         (x+.052, y, 1.06), '0 0 -1', 40.)
     body = ET.SubElement(root.find('worldbody'), 'body', name='bench_ram', pos=' '.join(map(str, position)))
     ET.SubElement(body, 'joint', name='bench_slide', type='slide', axis=axis,
@@ -79,6 +79,10 @@ def test_contact_ram_releases_latch_but_excessive_spring_resistance_prevents_rel
     model = with_ram(config, 'latch')
     data = mj.MjData(model)
     data.ctrl[0] = .09
+    # The protruding button also applies opening torque. This explicit bench
+    # load holds the door against its native closed stop while measuring latch
+    # actuation, then becomes the opening pull below. It is not robot support.
+    data.xfrc_applied[model.body('service_door').id, 5] = 2.
     step(model, data, .8)
     before = measure(model, data, config)
     assert before['contact_normal_forces_n']['bench_ram_tip|service_latch_button'] > 0.
@@ -87,9 +91,9 @@ def test_contact_ram_releases_latch_but_excessive_spring_resistance_prevents_rel
     data.xfrc_applied[model.body('service_door').id, 5] = -8.
     for _ in range(1500):
         door = data.body('service_door')
-        button = door.xpos+door.xmat.reshape(3, 3) @ np.array([-.045, -.085, .065])
+        button = door.xpos+door.xmat.reshape(3, 3) @ np.array([-.085, -.085, .065])
         data.ctrl[0] = np.clip(button[1]-.036+.015-(config.center_y_m+.09), 0., .14)
-        data.ctrl[1] = np.clip(config.front_x_m-.045-button[0], 0., .65)
+        data.ctrl[1] = np.clip(config.front_x_m-.085-button[0], 0., .65)
         mj.mj_step(model, data)
     mj.mj_forward(model, data)
     after = measure(model, data, config)

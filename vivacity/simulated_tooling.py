@@ -13,6 +13,7 @@ class ParallelGripperConfig(BaseModel):
     model_config = ConfigDict(extra='forbid', frozen=True, allow_inf_nan=False)
     finger_force_n: float = Field(default=40., ge=1., le=60.)
     sliding_friction: float = Field(default=.8, ge=.001, le=1.5)
+    position_stiffness_n_m: float = Field(default=800., ge=200., le=4000.)
 
 
 def append_parallel_gripper(root, parent, name, config: ParallelGripperConfig, *,
@@ -38,7 +39,7 @@ def append_parallel_gripper(root, parent, name, config: ParallelGripperConfig, *
         ET.SubElement(finger, 'geom', name=identity+'_pad', size='.040 .005 .060', mass='.12',
                       rgba='.73 .53 .25 1', **common)
         ET.SubElement(actuator, 'position', name=identity+'_drive', joint=identity+'_slide',
-            kp='800', kv='10', ctrllimited='true', ctrlrange='0 .105',
+            kp=str(config.position_stiffness_n_m), kv='10', ctrllimited='true', ctrlrange='0 .105',
             forcelimited='true', forcerange=f'-{config.finger_force_n} {config.finger_force_n}')
     return tool
 
@@ -48,10 +49,14 @@ def tooling_manifest(model, name, config):
         'identity':name, 'hardware_validation':False,
         'scope':'Visible custom simulated tooling; not a manufacturer hardware specification.',
         'parameters':config.model_dump(),
+        'mount':{'parent_body':model.body(int(model.body(name+'_tool').parentid[0])).name,
+            'position_m':model.body(name+'_tool').pos.tolist(),
+            'quaternion_wxyz':model.body(name+'_tool').quat.tolist()},
         'tcp_site':name+'_tcp', 'opening_range_m':[0., .21],
         'actuators':[{ 'name':f'{name}_{side}_drive',
             'command_unit':'m',
             'command_range':model.actuator(f'{name}_{side}_drive').ctrlrange.tolist(),
+            'position_stiffness_n_m':float(model.actuator(f'{name}_{side}_drive').gainprm[0]),
             'force_range_n':model.actuator(f'{name}_{side}_drive').forcerange.tolist()}
             for side in ('positive', 'negative')],
         'tool_mass_kg':sum(float(model.body(body).mass[0]) for body in (

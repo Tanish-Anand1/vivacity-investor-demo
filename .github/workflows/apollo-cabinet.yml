@@ -1,0 +1,39 @@
+name: Apollo cabinet component regressions
+on:
+  push:
+    branches: [codex/physical-truth-runtime]
+    paths:
+      - vivacity/apollo_door.py
+      - vivacity/cabinet_mechanism.py
+      - vivacity/humanoid_ik.py
+      - vivacity/simulated_tooling.py
+      - vivacity/stance_control.py
+      - tests/test_apollo_door.py
+      - tests/test_joint_reserve_ik.py
+      - .github/workflows/apollo-cabinet.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native-regressions:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build --tag vivacity-cabinet:verification .
+      - name: Execute native mechanism, tooling, IK and partial-door regressions
+        run: |
+          mkdir -p artifacts/apollo-cabinet
+          docker run --rm --memory=4g --memory-swap=4g \
+            -e PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 \
+            -v "$PWD/tests:/app/tests:ro" -v "$PWD/artifacts/apollo-cabinet:/verification" \
+            vivacity-cabinet:verification python -u -m pytest --noconftest \
+            /app/tests/test_apollo_door.py /app/tests/test_joint_reserve_ik.py \
+            /app/tests/test_simulated_tooling.py /app/tests/test_cabinet_mechanism.py \
+            -q --durations=10 --junitxml=/verification/apollo-components.xml
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: apollo-cabinet-component-evidence
+          path: artifacts/apollo-cabinet
+          retention-days: 14

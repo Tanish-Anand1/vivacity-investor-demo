@@ -124,6 +124,33 @@ No new GPU training, paid resource activation, production deployment, 24-hour
 soak or opening modification has occurred. This ledger is not a completion
 certificate.
 
+## Apollo wide-opening development, 2026-10-24
+
+The wide-opening path is an experimental CLI task, not a public capability or a
+completed service operation. Its left gripper uses a visible quarter-turn rigid
+mount, a distinct embodiment identity and a new compiled-model hash. The tooling
+manifest records its native parent transform and actual finger-servo stiffness.
+Old complete-embodiment and partial-door reports do not certify this plant.
+
+An offline diagnosis of trial R29 found a redundant arm pose that reaches the
+same requested latch position with 0.15 rad joint reserves. The opt-in bounded
+IK solver keeps the original damped solver for existing callers. Planning only
+touches scratch data; it neither moves the live robot nor certifies contact.
+
+Native R30 still failed `latch_resistance_or_retention_failure`: the latch moved
+18.839 mm against a requested 50 mm, and both grippers lost one contact. Door
+angle was 0.005343 rad. There were zero equality constraints and zero mocap
+bodies. This is failed evidence, not a cabinet-opening result. Loaded wrist
+control, full door opening, extraction, replacement, closure and acceptance
+remain open.
+
+The 14 native tooling/mechanism checks passed locally in 6.61 seconds, including
+stiffness causality, force caps, weak grip, overload, latch resistance and native
+restore. Larger local Apollo test runs were interrupted under memory pressure;
+they are not passes. The isolated `apollo-cabinet.yml` workflow runs the actual
+partial-door, IK and mechanism regressions in the deployment image on Linux.
+Its executed result is required before accepting these changes.
+
 ## Subsequent integration findings
 
 - The first Linux all-backend run failed one low-friction negative-test assertion.

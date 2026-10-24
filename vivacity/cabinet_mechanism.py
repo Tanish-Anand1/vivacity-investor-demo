@@ -77,6 +77,12 @@ def append_cabinet(root: ET.Element, config: CabinetConfig):
         ('strike', (-.012, -.29, 0), (.012, .022, .018)),
     ):
         _box(cabinet, 'service_'+name, pos, half, friction=config.contact_friction)
+    # Visible fixed supports explain the fixture's world anchoring. Their real
+    # collision surfaces also prevent treating the space below it as empty.
+    for ix,offset_x in enumerate((.06,.38)):
+        for iy,offset_y in enumerate((-.24,.24)):
+            _box(cabinet,f'service_cabinet_leg_{ix}_{iy}',
+                 (offset_x,offset_y,-.715),(.025,.025,.385))
 
     door = ET.SubElement(cabinet, 'body', name='service_door', pos='0 .28 0')
     ET.SubElement(door, 'joint', name='service_door_hinge', type='hinge', axis='0 0 -1',
@@ -98,9 +104,12 @@ def append_cabinet(root: ET.Element, config: CabinetConfig):
     # right hand holds the handle. No hidden actuator or logical unlock exists.
     _box(latch, 'service_latch_crossbar', (-.023, .20, .065), (.006, .20, .010), mass=.10)
     for end in (0., .40):
-        _box(latch, f'service_latch_crossbar_link_{end}', (-.034, end, .065),
-             (.017, .010, .010), mass=.01)
-    _box(latch, 'service_latch_button', (-.045, .40, .065), (.018, .018, .018), mass=.04,
+        # The left button stands clear of the broad crossbar so a real finger
+        # can surround it without entering that bar during wrist rotation.
+        center_x, half_x = (-.054,.037) if end==.40 else (-.034,.017)
+        _box(latch, f'service_latch_crossbar_link_{end}', (center_x, end, .065),
+             (half_x, .010, .010), mass=.01)
+    _box(latch, 'service_latch_button', (-.085, .40, .065), (.018, .018, .018), mass=.04,
          rgba='.77 .51 .19 1')
 
     retention = ET.SubElement(cabinet, 'body', name='service_retention', pos='.087 0 -.096')
@@ -113,6 +122,8 @@ def append_cabinet(root: ET.Element, config: CabinetConfig):
          rgba='.77 .51 .19 1')
 
     for name, center in (('old', (x-.22, y+.45)), ('replacement', (x-.22, y-.45))):
+        _box(world,f'service_{name}_tray_pedestal',(*center,.48),(.035,.035,.48))
+        _box(world,f'service_{name}_tray_foot',(*center,.015),(.15,.13,.015))
         _box(world, f'service_{name}_tray', (*center, .975), (.15, .13, .015),
              rgba='.40 .42 .42 1', friction=config.contact_friction)
         # Physical side walls retain a released cartridge, not an invisible region.
@@ -169,6 +180,7 @@ def measure(model, data, config: CabinetConfig):
         contacts['|'.join(names)] = contacts.get('|'.join(names), 0.)+max(0., float(force[0]))
     return {
         'time_s': float(data.time), 'door_angle_rad': joint('service_door_hinge'),
+        'door_angular_velocity_rad_s':float(data.joint('service_door_hinge').qvel[0]),
         'latch_retraction_m': joint('service_latch_slide'),
         'retention_retraction_m': joint('service_retention_slide'),
         'old_cartridge_position_m': old.tolist(), 'replacement_position_m': new.tolist(),

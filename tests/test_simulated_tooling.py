@@ -82,3 +82,18 @@ def test_tool_manifest_matches_native_mass_commands_and_force_limits():
         assert actuator['force_range_n'] == [-12., 12.]
         assert actuator['command_range'] == [0., .105]
     assert model.geom('test_positive_pad').friction[0] == .8
+
+
+def test_finger_stiffness_changes_measured_grip_pressure_without_changing_force_cap():
+    loads=[]
+    for stiffness in (400.,800.):
+        model,data=bench(ParallelGripperConfig(position_stiffness_n_m=stiffness))
+        data.ctrl[1:]=0.
+        for _ in range(600):
+            mj.mj_step(model,data)
+            assert np.max(np.abs(data.actuator_force[1:]))<=40.+1e-8
+        mj.mj_forward(model,data)
+        loads.append(min(measured_pad_loads(model,data).values()))
+        assert model.neq==0
+    assert loads[0]>5.
+    assert 1.8<loads[1]/loads[0]<2.2
