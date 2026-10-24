@@ -1,0 +1,42 @@
+{
+  "commit": "8508e31c63565d84197144d14b201463b2221117",
+  "workflow": "https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40080972324",
+  "scope": "Deterministic nominal repetitions and bounded simulated samples; not hardware reliability.",
+  "controller_version": "vivacity.wrench-inverse-dynamics/3-experimental",
+  "reports": [
+    {
+      "file": "constrained-acceptance.json.gz",
+      "uncompressed_sha256": "e5994b17132b9d8e8a838d45aba23a336da7b94241131c62af58a2d162f187d6",
+      "compressed_sha256": "6dc64d77f7fad19748e6550a1e91dba5d30fa9221ec6699c2bfc794c929dd683",
+      "bytes": 806492
+    }
+  ],
+  "measurements": {
+    "counts": {
+      "nominal": {
+        "trials": 20,
+        "passed": 20
+      },
+      "held_out": {
+        "trials": 100,
+        "passed": 100
+      },
+      "development": {
+        "trials": 0,
+        "passed": 0
+      }
+    },
+    "maximum_placement_error_m": 0.011590899320881493,
+    "minimum_steady_hand_share": 0.39085858394193385,
+    "maximum_joint_limit_penetration_rad": 0.003473313983498816,
+    "maximum_force_balance_error_n": 0.004209035985267562,
+    "median_compute_s": 31.6149425804997,
+    "maximum_compute_s": 33.28405989399994,
+    "maximum_actuator_torque_fraction": 1.0
+  },
+  "limitations": [
+    "Stationary 8 cm transfer and narrow sampled initial conditions, not walking carry.",
+    "Native joint stops are compliant: maximum measured joint penetration is reported, not claimed zero.",
+    "Source changes require revalidation."
+  ]
+}

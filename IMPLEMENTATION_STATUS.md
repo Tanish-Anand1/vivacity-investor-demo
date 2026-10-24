@@ -1,25 +1,29 @@
-## Current Physical Truth evidence — 2026-10-24, commit 8508e31
+## Verified Physical Truth baselines — 2026-10-24
 
 **The full directive is incomplete and has not been deployed.** Work remains on
 the isolated `codex/physical-truth-runtime` branch. The opening is unchanged.
 
-The Linux deployment-image suite passed **478 tests with 3 skips and no failures**.
+The Linux deployment-image suite at `cedf837` passed **485 tests with 3 skips and no failures**.
 Separate constrained-host checks passed **4 general/factory tests and 1 humanoid
 capacity test**. Chromium, Firefox and WebKit passed the contact-lab journey at
 this revision. These results are linked in `docs/PHYSICAL_TRUTH_EXECUTION.md`.
 
 Each complete G1, Apollo and H1 embodiment passed **20/20 nominal and 100/100
-held-out stationary stabilization trials**, plus its deliberate instability
+held-out stationary stabilization trials** at `cedf837`, plus its deliberate instability
 fixture. This is six seconds of standing, a small shoulder movement, a bounded
 horizontal disturbance and settling. It does not validate walking, carrying or
-cabinet service. The corrected constrained G1 contact acceptance is still running.
+cabinet service. Wrench controller v3 also passed 20/20 nominal and 100/100
+held-out stationary G1 contact trials at `8508e31`. Maximum placement error was
+11.591 mm; minimum steady hand share 39.086%. These results do not validate
+walking carry. The v4 constrained G1 cohort is still running; the updated stance
+cohorts have passed. Source hashes in each report define the tested implementation.
 
 A Linux-only enum comparison bug had skipped initial joint clamping and predictive
 joint-limit constraints. Integer-normalized comparisons and a near-limit braking
 regression now pass on Linux and Windows. Older Linux reports must not be used to
 certify the corrected joint-limit behavior.
 
-Apollo door control is under local development. Six local tests passed in
+Apollo door control is under local development. At `3750125`, six local tests passed in
 243.60 seconds, covering checkpoints, first-failure preservation, the measured
 nominal trial and two deliberate failures. The nominal trial
 retracted the passive latch and opened the door with native contact and bounded
@@ -27,11 +31,19 @@ tool forces, without equality attachments. The complete cartridge cycle remains
 open. The weak-tool fixture fails from measured instability during approach;
 the stiff latch is rejected before the previous prohibited collision. This
 primitive has not passed the required 20/100 acceptance and is not exposed as
-complete cabinet service.
+complete cabinet service. Later wide-opening development runs remain failed
+evidence; their errors are being addressed before acceptance.
 
 Model-matched locomotion, independent running, the shared warehouse, complete
 parameter coverage, perception-driven control, paid persistence, production
 release and soak remain open. No GPU or hosting purchase has been made.
+
+The isolated training lock now resolves CPU and CUDA dependencies at `c76abe1`.
+The three-step Apollo native/MJX numerical comparison passes. G1 and H1 retain
+explicit CPU MJX unsupported-collision failures. A Runpod A40 pilot is prepared
+with seven passing shutdown-guard tests and Linux shell validation; GPU execution
+is pending payment setup and the requested $2 pilot approval. Account access is
+working; no card information or credentials are stored in this repository.
 
 ## Earlier development records (superseded where described above)
 

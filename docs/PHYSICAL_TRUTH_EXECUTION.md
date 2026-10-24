@@ -18,8 +18,8 @@ checks. Hardware execution is outside the completion claim.
 | --- | --- | --- |
 | Complete checkpoint, independent controller and simulator forks | New native checkpoint adapter and transactional worker pass local restore/fork/restart tests; legacy services not migrated | Partial |
 | All exposed parameter dependencies and causality | New carton mass/density/inertia and solver-contact definitions pass native causality checks; app-wide inventory/UI generation incomplete | Partial |
-| Whole-body stabilization and constraints | Wrench kernel v3 fixes Linux enum handling. Complete G1, Apollo and H1 each pass 20/20 nominal, 100/100 held-out and deliberate instability in the bounded six-second stationary probe at 8508e31. General reach, collision audit and mobility remain open | Bounded stance verified; broader gate partial |
-| Contact-only manipulation and G1 bilateral load sharing | Stationary native-servo baseline passes 20/20 nominal and 100/100 held-out trials, with zero equality constraints and continuous retention checks; whole-body controller not accepted | Partial |
+| Whole-body stabilization and constraints | Wrench kernel v4 includes contact unloading. Complete G1, Apollo and H1 each pass 20/20 nominal, 100/100 held-out and deliberate instability in the bounded six-second stationary probe at cedf837. General reach, collision audit and mobility remain open | Bounded stance verified; broader gate partial |
+| Contact-only manipulation and G1 bilateral load sharing | Native-servo baseline and corrected wrench controller v3 each pass 20/20 nominal and 100/100 held-out stationary trials with zero equality constraints. Wrench v4 unloading changes require revalidation; locomotion is not covered | Partial |
 | G1/Apollo/H1 model-matched mobility, turns, terrain, carry | H1 short walk only; complete embodiments need training | Open |
 | Apollo cabinet, latch, old/replacement cartridge cycle | Passive fixture and force-limited tooling pass component tests. A development controller physically retracts the latch and opens the door about 0.23 rad; full opening, cartridge service and acceptance remain open | Partial |
 | Shared-world SORT through DISPATCH | Sorting ledger only | Open |
@@ -27,19 +27,27 @@ checks. Hardware execution is outside the completion claim.
 | RGB-D pose estimation without privileged controller inputs | Separate image/depth estimator passes five rendered-image tests; not driving robot control or validated over the complete envelope | Partial |
 | Hardware-transfer manifests, calibration and watchdog procedure | Offline G1 manifest, 382 simulated sensor samples, calibration procedure and fail-closed dry-run watchdog implemented; no transport or hardware validation | Partial |
 | Transactional recovery, owner-scoped fork/compare/export | New opt-in contact API passes real HTTP pause/fork/compare/replay/export; abrupt process-exit recovery tested on real small MuJoCo dynamics | Partial |
-| Browser journeys, three engines, all failure states | Actual WebGL2/live/pause/fork/compare/replay/export, network interruption, cancellation and final-state reload passed in Chromium, Firefox and WebKit at `8508e31`. Screenshot inspection found a native WebKit select contrast issue; correction awaits fresh browser evidence. Full warehouse journey remains open | Partial |
+| Browser journeys, three engines, all failure states | Actual WebGL2/live/pause/fork/compare/replay/export, network interruption, cancellation and final-state reload passed in Chromium, Firefox and WebKit at `3750125`. The WebKit select contrast correction also passed fresh tests and actual mobile screenshot inspection. Full warehouse journey remains open | Partial |
 | Paid persistence, backups/restore, full-world capacity | SQLite-consistent backup/restore passes concurrent-WAL tests; paid hosting and complete-world capacity remain open | Partial |
 | Production deployment and 24-hour soak | Not started for this release | Open |
 | Break the Frame cinematic release | Deliberately deferred until physics release passes | Deferred |
 
 ## Active slice
 
-Current completed Linux evidence at `8508e31`:
+Verified Linux baselines (their source hashes remain part of every report):
 
-- [Deployment-image suite](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40080972257): 478 passed, 3 skipped; separate capacity probes 4 + 1 passed.
-- [Complete stationary embodiments](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40080972312): each robot 20/20 nominal and 100/100 held-out, plus correctly rejected deliberate instability. The held-out Wilson 95% interval is [0.9630, 1.0000] for each narrow sampled distribution.
-- [Model/joint diagnostics](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40080972331): all three complete models pass the corrected initial-joint check.
-- [Contact/browser workflow](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40080972324): all three browser jobs passed; corrected 120-trial constrained-contact cohort is still running.
+- [Deployment-image suite, cedf837](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40088346632): **485 passed, 3 skipped, zero failures**; separate capacity probes 4 + 1 passed. JUnit reports are in `artifacts/physical-truth-runtime/backend-cedf837/`.
+- [Complete stationary embodiments, cedf837](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40088346654): each robot **20/20 nominal and 100/100 held-out**, plus correctly rejected deliberate instability. The held-out Wilson 95% interval is [0.9630, 1.0000] for each narrow sampled distribution. Reports and hashes are in `artifacts/physical-truth-runtime/stance-cedf837/`.
+- [Corrected constrained G1, 8508e31](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40080972324): wrench controller v3 **20/20 nominal and 100/100 held-out**. Maximum placement error 11.591 mm; minimum steady vertical hand-support share 39.086%; maximum transport force-balance residual 0.004210 N; median CPU time 31.615 s and maximum 33.285 s. Zero equality attachments. Maximum compliant joint-stop penetration was 0.003474 rad, not zero. The complete report and hashes are in `artifacts/physical-truth-runtime/constrained-8508e31/`.
+- [Three browser engines, 3750125](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40083924018): live frames, pause, fork, comparison, explicit replay, export, network interruption, cancellation, final-state reload. The corrected WebKit native select was inspected in the actual mobile screenshot.
+
+Apollo wide-door development revealed that a release request must remove the old
+handle's predicted support from the optimizer. Wrench v4 adds explicit contact
+unloading while retaining all native collision geometry. Its focused native
+separation test and the three complete-stance cohorts pass. The new constrained
+G1 contact cohort is still running. V3's report is preserved rather than
+relabeled as v4 evidence. Additional uncommitted Apollo development is not
+covered by these baselines.
 
 The maximum measured stance tilt was 0.01849 rad for G1, 0.02712 rad for
 Apollo and 0.00286 rad for H1. Maximum per-trial p95 loaded-foot slip was
@@ -65,6 +73,14 @@ contact-based load support.
 GPU training and paid persistent hosting require a concrete instance quote and
 spending ceiling approved before purchase. No paid resource has been provisioned
 for this release. Training dependencies must remain outside the runtime image.
+
+Runpod sign-in is complete. The observed 2026-10-24 quote is one A40 with 48 GB
+VRAM, 43 GB RAM and 9 vCPU: $0.59/hour compute plus $0.007/hour container disk
+(50 GB, no persistent volume). The first requested approval is a $2 ceiling for
+at most two hours of exact-model compatibility probes, not full training.
+Account balance is $0.00 and payment setup is pending. The operator must monitor
+the resource externally; the tested stop-request guard is not a provider billing
+cap. See `training/README.md` for the reviewed dependency lock and exact command.
 
 ## Evidence policy
 
@@ -115,7 +131,7 @@ certificate.
   than the Windows slip classification. Stronger evidence checks exposed that
   an upward ejection can produce clearance without a controlled lift. The test
   now checks missing bilateral grip and absence of supported holding; clearance
-  is not treated as successful manipulation. The full suite needs a fresh pass.
+  is not treated as successful manipulation. This correction passed the subsequent 484-test suite at 3750125.
 - Completed-history loading fetches the last persisted frame directly. Explicit
   Replay remains the only operation that starts recorded motion.
 - Checkpoint metadata and cached scene reads no longer decompress the full model.

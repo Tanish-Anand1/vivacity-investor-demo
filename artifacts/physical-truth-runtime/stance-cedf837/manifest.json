@@ -1,0 +1,67 @@
+{
+  "commit": "cedf837f828d5895d681ee768f3b037b828d28a2",
+  "run_id": 40088346654,
+  "scope": "Stationary stance only, not walking or full cabinet service",
+  "reports": {
+    "apollo-stance.json": {
+      "sha256": "38ced45f4f66da95b0bf43545e8da36f1e0820fd24dfc3531c9018491ca42d3a",
+      "gzip_sha256": "4e9f28a0f1c9d167d3c4474404f50db332aafc7fb98d0a9bf1742bf47079aac5",
+      "counts": {
+        "nominal": {
+          "total": 20,
+          "passed": 20
+        },
+        "held_out": {
+          "total": 100,
+          "passed": 100
+        }
+      },
+      "acceptance_passed": true,
+      "wilson95": [
+        0.9630065017930143,
+        1.0
+      ],
+      "instability_classified": true
+    },
+    "g1-stance.json": {
+      "sha256": "8504f757826e9485d5fd414a43156defe3bd982c3c7704f79e87a597fdfa1ac7",
+      "gzip_sha256": "f36123488e5f977361c418f01c00aa2bbc72870d9495fefc961d3972603638e1",
+      "counts": {
+        "nominal": {
+          "total": 20,
+          "passed": 20
+        },
+        "held_out": {
+          "total": 100,
+          "passed": 100
+        }
+      },
+      "acceptance_passed": true,
+      "wilson95": [
+        0.9630065017930143,
+        1.0
+      ],
+      "instability_classified": true
+    },
+    "h1-stance.json": {
+      "sha256": "8a0b521a9f36b5ecb6b10b5a17264ec0eecbe6550192cbdc631c58ab31dd9e23",
+      "gzip_sha256": "35a54dfa40b9eb2da27a27eba86eaf046a978f1e08f8e76e5540d20149d4c9b5",
+      "counts": {
+        "nominal": {
+          "total": 20,
+          "passed": 20
+        },
+        "held_out": {
+          "total": 100,
+          "passed": 100
+        }
+      },
+      "acceptance_passed": true,
+      "wilson95": [
+        0.9630065017930143,
+        1.0
+      ],
+      "instability_classified": true
+    }
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "commit": "375012562e57202cd818926261635ca1f25e6906",
+  "workflow": "https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40083924046",
+  "scope": "Six-second stationary stance, bounded shoulder motion and disturbance; not mobility or hardware.",
+  "reports": [
+    {
+      "file": "apollo-stance.json.gz",
+      "uncompressed_sha256": "9a42f4cc0e66ae51c69f57b788f34962b3495048022f2272c5b2f7c035862f1b",
+      "compressed_sha256": "c27e0268498cbdb2bc06d70c0242b98b977528beb1528e8b31c0be24ca321a47",
+      "bytes": 98512,
+      "robot": "apollo",
+      "counts": {
+        "nominal": {
+          "total": 20,
+          "passed": 20
+        },
+        "held_out": {
+          "total": 100,
+          "passed": 100
+        }
+      },
+      "held_out_wilson_95_interval": [
+        0.9630065017930143,
+        1.0
+      ],
+      "deliberate_instability_classified": true,
+      "maximum_tilt_rad": 0.027114051205489608,
+      "maximum_trial_p95_foot_slip_m_s": 0.000541067167770138
+    },
+    {
+      "file": "g1-stance.json.gz",
+      "uncompressed_sha256": "5b226a552912eec62c457bd6f2cae15f12edbc7fdc15750b66619f079c873726",
+      "compressed_sha256": "97f76cbe36d255f4d975f83cd5800bd2bf2189a54da25f53116d2156983faf6e",
+      "bytes": 114649,
+      "robot": "g1",
+      "counts": {
+        "nominal": {
+          "total": 20,
+          "passed": 20
+        },
+        "held_out": {
+          "total": 100,
+          "passed": 100
+        }
+      },
+      "held_out_wilson_95_interval": [
+        0.9630065017930143,
+        1.0
+      ],
+      "deliberate_instability_classified": true,
+      "maximum_tilt_rad": 0.018481447691464772,
+      "maximum_trial_p95_foot_slip_m_s": 0.0004541089955240038
+    },
+    {
+      "file": "h1-stance.json.gz",
+      "uncompressed_sha256": "a39060bb0c017bd9f6732b8cd0c19c0c94a4fb723ef11b560657a1cfb2273a60",
+      "compressed_sha256": "9e20c883731ff545c4d1e3e44069beece60239393fb8bd5f151000c84c3e5c42",
+      "bytes": 73713,
+      "robot": "h1",
+      "counts": {
+        "nominal": {
+          "total": 20,
+          "passed": 20
+        },
+        "held_out": {
+          "total": 100,
+          "passed": 100
+        }
+      },
+      "held_out_wilson_95_interval": [
+        0.9630065017930143,
+        1.0
+      ],
+      "deliberate_instability_classified": true,
+      "maximum_tilt_rad": 0.00285297719386035,
+      "maximum_trial_p95_foot_slip_m_s": 0.004947672597937625
+    }
+  ]
+}
