@@ -18,6 +18,7 @@ on:
       - tests/test_apollo_execution.py
       - tests/test_cabinet_tooling.py
       - tests/test_cabinet_route.py
+      - tests/test_tool_withdrawal.py
       - tests/test_joint_reserve_ik.py
       - .github/workflows/apollo-cabinet.yml
   workflow_dispatch:
@@ -41,6 +42,7 @@ jobs:
             /app/tests/test_joint_reserve_ik.py \
             /app/tests/test_simulated_tooling.py /app/tests/test_cabinet_mechanism.py \
             /app/tests/test_cabinet_tooling.py /app/tests/test_cabinet_route.py \
+            /app/tests/test_tool_withdrawal.py \
             -q --durations=10 --junitxml=/verification/apollo-components.xml
       - uses: actions/upload-artifact@v4
         if: always()

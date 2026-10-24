@@ -15,12 +15,12 @@ from scipy.spatial.transform import Rotation
 
 from .cabinet_mechanism import CabinetConfig, append_cabinet, measure
 from .cabinet_tooling import SWIVEL_JOINT, append_latch_swivel, swivel_manifest
-from .cabinet_route import route_approach
+from .cabinet_route import route_approach, plan_tool_clearance, route_tool_to_posture
 from .pickup_planning import stage_commands, stage_distance
 from .execution_checkpoint import capture, restore, ImmutableModelArtifact
 from .humanoid_embodiments import compile_embodiment
 from .humanoids import _frame
-from .humanoid_ik import site_pose
+from .humanoid_ik import site_pose, PosePlan
 from .inverse_dynamics import ControllerInfeasible
 from .simulated_tooling import ParallelGripperConfig
 from .stance_control import StanceController
@@ -41,7 +41,7 @@ SOURCE_HASHES = {name:hashlib.sha256(Path(__file__).with_name(name).read_bytes()
 
 
 class ApolloToolController:
-    version = 'vivacity.apollo-cartesian-contact/6-experimental'
+    version = 'vivacity.apollo-cartesian-contact/7-experimental'
 
     def __init__(self, model):
         self.stance = StanceController(model, 'apollo')
@@ -105,7 +105,7 @@ class ApolloToolController:
 
 
 class CabinetDoorPrimitive:
-    version = 'vivacity.apollo-door-primitive/6-experimental'
+    version = 'vivacity.apollo-door-primitive/7-experimental'
 
     def __init__(self, config=None, tooling=None, seed=7, opening_angle_rad=.25):
         if not np.isfinite(opening_angle_rad) or not .25 <= opening_angle_rad <= 1.2:
@@ -153,6 +153,8 @@ class CabinetDoorPrimitive:
     def _plan(self, phase):
         x,y = self.config.front_x_m,self.config.center_y_m
         goals = deepcopy(self.state['goals'])
+        clearance_plan=None
+        withdrawal_route=None
         if phase == 'approach':
             goals = {side:{'position':[x-.19,y+offset,z],'rotation':self._tool_rotation(side).tolist()}
                      for side,offset,z in (('r',-.11,1.1),('l',.145,1.165))}
@@ -223,6 +225,73 @@ class CabinetDoorPrimitive:
         elif phase == 'park_right':
             goals['r'] = {'position':[x-.35,y-.20,1.25],
                 'rotation':(Rotation.from_rotvec([0.,-.6,0.]).as_matrix() @ self._tool_rotation('r')).tolist()}
+        if self.controller.wide_tooling and phase in ('release_right','withdraw_right','park_right'):
+            site=self.data.site('r_service_tcp')
+            if phase=='release_right':
+                positions=[site.xpos+[dx,dy,dz] for dx in (-.025,-.05,-.075)
+                           for dy in (-.06,0.,.06) for dz in (-.06,0.,.06)]
+            elif phase=='withdraw_right':
+                positions=[site.xpos+[dx,dy,dz] for dx in (-.025,-.05)
+                           for dy in (-.03,0.,.03) for dz in (-.03,0.,.03)]
+            else:
+                positions=[[x-dx,y+dy,z] for dx in (.25,.30,.35,.40)
+                           for dy in (-.25,-.20,-.15) for z in (1.2,1.3,1.4)]
+            tools=[i for i in range(self.model.ngeom)
+                   if ((self.model.geom(i).name or '').startswith('r_service_') or
+                       ((self.model.geom(i).name or '').startswith('collision_') and
+                        '_r_' in (self.model.geom(i).name or '')))
+                   and (self.model.geom_contype[i] or self.model.geom_conaffinity[i])]
+            fixtures=[i for i in range(self.model.ngeom)
+                      if (self.model.geom(i).name or '').startswith('service_')]
+            grasp=[(self.model.geom(f'r_service_{finger}_pad').id,self.model.geom(surface).id)
+                   for finger in ('positive','negative') for surface in GRASP_SURFACES['r']]
+            finger_joints=[f'r_service_{finger}_slide' for finger in ('positive','negative')]
+            if phase=='park_right':
+                park=self.data.qpos.copy()
+                moving=['r_'+part for part in ARM_PARTS]+finger_joints
+                addresses=[self.model.joint(name).qposadr[0] for name in moving]
+                park[addresses]=self.model.key_qpos[0,addresses]
+                for name in finger_joints:
+                    park[self.model.joint(name).qposadr[0]]=.04
+                withdrawal_route=route_tool_to_posture(self.model,self.data.qpos,park,moving,
+                    tools,fixtures,self.rng,opening_joints=finger_joints,
+                    mechanism_sweep=('service_door_hinge',self.state['opening_angle_rad']))
+                selected=None
+                if withdrawal_route['feasible']:
+                    scratch=mj.MjData(self.model)
+                    scratch.qpos[:]=park
+                    mj.mj_kinematics(self.model,scratch)
+                    selected={'qpos':park.tolist(),'position':scratch.site('r_service_tcp').xpos.tolist(),
+                        'rotation':scratch.site('r_service_tcp').xmat.reshape(3,3).tolist()}
+                clearance_plan={**{k:v for k,v in withdrawal_route.items() if k!='waypoints'},'selected':selected}
+            else:
+                clearance_plan=plan_tool_clearance(self.model,self.data.qpos,'r_service_tcp',
+                    ['r_'+part for part in ARM_PARTS],finger_joints,
+                    tools,fixtures,grasp,positions,minimum_grasp_gap_m=.01 if phase=='release_right' else .025)
+            self.state['planning_events'].append({'phase':phase,
+                **{k:v for k,v in clearance_plan.items() if k!='selected'}})
+            if not clearance_plan['feasible']:
+                self.fail('collision_free_route_not_found',{'phase':phase,
+                    'collision_checks':clearance_plan['collision_checks']})
+                return
+            selected=clearance_plan['selected']
+            goals['r']={key:selected[key] for key in ('position','rotation')}
+            # The grasp integral represents the old loaded contact equilibrium.
+            # Applying it to a new measured release pose adds an unrequested
+            # translation/rotation (25 mm upward in the regression fixture).
+            # Rebase only the withdrawing arm; preserve the load-bearing hand.
+            self.controller.integrals['r'][:]=0.
+            self.controller.rotation_integrals['r'][:]=0.
+            if phase=='park_right':
+                # The free door settles while the supporting hand retains the
+                # button. Hold its measured equilibrium during the other arm's
+                # long retreat, rather than integrating toward the former
+                # two-hand pose and dragging the mechanism through the pads.
+                held=self.data.site('l_service_tcp')
+                goals['l']={'position':held.xpos.tolist(),
+                    'rotation':held.xmat.reshape(3,3).tolist()}
+                self.controller.integrals['l'][:]=0.
+                self.controller.rotation_integrals['l'][:]=0.
         reference = self.model.key_qpos[0].copy()
         start_reference = reference.copy()
         planning_state = self.data.qpos.copy()
@@ -241,6 +310,9 @@ class CabinetDoorPrimitive:
                 if not np.array_equal(previous,planning_state):
                     seeds.append(('previous_command',previous))
             for initialization,seed in seeds:
+                if side=='r' and clearance_plan is not None:
+                    plan=PosePlan(np.asarray(clearance_plan['selected']['qpos']),0.,0.,True,0)
+                    break
                 margins = ((None,) if phase=='release_right' and side=='r' and self.controller.wide_tooling
                            else (.08,.04,.01) if self.controller.wide_tooling else (None,))
                 for margin in margins:
@@ -264,7 +336,8 @@ class CabinetDoorPrimitive:
                 address = self.model.joint(name).qposadr[0]
                 reference[address] = plan.qpos[address]
                 start_reference[address] = (self.state['reference'][address]
-                    if self.controller.wide_tooling else self.data.qpos[address])
+                    if self.controller.wide_tooling and not (side=='r' and clearance_plan is not None)
+                    else self.data.qpos[address])
             for finger in ('positive','negative'):
                 address = self.model.joint(f'{side}_service_{finger}_slide').qposadr[0]
                 # A loaded finger's measured position differs from its servo
@@ -273,11 +346,13 @@ class CabinetDoorPrimitive:
                 # Preserve the commanded reference across wide-task phases;
                 # opening still ramps through the native force-limited drive.
                 start_reference[address] = (self.state['reference'][address]
-                    if self.controller.wide_tooling else self.data.qpos[address])
+                    if self.controller.wide_tooling and not (side=='r' and clearance_plan is not None)
+                    else self.data.qpos[address])
                 closing = phase in ('grasp','latch','open') or (
                     side=='l' and phase in ('grasp_left','release_right','withdraw_right','park_right','open_wide')) or (
                     side=='r' and phase in ('release_left','withdraw_left','rotate_left','insert_left','grasp_left'))
-                opening = .03 if side=='r' and phase in ('release_right','withdraw_right','park_right','open_wide') else .035
+                opening = (.04 if self.controller.wide_tooling else .03) if side=='r' and phase in (
+                    'release_right','withdraw_right','park_right','open_wide') else .035
                 reference[address] = 0. if closing else opening
         previous = self.state['phase']
         route=None
@@ -302,12 +377,13 @@ class CabinetDoorPrimitive:
                 return
         self.state.update(phase=phase,phase_started_s=float(self.data.time),stable_samples=0,
             approach_route=route,
+            withdrawal_route=withdrawal_route,
             lost_grip_samples=0,
             start_door_angle_rad=float(self.data.joint('service_door_hinge').qpos[0]),
             phase_start_qpos=start_reference.tolist(),reference=reference.tolist(),goals=goals,
             start_goals={side:(deepcopy(self.state['goals'][side])
                 if self.controller.wide_tooling and side in self.state['goals'] and
-                not (phase=='release_right' and side=='r') else
+                not (clearance_plan is not None and (side=='r' or phase=='park_right')) else
                 {'position':self.data.site(side+'_service_tcp').xpos.tolist(),
                  'rotation':self.data.site(side+'_service_tcp').xmat.reshape(3,3).tolist()}) for side in goals})
         self.state['phase_events'].append({'from':previous,'to':phase,'time_s':float(self.data.time),
@@ -394,19 +470,26 @@ class CabinetDoorPrimitive:
         duration = {'settle':1.,'approach':3.,'insert':3.,'grasp':1.,'latch':2.,'open':3.,
                     'release_left':1.,'withdraw_left':2.,'rotate_left':3.,'insert_left':3.,'grasp_left':1.,
                     'release_right':1.,'withdraw_right':2.,'park_right':4.,'open_wide':6.}[phase]
-        route=self.state.get('approach_route') if phase=='approach' else None
+        route=self.state.get('approach_route') if phase=='approach' else (
+            self.state.get('withdrawal_route') if phase=='park_right' else None)
         if route:
-            duration=max(duration,stage_distance(route)/.20)
+            duration=max(duration,stage_distance(route)/(.35 if phase=='park_right' else .20))
         fraction = min(1.,elapsed/duration)
         blend = fraction*fraction*(3.-2.*fraction)
         reference = np.asarray(self.state['phase_start_qpos'])+(np.asarray(self.state['reference'])-
                      np.asarray(self.state['phase_start_qpos']))*blend
         if route:
-            reference=stage_commands(route,[fraction])[0]
+            if phase=='park_right':
+                addresses=[self.model.joint(name).qposadr[0] for name in route['joint_names']]
+                reference[addresses]=stage_commands(route,[fraction])[0][addresses]
+            else:
+                reference=stage_commands(route,[fraction])[0]
         tracking = None
         if phase != 'settle' and (phase != 'approach' or fraction==1.):
             tracking = {}
             for side,goal in self.state['goals'].items():
+                if phase=='park_right' and route and fraction<1. and side=='r':
+                    continue
                 start = self.state['start_goals'][side]
                 relative = Rotation.from_matrix(np.asarray(goal['rotation']) @ np.asarray(start['rotation']).T)
                 tracking[side] = {'position':(np.asarray(start['position'])+
@@ -512,7 +595,7 @@ class CabinetDoorPrimitive:
                 self._plan(next_phase)
         elif elapsed > {'settle':2.,'approach':max(13.,duration+6.),'insert':10.,'grasp':6.,'latch':6.,'open':9.,
                         'release_left':5.,'withdraw_left':6.,'rotate_left':8.,'insert_left':8.,'grasp_left':5.,
-                        'release_right':5.,'withdraw_right':6.,'park_right':8.,'open_wide':12.}[phase]:
+                        'release_right':5.,'withdraw_right':6.,'park_right':max(8.,duration+6.),'open_wide':12.}[phase]:
             self.fail({'settle':'unstable_posture','approach':'approach_timeout','insert':'insertion_approach_timeout',
                 'grasp':'insufficient_grip_contact','latch':'latch_resistance_or_retention_failure','open':'door_opening_timeout',
                 'release_right':'tool_release_timeout','withdraw_right':'tool_retraction_timeout',

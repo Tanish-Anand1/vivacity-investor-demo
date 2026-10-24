@@ -18,6 +18,8 @@ def main():
     parser.add_argument('--latch-stiffness',type=float,default=300.)
     parser.add_argument('--opening-angle',type=float,default=.25)
     parser.add_argument('--output',type=Path,required=True)
+    parser.add_argument('--checkpoints',action='store_true',
+        help='Persist full integration/controller checkpoints at each measured phase transition and at termination.')
     args=parser.parse_args()
     # Retain exact uncommitted research source alongside failed trials too.
     # A hash without retrievable source cannot reproduce a development run.
@@ -33,6 +35,37 @@ def main():
     task=CabinetDoorPrimitive(CabinetConfig(front_x_m=args.front_x,latch_stiffness_n_m=args.latch_stiffness),
         ParallelGripperConfig(finger_force_n=args.finger_force,
             position_stiffness_n_m=args.finger_stiffness),opening_angle_rad=args.opening_angle)
+    # A checkpoint refers to this immutable compiled model. Persist it before
+    # stepping so an interrupted diagnostic retains a usable initial state.
+    model_path=args.output.parent/'models'/f'{task.artifact.sha256}.mjb'
+    model_path.parent.mkdir(parents=True,exist_ok=True)
+    if model_path.exists():
+        with model_path.open('rb') as handle:
+            existing=hashlib.file_digest(handle,'sha256').hexdigest()
+        if existing!=task.artifact.sha256:
+            raise ValueError('existing compiled-model artifact is corrupt')
+    else:
+        temporary=model_path.with_suffix('.mjb.tmp')
+        temporary.write_bytes(task.artifact.binary)
+        temporary.replace(model_path)
+    checkpoints=[]
+
+    def checkpoint(label):
+        if not args.checkpoints:
+            return
+        bundle=task.snapshot()
+        target=args.output.parent/'checkpoints'/f'{task.state["steps_completed"]:07d}-{label}.json'
+        target.parent.mkdir(parents=True,exist_ok=True)
+        content=(bundle.checkpoint.model_dump_json()+'\n').encode()
+        temporary=target.with_suffix('.json.tmp')
+        temporary.write_bytes(content)
+        temporary.replace(target)
+        checkpoints.append({'file':target.relative_to(args.output.parent).as_posix(),
+            'sha256':hashlib.sha256(content).hexdigest(),'model_sha256':task.artifact.sha256,
+            'steps_completed':bundle.checkpoint.steps_completed,
+            'next_frame_seq':bundle.checkpoint.next_frame_seq,'phase':task.state['phase']})
+
+    checkpoint('initial')
     frames=[]
     previous=None
     next_log_s=1.
@@ -43,6 +76,7 @@ def main():
             frames.append({'seq':frame['seq'],**frame['frame'],'phase':frame['phase'],
                 'ctrl':task.data.ctrl.tolist(),'measurements':frame['measurements']})
         if task.state['phase']!=previous:
+            checkpoint(task.state['phase'])
             print(json.dumps({'phase':task.state['phase'],'time':float(task.data.time)}),flush=True)
             previous=task.state['phase']
         if task.data.time>=next_log_s:
@@ -65,20 +99,10 @@ def main():
         'measurements':task.observe(),'frames':frames,'compute_s':time.perf_counter()-started,
         'equality_constraints':int(task.model.neq),'mocap_bodies':int(task.model.nmocap),
         'scope':'Stationary contact-operated latch and requested door opening primitive. Not complete cabinet service.'}
+    checkpoint('terminal')
+    report['checkpoints']=checkpoints
+    report['verifier_source_sha256']=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
     args.output.parent.mkdir(parents=True,exist_ok=True)
-    # Revisions of the controller often share an identical compiled model.
-    # Store that large mesh artifact once, without losing report provenance.
-    model_path=args.output.parent/'models'/f'{task.artifact.sha256}.mjb'
-    model_path.parent.mkdir(parents=True,exist_ok=True)
-    if model_path.exists():
-        with model_path.open('rb') as handle:
-            existing=hashlib.file_digest(handle,'sha256').hexdigest()
-        if existing!=task.artifact.sha256:
-            raise ValueError('existing compiled-model artifact is corrupt')
-    else:
-        temporary=model_path.with_suffix('.mjb.tmp')
-        temporary.write_bytes(task.artifact.binary)
-        temporary.replace(model_path)
     report['model_file']=model_path.relative_to(args.output.parent).as_posix()
     report['source_directory']=source_dir.relative_to(args.output.parent).as_posix()
     report['compiled_model_sha256']=task.artifact.sha256
