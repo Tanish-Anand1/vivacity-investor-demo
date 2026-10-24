@@ -1,3 +1,56 @@
+## Physical Truth development verification — 2026-10-25
+
+The isolated `codex/physical-truth-runtime` branch now plans and physically
+executes Apollo's right-hand release, collision-checked withdrawal and parked
+posture while the left hand retains the door. The wider swing starts from the
+measured spring-returned latch and tool pose, eliminating the previous 46 mm
+target discontinuity. Actuator commands remain the only execution mechanism;
+the tested model has **zero equality constraints and zero mocap bodies**.
+
+**The complete cabinet task still fails and the full release remains blocked.**
+At controller source revision `a14c619`, the native 1.1-radian development trial
+reached **0.560305 rad after 19,068 steps / 38.136 simulated seconds**, then
+correctly failed `lost_door_grip`. One left pad measured 31.199 N and the other
+0 N. Release, withdrawal and parking completed first. The run took 335.496 s
+wall time under local memory contention; this is not a production latency
+benchmark. Six complete development trials and three independent experimental
+continuations are retained, all failed. No nominal/held-out cabinet acceptance
+rate is claimed.
+
+Verification for the exact runtime source at `a14c619`:
+
+- Linux deployment image: **524 passed, 3 skipped, zero failures/errors**.
+- Apollo component suite: **55 passed**, zero failures/skips (232.506 s).
+- Contact suite: **98 passed**, zero failures/skips (216.819 s).
+- Chromium, Firefox and WebKit contact journeys passed.
+- Separate 512 MB capacity probes: **4 + 1 passed**. ARM64 image preflight
+  passed. These probes do not qualify the missing complete warehouse world.
+- Local withdrawal/IK/routing regressions: **21 passed in 2.16 s**. The new
+  measured-grasp native regression also passed separately.
+- Full checkpoint continuation reproduced the failed wide-door trial exactly:
+  **6,338 additional steps**, identical final qpos, qvel, controls, simulation
+  time and outcome. Reproducibility passed; the physical task failed.
+
+Evidence and reproduction commands:
+`artifacts/physical-truth-runtime/apollo-withdrawal-20261025/README.md` and
+`docs/PHYSICAL_TRUTH_EXECUTION.md`. The replay verifier is
+`scripts/replay_apollo_checkpoint.py`. Historical evidence below remains tied
+to its own source revision; overlapping suites are not independent samples.
+
+Remaining full-release requirements include cabinet cartridge exchange and
+closure, complete-embodiment mobility and H1 running, all eight warehouse
+stages in one world, perception-driven control, complete parameter/acceptance
+coverage, and a qualifying durable host with a 24-hour soak. Production and
+the opening are unchanged. Read-only production checks returned HTTP 200 for
+the homepage and `status: ok` for backend health after an earlier cold request
+timed out; these are reachability checks, not continuous-availability evidence.
+
+The user authorized approximately **$20 of existing Fireworks AI credits**;
+**no credits were spent and no new charges were made**. No authenticated
+Fireworks execution or route from its model-training APIs to this native
+MuJoCo/MJX locomotion workload has been demonstrated. Those credits do not
+establish available robotics GPU compute or durable hosting.
+
 ## Verified Physical Truth baselines — 2026-10-24
 
 ### Apollo shared-execution integration — 2026-10-24

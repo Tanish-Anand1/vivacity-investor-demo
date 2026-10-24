@@ -1,0 +1,507 @@
+{
+  "scope": "Failed development trials, not cabinet acceptance or release qualification.",
+  "model_binaries_included": false,
+  "trials": [
+    {
+      "name": "integrated-release",
+      "report_file": "integrated-release.json.gz",
+      "report_sha256": "aeaca2b9f9119cab6b61c79cdb1813bef6814eab4f6bd517ef3f88d3752bed3b",
+      "compressed_sha256": "9574ce502878de6617500eeb208328088eb8aaf43120d38e775bf7d235381f3f",
+      "sources_file": "integrated-release-sources.json.gz",
+      "model_sha256": "192c7e6acc3f52aac147a2498f77dca8609df526e4202343e5a10d1ce6691463",
+      "status": "failed",
+      "success": false,
+      "failure": "collision_free_route_not_found",
+      "failure_detail": {
+        "phase": "park_right",
+        "collision_checks": 12137
+      },
+      "phase": "withdraw_right",
+      "steps_completed": 12730,
+      "simulator_time_s": 25.459999999996768,
+      "wall_s": 231.41964490001556,
+      "door_angle_rad": 0.31917270264885655,
+      "grip_forces_n": {
+        "l": {
+          "positive": 40.9078233225982,
+          "negative": 38.82019130466567
+        },
+        "r": {
+          "positive": 0.0,
+          "negative": 0.0
+        }
+      },
+      "phase_transitions": [
+        {
+          "to": "approach",
+          "time_s": 1.1500000000000008
+        },
+        {
+          "to": "insert",
+          "time_s": 12.964000000000999
+        },
+        {
+          "to": "grasp",
+          "time_s": 16.114000000001948
+        },
+        {
+          "to": "latch",
+          "time_s": 17.26600000000131
+        },
+        {
+          "to": "open",
+          "time_s": 19.01400000000034
+        },
+        {
+          "to": "release_right",
+          "time_s": 22.165999999998593
+        },
+        {
+          "to": "withdraw_right",
+          "time_s": 23.067999999998094
+        }
+      ],
+      "equality_constraints": 0,
+      "mocap_bodies": 0
+    },
+    {
+      "name": "swept-parking",
+      "report_file": "swept-parking.json.gz",
+      "report_sha256": "a24817a5540904098be8889b5080075b25be5cb34ed938850f5e5399aa2fadac",
+      "compressed_sha256": "9ac5a3d0097a20459edc15ef137a79287cddbbafef35c7b656748f83099df67f",
+      "sources_file": "swept-parking-sources.json.gz",
+      "model_sha256": "192c7e6acc3f52aac147a2498f77dca8609df526e4202343e5a10d1ce6691463",
+      "status": "failed",
+      "success": false,
+      "failure": "collision_free_route_not_found",
+      "failure_detail": {
+        "phase": "park_right",
+        "collision_checks": 67577
+      },
+      "phase": "withdraw_right",
+      "steps_completed": 12730,
+      "simulator_time_s": 25.459999999996768,
+      "wall_s": 177.27339280000888,
+      "door_angle_rad": 0.31917270264885655,
+      "grip_forces_n": {
+        "l": {
+          "positive": 40.9078233225982,
+          "negative": 38.82019130466567
+        },
+        "r": {
+          "positive": 0.0,
+          "negative": 0.0
+        }
+      },
+      "phase_transitions": [
+        {
+          "to": "approach",
+          "time_s": 1.1500000000000008
+        },
+        {
+          "to": "insert",
+          "time_s": 12.964000000000999
+        },
+        {
+          "to": "grasp",
+          "time_s": 16.114000000001948
+        },
+        {
+          "to": "latch",
+          "time_s": 17.26600000000131
+        },
+        {
+          "to": "open",
+          "time_s": 19.01400000000034
+        },
+        {
+          "to": "release_right",
+          "time_s": 22.165999999998593
+        },
+        {
+          "to": "withdraw_right",
+          "time_s": 23.067999999998094
+        }
+      ],
+      "equality_constraints": 0,
+      "mocap_bodies": 0
+    },
+    {
+      "name": "rrt-parking",
+      "report_file": "rrt-parking.json.gz",
+      "report_sha256": "e2a30eefabe9e3098795fc5eefc65c137ddd54f9ca4cca305f107055a347b20a",
+      "compressed_sha256": "59d6b769e33a1562c8137f6be8af1238c7d977755e88a7b971992c810b5d42a9",
+      "sources_file": "rrt-parking-sources.json.gz",
+      "model_sha256": "192c7e6acc3f52aac147a2498f77dca8609df526e4202343e5a10d1ce6691463",
+      "status": "failed",
+      "success": false,
+      "failure": "lost_door_grip",
+      "failure_detail": {
+        "door_angle_rad": 0.4915154003334711,
+        "holding_hand": "l",
+        "grip_forces_n": {
+          "l": {
+            "positive": 0.0,
+            "negative": 21.71035441138619
+          },
+          "r": {
+            "positive": 0.0,
+            "negative": 0.0
+          }
+        }
+      },
+      "phase": "park_right",
+      "steps_completed": 15357,
+      "simulator_time_s": 30.713999999993856,
+      "wall_s": 144.63180100003956,
+      "door_angle_rad": 0.4915154003334711,
+      "grip_forces_n": {
+        "l": {
+          "positive": 0.0,
+          "negative": 21.71035441138619
+        },
+        "r": {
+          "positive": 0.0,
+          "negative": 0.0
+        }
+      },
+      "phase_transitions": [
+        {
+          "to": "approach",
+          "time_s": 1.1500000000000008
+        },
+        {
+          "to": "insert",
+          "time_s": 12.964000000000999
+        },
+        {
+          "to": "grasp",
+          "time_s": 16.114000000001948
+        },
+        {
+          "to": "latch",
+          "time_s": 17.26600000000131
+        },
+        {
+          "to": "open",
+          "time_s": 19.01400000000034
+        },
+        {
+          "to": "release_right",
+          "time_s": 22.165999999998593
+        },
+        {
+          "to": "withdraw_right",
+          "time_s": 23.067999999998094
+        },
+        {
+          "to": "park_right",
+          "time_s": 25.459999999996768
+        }
+      ],
+      "equality_constraints": 0,
+      "mocap_bodies": 0
+    },
+    {
+      "name": "measured-hold",
+      "report_file": "measured-hold.json.gz",
+      "report_sha256": "f66f0ae6e53c0499a4b90ddae4b7ca5d013ea56daa2ac1c7ee0a4869dda38fb4",
+      "compressed_sha256": "c67eaf301c536d2e670d8233f3487da603a0c8dafc081fcd33afae9db082c16a",
+      "sources_file": "measured-hold-sources.json.gz",
+      "model_sha256": "192c7e6acc3f52aac147a2498f77dca8609df526e4202343e5a10d1ce6691463",
+      "status": "failed",
+      "success": false,
+      "failure": "tool_retraction_timeout",
+      "failure_detail": null,
+      "phase": "park_right",
+      "steps_completed": 17529,
+      "simulator_time_s": 35.05799999999688,
+      "wall_s": 176.08674020000035,
+      "door_angle_rad": 0.3076987062673479,
+      "grip_forces_n": {
+        "l": {
+          "positive": 41.17812800678179,
+          "negative": 26.212865323319303
+        },
+        "r": {
+          "positive": 0.0,
+          "negative": 0.0
+        }
+      },
+      "phase_transitions": [
+        {
+          "to": "approach",
+          "time_s": 1.1500000000000008
+        },
+        {
+          "to": "insert",
+          "time_s": 12.964000000000999
+        },
+        {
+          "to": "grasp",
+          "time_s": 16.114000000001948
+        },
+        {
+          "to": "latch",
+          "time_s": 17.26600000000131
+        },
+        {
+          "to": "open",
+          "time_s": 19.01400000000034
+        },
+        {
+          "to": "release_right",
+          "time_s": 22.165999999998593
+        },
+        {
+          "to": "withdraw_right",
+          "time_s": 23.067999999998094
+        },
+        {
+          "to": "park_right",
+          "time_s": 25.459999999996768
+        }
+      ],
+      "equality_constraints": 0,
+      "mocap_bodies": 0
+    },
+    {
+      "name": "settled-parking",
+      "report_file": "settled-parking.json.gz",
+      "report_sha256": "a1755941504ee2ab2d9d2b2fdb7c0d76658b9d7b9d0997cb7f1ae6092dd2b8b8",
+      "compressed_sha256": "3278594bf8ee19a6b3e71f25af7cd655e87032f1275af41d5f16b16573c3b14d",
+      "sources_file": "settled-parking-sources.json.gz",
+      "model_sha256": "192c7e6acc3f52aac147a2498f77dca8609df526e4202343e5a10d1ce6691463",
+      "status": "failed",
+      "success": false,
+      "failure": "lost_door_grip",
+      "failure_detail": {
+        "door_angle_rad": 0.5065440912602418,
+        "holding_hand": "l",
+        "grip_forces_n": {
+          "l": {
+            "positive": 0.0,
+            "negative": 36.09005385215598
+          },
+          "r": {
+            "positive": 0.0,
+            "negative": 0.0
+          }
+        }
+      },
+      "phase": "open_wide",
+      "steps_completed": 18709,
+      "simulator_time_s": 37.417999999999765,
+      "wall_s": 184.32118040003115,
+      "door_angle_rad": 0.5065440912602418,
+      "grip_forces_n": {
+        "l": {
+          "positive": 0.0,
+          "negative": 36.09005385215598
+        },
+        "r": {
+          "positive": 0.0,
+          "negative": 0.0
+        }
+      },
+      "phase_transitions": [
+        {
+          "to": "approach",
+          "time_s": 1.1500000000000008
+        },
+        {
+          "to": "insert",
+          "time_s": 12.964000000000999
+        },
+        {
+          "to": "grasp",
+          "time_s": 16.114000000001948
+        },
+        {
+          "to": "latch",
+          "time_s": 17.26600000000131
+        },
+        {
+          "to": "open",
+          "time_s": 19.01400000000034
+        },
+        {
+          "to": "release_right",
+          "time_s": 22.165999999998593
+        },
+        {
+          "to": "withdraw_right",
+          "time_s": 23.067999999998094
+        },
+        {
+          "to": "park_right",
+          "time_s": 25.459999999996768
+        },
+        {
+          "to": "open_wide",
+          "time_s": 35.52599999999745
+        }
+      ],
+      "equality_constraints": 0,
+      "mocap_bodies": 0
+    },
+    {
+      "name": "measured-grasp",
+      "report_file": "measured-grasp.json.gz",
+      "report_sha256": "86cb64cc20d0345448e0cc50e0b01bbee2273e82f66c4a69e5b5472104ee05d2",
+      "compressed_sha256": "776b03a8662c25c1a3ac891d0ede1833e7c35069bb3292bf086a571fe483d26f",
+      "sources_file": "measured-grasp-sources.json.gz",
+      "model_sha256": "192c7e6acc3f52aac147a2498f77dca8609df526e4202343e5a10d1ce6691463",
+      "status": "failed",
+      "success": false,
+      "failure": "lost_door_grip",
+      "failure_detail": {
+        "door_angle_rad": 0.5603052798422768,
+        "holding_hand": "l",
+        "grip_forces_n": {
+          "l": {
+            "positive": 31.198714475327503,
+            "negative": 0.0
+          },
+          "r": {
+            "positive": 0.0,
+            "negative": 0.0
+          }
+        }
+      },
+      "phase": "open_wide",
+      "steps_completed": 19068,
+      "simulator_time_s": 38.13600000000064,
+      "wall_s": 335.49582840001676,
+      "door_angle_rad": 0.5603052798422768,
+      "grip_forces_n": {
+        "l": {
+          "positive": 31.198714475327503,
+          "negative": 0.0
+        },
+        "r": {
+          "positive": 0.0,
+          "negative": 0.0
+        }
+      },
+      "phase_transitions": [
+        {
+          "to": "approach",
+          "time_s": 1.1500000000000008
+        },
+        {
+          "to": "insert",
+          "time_s": 12.964000000000999
+        },
+        {
+          "to": "grasp",
+          "time_s": 16.114000000001948
+        },
+        {
+          "to": "latch",
+          "time_s": 17.26600000000131
+        },
+        {
+          "to": "open",
+          "time_s": 19.01400000000034
+        },
+        {
+          "to": "release_right",
+          "time_s": 22.165999999998593
+        },
+        {
+          "to": "withdraw_right",
+          "time_s": 23.067999999998094
+        },
+        {
+          "to": "park_right",
+          "time_s": 25.459999999996768
+        },
+        {
+          "to": "open_wide",
+          "time_s": 35.52599999999745
+        }
+      ],
+      "equality_constraints": 0,
+      "mocap_bodies": 0
+    }
+  ],
+  "research_overrides": [
+    {
+      "name": "centered-wide",
+      "report_sha256": "f3f0e6e2548e65d3b77c0dbf3c2a105db527ec34dd30480d9f2eaee5916a93a7",
+      "source_sha256": "24e5852f8de58c0e36710ab910efb1b7093a2d5fab63d647c7ab5086dd7e0c78",
+      "source_file": "centered-wide-source.py",
+      "settings": {
+        "centering": true,
+        "rate": null,
+        "label": "centered-wide"
+      },
+      "status": "failed",
+      "failure": "lost_door_grip",
+      "door_angle_rad": 0.6314786843253107,
+      "grip_forces_n": {
+        "l": {
+          "positive": 32.06308695539803,
+          "negative": 0.0
+        },
+        "r": {
+          "positive": 0.0,
+          "negative": 0.0
+        }
+      },
+      "acceptance_for_application_controller": false
+    },
+    {
+      "name": "centered-slow-wide",
+      "report_sha256": "ea0a1686a1a27988474222be633279b5f76503ce63f26a069513976bcaa0b59f",
+      "source_sha256": "24e5852f8de58c0e36710ab910efb1b7093a2d5fab63d647c7ab5086dd7e0c78",
+      "source_file": "centered-slow-wide-source.py",
+      "settings": {
+        "centering": true,
+        "rate": 0.08,
+        "label": "centered-slow-wide"
+      },
+      "status": "failed",
+      "failure": "door_opening_timeout",
+      "door_angle_rad": 0.5153018470195824,
+      "grip_forces_n": {
+        "l": {
+          "positive": 33.06758391562572,
+          "negative": 31.976200591871503
+        },
+        "r": {
+          "positive": 0.0,
+          "negative": 0.0
+        }
+      },
+      "acceptance_for_application_controller": false
+    },
+    {
+      "name": "centered-lookahead-wide",
+      "report_sha256": "e2b454c7ff1ba62621c249fd1aaecb5e765e0df891d27b35f972751aba51515d",
+      "source_sha256": "1056b79710f7bca726f176d2b11a2b76c3d127978dbfb7488e5e628ddd83d1ce",
+      "source_file": "centered-lookahead-wide-source.py",
+      "settings": {
+        "centering": true,
+        "rate": 0.08,
+        "lookahead": 0.12,
+        "label": "centered-lookahead-wide"
+      },
+      "status": "failed",
+      "failure": "lost_door_grip",
+      "door_angle_rad": 0.68944004060429,
+      "grip_forces_n": {
+        "l": {
+          "positive": 0.0,
+          "negative": 18.564345074261972
+        },
+        "r": {
+          "positive": 0.0,
+          "negative": 0.0
+        }
+      },
+      "acceptance_for_application_controller": false
+    }
+  ]
+}

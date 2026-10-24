@@ -1,0 +1,90 @@
+{
+  "schema_version": "vivacity.apollo-checkpoint-replay/1",
+  "checkpoint_sha256": "122ab66be3af8ec339709abc81c122ba56691e13f96aeadce2ec34b780caab1c",
+  "reference_report_sha256": "86cb64cc20d0345448e0cc50e0b01bbee2273e82f66c4a69e5b5472104ee05d2",
+  "model_sha256": "192c7e6acc3f52aac147a2498f77dca8609df526e4202343e5a10d1ce6691463",
+  "controller": "vivacity.apollo-cartesian-contact/7-experimental",
+  "source_sha256": {
+    "apollo_door.py": "070d08a0407db2fb3bc1c7865aed1cb1b8b284841ae7c2578a3d8e4b2c548732",
+    "cabinet_mechanism.py": "207af8c0f82c482637c271ef8c5d7ee0b22c91e983196fc15995f1abff87eee5",
+    "humanoid_embodiments.py": "040b2ffc6fab94407b62156da78f608c116b7b6b132d97db9eb11fdd40c8e89c",
+    "simulated_tooling.py": "09f32c7a4f873524406f6e1e8c9cb70b5541259d25e418eda9aac369ef0fe400",
+    "humanoid_ik.py": "d7dcf4852b6ec52df3afe15f41ca106c8301f6e2ae6e08d94ea7a9cb6f0bc958",
+    "stance_control.py": "6ab43644a32eb42cf8f399f625e47755956112cd29b3c25705e4b4b71ef32427",
+    "wrench_dynamics.py": "355ccbd60092d6658a4a7664f9694eb2acb7b5819e60d113e75400842f88cd80",
+    "cabinet_tooling.py": "78add1ac4baac962cd03946e25bee6bad222107720179202ebbcd27c4d22ea7d",
+    "cabinet_route.py": "bb25ef19e044148b952471676feeb29417b47efb5d92f14f3c645d4ebd13d203",
+    "pickup_planning.py": "4ebc2a64f5835fce98f394f988c7ce14456da0d9695877874df065ddd747644f"
+  },
+  "initial_steps": 12730,
+  "executed_steps": 6338,
+  "reproduced": true,
+  "checks": {
+    "qpos": true,
+    "qvel": true,
+    "ctrl": true,
+    "time_s": true,
+    "outcome": true
+  },
+  "status": "failed",
+  "task_success": false,
+  "failure": "lost_door_grip",
+  "measurements": {
+    "time_s": 38.13600000000064,
+    "door_angle_rad": 0.5603052798422768,
+    "door_angular_velocity_rad_s": 0.48178988653605415,
+    "latch_retraction_m": -0.00040909984392256996,
+    "retention_retraction_m": 0.0021582,
+    "old_cartridge_position_m": [
+      0.8500009892310146,
+      5.717359880654667e-12,
+      1.049997728847986
+    ],
+    "replacement_position_m": [
+      0.43000000000000005,
+      -0.45,
+      1.0499956279909974
+    ],
+    "old_tray_error_m": 0.6155492108313058,
+    "replacement_seating_error_m": 0.6155485358760221,
+    "replacement_orientation_error_rad": 0.0,
+    "contact_normal_forces_n": {
+      "service_replacement_shell|service_replacement_tray": 3.433499999630669,
+      "l_service_positive_pad|service_latch_button": 31.198714475327503,
+      "service_door_panel|service_left": 3.197012284120316,
+      "service_old_shell|service_shelf": 1.9691396276771354,
+      "service_old_shell|service_shelf_front_left": 0.7321801862285783,
+      "service_old_shell|service_shelf_front_right": 0.7321801860165567
+    },
+    "mechanism_ready": false,
+    "root_tilt_rad": 0.007875427098988507,
+    "root_speed_m_s": 0.002403229692621438,
+    "grip_forces_n": {
+      "l": {
+        "positive": 31.198714475327503,
+        "negative": 0.0
+      },
+      "r": {
+        "positive": 0.0,
+        "negative": 0.0
+      }
+    },
+    "pose_errors": {
+      "r": {
+        "position_m": 0.0006215939567586575,
+        "angle_rad": 0.050269487748575835
+      },
+      "l": {
+        "position_m": 0.08976577610351195,
+        "angle_rad": 0.09462528477757946
+      }
+    },
+    "tool_swivel": {
+      "angle_rad": -1.6223353619671816,
+      "speed_rad_s": 0.14473703431785562,
+      "actuator_torque_nm": 0.2525119920767054
+    },
+    "grasp_surface_clearance_m": {}
+  },
+  "elapsed_wall_s": 71.04829160001827
+}

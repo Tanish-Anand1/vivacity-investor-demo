@@ -38,18 +38,67 @@ checks. Hardware execution is outside the completion claim.
 | Whole-body stabilization and constraints | Wrench kernel v4 includes contact unloading. Complete G1, Apollo and H1 each pass 20/20 nominal, 100/100 held-out and deliberate instability in the bounded six-second stationary probe at cedf837. General reach, collision audit and mobility remain open | Bounded stance verified; broader gate partial |
 | Contact-only manipulation and G1 bilateral load sharing | Native-servo baseline and corrected wrench controllers v3/v4 each pass 20/20 nominal and 100/100 held-out stationary trials with zero equality constraints. V4 source hashes match the current implementation; locomotion is not covered | Partial |
 | G1/Apollo/H1 model-matched mobility, turns, terrain, carry | H1 short walk only; complete embodiments need training | Open |
-| Apollo cabinet, latch, old/replacement cartridge cycle | Passive fixture and force-limited tooling pass component tests. A development controller physically retracts the latch and opens the door about 0.26 rad, but a right-pad/crossbar collision stops the wide trial before cartridge service | Partial |
+| Apollo cabinet, latch, old/replacement cartridge cycle | At a14c619, native release, withdrawal and right-arm parking pass in one development trial. The wide swing loses left-pad grip at 0.560305 rad against a 1.1 rad target. Cartridge exchange, retention and closure are still not implemented as a complete task | Partial |
 | Shared-world SORT through DISPATCH | Sorting ledger only | Open |
 | Independent H1 running at 2 m/s | No validated running controller | Open |
 | RGB-D pose estimation without privileged controller inputs | Separate image/depth estimator passes five rendered-image tests; not driving robot control or validated over the complete envelope | Partial |
 | Hardware-transfer manifests, calibration and watchdog procedure | Offline G1 manifest, 382 simulated sensor samples, calibration procedure and fail-closed dry-run watchdog implemented; no transport or hardware validation | Partial |
 | Transactional recovery, owner-scoped fork/compare/export | New opt-in contact API passes real HTTP pause/fork/compare/replay/export; abrupt process-exit recovery tested on real small MuJoCo dynamics | Partial |
 | Browser journeys, three engines, all failure states | Actual WebGL2/live/pause/fork/compare/replay/export, network interruption, cancellation and final-state reload passed in Chromium, Firefox and WebKit at `3750125`. The WebKit select contrast correction also passed fresh tests and actual mobile screenshot inspection. Full warehouse journey remains open | Partial |
-| Paid persistence, backups/restore, full-world capacity | SQLite-consistent backup/restore passes concurrent-WAL tests; paid hosting and complete-world capacity remain open | Partial |
+| Durable hosting, backups/restore, full-world capacity | SQLite-consistent backup/restore passes concurrent-WAL tests. No qualifying no-cost host, complete-world capacity result or production restart proof | Partial |
 | Production deployment and 24-hour soak | Not started for this release | Open |
 | Break the Frame cinematic release | Deliberately deferred until physics release passes | Deferred |
 
 ## Active slice
+
+### Apollo withdrawal and measured grasp — 2026-10-25
+
+The current native controller source is `a14c619` (task version 8, Cartesian
+controller version 7). Its preceding `3fd1ae7` added seeded joint-space parking,
+native swept-clearance checks and explicit release/withdrawal candidates. Both
+preserve unplanned joint coordinates in planning scratch data. Execution goes
+through bounded actuators, independent of the planner's collision prediction.
+The controller clears stale released-hand integrals and holds the loaded hand
+at its measured equilibrium during parking. The wider swing now starts at the
+actual spring-returned latch/button and tool pose instead of the old 50 mm
+latch-pull reference. A native regression checks the formerly discontinuous
+target and verifies that planning leaves the active qpos unchanged.
+
+The latest full trial passes the intermediate handoff phases but **fails**
+`lost_door_grip` at 0.560305 rad against the requested 1.1 rad. It completed
+19,068 native steps / 38.136 simulated seconds. The loaded-hand pads measured
+31.199 N and 0 N; root tilt was 0.007875 rad. A further three explicit research
+overrides tested jaw centering and bounded angle feedback: two lost grip and
+one timed out at 0.515302 rad despite retaining both pad loads. These are failed
+independent continuations, not accepted application controllers or cabinet
+service. No failure predicate was relaxed to make the result pass.
+
+The local records retain all six full development trials, three research
+continuations, exact source archives, ordered measured frames, the last two
+trials' full integration/controller checkpoints and the native failed-state
+render. See `artifacts/physical-truth-runtime/apollo-withdrawal-20261025/`.
+Compiled models are retained locally and identified by SHA-256; the 257 MB
+binary is not committed. Fresh execution regenerates it. MJB compatibility
+and bitwise replay require the matching native runtime and model hash.
+
+The checkpoint replay from step 12,730 executes 6,338 further steps and exactly
+reproduces qpos, qvel, controls, time and terminal failure. The verifier returns
+separate `reproduced` and `task_success` flags. It checks model, controller
+version and source provenance before running, and never upgrades incompatible
+checkpoints. Command examples and per-trial data are in the evidence README.
+
+Current code verification (overlapping suites must not be summed):
+
+- [Linux deployment image, a14c619](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40127257731): **524 passed, 3 skipped, zero failures/errors**, across 172, 159 and 196-test shards. Separate 512 MB probes passed 4 general/factory and 1 humanoid check. These exercise existing tasks, not the unimplemented full warehouse.
+- [Apollo components, a14c619](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40127257656): **55/55 passed**, 232.506 s. This includes the preserved partial-door nominal and negative tests, new withdrawal planning and measured-grasp regression.
+- [Contact integration and browsers, a14c619](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40127257696): **98/98 native checks passed**, 216.819 s; Chromium, Firefox and WebKit jobs passed.
+- [ARM64 deployment-image preflight, a14c619](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40127257772): passed. Architecture compatibility is not hosting provisioning, durability, full-world capacity or a 24-hour soak.
+- Local `tests/test_tool_withdrawal.py tests/test_cabinet_route.py tests/test_joint_reserve_ik.py`: **21/21 passed in 2.16 s**. The measured-grasp regression passed separately under host memory pressure.
+
+Read-only production checks returned HTTP 200 for `https://demo.tryvivacity.com/`
+and `status: ok` from `https://isabella-labs-runtime.onrender.com/health` after
+an earlier request timed out at 25 s. No deployment or production state
+mutation was performed. All full-release gates remain as shown above.
 
 Verified Linux baselines (their source hashes remain part of every report):
 
@@ -101,8 +150,18 @@ GPU training and paid persistent hosting require a concrete instance quote and
 spending ceiling approved before purchase. No paid resource has been provisioned
 for this release. Training dependencies must remain outside the runtime image.
 
-The latest user constraint is **zero spend** (2026-10-24). There is no funded GPU
-or budget to activate the prior Runpod proposal. The free Colab compatibility
+The latest authorization allows approximately **$20 of existing Fireworks AI
+credits**, with **zero new spending** (2026-10-25). No credits were consumed or
+paid resources activated. No Fireworks credential was configured in the
+inspected environment, and its documented inference/model-training services
+have not been shown to execute our arbitrary native MuJoCo/MJX locomotion
+training workload. Existing credit is therefore not evidence of available
+robotics GPU compute or persistent production hosting. References:
+[Fireworks documentation](https://docs.fireworks.ai/) and
+[training product](https://fireworks.ai/product/training).
+
+There is no confirmed funded GPU or budget to activate the prior Runpod
+proposal. The free Colab compatibility
 notebook has now executed on a T4. Three-step numerical comparisons passed
 for H1/G1 with MJX-Warp and Apollo with MJX-JAX. Apollo's unchanged margin is
 unsupported by Warp; that failed attempt remains in the evidence. H1 has a
