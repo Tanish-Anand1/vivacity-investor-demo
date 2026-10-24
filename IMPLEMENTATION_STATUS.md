@@ -11,6 +11,31 @@ capacity test**. Chromium, Firefox and WebKit passed the contact-lab journey at
 this revision, with 18 checks per journey and an inspected mobile screenshot.
 These results are linked in `docs/PHYSICAL_TRUTH_EXECUTION.md`.
 
+Newer deployment-image verification at `9591541` passed **502 tests, 3 skips,
+zero failures or errors**. Separate constrained-host checks passed 4 + 1 tests.
+The cabinet component suite passed **33/33**; contact runtime checks passed
+**97/97**, and each of Chromium, Firefox and WebKit completed the 18-check real
+contact journey. The latest WebKit mobile screenshot was inspected. These
+checks protect the existing contact and partial-door behavior; they do not
+establish a complete cabinet service or warehouse workflow.
+
+The complete-embodiment native locomotion reference at `a31613c` passed
+**23/23 Linux tests** (16.402 s). It provides model-bound actor/action contracts,
+native stepping, measured rewards/failures and independent full checkpoints.
+It contains **no trained policy** and never treats a reward or timeout as task
+success. G1/Apollo/H1 walking, carrying and running remain unvalidated.
+
+Apollo research now includes a visible 3 Nm swivel, collision-aware approach,
+preserved finger preload between phases, angular-integral checkpoints, actual
+swivel measurements and heading-independent tilt. A new regression prevents
+the planner from changing unplanned coordinates. Wide-door trials still have
+measured retention/control failures. Full trial frames, compiled models and
+matching source archives are retained in the local development evidence tree;
+these are failed experiments, not release acceptance. See the current ledger.
+The final local cabinet regression run passed **35/35 tests in 193.91 s**,
+including the preserved partial-door nominal and deliberate failure fixtures.
+Evidence: `artifacts/physical-truth-runtime/apollo-final-regression-tests.xml`.
+
 Each complete G1, Apollo and H1 embodiment passed **20/20 nominal and 100/100
 held-out stationary stabilization trials** at `cedf837`, plus its deliberate instability
 fixture. This is six seconds of standing, a small shoulder movement, a bounded

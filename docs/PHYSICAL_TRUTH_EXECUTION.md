@@ -36,6 +36,11 @@ checks. Hardware execution is outside the completion claim.
 
 Verified Linux baselines (their source hashes remain part of every report):
 
+- [Deployment image, 9591541](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40102744073): **502 passed, 3 skipped, zero failures/errors**; separate 512 MB host checks 4 + 1 passed. Reports: `artifacts/physical-truth-runtime/backend-9591541/`.
+- [Apollo components, 9591541](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40102744097): **33 passed**, zero skips/failures, 77.732 s. Includes native partial-door success and negative fixtures, swivel torque/overload, collision routing, IK and checkpoint independence. This is not wide-service acceptance. Report: `artifacts/physical-truth-runtime/apollo-9591541/`.
+- [Contact integration, 9591541](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40102744206): **97 native checks passed** in 161.907 s; Chromium, Firefox and WebKit each passed the 18-check actual browser journey. The three runs each executed 9,510 steps and measured 5.882 mm placement error. The mobile WebKit screenshot was inspected. Reports: `artifacts/physical-truth-runtime/contact-9591541/`.
+- [Native locomotion contract, a31613c](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40102370744): **23 passed**, zero skips/failures, 16.402 s. New complete-embodiment mappings, sensor-only actor inputs, bounded native actions, measured failure/reward and checkpoint continuation. No trained policy or mobility acceptance. Report: `artifacts/physical-truth-runtime/native-contract-a31613c/`.
+
 - [Latest deployment-image suite, 1eedec9](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40095423157): **495 passed, 3 skipped, zero failures**; separate capacity tests 4 + 1 passed. The three skips concern frontend visual asset files excluded from the backend image. Reports: `artifacts/physical-truth-runtime/backend-1eedec9/`.
 
 - [Deployment-image suite, cedf837](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40088346632): **485 passed, 3 skipped, zero failures**; separate capacity probes 4 + 1 passed. JUnit reports are in `artifacts/physical-truth-runtime/backend-cedf837/`.
@@ -179,6 +184,29 @@ including the nominal partial door, weak-tool instability, stiff-latch rejection
 checkpoint independence and the no-substitution check for wide requests.
 JUnit: `artifacts/physical-truth-runtime/apollo-0b8f00d/apollo-components.xml`.
 The wide-service acceptance remains open.
+
+### Later cabinet research record
+
+Native attempts R38--R53 are retained as 16 differing development experiments,
+not a statistical acceptance cohort. None completed the requested wide opening.
+R53 used the 0.65 m fixture, 2,400 N/m finger servos capped at 40 N, a 300 N/m
+latch and a 1.1 rad requested opening. It executed 12,581 native steps in
+102.130 seconds of local compute, then failed from latch resistance/retention
+at 25.162 seconds of simulation. Measured latch retraction was 24.568 mm,
+door angle 0.004643 rad and root tilt 0.034798 rad. Neither cartridge moved to
+its service destination. There were zero equality constraints or mocap bodies.
+
+The trace and source snapshot are retained in
+`artifacts/physical-truth-runtime/apollo-development-review/`; the larger native
+model is retained in the local development evidence directory. The review JSON
+records per-attempt parameters, actual outcomes, source hashes and report hashes.
+Missing older source archives are marked null rather than asserted verified.
+Right-hand preload persists in R53, but left-hand retention still fails. This
+blocks wide-door acceptance, cartridge-service composition and deployment.
+The final local cabinet/mechanism/tooling/IK/routing/checkpoint regression run
+passed **35 tests in 193.91 s**, with no failures or skips. This includes the
+preserved partial-door nominal and negative cases. Its JUnit report is
+`artifacts/physical-truth-runtime/apollo-final-regression-tests.xml`.
 
 ## Subsequent integration findings
 

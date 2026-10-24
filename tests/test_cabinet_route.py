@@ -41,3 +41,17 @@ def test_collision_at_goal_returns_honest_failure_without_waypoints():
     result=route_approach(model,data.qpos,np.zeros(2),['x','y'],np.random.default_rng(7),iterations=500)
     assert not result['feasible'] and not result['waypoints']
     np.testing.assert_array_equal(data.qpos,[-.2,0.])
+
+
+def test_route_never_changes_unplanned_coordinates_to_unchecked_goal_values():
+    model,data=scene()
+    # A one-axis route below the obstacle is valid; the unplanned y goal would
+    # drive through it. It must stay at the actual initial y throughout.
+    data.qpos[:]=[-.2,-.3]
+    route=route_approach(model,data.qpos,np.array([.2,0.]),['x'],np.random.default_rng(7))
+    assert route['feasible']
+    commands=stage_commands(route,np.linspace(0,1,40))
+    np.testing.assert_array_equal(np.asarray(route['waypoints'])[:,1],
+        np.full(len(route['waypoints']),-.3))
+    np.testing.assert_allclose(commands[:,1],np.full(40,-.3),rtol=0.,atol=1e-15)
+    assert commands[-1,0]==.2

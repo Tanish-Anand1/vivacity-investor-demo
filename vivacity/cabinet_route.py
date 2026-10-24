@@ -121,7 +121,9 @@ def route_approach(model,initial_qpos,goal_qpos,joint_names,rng,*,iterations=150
         route=_connect_route(start,goal,model.jnt_range[joints],valid,rng,iterations)
     waypoints=[]
     for point in route or ():
-        full=np.asarray(goal_qpos).copy()
+        # Only the selected joints were collision checked. Preserve every
+        # other coordinate, including passive fixtures and floating roots.
+        full=np.asarray(initial_qpos).copy()
         full[qadr]=point
         waypoints.append(full.tolist())
     return {'waypoints':waypoints,'collision_checks':checks,

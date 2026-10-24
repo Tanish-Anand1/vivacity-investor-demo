@@ -33,6 +33,7 @@ TOOL_ROTATIONS = {
 }
 GRASP_SURFACES = {'l':{'service_latch_button','service_latch_crossbar_link_0.4'},
     'r':{'service_door_handle','service_handle_mount_-0.045','service_handle_mount_0.045'}}
+LATCH_TCP_STANDOFF_M = .02
 SOURCE_HASHES = {name:hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
                 for name in ('apollo_door.py','cabinet_mechanism.py','humanoid_embodiments.py',
                              'simulated_tooling.py','humanoid_ik.py','stance_control.py','wrench_dynamics.py',
@@ -40,12 +41,13 @@ SOURCE_HASHES = {name:hashlib.sha256(Path(__file__).with_name(name).read_bytes()
 
 
 class ApolloToolController:
-    version = 'vivacity.apollo-cartesian-contact/4-experimental'
+    version = 'vivacity.apollo-cartesian-contact/5-experimental'
 
     def __init__(self, model):
         self.stance = StanceController(model, 'apollo')
         self.wide_tooling = mj.mj_name2id(model,mj.mjtObj.mjOBJ_JOINT,SWIVEL_JOINT)>=0
         self.integrals = {side:np.zeros(3) for side in ('l','r')}
+        self.rotation_integrals = {side:np.zeros(3) for side in ('l','r')}
         self.dt = float(model.opt.timestep)
 
     def compute(self, data, reference, goals=None, released_hands=()):
@@ -58,12 +60,22 @@ class ApolloToolController:
             self.integrals[side] = np.clip(self.integrals[side]+self.dt*.8*error, -.06, .06)
             poses[name] = {**goal,'position':np.asarray(goal['position'])+self.integrals[side],
                 'weight':10000.}
+            if self.wide_tooling:
+                angular=Rotation.from_matrix(np.asarray(goal['rotation']) @
+                    data.site(name).xmat.reshape(3,3).T).as_rotvec()
+                correction=self.rotation_integrals[side]+self.dt*.2*angular
+                self.rotation_integrals[side]=correction*min(1.,.15/max(np.linalg.norm(correction),1e-12))
+                poses[name]['rotation']=Rotation.from_rotvec(self.rotation_integrals[side]).as_matrix() @ goal['rotation']
         released_geoms = [self.stance.model.geom(f'{side}_service_{finger}_pad').id
             for side in released_hands for finger in ('positive','negative')]
-        return self.stance.compute(data,reference,site_targets=poses,released_geoms=released_geoms)
+        joint_targets = ({SWIVEL_JOINT:float(reference[
+            self.stance.model.joint(SWIVEL_JOINT).qposadr[0]])} if self.wide_tooling else None)
+        return self.stance.compute(data,reference,site_targets=poses,released_geoms=released_geoms,
+            joint_targets=joint_targets)
 
     def snapshot(self):
         return {'version':self.version, 'stance':self.stance.snapshot(),
+                'rotation_integrals':{name:value.tolist() for name,value in self.rotation_integrals.items()},
                 'integrals':{name:value.tolist() for name,value in self.integrals.items()}}
 
     def restore(self, state):
@@ -77,11 +89,18 @@ class ApolloToolController:
             integrals[side] = value.copy()
         stance = StanceController(self.stance.model, 'apollo')
         stance.restore(state['stance'])
+        angular_integrals={}
+        for side in ('l','r'):
+            value=np.asarray(state['rotation_integrals'][side],dtype=float)
+            if value.shape!=(3,) or not np.isfinite(value).all() or np.linalg.norm(value)>.15000001:
+                raise ValueError('invalid angular integral checkpoint')
+            angular_integrals[side]=value.copy()
         self.integrals, self.stance = integrals, stance
+        self.rotation_integrals=angular_integrals
 
 
 class CabinetDoorPrimitive:
-    version = 'vivacity.apollo-door-primitive/3-experimental'
+    version = 'vivacity.apollo-door-primitive/4-experimental'
 
     def __init__(self, config=None, tooling=None, seed=7, opening_angle_rad=.25):
         if not np.isfinite(opening_angle_rad) or not .25 <= opening_angle_rad <= 1.2:
@@ -91,11 +110,6 @@ class CabinetDoorPrimitive:
         def scene(root):
             if opening_angle_rad > .25:
                 append_latch_swivel(root)
-                # Surround the handle's ends with a horizontal pinch. The old
-                # vertical pinch had only 14 mm of finger deflection and lost
-                # its measured retention while the other hand released.
-                root.find(".//body[@name='r_service_tool']").set(
-                    'quat','.7071067811865476 0 0 .7071067811865476')
             append_cabinet(root,self.config)
             if opening_angle_rad == .25:
                 # The historical fixture has a shorter exposed latch button.
@@ -107,7 +121,7 @@ class CabinetDoorPrimitive:
                 link.set('size','.017 .010 .010')
         self.model,self.data,self.manifest = compile_embodiment('apollo',self.tooling,append_scene=scene)
         if opening_angle_rad > .25:
-            self.manifest['identity'] = 'vivacity.apollo-cabinet-swivel-tool/2-experimental'
+            self.manifest['identity'] = 'vivacity.apollo-cabinet-swivel-tool/3-experimental'
             self.manifest['cabinet_tooling'] = swivel_manifest(self.model)
         self.manifest['cabinet_fixture_profile'] = (
             'wide-opening-development' if opening_angle_rad>.25 else 'historical-partial-door')
@@ -121,6 +135,7 @@ class CabinetDoorPrimitive:
             task_version=self.version,source_hashes=SOURCE_HASHES.copy(),
             success=False,cabinet_service_complete=False,failure=None,
             phase_events=[],planning_events=[],stable_samples=0,peak_tilt_rad=0.,peak_contact_force_n=0.,peak_gripper_actuator_force_n=0.,
+            peak_swivel_torque_nm=0.,
             phase_start_qpos=self.data.qpos.tolist(),reference=self.model.key_qpos[0].tolist(),
             goals={},start_goals={},grip_forces={},model_manifest=self.manifest)
 
@@ -128,9 +143,7 @@ class CabinetDoorPrimitive:
         # A vertical pinch lets the latch button yaw between the pads while the
         # door swings. Horizontal pinch would demand an unreachable wrist yaw.
         # Native friction/contact still decides whether this grasp is retained.
-        if side=='r' and self.state['opening_angle_rad']>.25:
-            return TOOL_ROTATIONS['l']
-        return TOOL_ROTATIONS['r'] if side=='l' and vertical else TOOL_ROTATIONS[side]
+        return TOOL_ROTATIONS['r'] if side=='l' and (vertical or self.controller.wide_tooling) else TOOL_ROTATIONS[side]
 
     def _plan(self, phase):
         x,y = self.config.front_x_m,self.config.center_y_m
@@ -140,13 +153,11 @@ class CabinetDoorPrimitive:
                      for side,offset,z in (('r',-.11,1.1),('l',.145,1.165))}
             if self.state['opening_angle_rad']>.25:
                 goals['l']['position'][0] = x-.21
-                goals['r']['position'][1] = y-.18
-                goals['r']['position'][2] = 1.16
         elif phase == 'insert':
             for side,goal in goals.items():
                 # The button protrudes from its crossbar. Grasp its exposed
                 # front section without driving the fingertips into the bar.
-                offset = (.135 if side=='l' else .10) if self.state['opening_angle_rad']>.25 else (
+                offset = (.085+LATCH_TCP_STANDOFF_M if side=='l' else .10) if self.state['opening_angle_rad']>.25 else (
                     .095 if side=='l' else .08)
                 goal['position'][0] = x-offset
                 if side=='r' and self.controller.wide_tooling:
@@ -168,15 +179,13 @@ class CabinetDoorPrimitive:
             angle = self.state['opening_angle_rad'] if phase=='open_wide' else .25
             rotation = Rotation.from_rotvec([0.,0.,-angle]).as_matrix()
             for side,relative in (('r',[-.10,-.39,0.]),('l',[-.135,-.085,.065])):
-                if side=='r' and self.state['opening_angle_rad']>.25:
-                    relative=[-.10,-.46,0.]
                 if phase=='open_wide' and side=='r':
                     continue
                 # The right pads grasp the horizontal top/bottom faces; their
                 # vertical closing axis can stay fixed as the handle yaws.
                 # Retention is still decided from actual contact, not a weld.
                 wrist_angle = min(angle, .5)
-                orientation = self._tool_rotation(side,phase=='open_wide') if side=='r' or phase=='open_wide' else (
+                orientation = self._tool_rotation(side,phase=='open_wide') if side=='r' or phase=='open_wide' or self.controller.wide_tooling else (
                     Rotation.from_rotvec([0.,0.,-wrist_angle]).as_matrix() @ TOOL_ROTATIONS[side])
                 position = hinge+rotation @ relative
                 if side=='l':
@@ -184,7 +193,7 @@ class CabinetDoorPrimitive:
                     # along its own approach axis. Rotating this offset with the
                     # door while the wrist yaw is bounded loses the grasp.
                     button = hinge+rotation @ np.array([-.085,-.085,.065])
-                    position = button+orientation @ np.array([0.,0.,.05])
+                    position = button+orientation @ np.array([0.,0.,LATCH_TCP_STANDOFF_M])
                 goals[side] = {'position':position.tolist(),
                                'rotation':orientation.tolist()}
             if phase=='open' and self.state['opening_angle_rad']==.25:
@@ -209,8 +218,7 @@ class CabinetDoorPrimitive:
         planning_state = self.data.qpos.copy()
         for side,goal in goals.items():
             joints = [side+'_'+part for part in ARM_PARTS]
-            if side=='l' and self.controller.wide_tooling and phase in (
-                    'rotate_left','insert_left','grasp_left','release_right','withdraw_right','park_right','open_wide'):
+            if side=='l' and self.controller.wide_tooling:
                 joints.append(SWIVEL_JOINT)
             for margin in ((.08,.04,.01) if self.controller.wide_tooling else (None,)):
                 plan = site_pose(self.model,planning_state,side+'_service_tcp',
@@ -229,21 +237,27 @@ class CabinetDoorPrimitive:
             for name in joints:
                 address = self.model.joint(name).qposadr[0]
                 reference[address] = plan.qpos[address]
-                start_reference[address] = self.data.qpos[address]
+                start_reference[address] = (self.state['reference'][address]
+                    if self.controller.wide_tooling else self.data.qpos[address])
             for finger in ('positive','negative'):
                 address = self.model.joint(f'{side}_service_{finger}_slide').qposadr[0]
-                start_reference[address] = self.data.qpos[address]
+                # A loaded finger's measured position differs from its servo
+                # target. Starting the next phase at the measured compression
+                # would remove its preload and let a frictional grasp slip.
+                # Preserve the commanded reference across wide-task phases;
+                # opening still ramps through the native force-limited drive.
+                start_reference[address] = (self.state['reference'][address]
+                    if self.controller.wide_tooling else self.data.qpos[address])
                 closing = phase in ('grasp','latch','open') or (
                     side=='l' and phase in ('grasp_left','release_right','withdraw_right','park_right','open_wide')) or (
                     side=='r' and phase in ('release_left','withdraw_left','rotate_left','insert_left','grasp_left'))
                 opening = .03 if side=='r' and phase in ('release_right','withdraw_right','park_right','open_wide') else .035
-                if side=='r' and self.controller.wide_tooling:
-                    opening=.075
                 reference[address] = 0. if closing else opening
         previous = self.state['phase']
         route=None
         if phase=='approach' and self.controller.wide_tooling:
             route_joints=[side+'_'+part for side in ('l','r') for part in ARM_PARTS]
+            route_joints.append(SWIVEL_JOINT)
             route_joints += [f'{side}_service_{finger}_slide'
                 for side in ('l','r') for finger in ('positive','negative')]
             guides=[]
@@ -265,8 +279,10 @@ class CabinetDoorPrimitive:
             lost_grip_samples=0,
             start_door_angle_rad=float(self.data.joint('service_door_hinge').qpos[0]),
             phase_start_qpos=start_reference.tolist(),reference=reference.tolist(),goals=goals,
-            start_goals={side:{'position':self.data.site(side+'_service_tcp').xpos.tolist(),
-                'rotation':self.data.site(side+'_service_tcp').xmat.reshape(3,3).tolist()} for side in goals})
+            start_goals={side:(deepcopy(self.state['goals'][side])
+                if self.controller.wide_tooling and side in self.state['goals'] else
+                {'position':self.data.site(side+'_service_tcp').xpos.tolist(),
+                 'rotation':self.data.site(side+'_service_tcp').xmat.reshape(3,3).tolist()}) for side in goals})
         self.state['phase_events'].append({'from':previous,'to':phase,'time_s':float(self.data.time),
             'measurements':self.observe()})
 
@@ -278,7 +294,8 @@ class CabinetDoorPrimitive:
 
     def observe(self):
         result = measure(self.model,self.data,self.config)
-        result['root_tilt_rad'] = float(2*np.arccos(np.clip(abs(self.data.qpos[3]),0,1)))
+        # Tilt excludes heading: yaw alone cannot make an upright robot fall.
+        result['root_tilt_rad'] = float(np.arccos(np.clip(self.data.body('base_link').xmat[8],-1.,1.)))
         result['root_speed_m_s'] = float(np.linalg.norm(self.data.qvel[:3]))
         result['grip_forces_n'] = deepcopy(self.state['grip_forces'])
         result['pose_errors'] = {side:{
@@ -286,6 +303,10 @@ class CabinetDoorPrimitive:
             'angle_rad':float(np.linalg.norm(Rotation.from_matrix(np.asarray(goal['rotation']) @
                 self.data.site(side+'_service_tcp').xmat.reshape(3,3).T).as_rotvec()))}
             for side,goal in self.state['goals'].items()}
+        result['tool_swivel'] = ({'angle_rad':float(self.data.joint(SWIVEL_JOINT).qpos[0]),
+            'speed_rad_s':float(self.data.joint(SWIVEL_JOINT).qvel[0]),
+            'actuator_torque_nm':float(self.data.actuator_force[self.model.actuator('l_service_swivel_drive').id])}
+            if self.controller.wide_tooling else None)
         return result
 
     def _contacts(self):
@@ -346,7 +367,7 @@ class CabinetDoorPrimitive:
                 hinge = np.array([self.config.front_x_m,self.config.center_y_m+.28,1.1])
                 wrist = self._tool_rotation('l',True)
                 tracking['l'] = {'position':(hinge+Rotation.from_rotvec([0.,0.,-angle]).apply(
-                    [-.085,-.085,.065])+wrist @ np.array([0.,0.,.05])).tolist(),
+                    [-.085,-.085,.065])+wrist @ np.array([0.,0.,LATCH_TCP_STANDOFF_M])).tolist(),
                     'rotation':wrist.tolist()}
         try:
             released = ('r',) if phase in ('release_right','withdraw_right','park_right','open_wide') else (
@@ -370,6 +391,11 @@ class CabinetDoorPrimitive:
         self.state['peak_gripper_actuator_force_n'] = max(self.state['peak_gripper_actuator_force_n'],max(gripper_forces))
         if max(gripper_forces) > self.tooling.finger_force_n+1e-6:
             self.fail('actuator_force_limit_violation')
+        if self.controller.wide_tooling:
+            torque=abs(float(self.data.actuator_force[self.model.actuator('l_service_swivel_drive').id]))
+            self.state['peak_swivel_torque_nm']=max(self.state['peak_swivel_torque_nm'],torque)
+            if torque>3.+1e-6:
+                self.fail('actuator_force_limit_violation',{'actuator':'l_service_swivel_drive','torque_nm':torque})
         self._contacts()
         observed = self.observe()
         self.state['peak_tilt_rad'] = max(self.state['peak_tilt_rad'],observed['root_tilt_rad'])
@@ -377,11 +403,14 @@ class CabinetDoorPrimitive:
             self.fail('unstable_posture')
         if self.state['status'] != 'running':
             return
-        if phase in ('release_right','withdraw_right','park_right','open_wide') and elapsed>.3:
+        holding_side=('l' if phase in ('release_right','withdraw_right','park_right','open_wide') else
+            'r' if phase in ('release_left','withdraw_left','rotate_left','insert_left','grasp_left') else None)
+        if holding_side and elapsed>.3:
             self.state['lost_grip_samples'] = (self.state['lost_grip_samples']+1
-                if min(self.state['grip_forces']['l'].values())<2. else 0)
+                if min(self.state['grip_forces'][holding_side].values())<2. else 0)
             if self.state['lost_grip_samples']>=100:
                 self.fail('lost_door_grip',{'door_angle_rad':observed['door_angle_rad'],
+                    'holding_hand':holding_side,
                     'grip_forces_n':observed['grip_forces_n']})
                 return
         if phase == 'latch' and elapsed > duration+.25 and observed['latch_retraction_m'] < .025:
@@ -415,7 +444,7 @@ class CabinetDoorPrimitive:
                     max(self.state['grip_forces']['l'].values())<1.) or
                  (phase=='release_right' and elapsed>.3 and
                     min(float(self.data.joint(f'r_service_{finger}_slide').qpos[0])
-                        for finger in ('positive','negative'))>.065 and
+                        for finger in ('positive','negative'))>.025 and
                     min(self.state['grip_forces']['l'].values())>2. and
                     max(self.state['grip_forces']['r'].values())<1.) or
                  (phase in ('withdraw_right','park_right') and fraction==1. and
@@ -433,7 +462,7 @@ class CabinetDoorPrimitive:
                 self.state.update(status='completed',success=True)
             else:
                 next_phase = {'settle':'approach','approach':'insert','insert':'grasp','grasp':'latch','latch':'open',
-                    'open':'release_left','release_left':'withdraw_left','withdraw_left':'rotate_left',
+                    'open':'release_right','release_left':'withdraw_left','withdraw_left':'rotate_left',
                     'rotate_left':'insert_left','insert_left':'grasp_left','grasp_left':'release_right',
                     'release_right':'withdraw_right','withdraw_right':'park_right',
                     'park_right':'open_wide'}[phase]

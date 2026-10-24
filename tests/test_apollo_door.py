@@ -48,7 +48,7 @@ def test_door_primitive_checkpoint_preserves_feedback_and_independent_native_sta
 def test_wide_opening_keeps_its_distinct_model_and_never_substitutes_the_partial_goal():
     task=CabinetDoorPrimitive(opening_angle_rad=1.1)
     assert task.manifest['cabinet_fixture_profile']=='wide-opening-development'
-    assert task.manifest['identity']=='vivacity.apollo-cabinet-swivel-tool/2-experimental'
+    assert task.manifest['identity']=='vivacity.apollo-cabinet-swivel-tool/3-experimental'
     assert task.model.nu==37
     assert task.manifest['cabinet_tooling']['torque_range_nm']==[-3.,3.]
     assert not task.manifest['cabinet_tooling']['hardware_validation']
@@ -73,6 +73,27 @@ def test_invalid_cartesian_integral_state_is_rejected():
     with pytest.raises(ValueError,match='stance checkpoint'):
         task.controller.restore(state)
     assert task.controller.snapshot()==before
+    for angular in ([float('nan'),0.,0.],[.151,0.,0.],[0.,0.]):
+        state=deepcopy(before)
+        state['rotation_integrals']['l']=angular
+        with pytest.raises(ValueError,match='angular integral'):
+            task.controller.restore(state)
+        assert task.controller.snapshot()==before
+
+
+def test_root_tilt_observation_does_not_classify_heading_as_instability():
+    import mujoco as mj
+    from scipy.spatial.transform import Rotation
+    task=CabinetDoorPrimitive()
+    # Evaluator fixture only: set independent initial orientations, not task
+    # execution poses. A heading change must not be counted as falling.
+    for yaw in (0.,.8,1.57):
+        task.data.qpos[3:7]=Rotation.from_euler('z',yaw).as_quat(scalar_first=True)
+        mj.mj_forward(task.model,task.data)
+        assert task.observe()['root_tilt_rad']==pytest.approx(0.,abs=1e-7)
+    task.data.qpos[3:7]=Rotation.from_euler('zy',[1.,.25]).as_quat(scalar_first=True)
+    mj.mj_forward(task.model,task.data)
+    assert task.observe()['root_tilt_rad']==pytest.approx(.25,abs=1e-7)
 
 
 def test_swivel_embodiment_checkpoint_restores_independent_actuators_and_native_state():

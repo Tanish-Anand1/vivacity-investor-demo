@@ -110,6 +110,53 @@ changes stop a stalled latch earlier and preserve the first failure observed.
 
 ### Training isolation
 
+The native reference contract is now implemented in
+`training/locomotion_contract.py` and `training/native_locomotion.py`.
+G1 has 43 actions / 138 observations, Apollo 36 / 117, and the complete H1
+23 / 78. It binds named joints, native actuator limits and compiled-model hashes.
+Actor inputs are explicit proprioceptive sensor arrays, not a simulator object.
+The Linux contract suite passed 23 tests at `a31613c`, including actual stepping,
+deliberate falls, terminal-state freezing and independent checkpoint continuation.
+This is the CPU reference for subsequent model-matched learning. No learned
+weights, batched training environment, export parity or validated mobility is
+provided by that contract. Training and acceptance remain separate open gates.
+
+### Wide-door experiments and control corrections
+
+The experimental Apollo model adds a visible 0.10 kg tool rotor with a bounded
+native 3 Nm drive and +/-1.65 rad travel. Manufacturer arm limits are retained.
+There are no equality attachments, mocap supports or execution-time pose writes.
+Its native bench checks include rotation, overload and degree/radian compilation.
+
+The approach uses seeded bidirectional RRT with sampled collision clearance.
+The live trial still evaluates actual prohibited contact and stability. Routing
+now preserves all coordinates outside the selected planning joints; an earlier
+implementation checked the initial values but returned unchecked goal values
+for them. The new regression exercises that discrepancy with native geometry.
+
+Wide-task phase changes preserve commanded gripper preload. A measured finger
+position compressed against an object is not an unloaded servo target. Angular
+feedback memory is checkpointed and validated; root tilt excludes heading.
+Swivel angle, speed and torque are included in measurements and failures.
+
+These changes are research, not full-service acceptance. Earlier horizontal
+pinch and wrist variants failed from collisions, reachability or grip loss.
+The nearer 0.65 m fixture has reachable cartridge poses in independent IK, but
+that is not proof of a collision-free dynamic service cycle. Current trial
+reports retain all failed outcomes, frames, exact sources and native models.
+The partial 0.25 rad fixture keeps its historical plant/control semantics.
+
+```powershell
+python -m pytest --noconftest tests/test_cabinet_route.py tests/test_cabinet_tooling.py tests/test_apollo_door.py -q
+python -m scripts.verify_apollo_door --front-x .65 --finger-stiffness 2400 --opening-angle 1.1 --output data/apollo-wide-development.json
+python -m pytest --noconftest training/native_tests -q
+```
+
+The wide-development command is expected to return nonzero while its gate is
+failing. It never substitutes the verified partial-opening target.
+
+### MJX compatibility
+
 `training/README.md` describes an exact-embodiment MJX compatibility preflight.
 It does not assign the old H1 policy to the new model, train a policy, provision
 a GPU or establish locomotion. Training dependencies remain outside the runtime

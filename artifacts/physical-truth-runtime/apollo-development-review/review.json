@@ -1,0 +1,738 @@
+{
+  "schema_version": "vivacity.apollo-development-review/1",
+  "scope": "Sequential development attempts with differing models/controllers; not an acceptance cohort.",
+  "cabinet_service_complete": false,
+  "wide_door_acceptance_passed": false,
+  "attempts": [
+    {
+      "trial": "apollo-wide-r38.json",
+      "report_sha256": "b7de4df72871604112c71440178e743d801a6990f4772951b8962771e68b540b",
+      "status": "failed",
+      "failure": "unreachable_target",
+      "phase": "latch",
+      "success": false,
+      "steps": 6414,
+      "compute_s": 53.324895399971865,
+      "config": {
+        "front_x_m": 0.75,
+        "center_y_m": 0.0,
+        "cartridge_dimensions_m": [
+          0.2,
+          0.15,
+          0.12
+        ],
+        "cartridge_mass_kg": 0.35,
+        "latch_stiffness_n_m": 300.0,
+        "retention_stiffness_n_m": 500.0,
+        "contact_friction": 0.6
+      },
+      "tooling": {
+        "finger_force_n": 40.0,
+        "sliding_friction": 0.8,
+        "position_stiffness_n_m": 800.0
+      },
+      "requested_angle_rad": 1.1,
+      "measured_angle_rad": 0.007072599386168481,
+      "latch_m": 0.044796051467549496,
+      "tilt_rad": 0.04478978389398852,
+      "model_sha256": "5c5f5a164b5eac96ceac7a405b490bc5b40e8ac38811897c08d4e3e8805f4bba",
+      "archived_sources_verified": null,
+      "source_hashes": {
+        "apollo_door.py": "179117df45fbd3f49096aa5f6a381969f6a95613644e7d7f7d3c1bd02f1bddbc",
+        "cabinet_mechanism.py": "e7eb2f053436b1583efd7ef0ffe4486a6cdb812f66b7426bd9a98467ed69c328",
+        "humanoid_embodiments.py": "040b2ffc6fab94407b62156da78f608c116b7b6b132d97db9eb11fdd40c8e89c",
+        "simulated_tooling.py": "09f32c7a4f873524406f6e1e8c9cb70b5541259d25e418eda9aac369ef0fe400",
+        "humanoid_ik.py": "d7dcf4852b6ec52df3afe15f41ca106c8301f6e2ae6e08d94ea7a9cb6f0bc958",
+        "stance_control.py": "6ab43644a32eb42cf8f399f625e47755956112cd29b3c25705e4b4b71ef32427",
+        "wrench_dynamics.py": "355ccbd60092d6658a4a7664f9694eb2acb7b5819e60d113e75400842f88cd80",
+        "cabinet_tooling.py": "c07e6193e8f0dad34c710c8ac1efff85dde4d97e40b23b766fa5fab587c93009"
+      }
+    },
+    {
+      "trial": "apollo-wide-r39.json",
+      "report_sha256": "c8994a5a7d0713fc9593411ad95d0e6abb7412e37141ff50efff2c6ec4b51d5b",
+      "status": "failed",
+      "failure": "prohibited_collision",
+      "phase": "release_left",
+      "success": false,
+      "steps": 9328,
+      "compute_s": 104.6061501999502,
+      "config": {
+        "front_x_m": 0.75,
+        "center_y_m": 0.0,
+        "cartridge_dimensions_m": [
+          0.2,
+          0.15,
+          0.12
+        ],
+        "cartridge_mass_kg": 0.35,
+        "latch_stiffness_n_m": 300.0,
+        "retention_stiffness_n_m": 500.0,
+        "contact_friction": 0.6
+      },
+      "tooling": {
+        "finger_force_n": 40.0,
+        "sliding_friction": 0.8,
+        "position_stiffness_n_m": 800.0
+      },
+      "requested_angle_rad": 1.1,
+      "measured_angle_rad": 0.10400663501662279,
+      "latch_m": -0.0001865053396514425,
+      "tilt_rad": 0.16772454269978904,
+      "model_sha256": "5c5f5a164b5eac96ceac7a405b490bc5b40e8ac38811897c08d4e3e8805f4bba",
+      "archived_sources_verified": true,
+      "source_hashes": {
+        "apollo_door.py": "e79f2259779fd6ae6dd09a21b7b865bf8f3d7e2b5b709897668cfc4635b9be0d",
+        "cabinet_mechanism.py": "e7eb2f053436b1583efd7ef0ffe4486a6cdb812f66b7426bd9a98467ed69c328",
+        "humanoid_embodiments.py": "040b2ffc6fab94407b62156da78f608c116b7b6b132d97db9eb11fdd40c8e89c",
+        "simulated_tooling.py": "09f32c7a4f873524406f6e1e8c9cb70b5541259d25e418eda9aac369ef0fe400",
+        "humanoid_ik.py": "d7dcf4852b6ec52df3afe15f41ca106c8301f6e2ae6e08d94ea7a9cb6f0bc958",
+        "stance_control.py": "6ab43644a32eb42cf8f399f625e47755956112cd29b3c25705e4b4b71ef32427",
+        "wrench_dynamics.py": "355ccbd60092d6658a4a7664f9694eb2acb7b5819e60d113e75400842f88cd80",
+        "cabinet_tooling.py": "c07e6193e8f0dad34c710c8ac1efff85dde4d97e40b23b766fa5fab587c93009"
+      }
+    },
+    {
+      "trial": "apollo-wide-r40.json",
+      "report_sha256": "1c668f26e6fa8f18ac6d70f42bf3a4b67205f37c2cf8ada0494111ff4f7cd8b5",
+      "status": "failed",
+      "failure": "prohibited_collision",
+      "phase": "approach",
+      "success": false,
+      "steps": 1573,
+      "compute_s": 25.327542799990624,
+      "config": {
+        "front_x_m": 0.75,
+        "center_y_m": 0.0,
+        "cartridge_dimensions_m": [
+          0.2,
+          0.15,
+          0.12
+        ],
+        "cartridge_mass_kg": 0.35,
+        "latch_stiffness_n_m": 300.0,
+        "retention_stiffness_n_m": 500.0,
+        "contact_friction": 0.6
+      },
+      "tooling": {
+        "finger_force_n": 40.0,
+        "sliding_friction": 0.8,
+        "position_stiffness_n_m": 800.0
+      },
+      "requested_angle_rad": 1.1,
+      "measured_angle_rad": 1.3148509526279548e-13,
+      "latch_m": 3.6027961472643995e-20,
+      "tilt_rad": 0.03310714279104026,
+      "model_sha256": "dc613f796fb502949daab264077098935312d97b59a854b19d9ba61f611c450d",
+      "archived_sources_verified": true,
+      "source_hashes": {
+        "apollo_door.py": "06941f0d4e69ad7342b08a48a4edfd63f978afbc98d54456aed80d3ef69894a7",
+        "cabinet_mechanism.py": "e7eb2f053436b1583efd7ef0ffe4486a6cdb812f66b7426bd9a98467ed69c328",
+        "humanoid_embodiments.py": "040b2ffc6fab94407b62156da78f608c116b7b6b132d97db9eb11fdd40c8e89c",
+        "simulated_tooling.py": "09f32c7a4f873524406f6e1e8c9cb70b5541259d25e418eda9aac369ef0fe400",
+        "humanoid_ik.py": "d7dcf4852b6ec52df3afe15f41ca106c8301f6e2ae6e08d94ea7a9cb6f0bc958",
+        "stance_control.py": "6ab43644a32eb42cf8f399f625e47755956112cd29b3c25705e4b4b71ef32427",
+        "wrench_dynamics.py": "355ccbd60092d6658a4a7664f9694eb2acb7b5819e60d113e75400842f88cd80",
+        "cabinet_tooling.py": "78add1ac4baac962cd03946e25bee6bad222107720179202ebbcd27c4d22ea7d"
+      }
+    },
+    {
+      "trial": "apollo-wide-r41.json",
+      "report_sha256": "db2d4f2731869c5de93bc5e235c5f63a85653b32934ce2c06b06135b857f04c8",
+      "status": "failed",
+      "failure": "collision_free_route_not_found",
+      "phase": "settle",
+      "success": false,
+      "steps": 575,
+      "compute_s": 50.3225747999968,
+      "config": {
+        "front_x_m": 0.75,
+        "center_y_m": 0.0,
+        "cartridge_dimensions_m": [
+          0.2,
+          0.15,
+          0.12
+        ],
+        "cartridge_mass_kg": 0.35,
+        "latch_stiffness_n_m": 300.0,
+        "retention_stiffness_n_m": 500.0,
+        "contact_friction": 0.6
+      },
+      "tooling": {
+        "finger_force_n": 40.0,
+        "sliding_friction": 0.8,
+        "position_stiffness_n_m": 800.0
+      },
+      "requested_angle_rad": 1.1,
+      "measured_angle_rad": 1.1418471810299506e-13,
+      "latch_m": 1.1773049279561532e-18,
+      "tilt_rad": 0.018039980957122528,
+      "model_sha256": "dc613f796fb502949daab264077098935312d97b59a854b19d9ba61f611c450d",
+      "archived_sources_verified": true,
+      "source_hashes": {
+        "apollo_door.py": "b53645a729913695fbee1a92ae1eefd4b95124e917521369b8bc9fc648572408",
+        "cabinet_mechanism.py": "e7eb2f053436b1583efd7ef0ffe4486a6cdb812f66b7426bd9a98467ed69c328",
+        "humanoid_embodiments.py": "040b2ffc6fab94407b62156da78f608c116b7b6b132d97db9eb11fdd40c8e89c",
+        "simulated_tooling.py": "09f32c7a4f873524406f6e1e8c9cb70b5541259d25e418eda9aac369ef0fe400",
+        "humanoid_ik.py": "d7dcf4852b6ec52df3afe15f41ca106c8301f6e2ae6e08d94ea7a9cb6f0bc958",
+        "stance_control.py": "6ab43644a32eb42cf8f399f625e47755956112cd29b3c25705e4b4b71ef32427",
+        "wrench_dynamics.py": "355ccbd60092d6658a4a7664f9694eb2acb7b5819e60d113e75400842f88cd80",
+        "cabinet_tooling.py": "78add1ac4baac962cd03946e25bee6bad222107720179202ebbcd27c4d22ea7d",
+        "cabinet_route.py": "e608af820ef5fba606d2a5882a6e3b7320efa7bb63675c68c3e4ea9828647be0",
+        "pickup_planning.py": "88b2b2e7a331dd593ebc3551eaacfa349846c59bef5567196de43739a84e1629"
+      }
+    },
+    {
+      "trial": "apollo-wide-r42.json",
+      "report_sha256": "1ecd8a8a7d994fd9133c0ea83171603c1a3ded5f4fe62e94fd69b133842e65bd",
+      "status": "failed",
+      "failure": "collision_free_route_not_found",
+      "phase": "settle",
+      "success": false,
+      "steps": 575,
+      "compute_s": 70.93625720002456,
+      "config": {
+        "front_x_m": 0.75,
+        "center_y_m": 0.0,
+        "cartridge_dimensions_m": [
+          0.2,
+          0.15,
+          0.12
+        ],
+        "cartridge_mass_kg": 0.35,
+        "latch_stiffness_n_m": 300.0,
+        "retention_stiffness_n_m": 500.0,
+        "contact_friction": 0.6
+      },
+      "tooling": {
+        "finger_force_n": 40.0,
+        "sliding_friction": 0.8,
+        "position_stiffness_n_m": 800.0
+      },
+      "requested_angle_rad": 1.1,
+      "measured_angle_rad": 1.1418471810299506e-13,
+      "latch_m": 1.1773049279561532e-18,
+      "tilt_rad": 0.018039980957122528,
+      "model_sha256": "dc613f796fb502949daab264077098935312d97b59a854b19d9ba61f611c450d",
+      "archived_sources_verified": true,
+      "source_hashes": {
+        "apollo_door.py": "d98c7f2631af7ce6b5479de81d142f39c5fdfe3ba9765522da470f64e961c713",
+        "cabinet_mechanism.py": "e7eb2f053436b1583efd7ef0ffe4486a6cdb812f66b7426bd9a98467ed69c328",
+        "humanoid_embodiments.py": "040b2ffc6fab94407b62156da78f608c116b7b6b132d97db9eb11fdd40c8e89c",
+        "simulated_tooling.py": "09f32c7a4f873524406f6e1e8c9cb70b5541259d25e418eda9aac369ef0fe400",
+        "humanoid_ik.py": "d7dcf4852b6ec52df3afe15f41ca106c8301f6e2ae6e08d94ea7a9cb6f0bc958",
+        "stance_control.py": "6ab43644a32eb42cf8f399f625e47755956112cd29b3c25705e4b4b71ef32427",
+        "wrench_dynamics.py": "355ccbd60092d6658a4a7664f9694eb2acb7b5819e60d113e75400842f88cd80",
+        "cabinet_tooling.py": "78add1ac4baac962cd03946e25bee6bad222107720179202ebbcd27c4d22ea7d",
+        "cabinet_route.py": "850921c9274d4a8bf44b6f45c0d8a54716889cc58d165d18431101904daa2f6e",
+        "pickup_planning.py": "11b6f0ecbc1b957a9e980a372bc1c2a0ac6c7f1493b7a285831878e98588bcd4"
+      }
+    },
+    {
+      "trial": "apollo-wide-r43.json",
+      "report_sha256": "266f75a06fef52dfcee8103e2d995759a6b464f23da1009e2cfe78b8c567b2a7",
+      "status": "failed",
+      "failure": "prohibited_collision",
+      "phase": "approach",
+      "success": false,
+      "steps": 2907,
+      "compute_s": 37.23341159999836,
+      "config": {
+        "front_x_m": 0.75,
+        "center_y_m": 0.0,
+        "cartridge_dimensions_m": [
+          0.2,
+          0.15,
+          0.12
+        ],
+        "cartridge_mass_kg": 0.35,
+        "latch_stiffness_n_m": 300.0,
+        "retention_stiffness_n_m": 500.0,
+        "contact_friction": 0.6
+      },
+      "tooling": {
+        "finger_force_n": 40.0,
+        "sliding_friction": 0.8,
+        "position_stiffness_n_m": 800.0
+      },
+      "requested_angle_rad": 1.1,
+      "measured_angle_rad": 0.0029404870290544653,
+      "latch_m": -2.713009113549961e-09,
+      "tilt_rad": 0.04521255541704993,
+      "model_sha256": "dc613f796fb502949daab264077098935312d97b59a854b19d9ba61f611c450d",
+      "archived_sources_verified": true,
+      "source_hashes": {
+        "apollo_door.py": "d98c7f2631af7ce6b5479de81d142f39c5fdfe3ba9765522da470f64e961c713",
+        "cabinet_mechanism.py": "e7eb2f053436b1583efd7ef0ffe4486a6cdb812f66b7426bd9a98467ed69c328",
+        "humanoid_embodiments.py": "040b2ffc6fab94407b62156da78f608c116b7b6b132d97db9eb11fdd40c8e89c",
+        "simulated_tooling.py": "09f32c7a4f873524406f6e1e8c9cb70b5541259d25e418eda9aac369ef0fe400",
+        "humanoid_ik.py": "d7dcf4852b6ec52df3afe15f41ca106c8301f6e2ae6e08d94ea7a9cb6f0bc958",
+        "stance_control.py": "6ab43644a32eb42cf8f399f625e47755956112cd29b3c25705e4b4b71ef32427",
+        "wrench_dynamics.py": "355ccbd60092d6658a4a7664f9694eb2acb7b5819e60d113e75400842f88cd80",
+        "cabinet_tooling.py": "78add1ac4baac962cd03946e25bee6bad222107720179202ebbcd27c4d22ea7d",
+        "cabinet_route.py": "e28bbc08c21c42c510a0358c05b58c60c22051fc2fb49fe06b9beb894d725015",
+        "pickup_planning.py": "11b6f0ecbc1b957a9e980a372bc1c2a0ac6c7f1493b7a285831878e98588bcd4"
+      }
+    },
+    {
+      "trial": "apollo-wide-r44.json",
+      "report_sha256": "684e2b1baa7213fc0b53d8a8cf428bf7e2c3030bb983d7d1894e3a39af75ba49",
+      "status": "failed",
+      "failure": "prohibited_collision",
+      "phase": "insert",
+      "success": false,
+      "steps": 9630,
+      "compute_s": 105.02228929998819,
+      "config": {
+        "front_x_m": 0.75,
+        "center_y_m": 0.0,
+        "cartridge_dimensions_m": [
+          0.2,
+          0.15,
+          0.12
+        ],
+        "cartridge_mass_kg": 0.35,
+        "latch_stiffness_n_m": 300.0,
+        "retention_stiffness_n_m": 500.0,
+        "contact_friction": 0.6
+      },
+      "tooling": {
+        "finger_force_n": 40.0,
+        "sliding_friction": 0.8,
+        "position_stiffness_n_m": 800.0
+      },
+      "requested_angle_rad": 1.1,
+      "measured_angle_rad": 1.3203464229442425e-13,
+      "latch_m": 2.1503920336810315e-32,
+      "tilt_rad": 0.04712176336745211,
+      "model_sha256": "dc613f796fb502949daab264077098935312d97b59a854b19d9ba61f611c450d",
+      "archived_sources_verified": true,
+      "source_hashes": {
+        "apollo_door.py": "5b76825672ebb02c9e7278e030b55698b0cef4f828970f227a78383553d44796",
+        "cabinet_mechanism.py": "e7eb2f053436b1583efd7ef0ffe4486a6cdb812f66b7426bd9a98467ed69c328",
+        "humanoid_embodiments.py": "040b2ffc6fab94407b62156da78f608c116b7b6b132d97db9eb11fdd40c8e89c",
+        "simulated_tooling.py": "09f32c7a4f873524406f6e1e8c9cb70b5541259d25e418eda9aac369ef0fe400",
+        "humanoid_ik.py": "d7dcf4852b6ec52df3afe15f41ca106c8301f6e2ae6e08d94ea7a9cb6f0bc958",
+        "stance_control.py": "6ab43644a32eb42cf8f399f625e47755956112cd29b3c25705e4b4b71ef32427",
+        "wrench_dynamics.py": "355ccbd60092d6658a4a7664f9694eb2acb7b5819e60d113e75400842f88cd80",
+        "cabinet_tooling.py": "78add1ac4baac962cd03946e25bee6bad222107720179202ebbcd27c4d22ea7d",
+        "cabinet_route.py": "c295ac26c64b4b88fa136e5abb23f785f929fb49e30c0bae77a6b6220591268a",
+        "pickup_planning.py": "11b6f0ecbc1b957a9e980a372bc1c2a0ac6c7f1493b7a285831878e98588bcd4"
+      }
+    },
+    {
+      "trial": "apollo-wide-r45.json",
+      "report_sha256": "02b74976df102617e354614f62c1a7904867e8f4d86a5057762f89195ce332ea",
+      "status": "failed",
+      "failure": "approach_timeout",
+      "phase": "approach",
+      "success": false,
+      "steps": 8890,
+      "compute_s": 68.32556530000875,
+      "config": {
+        "front_x_m": 0.75,
+        "center_y_m": 0.0,
+        "cartridge_dimensions_m": [
+          0.2,
+          0.15,
+          0.12
+        ],
+        "cartridge_mass_kg": 0.35,
+        "latch_stiffness_n_m": 300.0,
+        "retention_stiffness_n_m": 500.0,
+        "contact_friction": 0.6
+      },
+      "tooling": {
+        "finger_force_n": 40.0,
+        "sliding_friction": 0.8,
+        "position_stiffness_n_m": 2400.0
+      },
+      "requested_angle_rad": 1.1,
+      "measured_angle_rad": 1.320721414011682e-13,
+      "latch_m": 2.783932916561165e-31,
+      "tilt_rad": 0.035052794960879465,
+      "model_sha256": "0fef22276cbd57f44346da6502aa3adf97a02f520884df8daedf930eb88c5399",
+      "archived_sources_verified": true,
+      "source_hashes": {
+        "apollo_door.py": "829256ca42c19aec3589c4829102f6bb8a9498cae8b6b38de36ebe8cbab11a9d",
+        "cabinet_mechanism.py": "e7eb2f053436b1583efd7ef0ffe4486a6cdb812f66b7426bd9a98467ed69c328",
+        "humanoid_embodiments.py": "040b2ffc6fab94407b62156da78f608c116b7b6b132d97db9eb11fdd40c8e89c",
+        "simulated_tooling.py": "09f32c7a4f873524406f6e1e8c9cb70b5541259d25e418eda9aac369ef0fe400",
+        "humanoid_ik.py": "d7dcf4852b6ec52df3afe15f41ca106c8301f6e2ae6e08d94ea7a9cb6f0bc958",
+        "stance_control.py": "6ab43644a32eb42cf8f399f625e47755956112cd29b3c25705e4b4b71ef32427",
+        "wrench_dynamics.py": "355ccbd60092d6658a4a7664f9694eb2acb7b5819e60d113e75400842f88cd80",
+        "cabinet_tooling.py": "78add1ac4baac962cd03946e25bee6bad222107720179202ebbcd27c4d22ea7d",
+        "cabinet_route.py": "53a223ccdbbedc62ea1e0b4f6662f28acb09524f8b3769eac13d160827c8a2c2",
+        "pickup_planning.py": "11b6f0ecbc1b957a9e980a372bc1c2a0ac6c7f1493b7a285831878e98588bcd4"
+      }
+    },
+    {
+      "trial": "apollo-wide-r46.json",
+      "report_sha256": "c8ed50f6e12d914b1288727e64d14c122421399aae57a0514b3b8a49fe222d24",
+      "status": "failed",
+      "failure": "latch_resistance_or_retention_failure",
+      "phase": "latch",
+      "success": false,
+      "steps": 10607,
+      "compute_s": 81.1506253000116,
+      "config": {
+        "front_x_m": 0.75,
+        "center_y_m": 0.0,
+        "cartridge_dimensions_m": [
+          0.2,
+          0.15,
+          0.12
+        ],
+        "cartridge_mass_kg": 0.35,
+        "latch_stiffness_n_m": 300.0,
+        "retention_stiffness_n_m": 500.0,
+        "contact_friction": 0.6
+      },
+      "tooling": {
+        "finger_force_n": 40.0,
+        "sliding_friction": 0.8,
+        "position_stiffness_n_m": 2400.0
+      },
+      "requested_angle_rad": 1.1,
+      "measured_angle_rad": 0.004546584976990393,
+      "latch_m": 0.007687381517560599,
+      "tilt_rad": 0.035123403941911456,
+      "model_sha256": "0fef22276cbd57f44346da6502aa3adf97a02f520884df8daedf930eb88c5399",
+      "archived_sources_verified": true,
+      "source_hashes": {
+        "apollo_door.py": "b51078550a5228c39acbcf07f28a61235061ef85ccaa7ae1413fd3ae9079571d",
+        "cabinet_mechanism.py": "e7eb2f053436b1583efd7ef0ffe4486a6cdb812f66b7426bd9a98467ed69c328",
+        "humanoid_embodiments.py": "040b2ffc6fab94407b62156da78f608c116b7b6b132d97db9eb11fdd40c8e89c",
+        "simulated_tooling.py": "09f32c7a4f873524406f6e1e8c9cb70b5541259d25e418eda9aac369ef0fe400",
+        "humanoid_ik.py": "d7dcf4852b6ec52df3afe15f41ca106c8301f6e2ae6e08d94ea7a9cb6f0bc958",
+        "stance_control.py": "6ab43644a32eb42cf8f399f625e47755956112cd29b3c25705e4b4b71ef32427",
+        "wrench_dynamics.py": "355ccbd60092d6658a4a7664f9694eb2acb7b5819e60d113e75400842f88cd80",
+        "cabinet_tooling.py": "78add1ac4baac962cd03946e25bee6bad222107720179202ebbcd27c4d22ea7d",
+        "cabinet_route.py": "53a223ccdbbedc62ea1e0b4f6662f28acb09524f8b3769eac13d160827c8a2c2",
+        "pickup_planning.py": "11b6f0ecbc1b957a9e980a372bc1c2a0ac6c7f1493b7a285831878e98588bcd4"
+      }
+    },
+    {
+      "trial": "apollo-wide-r47.json",
+      "report_sha256": "3111a24ca0c30aee730b8bb0259468eedc5c15d5122a7998987bbd1d3bfd3ee6",
+      "status": "failed",
+      "failure": "excessive_contact_force",
+      "phase": "open",
+      "success": false,
+      "steps": 13616,
+      "compute_s": 111.66509929997846,
+      "config": {
+        "front_x_m": 0.75,
+        "center_y_m": 0.0,
+        "cartridge_dimensions_m": [
+          0.2,
+          0.15,
+          0.12
+        ],
+        "cartridge_mass_kg": 0.35,
+        "latch_stiffness_n_m": 300.0,
+        "retention_stiffness_n_m": 500.0,
+        "contact_friction": 0.6
+      },
+      "tooling": {
+        "finger_force_n": 40.0,
+        "sliding_friction": 0.8,
+        "position_stiffness_n_m": 800.0
+      },
+      "requested_angle_rad": 1.1,
+      "measured_angle_rad": 0.09003593788393678,
+      "latch_m": 0.056971834643635505,
+      "tilt_rad": 0.1800123935596771,
+      "model_sha256": "5c5f5a164b5eac96ceac7a405b490bc5b40e8ac38811897c08d4e3e8805f4bba",
+      "archived_sources_verified": true,
+      "source_hashes": {
+        "apollo_door.py": "a7422e3a20235f0d4eaa01a22fbf3dd536fa934834b9add11d56c4d4c59af5e5",
+        "cabinet_mechanism.py": "e7eb2f053436b1583efd7ef0ffe4486a6cdb812f66b7426bd9a98467ed69c328",
+        "humanoid_embodiments.py": "040b2ffc6fab94407b62156da78f608c116b7b6b132d97db9eb11fdd40c8e89c",
+        "simulated_tooling.py": "09f32c7a4f873524406f6e1e8c9cb70b5541259d25e418eda9aac369ef0fe400",
+        "humanoid_ik.py": "d7dcf4852b6ec52df3afe15f41ca106c8301f6e2ae6e08d94ea7a9cb6f0bc958",
+        "stance_control.py": "6ab43644a32eb42cf8f399f625e47755956112cd29b3c25705e4b4b71ef32427",
+        "wrench_dynamics.py": "355ccbd60092d6658a4a7664f9694eb2acb7b5819e60d113e75400842f88cd80",
+        "cabinet_tooling.py": "78add1ac4baac962cd03946e25bee6bad222107720179202ebbcd27c4d22ea7d",
+        "cabinet_route.py": "53a223ccdbbedc62ea1e0b4f6662f28acb09524f8b3769eac13d160827c8a2c2",
+        "pickup_planning.py": "11b6f0ecbc1b957a9e980a372bc1c2a0ac6c7f1493b7a285831878e98588bcd4"
+      }
+    },
+    {
+      "trial": "apollo-wide-r48.json",
+      "report_sha256": "52e51f716599885a2116594bfbfc5a29c7a8cde994fbc2d385d93d7bb1838b5f",
+      "status": "failed",
+      "failure": "unreachable_target",
+      "phase": "settle",
+      "success": false,
+      "steps": 575,
+      "compute_s": 5.853103499975987,
+      "config": {
+        "front_x_m": 0.65,
+        "center_y_m": 0.0,
+        "cartridge_dimensions_m": [
+          0.2,
+          0.15,
+          0.12
+        ],
+        "cartridge_mass_kg": 0.35,
+        "latch_stiffness_n_m": 300.0,
+        "retention_stiffness_n_m": 500.0,
+        "contact_friction": 0.6
+      },
+      "tooling": {
+        "finger_force_n": 40.0,
+        "sliding_friction": 0.8,
+        "position_stiffness_n_m": 800.0
+      },
+      "requested_angle_rad": 1.1,
+      "measured_angle_rad": 1.141847181029962e-13,
+      "latch_m": 1.1773049279561652e-18,
+      "tilt_rad": 0.018010005579031096,
+      "model_sha256": "ca9cebdd55e960af5d4397e5f11ee74abb60799f32d3581a1bd566d6e0d70330",
+      "archived_sources_verified": true,
+      "source_hashes": {
+        "apollo_door.py": "0ef4d593cec44eafbbd5373f5634e479db21793beeae08603716bd804f1f95a5",
+        "cabinet_mechanism.py": "e7eb2f053436b1583efd7ef0ffe4486a6cdb812f66b7426bd9a98467ed69c328",
+        "humanoid_embodiments.py": "040b2ffc6fab94407b62156da78f608c116b7b6b132d97db9eb11fdd40c8e89c",
+        "simulated_tooling.py": "09f32c7a4f873524406f6e1e8c9cb70b5541259d25e418eda9aac369ef0fe400",
+        "humanoid_ik.py": "d7dcf4852b6ec52df3afe15f41ca106c8301f6e2ae6e08d94ea7a9cb6f0bc958",
+        "stance_control.py": "6ab43644a32eb42cf8f399f625e47755956112cd29b3c25705e4b4b71ef32427",
+        "wrench_dynamics.py": "355ccbd60092d6658a4a7664f9694eb2acb7b5819e60d113e75400842f88cd80",
+        "cabinet_tooling.py": "78add1ac4baac962cd03946e25bee6bad222107720179202ebbcd27c4d22ea7d",
+        "cabinet_route.py": "1b0fdcd0081d80af5875585cd9b8df5957dbdc9609cf13a862a4f909bfbecf35",
+        "pickup_planning.py": "11b6f0ecbc1b957a9e980a372bc1c2a0ac6c7f1493b7a285831878e98588bcd4"
+      }
+    },
+    {
+      "trial": "apollo-wide-r49.json",
+      "report_sha256": "511656ac69dfc7e08f0b564ee99d5789358161eee45386d66f2f4114c05f47ff",
+      "status": "failed",
+      "failure": "latch_resistance_or_retention_failure",
+      "phase": "latch",
+      "success": false,
+      "steps": 11871,
+      "compute_s": 94.32216490001883,
+      "config": {
+        "front_x_m": 0.65,
+        "center_y_m": 0.0,
+        "cartridge_dimensions_m": [
+          0.2,
+          0.15,
+          0.12
+        ],
+        "cartridge_mass_kg": 0.35,
+        "latch_stiffness_n_m": 300.0,
+        "retention_stiffness_n_m": 500.0,
+        "contact_friction": 0.6
+      },
+      "tooling": {
+        "finger_force_n": 40.0,
+        "sliding_friction": 0.8,
+        "position_stiffness_n_m": 800.0
+      },
+      "requested_angle_rad": 1.1,
+      "measured_angle_rad": 0.005249297070954808,
+      "latch_m": 0.00783503181378374,
+      "tilt_rad": 0.009327590358680169,
+      "model_sha256": "ca9cebdd55e960af5d4397e5f11ee74abb60799f32d3581a1bd566d6e0d70330",
+      "archived_sources_verified": true,
+      "source_hashes": {
+        "apollo_door.py": "5b2fa6bd93a04c15a79d1edf1d00bc215a51cffcf368425b9511d20801c173bb",
+        "cabinet_mechanism.py": "e7eb2f053436b1583efd7ef0ffe4486a6cdb812f66b7426bd9a98467ed69c328",
+        "humanoid_embodiments.py": "040b2ffc6fab94407b62156da78f608c116b7b6b132d97db9eb11fdd40c8e89c",
+        "simulated_tooling.py": "09f32c7a4f873524406f6e1e8c9cb70b5541259d25e418eda9aac369ef0fe400",
+        "humanoid_ik.py": "d7dcf4852b6ec52df3afe15f41ca106c8301f6e2ae6e08d94ea7a9cb6f0bc958",
+        "stance_control.py": "6ab43644a32eb42cf8f399f625e47755956112cd29b3c25705e4b4b71ef32427",
+        "wrench_dynamics.py": "355ccbd60092d6658a4a7664f9694eb2acb7b5819e60d113e75400842f88cd80",
+        "cabinet_tooling.py": "78add1ac4baac962cd03946e25bee6bad222107720179202ebbcd27c4d22ea7d",
+        "cabinet_route.py": "1b0fdcd0081d80af5875585cd9b8df5957dbdc9609cf13a862a4f909bfbecf35",
+        "pickup_planning.py": "11b6f0ecbc1b957a9e980a372bc1c2a0ac6c7f1493b7a285831878e98588bcd4"
+      }
+    },
+    {
+      "trial": "apollo-wide-r50.json",
+      "report_sha256": "2c29b77717ff37195eb5838ae788121af0bf9fabb1f83c2739ca03301f39a9cb",
+      "status": "failed",
+      "failure": "latch_resistance_or_retention_failure",
+      "phase": "latch",
+      "success": false,
+      "steps": 12304,
+      "compute_s": 96.74603310000384,
+      "config": {
+        "front_x_m": 0.65,
+        "center_y_m": 0.0,
+        "cartridge_dimensions_m": [
+          0.2,
+          0.15,
+          0.12
+        ],
+        "cartridge_mass_kg": 0.35,
+        "latch_stiffness_n_m": 300.0,
+        "retention_stiffness_n_m": 500.0,
+        "contact_friction": 0.6
+      },
+      "tooling": {
+        "finger_force_n": 40.0,
+        "sliding_friction": 0.8,
+        "position_stiffness_n_m": 2400.0
+      },
+      "requested_angle_rad": 1.1,
+      "measured_angle_rad": 0.0052070704485653865,
+      "latch_m": 0.0009566099740110904,
+      "tilt_rad": 0.005505682392490063,
+      "model_sha256": "192c7e6acc3f52aac147a2498f77dca8609df526e4202343e5a10d1ce6691463",
+      "archived_sources_verified": true,
+      "source_hashes": {
+        "apollo_door.py": "5b2fa6bd93a04c15a79d1edf1d00bc215a51cffcf368425b9511d20801c173bb",
+        "cabinet_mechanism.py": "e7eb2f053436b1583efd7ef0ffe4486a6cdb812f66b7426bd9a98467ed69c328",
+        "humanoid_embodiments.py": "040b2ffc6fab94407b62156da78f608c116b7b6b132d97db9eb11fdd40c8e89c",
+        "simulated_tooling.py": "09f32c7a4f873524406f6e1e8c9cb70b5541259d25e418eda9aac369ef0fe400",
+        "humanoid_ik.py": "d7dcf4852b6ec52df3afe15f41ca106c8301f6e2ae6e08d94ea7a9cb6f0bc958",
+        "stance_control.py": "6ab43644a32eb42cf8f399f625e47755956112cd29b3c25705e4b4b71ef32427",
+        "wrench_dynamics.py": "355ccbd60092d6658a4a7664f9694eb2acb7b5819e60d113e75400842f88cd80",
+        "cabinet_tooling.py": "78add1ac4baac962cd03946e25bee6bad222107720179202ebbcd27c4d22ea7d",
+        "cabinet_route.py": "1b0fdcd0081d80af5875585cd9b8df5957dbdc9609cf13a862a4f909bfbecf35",
+        "pickup_planning.py": "11b6f0ecbc1b957a9e980a372bc1c2a0ac6c7f1493b7a285831878e98588bcd4"
+      }
+    },
+    {
+      "trial": "apollo-wide-r51.json",
+      "report_sha256": "701d706666f88c5d9d7b994ef69ec642d795a14126b21e925dc3a4985244b494",
+      "status": "failed",
+      "failure": "latch_resistance_or_retention_failure",
+      "phase": "latch",
+      "success": false,
+      "steps": 12210,
+      "compute_s": 95.35891099995933,
+      "config": {
+        "front_x_m": 0.65,
+        "center_y_m": 0.0,
+        "cartridge_dimensions_m": [
+          0.2,
+          0.15,
+          0.12
+        ],
+        "cartridge_mass_kg": 0.35,
+        "latch_stiffness_n_m": 300.0,
+        "retention_stiffness_n_m": 500.0,
+        "contact_friction": 0.6
+      },
+      "tooling": {
+        "finger_force_n": 40.0,
+        "sliding_friction": 0.8,
+        "position_stiffness_n_m": 2400.0
+      },
+      "requested_angle_rad": 1.1,
+      "measured_angle_rad": 0.005209995001555203,
+      "latch_m": 0.001251534380922264,
+      "tilt_rad": 0.024410687215563835,
+      "model_sha256": "192c7e6acc3f52aac147a2498f77dca8609df526e4202343e5a10d1ce6691463",
+      "archived_sources_verified": true,
+      "source_hashes": {
+        "apollo_door.py": "95e1de36cde08c0704453bc4745f868e7be50247a9d576a13ecf4a4f5185c800",
+        "cabinet_mechanism.py": "e7eb2f053436b1583efd7ef0ffe4486a6cdb812f66b7426bd9a98467ed69c328",
+        "humanoid_embodiments.py": "040b2ffc6fab94407b62156da78f608c116b7b6b132d97db9eb11fdd40c8e89c",
+        "simulated_tooling.py": "09f32c7a4f873524406f6e1e8c9cb70b5541259d25e418eda9aac369ef0fe400",
+        "humanoid_ik.py": "d7dcf4852b6ec52df3afe15f41ca106c8301f6e2ae6e08d94ea7a9cb6f0bc958",
+        "stance_control.py": "6ab43644a32eb42cf8f399f625e47755956112cd29b3c25705e4b4b71ef32427",
+        "wrench_dynamics.py": "355ccbd60092d6658a4a7664f9694eb2acb7b5819e60d113e75400842f88cd80",
+        "cabinet_tooling.py": "78add1ac4baac962cd03946e25bee6bad222107720179202ebbcd27c4d22ea7d",
+        "cabinet_route.py": "1b0fdcd0081d80af5875585cd9b8df5957dbdc9609cf13a862a4f909bfbecf35",
+        "pickup_planning.py": "11b6f0ecbc1b957a9e980a372bc1c2a0ac6c7f1493b7a285831878e98588bcd4"
+      }
+    },
+    {
+      "trial": "apollo-wide-r52.json",
+      "report_sha256": "f519b848ab657a3de638860186b5893086c94dd3d8f0a3205d43517aca7202c9",
+      "status": "failed",
+      "failure": "latch_resistance_or_retention_failure",
+      "phase": "latch",
+      "success": false,
+      "steps": 12237,
+      "compute_s": 104.1141604000004,
+      "config": {
+        "front_x_m": 0.65,
+        "center_y_m": 0.0,
+        "cartridge_dimensions_m": [
+          0.2,
+          0.15,
+          0.12
+        ],
+        "cartridge_mass_kg": 0.35,
+        "latch_stiffness_n_m": 300.0,
+        "retention_stiffness_n_m": 500.0,
+        "contact_friction": 0.6
+      },
+      "tooling": {
+        "finger_force_n": 40.0,
+        "sliding_friction": 0.8,
+        "position_stiffness_n_m": 2400.0
+      },
+      "requested_angle_rad": 1.1,
+      "measured_angle_rad": 0.005274799137534003,
+      "latch_m": 0.00833997262203474,
+      "tilt_rad": 0.026234384979734973,
+      "model_sha256": "192c7e6acc3f52aac147a2498f77dca8609df526e4202343e5a10d1ce6691463",
+      "archived_sources_verified": true,
+      "source_hashes": {
+        "apollo_door.py": "9952c93457d558640c7d2a54a596a34764b93979624021ebfa38a3fa39198e4f",
+        "cabinet_mechanism.py": "e7eb2f053436b1583efd7ef0ffe4486a6cdb812f66b7426bd9a98467ed69c328",
+        "humanoid_embodiments.py": "040b2ffc6fab94407b62156da78f608c116b7b6b132d97db9eb11fdd40c8e89c",
+        "simulated_tooling.py": "09f32c7a4f873524406f6e1e8c9cb70b5541259d25e418eda9aac369ef0fe400",
+        "humanoid_ik.py": "d7dcf4852b6ec52df3afe15f41ca106c8301f6e2ae6e08d94ea7a9cb6f0bc958",
+        "stance_control.py": "6ab43644a32eb42cf8f399f625e47755956112cd29b3c25705e4b4b71ef32427",
+        "wrench_dynamics.py": "355ccbd60092d6658a4a7664f9694eb2acb7b5819e60d113e75400842f88cd80",
+        "cabinet_tooling.py": "78add1ac4baac962cd03946e25bee6bad222107720179202ebbcd27c4d22ea7d",
+        "cabinet_route.py": "1b0fdcd0081d80af5875585cd9b8df5957dbdc9609cf13a862a4f909bfbecf35",
+        "pickup_planning.py": "11b6f0ecbc1b957a9e980a372bc1c2a0ac6c7f1493b7a285831878e98588bcd4"
+      }
+    },
+    {
+      "trial": "apollo-wide-r53.json",
+      "report_sha256": "66758687f5fed2e6ed9746e0bd1a088b8d5ebae8576fd9d60552d3609b83f741",
+      "status": "failed",
+      "failure": "latch_resistance_or_retention_failure",
+      "phase": "latch",
+      "success": false,
+      "steps": 12581,
+      "compute_s": 102.12993920000736,
+      "config": {
+        "front_x_m": 0.65,
+        "center_y_m": 0.0,
+        "cartridge_dimensions_m": [
+          0.2,
+          0.15,
+          0.12
+        ],
+        "cartridge_mass_kg": 0.35,
+        "latch_stiffness_n_m": 300.0,
+        "retention_stiffness_n_m": 500.0,
+        "contact_friction": 0.6
+      },
+      "tooling": {
+        "finger_force_n": 40.0,
+        "sliding_friction": 0.8,
+        "position_stiffness_n_m": 2400.0
+      },
+      "requested_angle_rad": 1.1,
+      "measured_angle_rad": 0.004642987146255449,
+      "latch_m": 0.02456820013295236,
+      "tilt_rad": 0.03479766384232529,
+      "model_sha256": "192c7e6acc3f52aac147a2498f77dca8609df526e4202343e5a10d1ce6691463",
+      "archived_sources_verified": true,
+      "source_hashes": {
+        "apollo_door.py": "3400fb84a66e24e75c84d74941d14bf6443f1e23d43ddd75c2ae94afd2fa24cb",
+        "cabinet_mechanism.py": "e7eb2f053436b1583efd7ef0ffe4486a6cdb812f66b7426bd9a98467ed69c328",
+        "humanoid_embodiments.py": "040b2ffc6fab94407b62156da78f608c116b7b6b132d97db9eb11fdd40c8e89c",
+        "simulated_tooling.py": "09f32c7a4f873524406f6e1e8c9cb70b5541259d25e418eda9aac369ef0fe400",
+        "humanoid_ik.py": "d7dcf4852b6ec52df3afe15f41ca106c8301f6e2ae6e08d94ea7a9cb6f0bc958",
+        "stance_control.py": "6ab43644a32eb42cf8f399f625e47755956112cd29b3c25705e4b4b71ef32427",
+        "wrench_dynamics.py": "355ccbd60092d6658a4a7664f9694eb2acb7b5819e60d113e75400842f88cd80",
+        "cabinet_tooling.py": "78add1ac4baac962cd03946e25bee6bad222107720179202ebbcd27c4d22ea7d",
+        "cabinet_route.py": "1b0fdcd0081d80af5875585cd9b8df5957dbdc9609cf13a862a4f909bfbecf35",
+        "pickup_planning.py": "11b6f0ecbc1b957a9e980a372bc1c2a0ac6c7f1493b7a285831878e98588bcd4"
+      }
+    }
+  ]
+}
