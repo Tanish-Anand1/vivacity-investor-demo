@@ -1,4 +1,39 @@
-## Physical Truth contact revision (verification in progress)
+## Current Physical Truth evidence — 2026-10-24, commit 8508e31
+
+**The full directive is incomplete and has not been deployed.** Work remains on
+the isolated `codex/physical-truth-runtime` branch. The opening is unchanged.
+
+The Linux deployment-image suite passed **478 tests with 3 skips and no failures**.
+Separate constrained-host checks passed **4 general/factory tests and 1 humanoid
+capacity test**. Chromium, Firefox and WebKit passed the contact-lab journey at
+this revision. These results are linked in `docs/PHYSICAL_TRUTH_EXECUTION.md`.
+
+Each complete G1, Apollo and H1 embodiment passed **20/20 nominal and 100/100
+held-out stationary stabilization trials**, plus its deliberate instability
+fixture. This is six seconds of standing, a small shoulder movement, a bounded
+horizontal disturbance and settling. It does not validate walking, carrying or
+cabinet service. The corrected constrained G1 contact acceptance is still running.
+
+A Linux-only enum comparison bug had skipped initial joint clamping and predictive
+joint-limit constraints. Integer-normalized comparisons and a near-limit braking
+regression now pass on Linux and Windows. Older Linux reports must not be used to
+certify the corrected joint-limit behavior.
+
+Apollo door control is under local development. Six local tests passed in
+243.60 seconds, covering checkpoints, first-failure preservation, the measured
+nominal trial and two deliberate failures. The nominal trial
+retracted the passive latch and opened the door with native contact and bounded
+tool forces, without equality attachments. The complete cartridge cycle remains
+open. The weak-tool fixture fails from measured instability during approach;
+the stiff latch is rejected before the previous prohibited collision. This
+primitive has not passed the required 20/100 acceptance and is not exposed as
+complete cabinet service.
+
+Model-matched locomotion, independent running, the shared warehouse, complete
+parameter coverage, perception-driven control, paid persistence, production
+release and soak remain open. No GPU or hosting purchase has been made.
+
+## Earlier development records (superseded where described above)
 
 The subsequent development slice adds passive cabinet mechanics, contact-based
 parallel grippers and separately versioned complete G1/Apollo/H1 embodiments.

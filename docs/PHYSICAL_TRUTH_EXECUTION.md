@@ -18,21 +18,33 @@ checks. Hardware execution is outside the completion claim.
 | --- | --- | --- |
 | Complete checkpoint, independent controller and simulator forks | New native checkpoint adapter and transactional worker pass local restore/fork/restart tests; legacy services not migrated | Partial |
 | All exposed parameter dependencies and causality | New carton mass/density/inertia and solver-contact definitions pass native causality checks; app-wide inventory/UI generation incomplete | Partial |
-| Whole-body stabilization and constraints | Native wrench controller, complete embodiments and six-second stabilization probes implemented. First carton gate failed 19/20 due to a wall-clock cutoff. A later cabinet integration exposed invalid braking constraints on passive spring joints; kernel v2 and new acceptance remain under verification | Revision under test |
+| Whole-body stabilization and constraints | Wrench kernel v3 fixes Linux enum handling. Complete G1, Apollo and H1 each pass 20/20 nominal, 100/100 held-out and deliberate instability in the bounded six-second stationary probe at 8508e31. General reach, collision audit and mobility remain open | Bounded stance verified; broader gate partial |
 | Contact-only manipulation and G1 bilateral load sharing | Stationary native-servo baseline passes 20/20 nominal and 100/100 held-out trials, with zero equality constraints and continuous retention checks; whole-body controller not accepted | Partial |
 | G1/Apollo/H1 model-matched mobility, turns, terrain, carry | H1 short walk only; complete embodiments need training | Open |
-| Apollo cabinet, latch, old/replacement cartridge cycle | Passive cabinet, latch, retention, rails, cartridges and visible force-limited tooling pass component tests. Full robot service sequence remains open | Partial |
+| Apollo cabinet, latch, old/replacement cartridge cycle | Passive fixture and force-limited tooling pass component tests. A development controller physically retracts the latch and opens the door about 0.23 rad; full opening, cartridge service and acceptance remain open | Partial |
 | Shared-world SORT through DISPATCH | Sorting ledger only | Open |
 | Independent H1 running at 2 m/s | No validated running controller | Open |
 | RGB-D pose estimation without privileged controller inputs | Separate image/depth estimator passes five rendered-image tests; not driving robot control or validated over the complete envelope | Partial |
 | Hardware-transfer manifests, calibration and watchdog procedure | Offline G1 manifest, 382 simulated sensor samples, calibration procedure and fail-closed dry-run watchdog implemented; no transport or hardware validation | Partial |
 | Transactional recovery, owner-scoped fork/compare/export | New opt-in contact API passes real HTTP pause/fork/compare/replay/export; abrupt process-exit recovery tested on real small MuJoCo dynamics | Partial |
-| Browser journeys, three engines, all failure states | Actual WebGL2/live/pause/fork/compare/replay/export, network interruption, cancellation and final-state reload passed in Chromium, Firefox and WebKit at `f3d9817`. New physics revision awaits rerun; full warehouse journey remains open | Partial |
+| Browser journeys, three engines, all failure states | Actual WebGL2/live/pause/fork/compare/replay/export, network interruption, cancellation and final-state reload passed in Chromium, Firefox and WebKit at `8508e31`. Screenshot inspection found a native WebKit select contrast issue; correction awaits fresh browser evidence. Full warehouse journey remains open | Partial |
 | Paid persistence, backups/restore, full-world capacity | SQLite-consistent backup/restore passes concurrent-WAL tests; paid hosting and complete-world capacity remain open | Partial |
 | Production deployment and 24-hour soak | Not started for this release | Open |
 | Break the Frame cinematic release | Deliberately deferred until physics release passes | Deferred |
 
 ## Active slice
+
+Current completed Linux evidence at `8508e31`:
+
+- [Deployment-image suite](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40080972257): 478 passed, 3 skipped; separate capacity probes 4 + 1 passed.
+- [Complete stationary embodiments](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40080972312): each robot 20/20 nominal and 100/100 held-out, plus correctly rejected deliberate instability. The held-out Wilson 95% interval is [0.9630, 1.0000] for each narrow sampled distribution.
+- [Model/joint diagnostics](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40080972331): all three complete models pass the corrected initial-joint check.
+- [Contact/browser workflow](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40080972324): all three browser jobs passed; corrected 120-trial constrained-contact cohort is still running.
+
+The maximum measured stance tilt was 0.01849 rad for G1, 0.02712 rad for
+Apollo and 0.00286 rad for H1. Maximum per-trial p95 loaded-foot slip was
+0.000455, 0.000542 and 0.004948 m/s respectively. These stationary samples
+are not hardware reliability estimates or acceptance for the requested courses.
 
 The isolated stationary native-servo G1 slice now has measured frictional contacts,
 full-state checkpoints, a durable owner-scoped worker, real HTTP verification and
@@ -131,8 +143,15 @@ controller constraints, regardless of their measured task outcome.
 
 The correction explicitly converts joint types and constants to Python integers,
 bumps controller versions, and tests a fast approaching slider that must command
-at least 6.25 m/s² of braking before the native stop. Prior in-flight constrained
-and complete-stance cohorts were cancelled as superseded. Partial reports are
-historical development evidence, not completed acceptance. Fresh Linux cohorts
+at least 6.25 m/s² of braking before the native stop. The prior constrained cohort
+completed 20/20 nominal and 100/100 held-out physical outcomes before cancellation
+was attempted; those outcomes do not establish the missing optimization barrier.
+The prior complete-stance cohort was cancelled as superseded (108 Apollo samples,
+113 G1 samples, and a completed 121-sample H1 report were retained). These reports
+are historical development evidence, not current acceptance. Fresh Linux cohorts
 are required for the corrected controller and compiled model identities.
+
+The Linux model audit at `8508e31` passed all three complete embodiments, with
+both G1 thumb positions correctly bounded at ±1.0472 radians. The local braking,
+inverse-dynamics, and embodiment regression suite passed 23 tests in 27.52 s.
 

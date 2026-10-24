@@ -15,3 +15,6 @@
 !verified-native-images.json
 
 !constrained-cutoff-failed-acceptance.json.gz
+!stance-8508e31/
+!stance-8508e31/*.json
+!stance-8508e31/*.json.gz

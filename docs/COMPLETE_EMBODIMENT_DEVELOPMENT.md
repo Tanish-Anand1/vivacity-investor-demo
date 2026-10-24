@@ -78,6 +78,45 @@ stabilization or manipulation reliability. Sample counts and the report's
 
 ## Open work
 
+### Contact-operated Apollo door development
+
+`vivacity/apollo_door.py` adds an independent controller/task checkpoint for a
+stationary door primitive. A bounded Cartesian integral feeds the constrained
+whole-body actuator controller. Actual contact, root stability, tool forces,
+latch displacement and door angle decide phase transitions. Execution never
+overwrites robot, door or object poses. The compiled model has zero equality
+constraints and zero mocap bodies.
+
+The nominal development fixture is 0.75 m ahead of the world origin, with a
+300 N/m latch spring and 40 N maximum actuator force per finger. The robot
+approaches, inserts its tools around the visible handle/button, closes the
+fingers, retracts the latch, and opens the door about 0.23 rad. This is only a
+partial door opening; `cabinet_service_complete` remains false. The old and
+replacement cartridges are not exchanged by this primitive.
+
+```powershell
+python -m pytest tests/test_apollo_door.py -q
+python -m scripts.verify_apollo_door --output data/apollo-door-development.json
+python -m scripts.verify_apollo_door --finger-force 1 --output data/apollo-weak-tool.json
+python -m scripts.verify_apollo_door --latch-stiffness 4000 --output data/apollo-stiff-latch.json
+```
+
+Reports include actual qpos/qvel, body transforms, forces, phase events, source
+hashes and a companion compiled MJB for rendering that exact model. Negative
+commands return nonzero. The first weak-tool attempt became unstable before
+grasping; an excessive-latch-resistance attempt lost retention and contacted the
+crossbar. These are retained failures, not successful service evidence. Current
+changes stop a stalled latch earlier and preserve the first failure observed.
+
+### Training isolation
+
+`training/README.md` describes an exact-embodiment MJX compatibility preflight.
+It does not assign the old H1 policy to the new model, train a policy, provision
+a GPU or establish locomotion. Training dependencies remain outside the runtime
+image. Concrete cost approval is still required before paid resources.
+
+### Remaining requirements
+
 The complete cabinet sequence, force-aware insertion, collision-clearance
 planning, full parameter/failure audit, model-matched locomotion, running,
 shared-world fulfillment, RGB-D-driven control, API/UI integration for these new

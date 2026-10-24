@@ -1,0 +1,43 @@
+name: Complete embodiment MJX preflight
+on:
+  push:
+    branches: [codex/physical-truth-runtime]
+    paths: ['training/**', '.github/workflows/locomotion-preflight.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  model-compatibility:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        robot: [h1, g1, apollo]
+    env:
+      JAX_PLATFORMS: cpu
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      XLA_PYTHON_CLIENT_PREALLOCATE: 'false'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: training/requirements.in
+      - name: Resolve separate research environment
+        run: |
+          mkdir -p artifacts/locomotion-preflight
+          python -m pip install -r training/requirements.in --report artifacts/locomotion-preflight/resolver.json
+          python -m pip check
+          python -m pip freeze > artifacts/locomotion-preflight/requirements-linux.txt
+      - name: Compare exact native and MJX models without training
+        run: |
+          timeout 1200 python -u -m training.preflight --robot ${{ matrix.robot }} --steps 3 --output artifacts/locomotion-preflight/${{ matrix.robot }}.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mjx-preflight-${{ matrix.robot }}
+          path: artifacts/locomotion-preflight
+          retention-days: 14

@@ -69,7 +69,10 @@ class StanceController:
                 jac = np.vstack((jp,.2*jr))
                 angular = Rotation.from_matrix(np.asarray(pose['rotation']) @ data.site_xmat[site].reshape(3,3).T).as_rotvec()
                 error = np.r_[np.asarray(pose['position'])-data.site_xpos[site],.2*angular]
-                tasks.append((jac,150.*error-25.*(jac @ data.qvel),300.))
+                weight = float(pose.get('weight', 300.))
+                if not np.isfinite(weight) or not 1. <= weight <= 10000.:
+                    raise ValueError('site tracking weight must be finite and bounded')
+                tasks.append((jac,150.*error-25.*(jac @ data.qvel),weight))
             native_bias = (model.actuator_biasprm[:, 0]+model.actuator_biasprm[:, 1]*data.actuator_length
                            +model.actuator_biasprm[:, 2]*data.actuator_velocity)
             servo = model.actuator_biastype == mj.mjtBias.mjBIAS_AFFINE

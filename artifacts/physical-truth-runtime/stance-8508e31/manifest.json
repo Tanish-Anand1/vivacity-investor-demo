@@ -1,0 +1,70 @@
+{
+  "commit": "8508e31c63565d84197144d14b201463b2221117",
+  "workflow": "https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40080972312",
+  "scope": "Stationary six-second stance/shoulder/disturbance/settle probes, not mobility or hardware.",
+  "reports": [
+    {
+      "robot": "g1",
+      "file": "g1-stance.json.gz",
+      "uncompressed_sha256": "be9800066a91111c4f8365aa6d8e7582d134a903a3277e991347b58d234e03c7",
+      "compressed_sha256": "da1175d9993fc52ff384df4098be039e480e38f7d172cc3645722b7d313a5056",
+      "bytes": 512247,
+      "top_level_fields": [
+        "schema_version",
+        "manifest",
+        "sources",
+        "planned",
+        "trials",
+        "complete",
+        "acceptance_passed",
+        "scope",
+        "counts",
+        "held_out_wilson_95_interval",
+        "deliberate_instability_classified",
+        "development_only"
+      ]
+    },
+    {
+      "robot": "apollo",
+      "file": "apollo-stance.json.gz",
+      "uncompressed_sha256": "5ac9d8ffe8594daf2653377d0c56a89277027f87b7275ec82e4efc07d399a357",
+      "compressed_sha256": "8cf61a544e7f657d211b1816b1ddb24389abafff914242146db2ec98b0ce0896",
+      "bytes": 451964,
+      "top_level_fields": [
+        "schema_version",
+        "manifest",
+        "sources",
+        "planned",
+        "trials",
+        "complete",
+        "acceptance_passed",
+        "scope",
+        "counts",
+        "held_out_wilson_95_interval",
+        "deliberate_instability_classified",
+        "development_only"
+      ]
+    },
+    {
+      "robot": "h1",
+      "file": "h1-stance.json.gz",
+      "uncompressed_sha256": "bfce849378743055f584b425c11f08b21035ce58925eb87304ebc2625ff3cc77",
+      "compressed_sha256": "85f3896b3bd441522561a79723146c401f5b5ce5adc5735ebb6e1271a8691f85",
+      "bytes": 359087,
+      "top_level_fields": [
+        "schema_version",
+        "manifest",
+        "sources",
+        "planned",
+        "trials",
+        "complete",
+        "acceptance_passed",
+        "scope",
+        "counts",
+        "held_out_wilson_95_interval",
+        "deliberate_instability_classified",
+        "development_only"
+      ]
+    }
+  ]
+}
