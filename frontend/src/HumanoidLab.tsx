@@ -23,7 +23,8 @@ const labels:Record<string,string>={unitree_g1:'Warehouse logistics',apptronik_a
 const modelNames:Record<string,string>={unitree_g1:'Unitree G1',apptronik_apollo:'Apptronik Apollo',unitree_h1:'Unitree H1'};
 
 async function read<T>(path:string,init:RequestInit={}):Promise<T>{
-  const response=await fetchRuntime(API+path,{...init,headers:{'X-Workspace-Token':workspaceToken(),...init.headers},signal:init.signal??AbortSignal.timeout(90000)},{timeoutMs:60000});
+  const readOnly=(init.method??'GET').toUpperCase()==='GET';
+  const response=await fetchRuntime(API+path,{...init,headers:{'X-Workspace-Token':workspaceToken(),...init.headers}},{timeoutMs:readOnly?30000:60000});
   const value=await response.json().catch(()=>null);
   if(!response.ok)throw new Error(typeof value?.detail==='string'?value.detail:`Request failed (${response.status})`);
   if(!value)throw new Error('The runtime returned an unreadable response.');

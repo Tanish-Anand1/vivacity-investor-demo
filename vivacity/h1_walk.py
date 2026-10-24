@@ -56,7 +56,10 @@ def simulate_walk(request: HumanoidTrialRequest, *, on_frame=None, checkpoint=No
             if request.action == 'hold_stance' or remaining < .12:
                 forward = 0.
             else:
-                forward = float(np.clip(1.15*remaining, .12, .5))*request.movement_scale
+                # The pinned Unitree deployment config starts this policy at
+                # 0.5 m/s. Smaller approach commands stalled before several
+                # nearby goals; use its published gait command until stopping.
+                forward = .5*request.movement_scale
             lateral = float(np.clip(-.65*data.qpos[1], -.16, .16))
             command = (forward, lateral, 0.)
             action = policy.act(observation(data, command, action))

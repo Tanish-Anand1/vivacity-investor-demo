@@ -107,11 +107,22 @@ H1's pass criterion uses the 95th percentile of support-foot slip, not the
 single largest instantaneous slip sample. Both values are now shown so a
 successful run with a larger peak is not mistaken for a hidden failure.
 
-The currently exposed H1 distance and horizontal-disturbance controls have
-direct controller/force paths but do not yet have independent parameter-sweep
-acceptance tests. The same applies to every permutation of the Panda and
-factory editors. These are remaining sensitivity-audit gaps, not evidence that
-the controls are inert.
+Follow-up on 2026-10-24: the H1 controller's earlier proportional speed
+reduction stalled at several short goals. It now commands the pinned Unitree
+[deployment policy's documented initial forward speed](https://raw.githubusercontent.com/unitreerobotics/unitree_rl_gym/main/deploy/deploy_mujoco/configs/h1.yaml)
+of 0.5 m/s until the
+measured stop zone. A direct fixed-seed sweep of all **17** distances exposed
+by the UI (0.50–1.30 m, 0.05 m increments) passed goal, support, slip, balance
+and at least 1.0 s of stable-stop checks. Measured final goal errors ranged
+from **0.0387 to 0.1736 m**, below the 0.18 m acceptance bound. The 0.2 floor
+friction trial still failed with a fall; a 70 N disturbance changed the live
+trajectory and did not imply a general disturbance guarantee. The new
+`test_h1_reaches_and_stops_for_every_exposed_walk_distance` repeats the entire
+UI distance sweep. New tests also compare measured G1 source/destination
+changes and motion-scale/disturbance effects on all three humanoids. These
+fixed conditions do not establish robustness over arbitrary seeds, starts,
+surfaces, or hardware. Every permutation of the Panda and factory editors
+still lacks an independent sensitivity audit.
 
 ## Acceptance evidence and remaining gates
 
@@ -132,6 +143,19 @@ trajectory/outcome changes, and G1 loading over 0.2, 1.2 and 2.0 kg. The
 mass is not silently turned into a success. The existing world-editor tests
 exercise native reset/version and independent forks; the humanoid API tests
 exercise persisted results and owner isolation.
+
+The 2026-10-24 follow-up added five behavioral tests: the 17-point H1 distance
+sweep, G1 source and destination interventions, and motion-scale plus external
+force interventions for G1, Apollo and H1. In local focused runs, the H1
+sweep/low-friction/deterministic replay selection passed **3/3** and the
+source/destination plus three motion/force tests passed **4/4**. These are
+separate from the historical 365-pass full-suite result below. The complete
+backend suite was then rerun after the controller change: **370 passed,
+1 skipped, 1 warning, 0 failed in 27m14s** on this Windows host. The exact
+cases are preserved in `docs/evidence/physical-truth/pytest-followup.xml`.
+The frontend TypeScript/production build and API transport tests also passed
+after the connection-recovery change (**20/20** transport tests). These runs
+do not establish hardware, arbitrary-terrain, or shared-world capability.
 
 Gate 1 (parameter propagation) is repaired for the confirmed humanoid
 sole/floor break, with solver-level and controller-level tests. It is not a
