@@ -44,8 +44,16 @@ predicate now requires at least **5 mm** native geom separation, preventing
 this transient unload from being misreported as a physical release. The local
 Apollo door/execution suite passed **14/14 in 590.40 s** before a query-cost
 optimization; the focused separation and checkpoint checks passed **2/2 in
-37.66 s** after it. The complete cabinet exchange remains unimplemented and
-no wide-door trial has passed.
+37.66 s** after it. On code revision `483a25f`, Linux CI passed **510/513
+backend tests with three skips and zero failures/errors**, **41/41 Apollo
+component tests**, **98/98 contact tests**, **30/30 ARM64 preflight tests**,
+and the Chromium, Firefox and WebKit contact journeys. Four general/factory
+and one humanoid 512 MB capacity checks also passed. The exact 1.1-rad Apollo
+trial still failed `prohibited_collision` after 11,551 MuJoCo steps: right pad
+to latch crossbar force was 8.949 N, while right-pad-to-handle clearance was
+only 0.011 mm despite zero momentary grip force. Its local compute time was
+122.10 s. The complete cabinet exchange remains unimplemented and no
+wide-door trial has passed.
 
 **The full directive is incomplete and has not been deployed.** Work remains on
 the isolated `codex/physical-truth-runtime` branch. The opening is unchanged.

@@ -289,8 +289,18 @@ so both geometry edits were reverted. These are failed development trials,
 not accepted cabinet service or released controller paths.
 The local Apollo door/execution suite passed **14/14 in 590.40 s** with the
 separation check. After limiting signed-distance queries to unloaded hands,
-the focused separation/checkpoint checks passed **2/2 in 37.66 s**. A full
-Linux run of this exact revision is still required.
+the focused separation/checkpoint checks passed **2/2 in 37.66 s**. The exact
+code revision `483a25f` passed [510/513 Linux backend tests with three skips](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40116822856),
+[41/41 Apollo component tests](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40116822908),
+[98/98 contact tests and all three browser engines](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40116822816),
+and [30/30 ARM64 native preflight tests](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40116822847).
+An exact-code full wide-door trial then failed `prohibited_collision` after
+11,551 native steps at 23.102 s of simulator time. The right-pad/crossbar force
+was 8.949 N. Momentary right grip force was zero, but right-pad/handle signed
+clearance was only **0.011 mm**, so the new release guard did not advance the
+phase. Local compute time was 122.10 s; the verifier returned exit code 1 as
+designed for a failed physical trial. The report remains local at
+`$TEMP/vivacity-apollo-postguard/report.json`; it is not a release artifact.
 
 ## Subsequent integration findings
 
