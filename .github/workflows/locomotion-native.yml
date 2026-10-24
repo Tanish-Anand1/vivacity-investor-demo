@@ -1,0 +1,41 @@
+name: Complete embodiment native policy contract
+on:
+  push:
+    branches: [codex/physical-truth-runtime]
+    paths:
+      - training/locomotion_contract.py
+      - training/native_locomotion.py
+      - training/native_tests/**
+      - vivacity/humanoid_embodiments.py
+      - .github/workflows/locomotion-native.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      PYTEST_DISABLE_PLUGIN_AUTOLOAD: '1'
+      PYTHONPATH: .
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: requirements-lock.txt
+      - run: python -m pip install -r requirements-lock.txt
+      - name: Native physics, actuator mapping, observation isolation and checkpoints
+        run: |
+          mkdir -p artifacts/locomotion-contract
+          python -m pytest --noconftest training/native_tests -q --durations=10 \
+            --junitxml=artifacts/locomotion-contract/native-contract.xml
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-locomotion-contract-evidence
+          path: artifacts/locomotion-contract
+          retention-days: 14

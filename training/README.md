@@ -4,6 +4,40 @@ This directory is an isolated research environment. No trained policy exists for
 the complete tool-equipped embodiments yet. Nothing here is used by the API
 image, and no GPU resource has been purchased.
 
+## Native policy contract — executed 2026-10-24
+
+`locomotion_contract.py` and `native_locomotion.py` now provide the CPU reference
+for the complete tool-equipped embodiments. The action/observation sizes are
+G1 **43/138**, Apollo **36/117**, and H1 **23/78**. The manifest binds named joints,
+units, joint ranges, native actuator types, force limits and action scaling to
+the compiled-model hash. It does not reuse the ten-actuator H1 mapping.
+
+The actor accepts only explicit joint/IMU observations, a bounded velocity
+command and its previous action. Absolute world positions and evaluator contact
+measurements do not enter the actor function. Position servos retain their native
+force clamps; direct motors receive bounded PD torque commands. Every environment
+step advances native MuJoCo through `data.ctrl`. Full integration checkpoints
+retain previous actions, settings, model identity and RNG state; an independent
+restored world reproduces continuation and can diverge under different actions.
+
+This is **an unloaded, flat-floor training reference, not a walking policy**.
+The computed reward never asserts task success. Falls, force/joint-limit
+violations and time limits remain explicit outcomes. GPU batching, the actual
+learning environment, training, exported-policy parity, terrain/carry/running
+tasks and native acceptance cohorts remain open.
+
+Run without installing any GPU or training framework:
+
+```sh
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 \
+  python -m pytest --noconftest training/native_tests -q
+```
+
+The Windows run passed **23 native contract tests**. In the combined run with
+the six cabinet route/tool component checks, **29 tests passed in 130.03 s**.
+Evidence: `artifacts/physical-truth-runtime/native-contract-route-tests.xml`.
+Those component checks do not establish that Apollo completes cabinet service.
+
 ## Current spending constraint: zero
 
 On 2026-10-24 the user clarified that there is no budget and no existing funded
