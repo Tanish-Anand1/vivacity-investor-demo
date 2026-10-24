@@ -18,16 +18,16 @@ checks. Hardware execution is outside the completion claim.
 | --- | --- | --- |
 | Complete checkpoint, independent controller and simulator forks | New native checkpoint adapter and transactional worker pass local restore/fork/restart tests; legacy services not migrated | Partial |
 | All exposed parameter dependencies and causality | New carton mass/density/inertia and solver-contact definitions pass native causality checks; app-wide inventory/UI generation incomplete | Partial |
-| Whole-body stabilization and constraints | New native-actuator wrench controller completes stationary G1 trials, but its first nominal gate failed 19/20 due to a wall-clock solver cutoff. Revised deterministic iteration budget awaits complete acceptance | Failed gate / revision under test |
+| Whole-body stabilization and constraints | Native wrench controller, complete embodiments and six-second stabilization probes implemented. First carton gate failed 19/20 due to a wall-clock cutoff. A later cabinet integration exposed invalid braking constraints on passive spring joints; kernel v2 and new acceptance remain under verification | Revision under test |
 | Contact-only manipulation and G1 bilateral load sharing | Stationary native-servo baseline passes 20/20 nominal and 100/100 held-out trials, with zero equality constraints and continuous retention checks; whole-body controller not accepted | Partial |
 | G1/Apollo/H1 model-matched mobility, turns, terrain, carry | H1 short walk only; complete embodiments need training | Open |
-| Apollo cabinet, latch, old/replacement cartridge cycle | Physical switch demonstration only | Open |
+| Apollo cabinet, latch, old/replacement cartridge cycle | Passive cabinet, latch, retention, rails, cartridges and visible force-limited tooling pass component tests. Full robot service sequence remains open | Partial |
 | Shared-world SORT through DISPATCH | Sorting ledger only | Open |
 | Independent H1 running at 2 m/s | No validated running controller | Open |
 | RGB-D pose estimation without privileged controller inputs | Separate image/depth estimator passes five rendered-image tests; not driving robot control or validated over the complete envelope | Partial |
 | Hardware-transfer manifests, calibration and watchdog procedure | Offline G1 manifest, 382 simulated sensor samples, calibration procedure and fail-closed dry-run watchdog implemented; no transport or hardware validation | Partial |
 | Transactional recovery, owner-scoped fork/compare/export | New opt-in contact API passes real HTTP pause/fork/compare/replay/export; abrupt process-exit recovery tested on real small MuJoCo dynamics | Partial |
-| Browser journeys, three engines, all failure states | New opt-in `/contact-lab` renders compiled native geometry; complete browser journey not yet accepted. Hosted Chromium/Firefox/WebKit verification prepared | Open |
+| Browser journeys, three engines, all failure states | Actual WebGL2/live/pause/fork/compare/replay/export, network interruption, cancellation and final-state reload passed in Chromium, Firefox and WebKit at `f3d9817`. New physics revision awaits rerun; full warehouse journey remains open | Partial |
 | Paid persistence, backups/restore, full-world capacity | SQLite-consistent backup/restore passes concurrent-WAL tests; paid hosting and complete-world capacity remain open | Partial |
 | Production deployment and 24-hour soak | Not started for this release | Open |
 | Break the Frame cinematic release | Deliberately deferred until physics release passes | Deferred |
@@ -39,6 +39,9 @@ full-state checkpoints, a durable owner-scoped worker, real HTTP verification an
 replay renders. Production still uses the historical fixture task. Do not replace
 its UI or enable the research API by default until the required controller and
 frontend gates pass. See `CONTACT_EXECUTION_HANDOFF.md` for the exact local contract.
+The separate complete-embodiment development slice is documented in
+`COMPLETE_EMBODIMENT_DEVELOPMENT.md`. Its fixture probes must not be described as
+completed cabinet service or model-matched locomotion.
 
 Only actuator commands may drive robot joints during a trial. Initial conditions
 and independent planning scratch states may set positions before execution.
@@ -92,3 +95,26 @@ deployment steps. Its completed reports, not its configuration, determine status
 No new GPU training, paid resource activation, production deployment, 24-hour
 soak or opening modification has occurred. This ledger is not a completion
 certificate.
+
+## Subsequent integration findings
+
+- The first Linux all-backend run failed one low-friction negative-test assertion.
+  The native simulation rejected the trial for insufficient grip contact rather
+  than the Windows slip classification. Stronger evidence checks exposed that
+  an upward ejection can produce clearance without a controlled lift. The test
+  now checks missing bilateral grip and absence of supported holding; clearance
+  is not treated as successful manipulation. The full suite needs a fresh pass.
+- Completed-history loading fetches the last persisted frame directly. Explicit
+  Replay remains the only operation that starts recorded motion.
+- Checkpoint metadata and cached scene reads no longer decompress the full model.
+  The owner boundary remains enforced before metadata or geometry is returned.
+- New cabinet bench tests exercise locked-door contact, latch release and excess
+  resistance, retention, free cartridge extraction and native restore. Added
+  gripper tests cover frictional lift/release, low friction, weak grip and overload.
+- The complete H1 requires a distinct 23-actuator model and policy. Its new tool
+  crossbars need an abducted initial arm posture to clear the hips. This geometry
+  correction is explicit; the old ten-actuator walking policy is not reused.
+- An unactuated retention spring legitimately decelerated faster than the
+  controller's constant-acceleration braking barrier. Wrench kernel v2 applies
+  that barrier to driven joints; passive stops remain in native MuJoCo. A native
+  regression reproduces the prior infeasibility and verifies passive settling.

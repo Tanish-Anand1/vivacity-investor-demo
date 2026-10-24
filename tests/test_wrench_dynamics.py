@@ -51,6 +51,31 @@ def test_unpowered_load_falls_or_reports_infeasibility():
     assert abs(data.qpos[0]) > .1
 
 
+def test_passive_spring_retracts_without_impossible_actuator_braking_constraints():
+    model = mj.MjModel.from_xml_string('''<mujoco><option timestep=".001" integrator="implicitfast"/>
+    <worldbody><body name="driven"><joint name="drive" type="slide" axis="1 0 0" range="-1 1"/>
+    <geom type="sphere" size=".02" mass="1"/></body>
+    <body name="passive" pos="1 0 1"><joint name="spring" type="slide" axis="0 0 -1"
+      range="0 .05" stiffness="500" damping="3" armature=".005"/>
+      <geom type="sphere" size=".02" mass=".11"/></body></worldbody>
+    <actuator><motor joint="drive" ctrlrange="-10 10"/></actuator></mujoco>''')
+    data = mj.MjData(model)
+    data.qpos[1], data.qvel[1] = .0024736346886078645, .09222354642241679
+    mj.mj_forward(model, data)
+    # This natural deceleration violates a constant-acceleration 80 ms barrier,
+    # but the changing spring force stops the passive joint inside its range.
+    assert data.qacc[1] < 2*(0-data.qpos[1]-.08*data.qvel[1])/.08**2
+    solver = WrenchInverseDynamics(model)
+    solution = solver.compute(data, data.qpos.copy())
+    assert solution.acceleration[1] == pytest.approx(data.qacc[1], abs=.0001)
+    for _ in range(500):
+        data.ctrl[:] = solver.compute(data, np.zeros(model.nq)).commands
+        mj.mj_step(model, data)
+        mj.mj_forward(model, data)
+        assert 0 <= data.qpos[1] <= .05
+    assert data.qpos[1] == pytest.approx(.11*9.81/500, abs=.00001)
+
+
 @pytest.mark.parametrize('dim', [1, 3, 4, 6])
 def test_contact_basis_maps_native_measured_wrench_to_generalized_force(dim):
     model = mj.MjModel.from_xml_string(f'''<mujoco><option cone="elliptic"/>

@@ -113,8 +113,10 @@ whole task ledger with `last_measurement` and aggregate counters.
 The new contact interface uses HTTP cursor polling, not a new WebSocket protocol.
 The existing general experiment WebSocket contract is unchanged. `/contact-lab`
 implements live polling, pause/resume/cancel, fork, history, comparison, explicit
-replay, export and changed-condition trials. Full cross-browser acceptance is
-still open. Loading the route makes read-only requests only.
+replay, export and changed-condition trials. The three-engine journey passed at
+`f3d9817`, including actual WebGL2, network interruption, cancellation and direct
+final-frame history loading. Each changed physics revision still requires a new
+integration pass. Loading the route makes read-only requests only.
 
 ## Geometry and physical meaning
 

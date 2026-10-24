@@ -82,7 +82,7 @@ class WrenchSolution:
 
 
 class WrenchInverseDynamics:
-    version = 'vivacity.wrench-inverse-dynamics/1-experimental'
+    version = 'vivacity.wrench-inverse-dynamics/2-experimental'
 
     def __init__(self, model):
         self.model = model
@@ -96,6 +96,7 @@ class WrenchInverseDynamics:
                 or np.any(model.actuator_gear[:, 1:] != 0)):
             raise ValueError('bounded positive-gain direct joint motors or affine servos are required')
         self.joints = model.actuator_trnid[:, 0]
+        self.controlled_joints = set(map(int, self.joints))
         self.dofs = model.jnt_dofadr[self.joints]
         if len(set(self.dofs)) != model.nu:
             raise ValueError('one motor per joint is required')
@@ -192,7 +193,11 @@ class WrenchInverseDynamics:
         command_rows[:, nv:nv+nu] = np.eye(nu)
         bounds(command_rows, force_low, force_high)
         for jid in range(model.njnt):
-            if not model.jnt_limited[jid] or model.jnt_type[jid] not in (mj.mjtJoint.mjJNT_HINGE, mj.mjtJoint.mjJNT_SLIDE):
+            # A passive fixture can decelerate under its own changing spring
+            # force. An actuator-style constant-acceleration braking barrier
+            # incorrectly declares that valid motion infeasible. Its native
+            # stops remain enabled; enforce command viability on driven joints.
+            if jid not in self.controlled_joints or not model.jnt_limited[jid] or model.jnt_type[jid] not in (mj.mjtJoint.mjJNT_HINGE, mj.mjtJoint.mjJNT_SLIDE):
                 continue
             dof, qadr = model.jnt_dofadr[jid], model.jnt_qposadr[jid]
             horizon = .08

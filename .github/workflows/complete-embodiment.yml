@@ -1,0 +1,42 @@
+name: Complete embodiment stabilization probes
+on:
+  push:
+    branches: [codex/physical-truth-runtime]
+    paths:
+      - vivacity/humanoid_embodiments.py
+      - vivacity/stance_control.py
+      - vivacity/simulated_tooling.py
+      - vivacity/wrench_dynamics.py
+      - scripts/verify_complete_stance.py
+      - .github/workflows/complete-embodiment.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: complete-embodiment-${{ github.ref }}-${{ github.sha }}
+  cancel-in-progress: false
+jobs:
+  stabilization:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        robot: [g1, apollo, h1]
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build --tag vivacity-embodiment:verification .
+      - name: Run twenty nominal, one hundred held-out, and deliberate instability trials
+        run: |
+          mkdir -p artifacts/complete-embodiment
+          docker run --rm --memory=4g --memory-swap=4g \
+            -v "$PWD/scripts:/app/scripts:ro" -v "$PWD/artifacts/complete-embodiment:/verification" \
+            vivacity-embodiment:verification python -u -m scripts.verify_complete_stance \
+            --robot ${{ matrix.robot }} --nominal 20 --held-out 100 --failure-fixtures \
+            --output /verification/${{ matrix.robot }}-stance.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: complete-${{ matrix.robot }}-stance-evidence
+          path: artifacts/complete-embodiment
+          retention-days: 14

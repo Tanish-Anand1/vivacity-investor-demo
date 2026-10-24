@@ -46,6 +46,8 @@ jobs:
             /app/tests/test_execution_api.py /app/tests/test_render_geometry.py \
             /app/tests/test_hardware_transfer.py /app/tests/test_rgbd_perception.py \
             /app/tests/test_contact_parameters.py \
+            /app/tests/test_bimanual.py /app/tests/test_cabinet_mechanism.py \
+            /app/tests/test_simulated_tooling.py /app/tests/test_humanoid_embodiments.py \
             -q --junitxml=/verification/contact-tests.xml
       - name: Twenty nominal and one hundred preplanned held-out native trials
         if: steps.physics.outputs.changed == 'true'

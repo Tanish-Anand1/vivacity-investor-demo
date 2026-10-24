@@ -53,7 +53,11 @@ def test_deliberate_failures_are_measured(config, expected):
         assert min(measured['last_measurement']['loads'][side]['normal_force_n']
                    for side in ('left','right')) < 4.
         assert not (measured['grip_contact_observed'] and measured['maximum_grip_slip_m'] > .04)
-        assert measured['maximum_parcel_clearance_m'] < .04
+        # A low-friction squeeze may eject the carton upward. Clearance alone
+        # is not a controlled lift: neither a holding phase nor bilateral
+        # supported transport may be credited by this early failure.
+        assert measured['hold_samples'] == 0
+        assert measured['bilateral_hold_samples'] == 0
 
 
 def test_contact_task_checkpoint_repeats_physics_and_controller_decisions():

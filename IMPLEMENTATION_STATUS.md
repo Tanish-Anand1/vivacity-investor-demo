@@ -1,5 +1,14 @@
 ## Physical Truth contact revision (verification in progress)
 
+The subsequent development slice adds passive cabinet mechanics, contact-based
+parallel grippers and separately versioned complete G1/Apollo/H1 embodiments.
+Local controller/fixture/restore checks passed 35 tests; two additional gripper
+failure cases then passed in the 13-test fixture run. Three-engine live browser
+journeys passed at `f3d9817`. A passive-spring integration defect required wrench
+kernel v2, so fresh physics and integration acceptance is required. Full cabinet
+service, locomotion/running, shared warehouse, perception-driven control and the
+production release remain open. See `docs/COMPLETE_EMBODIMENT_DEVELOPMENT.md`.
+
 The isolated contact-only G1 research slice now includes a native-actuator constrained wrench controller, compiled-model scene/mesh APIs, owner-scoped history, an opt-in `/contact-lab` UI, and an offline hardware-transfer package. No new production release or opening change has occurred. The constrained controller first passed development trials but failed its nominal gate (19/20, optimizer wall-clock cutoff). The cutoff has been replaced with an iteration bound; complete revalidation is pending. Local concurrent checks encountered 8 GB memory pressure and were interrupted; they are not passes. See `docs/PHYSICAL_TRUTH_EXECUTION.md` and the hosted `Physical Truth contact gates` reports for exact current evidence.
 
 # Physical Truth implementation checkpoint — 2026-10-24
