@@ -74,6 +74,12 @@ GPU training and paid persistent hosting require a concrete instance quote and
 spending ceiling approved before purchase. No paid resource has been provisioned
 for this release. Training dependencies must remain outside the runtime image.
 
+The latest user constraint is **zero spend** (2026-10-24). There is no funded GPU
+or budget to activate the prior Runpod proposal. The free Colab compatibility
+notebook is prepared; its execution and resource availability must be verified.
+Paid hosting and training remain unfulfilled release requirements, not implied
+authorizations. The following paid quote is retained only as historical context.
+
 Runpod sign-in is complete. The observed 2026-10-24 quote is one A40 with 48 GB
 VRAM, 43 GB RAM and 9 vCPU: $0.59/hour compute plus $0.007/hour container disk
 (50 GB, no persistent volume). The first requested approval is a $2 ceiling for

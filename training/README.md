@@ -4,6 +4,22 @@ This directory is an isolated research environment. No trained policy exists for
 the complete tool-equipped embodiments yet. Nothing here is used by the API
 image, and no GPU resource has been purchased.
 
+## Current spending constraint: zero
+
+On 2026-10-24 the user clarified that there is no budget and no existing funded
+GPU. The Runpod proposal below is historical and **not approved for activation**.
+Do not add funds, select paid accelerators, upgrade hosting or assume that owning
+a payment card authorizes a charge.
+
+`colab_compatibility.ipynb` is the free-runtime alternative. Its source is pinned
+to `fa47720a2437fed8687648e6f37f399d36af8987`. It uses a separate virtual environment,
+original collision geometry, a 30-minute subprocess budget and unique evidence
+directories. No Drive mount, SSH, external serving, quota workaround or purchase
+is involved. The JSON and Python cells parse; actual GPU execution is pending.
+Use only an available free T4 with standard RAM. Download the evidence and
+disconnect afterward. A free runtime is not guaranteed, and this notebook is a
+compatibility probe rather than a trained controller or production host.
+
 The installed Linux dependency lock was produced by the actual
 [preflight run](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40083924085)
 at `3750125`. Dependency installation and `pip check` passed. Model execution did
