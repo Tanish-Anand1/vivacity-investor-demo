@@ -32,7 +32,9 @@ test('real contact task: live state, pause, fork, compare, replay, changed geome
   expect(capability).toBeTruthy();
   const headers={'X-Workspace-Token':capability!};
   const read=async(id:string,suffix='')=>{
-    const response=await request.get(`${prefix}/experiments/${id}${suffix}`,{headers});
+    // Recover an idempotent read if the server closes an idle keep-alive socket.
+    // HTTP errors and mutations are not retried; a dead server still fails.
+    const response=await request.get(`${prefix}/experiments/${id}${suffix}`,{headers,maxRetries:2});
     expect(response.ok(),await response.text()).toBeTruthy();return response.json();
   };
   const submitted=page.waitForResponse(r=>r.url().endsWith(route+'/experiments')&&r.request().method()==='POST');
