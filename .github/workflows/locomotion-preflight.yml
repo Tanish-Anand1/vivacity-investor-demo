@@ -7,6 +7,17 @@ on:
 permissions:
   contents: read
 jobs:
+  pilot-controls:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install pytest==9.1.1
+      - run: python -m pytest training/tests -q
+      - run: bash -n training/gpu_pilot.sh
   model-compatibility:
     runs-on: ubuntu-24.04
     timeout-minutes: 30
@@ -34,7 +45,7 @@ jobs:
           python -m pip freeze > artifacts/locomotion-preflight/requirements-linux.txt
       - name: Resolve GPU additions without provisioning or using a GPU
         if: matrix.robot == 'h1'
-        run: python -m pip install --dry-run -r training/requirements-gpu.in --report artifacts/locomotion-preflight/gpu-resolver.json
+        run: python -m pip install --dry-run -r training/requirements-gpu-lock.txt --report artifacts/locomotion-preflight/gpu-resolver.json
       - name: Compare exact native and MJX models without training
         run: |
           timeout 1200 python -u -m training.preflight --robot ${{ matrix.robot }} --steps 3 --output artifacts/locomotion-preflight/${{ matrix.robot }}.json
