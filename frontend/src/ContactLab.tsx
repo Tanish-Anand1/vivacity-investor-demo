@@ -17,7 +17,7 @@ type Result={task_success:boolean;failure_reason:string|null;controller:string;m
 type Measurements={minimum_hold_share?:number;hold_samples?:number;maximum_actuator_torque_fraction?:number;last_measurement?:{
   destination_error_m?:number;parcel_position_m?:number[];parcel_speed_m_s?:number;
   support?:{left_vertical_n:number;right_vertical_n:number;other_vertical_n:number}}};
-type Job={id:string;task:string;status:string;steps_completed:number;current_phase:string|null;world_version:string|null;
+type Job={id:string;task:string;status:string;steps_completed:number;next_cursor:number;current_phase:string|null;world_version:string|null;
   config:Record<string,unknown>;result:Result|null;error:string|null;partial_measurements:NonNullable<Measurements['last_measurement']>};
 type Entries={seq:number;frame:Frame}[];
 type Delta={status:string;frames:Entries;next_cursor:number;steps_completed:number;current_phase:string|null;partial_measurements:Job['partial_measurements']};
@@ -92,7 +92,10 @@ export default function ContactLab(){
   },[retry]);
   useEffect(()=>()=>{assets?.geometry.forEach(g=>g.dispose());},[assets]);
 
-  useEffect(()=>{if(!job?.id)return;const id=job.id,controller=new AbortController();let disposed=false,next=0,sceneLoaded=false;
+  useEffect(()=>{if(!job?.id)return;const id=job.id,controller=new AbortController();
+    // Selecting completed history displays its final state directly. Fetching
+    // every page into the viewport would otherwise resemble automatic replay.
+    let disposed=false,next=terminal.has(job.status)?Math.max(0,job.next_cursor-1):0,sceneLoaded=false;
     liveFrames.current=[];setFrames([]);setSceneFor('');
     async function follow(){while(!disposed){try{
       const delta=await request<Delta>(`/experiments/${id}/frames?cursor=${next}&limit=32`,'GET',undefined,controller.signal);
@@ -103,7 +106,7 @@ export default function ContactLab(){
         liveFrames.current.push(entry.frame);next++;
       }
       if(delta.next_cursor!==next)throw new Error('The runtime frame cursor is inconsistent.');
-      if(delta.frames.length)setFrames([...liveFrames.current]);
+      if(delta.frames.length&&!terminal.has(delta.status))setFrames([...liveFrames.current]);
       setJob(current=>current?.id===id?{...current,status:delta.status,steps_completed:delta.steps_completed,
         current_phase:delta.current_phase,partial_measurements:delta.partial_measurements}:current);
       if(!sceneLoaded&&liveFrames.current.length){
@@ -116,10 +119,11 @@ export default function ContactLab(){
         setAssets(built);setSceneFor(id);sceneLoaded=true;
       }
       setError(null);
-      if(delta.status==='paused'||terminal.has(delta.status)){
+      if(delta.status==='paused'||(terminal.has(delta.status)&&delta.frames.length<32)){
         cursor.current=liveFrames.current.at(-1)?.time_s??0;setTime(cursor.current);
       }
       if(terminal.has(delta.status)&&delta.frames.length<32){
+        setFrames([...liveFrames.current]);
         const final=await request<Job>(`/experiments/${id}`,'GET',undefined,controller.signal);
         if(disposed)return;setJob(final);await refreshHistory();return;
       }

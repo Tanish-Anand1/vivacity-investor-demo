@@ -31,7 +31,7 @@ def test_native_g1_both_hands_carry_and_release_without_attachment():
 
 @pytest.mark.parametrize('config,expected', [
     (BimanualConfig(parcel=BoxPhysics(sliding_friction=.001, torsional_friction_m=0., rolling_friction_m=0.)),
-     {'grip_slipped', 'lift_not_clear', 'bilateral_load_not_sustained', 'retention_lost'}),
+     {'grip_slipped', 'insufficient_grip_contact', 'lift_not_clear', 'bilateral_load_not_sustained', 'retention_lost'}),
     (BimanualConfig(hand_torque_scale=.01),
      {'grip_slipped', 'insufficient_grip_contact', 'lift_not_clear', 'bilateral_load_not_sustained', 'retention_lost'}),
     (BimanualConfig(source_xy_m=(.68, 0.)), {'unreachable_target'}),
@@ -44,6 +44,16 @@ def test_deliberate_failures_are_measured(config, expected):
     if result['failure_reason'] == 'grip_slipped':
         assert result['measurements']['grip_contact_observed']
         assert result['measurements']['maximum_grip_slip_m'] > .04
+    elif result['failure_reason'] == 'insufficient_grip_contact':
+        # On the Linux runtime, very low friction can prevent a load-bearing
+        # grip before the slip threshold is reached. Require measured evidence
+        # for that earlier failure rather than demanding one platform's label.
+        measured = result['measurements']
+        assert measured['phase'] == 'grip'
+        assert min(measured['last_measurement']['loads'][side]['normal_force_n']
+                   for side in ('left','right')) < 4.
+        assert not (measured['grip_contact_observed'] and measured['maximum_grip_slip_m'] > .04)
+        assert measured['maximum_parcel_clearance_m'] < .04
 
 
 def test_contact_task_checkpoint_repeats_physics_and_controller_decisions():

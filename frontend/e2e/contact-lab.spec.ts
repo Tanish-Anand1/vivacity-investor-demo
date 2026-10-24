@@ -106,7 +106,11 @@ test('real contact task: live state, pause, fork, compare, replay, changed geome
   const scene=await read(changed.id,'/scene');
   expect(scene.geoms.find((g:{name:string})=>g.name==='parcel_box').size[0]).toBe(.1);
   await expect(page.locator('[data-model-hash]')).toHaveAttribute('data-model-hash',scene.model_hash);
-  const beforeReload=writes.length;await page.reload();
+  const beforeReload=writes.length;
+  const restoredFrameRequest=page.waitForRequest(r=>r.url().includes(`${route}/experiments/${changed.id}/frames?`));
+  await page.reload();
+  const restoredCursor=new URL((await restoredFrameRequest).url()).searchParams.get('cursor');
+  expect(Number(restoredCursor)).toBe(failed.next_cursor-1);
   await expect(page.getByTestId('contact-result')).toContainText('Trial failed:');
   await expect(page.locator('[data-model-hash]')).toHaveAttribute('data-model-hash',scene.model_hash);
   await renderedScene();
@@ -135,6 +139,6 @@ test('real contact task: live state, pause, fork, compare, replay, changed geome
     failure_reason:failed.result.failure_reason,initial_load_started_experiments:false,
     reload_started_experiments:false,checks:['live_before_terminal','complete_pause_snapshot','independent_fork',
       'matching_final_measurement','explicit_replay','export_matches_cursor','changed_geometry','genuine_failure',
-      'reload_recovery','network_recovery_without_duplicate_start','cancellation','displayed_pause_matches_checkpoint',
+      'reload_recovery','completed_history_displays_final_frame','network_recovery_without_duplicate_start','cancellation','displayed_pause_matches_checkpoint',
       'mobile_reflow','keyboard_focus','reduced_motion','webgl2_rendering','no_page_errors']},null,2));
 });
