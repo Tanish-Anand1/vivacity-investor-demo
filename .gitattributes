@@ -1,0 +1,6 @@
+# These source hashes are persisted with controller/checkpoint evidence.
+vivacity/bimanual.py text eol=lf
+vivacity/contact_evidence.py text eol=lf
+vivacity/physical_parameters.py text eol=lf
+vivacity/inverse_dynamics.py text eol=lf
+vivacity/whole_body_contact.py text eol=lf
