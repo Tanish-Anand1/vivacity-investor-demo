@@ -21,7 +21,13 @@ test('older production runtime keeps contact research unavailable and renders th
   await expect(page.getByRole('alert')).toHaveCount(0);
   await page.setViewportSize({width:390,height:844});
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
-  await page.screenshot({path:testInfo.outputPath('unavailable-contact-mobile.png'),fullPage:true});
+  // Chromium's headed Linux compositor can reject its first capture while the
+  // WebGL surface is being resized. Retry only that transient capture failure;
+  // page, rendering and assertion errors retain their normal failing result.
+  await expect.poll(async()=>{
+    try{await page.screenshot({path:testInfo.outputPath('unavailable-contact-mobile.png'),fullPage:true});return true;}
+    catch(error){if(String(error).includes('Unable to capture screenshot'))return false;throw error;}
+  },{timeout:5000}).toBe(true);
   expect(writes).toEqual([]);
   expect(errors).toEqual([]);
   // An authorization failure must never be disguised as an absent capability.
