@@ -4,6 +4,36 @@ This directory is an isolated research environment. No trained policy exists for
 the complete tool-equipped embodiments yet. Nothing here is used by the API
 image, and no GPU resource has been purchased.
 
+## Executed controller and batching probes — 2026-10-25
+
+The available free T4 was used for complete-model closed-loop controls, batched
+independence, terminal-state freezing and native/GPU observation parity. The
+CPU reference now consistently uses the body frame (`mjOBJ_XBODY`); eight new
+native regression cases pass, and the full native contract suite passes 31/31.
+`mjx_locomotion.py` keeps per-world integration states and uses MuJoCo's
+`Data.where` for Warp's shared contact workspaces. It remains research-only.
+
+The corrected two-world H1 and Apollo probes pass their short checks. G1 passes
+native parity but fails exact GPU repeatability. Eight-world G1 executes 8,000
+steps at 3,870.886 steps/s; H1 executes 3,600 steps at 3,436.272 steps/s before all
+eight untrained worlds fall at 0.9 simulated seconds. Both larger probes fail
+strict bitwise repeatability (maximum qpos differences below 1e-9). Opt-in
+`--warp-deterministic` compilation times out after 350 seconds for both models.
+These failures remain failures. No policy was trained or deployed.
+
+Exact model/source hashes, earlier failed attempts, measured timings and commands:
+[executed evidence](../artifacts/physical-truth-runtime/frontend-gpu-20261025/README.md).
+Use the pinned GPU environment and an external subprocess time budget:
+
+```sh
+python -m training.mjx_probe --robot h1 --batch-size 2 --transitions 10 --output h1.json
+python -m training.mjx_probe --robot g1 --batch-size 8 --transitions 100 --output g1-eight.json
+```
+
+This does not satisfy model-matched mobility, carrying, terrain or running gates.
+The historical compatibility-only notebook remains a bootstrap; use the commands
+above against the recorded source revision for the new probe.
+
 ## Native policy contract — executed 2026-10-24
 
 `locomotion_contract.py` and `native_locomotion.py` now provide the CPU reference

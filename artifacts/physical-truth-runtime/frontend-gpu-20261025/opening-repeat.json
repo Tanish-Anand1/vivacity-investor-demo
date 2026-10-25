@@ -1,0 +1,246 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\Tanish Anand\\.codex\\worktrees\\physical-truth-runtime\\DEMO-\\frontend\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "playwright.opening.config.ts",
+      "--grep",
+      "actual film plays",
+      "--repeat-each",
+      "3"
+    ],
+    "configFile": "C:\\Users\\Tanish Anand\\.codex\\worktrees\\physical-truth-runtime\\DEMO-\\frontend\\playwright.opening.config.ts",
+    "rootDir": "C:/Users/Tanish Anand/.codex/worktrees/physical-truth-runtime/DEMO-/frontend/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/Tanish Anand/.codex/worktrees/physical-truth-runtime/DEMO-/frontend/test-results/the-one-opening",
+        "repeatEach": 3,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/Tanish Anand/.codex/worktrees/physical-truth-runtime/DEMO-/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "isabella-opening.spec.ts"
+        ],
+        "timeout": 45000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\Tanish Anand\\.codex\\worktrees\\physical-truth-runtime\\DEMO-\\frontend\\test-results\\the-one-opening",
+        "repeatEach": 3,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "C:\\Users\\Tanish Anand\\.codex\\worktrees\\physical-truth-runtime\\DEMO-\\frontend\\e2e",
+        "snapshotDir": "C:\\Users\\Tanish Anand\\.codex\\worktrees\\physical-truth-runtime\\DEMO-\\frontend\\e2e",
+        "testIgnore": [],
+        "testMatch": "isabella-opening.spec.ts",
+        "timeout": 45000,
+        "use": {
+          "baseURL": "http://127.0.0.1:5186",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "channel": "chrome",
+          "headless": true,
+          "launchOptions": {
+            "args": []
+          },
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "../artifacts/the-one-browser-tests.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "isabella-opening.spec.ts",
+      "file": "isabella-opening.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "the actual film plays 7.5 seconds, hands off to the homepage, and starts no physics",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 14979,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T05:38:26.337Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "playback-metrics",
+                      "contentType": "application/json",
+                      "body": "ewogICJkdXJhdGlvbiI6IDcuNSwKICAibXV0ZWQiOiB0cnVlLAogICJyYXRlIjogMSwKICAid2lkdGgiOiA5NjAsCiAgImhlaWdodCI6IDU0MCwKICAibWVkaWFFbmQiOiA3LjUsCiAgImVsYXBzZWRNcyI6IDgyNjMuMTk5OTk5OTg4MDc5LAogICJwaHlzaWNzU3RhcnRzIjogMAp9"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d712e32cc241d49c3697-8ec968a5e5b62d00fff3",
+          "file": "isabella-opening.spec.ts",
+          "line": 34,
+          "column": 1
+        },
+        {
+          "title": "the actual film plays 7.5 seconds, hands off to the homepage, and starts no physics",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 13013,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T05:38:47.156Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "playback-metrics",
+                      "contentType": "application/json",
+                      "body": "ewogICJkdXJhdGlvbiI6IDcuNSwKICAibXV0ZWQiOiB0cnVlLAogICJyYXRlIjogMSwKICAid2lkdGgiOiA5NjAsCiAgImhlaWdodCI6IDU0MCwKICAibWVkaWFFbmQiOiA3LjUsCiAgImVsYXBzZWRNcyI6IDc1NzcsCiAgInBoeXNpY3NTdGFydHMiOiAwCn0="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d712e32cc241d49c3697-813127574d37fdab5bdb",
+          "file": "isabella-opening.spec.ts",
+          "line": 34,
+          "column": 1
+        },
+        {
+          "title": "the actual film plays 7.5 seconds, hands off to the homepage, and starts no physics",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 12259,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T05:39:03.691Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "playback-metrics",
+                      "contentType": "application/json",
+                      "body": "ewogICJkdXJhdGlvbiI6IDcuNSwKICAibXV0ZWQiOiB0cnVlLAogICJyYXRlIjogMSwKICAid2lkdGgiOiA5NjAsCiAgImhlaWdodCI6IDU0MCwKICAibWVkaWFFbmQiOiA3LjUsCiAgImVsYXBzZWRNcyI6IDc1NjguODk5OTk5OTc2MTU4LAogICJwaHlzaWNzU3RhcnRzIjogMAp9"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d712e32cc241d49c3697-c3acb207ca34a1fdd5ce",
+          "file": "isabella-opening.spec.ts",
+          "line": 34,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-25T05:38:23.418Z",
+    "duration": 53829.636999999995,
+    "expected": 3,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

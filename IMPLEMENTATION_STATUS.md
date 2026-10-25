@@ -1,3 +1,48 @@
+## Public frontend release and GPU controller verification — 2026-10-25
+
+Frontend source `d2519c390962ed6aa5b3cbb68d192db82cf968c7` is deployed at
+<https://demo.tryvivacity.com> through production deployment
+`dpl_2ddoDynjdVt58puBYK4KGTw7wh9w`. The existing production backend is preserved.
+This is a frontend repair release, not completion of Physical Truth.
+
+- Fixed the contact preview on production runtimes without the experimental
+  capabilities route. Unavailable execution is explicitly disabled; authorization
+  and transport failures are still errors.
+- Fixed selected-trial replay being cleared by sample-panel initialization.
+  Measurements, statuses, CSV/JSON and complete-record exports now follow the
+  selected trial rather than silently reverting to the baseline.
+- Fixed partial measurement exports: exports wait for all saved sample pages.
+- Final hosted checks at `d2519c3`: opening 17/17 and real production/mobile
+  journeys 2/2 passed in CI 40169825355. Local memory-pressure failures and the
+  subsequent 3/3 isolated repeat are retained rather than omitted.
+- Production baseline plus six-trial comparison executed through real browser
+  requests. Comparison: baseline 0/3, candidate 3/3, 63,691 native physics steps,
+  699.606 wall seconds. Selected-run replay and CSV/sampled JSON/complete-record
+  identity passed. Mobile/reduced motion passed. These are small-sample
+  simulation results, not complete scenario or hardware acceptance.
+- Backend at `a539ecf`: 536 passed, 3 skipped. Contact suite at `efc966a`:
+  110 passed. Chromium, Firefox and WebKit contact journeys passed. Native
+  policy-contract suite: 31 passed (including eight new body-frame checks).
+- A concurrent production request correctly received HTTP 429 from the existing
+  single-worker admission limit. Sequential verification is required on this host.
+- Real production mass edits update native mass/inertia/energy; invalid zero mass
+  is rejected without changing the valid world. Health and runtime proxy return
+  HTTP 200 with JSON; no simulation starts merely by loading the page.
+
+The free T4 probe found and corrected body/inertia-frame observation mismatch and
+Warp state-selection defects. Short corrected H1/Apollo control probes pass;
+G1's exact repeatability does not. Eight-world G1 ran 8,000 timed physics steps;
+H1 ran 3,600 before falling at 0.9 s. Deterministic compilation timed out at the
+350-second bound. No trained mobility policy or task success is claimed.
+
+Full reports, source/model hashes, failed checks, reproduction and rollback:
+`artifacts/physical-truth-runtime/frontend-gpu-20261025/README.md`.
+The strengthened final deployment journey passed; earlier worker-busy and
+partial-pagination failures remain in the evidence bundle.
+No new spending or Fireworks calls occurred. Full cabinet service, mobility,
+warehouse execution, perception-driven control, complete coverage and durable
+hosting/24-hour soak remain unpassed. Cinematic refinement stays deferred.
+
 ## Cabinet clearance update and current verification — 2026-10-25
 
 Verified application source: `b49552c64aced96b972ee8eba4d410e29fc8a8a1`.

@@ -1,0 +1,7 @@
+{
+  "source_commit": "76c00164a0abed8abf314fb9a0a85e62ec0f8172",
+  "gpu": "Tesla T4, 15360 MiB, 580.82.07",
+  "scope": "Research-only controller parity, native-model batch capacity and failed exact GPU repeatability checks; no locomotion acceptance or trained policy",
+  "training_performed": false,
+  "new_spending_usd": 0
+}

@@ -1,0 +1,122 @@
+Browser tab: 37, Title: "Isabella Labs — By Vivacity", URL: "https://demo.tryvivacity.com/lab".
+1 AXWebArea Isabella Labs — By Vivacity, URL: demo.tryvivacity.com/lab
+	2 container root
+		3 link Description: Skip to workspace, Value: demo.tryvivacity.com/lab#workspace
+		4 container
+			5 link Description: Isabella Labs home, Value: demo.tryvivacity.com/
+			6 container Workspace navigation
+				7 link Description: Lab, Value: demo.tryvivacity.com/laboratory
+				8 link Description: Worlds, Value: demo.tryvivacity.com/worlds
+				9 link Description: Records, Value: demo.tryvivacity.com/experiments
+			10 link Description: Runtime settings, Value: demo.tryvivacity.com/settings
+		11 container
+			12 text ISABELLA LABS / ROBOTIC HANDLING
+			13 heading Build a world. Test what could happen., Value: 1
+				14 text Build a world. Test what could happen.
+			15 text Observe a physical failure, change one condition, and compare the outcomes before touching a production line.
+			16 link Description: Explore V-Robotics programs ↗, Value: demo.tryvivacity.com/workspace
+			17 container Laboratory depth
+				18 checkbox Explore, Value: 0
+				19 checkbox Research, Value: 1
+			40 container
+				41 text View
+				42 pop up button (collapsed, settable) View, Value: High fidelity, Secondary Actions: Expand
+					43 menu
+						44 (selected) High fidelity
+						45 Performance
+						46 Engineering
+			20 button (collapsed) Autonomous work Order → Sort → Collect → Pack → Seal → Label → Dispatch +, Secondary Actions: Expand
+				21 text Autonomous work
+				22 text Order → Sort → Collect → Pack → Seal → Label → Dispatch
+				23 text +
+			33 container Factory simulation
+				34 image Factory view. Arrow keys orbit, plus and minus zoom, R resets.
+				35 text Sorting cell 01  · Panda / Z-up / metres
+				36 checkbox Overview, Value: 1
+				37 checkbox Robot station, Value: 0
+				38 checkbox Plan, Value: 0
+			39 text World Ready 0.000  s · simulation time Ready Backend state and controls
+			47 button Start production
+			48 button (disabled) Pause
+			49 button (disabled) Stop
+			50 button (disabled) Emergency simulation stop
+			51 button Reset
+			52 text 0  /  1  cartons sorted 0  station arrivals Lane A <  70  g · Lane B ≥  70  g Small-carton contact sorting. Control uses simulator mass and position. Camera observations are independently rendered on request. Emergency stop freezes this simulation, not physical hardware.
+			53 button (collapsed) Production conditions, Secondary Actions: Expand
+				54 text Production conditions
+			55 button (collapsed) Measured transport and event log, Secondary Actions: Expand
+				56 text Measured transport and event log
+			57 button (collapsed) World state and reproducibility, Secondary Actions: Expand
+				58 text World state and reproducibility
+			59 button (collapsed) Projects & configuration versions, Secondary Actions: Expand
+				60 text Projects & configuration versions
+			61 button (collapsed) Reproduce & export, Secondary Actions: Expand
+				62 text Reproduce & export
+			63 button (collapsed) Repeated benchmark & saved runs, Secondary Actions: Expand
+				64 text Repeated benchmark & saved runs
+			65 container Robot observations
+				66 heading Observation, Value: 2
+					67 text Observation
+				68 button Capture camera
+				69 container
+					70 text Actual simulated camera Capture an RGB frame and its depth-based carton detections. The image is rendered by the simulator at the recorded state.
+				71 heading Simulator ground truth, Value: 3
+					72 text Simulator ground truth
+				73 container
+					74 text Live  state ·  0.000  s
+				75 container
+					76 text Inspect carton
+					77 pop up button (collapsed, settable) Inspect carton, Value: target, Secondary Actions: Expand
+						78 menu
+							79 (selected) target
+				80 definition list
+					81 container Position (m)
+						82 text Position (m)
+					83 text 0.500, -0.400, 0.026
+					84 container Orientation (w, x, y, z)
+						85 text Orientation (w, x, y, z)
+					86 text 1.000, 0.000, 0.000, 0.000
+					87 container Linear velocity (m/s)
+						88 text Linear velocity (m/s)
+					89 text 0.000, 0.000, 0.000
+					90 container Angular velocity (rad/s)
+						91 text Angular velocity (rad/s)
+					92 text 0.000, 0.000, 0.000
+					93 container Mass (kg)
+						94 text Mass (kg)
+					95 text 0.0900
+					96 container Acceleration (m/s²)
+						97 text Acceleration (m/s²)
+					98 text 0.000, 0.000, -9.810
+					99 container Principal inertia (kg m²)
+						100 text Principal inertia (kg m²)
+					101 text 0.0000375, 0.0000375, 0.0000375
+					102 container Sliding friction
+						103 text Sliding friction
+					104 text 0.800
+					105 container Contacts
+						106 text Contacts
+					107 text 0
+					108 container Kinetic / potential (J)
+						109 text Kinetic / potential (J)
+					110 container
+						111 text 0.0000  /  0.7293
+					112 container Gripper normal force (N)
+						113 text Gripper normal force (N)
+					114 text 0.000
+					115 container Total actuator power (W)
+						116 text Total actuator power (W)
+					117 text 0.000
+					118 container Net / positive work (J)
+						119 text Net / positive work (J)
+					120 container
+						121 text 0.000  /  0.000
+					122 container End effector (m)
+						123 text End effector (m)
+					124 text 0.554, -0.000, 0.522
+				125 container
+					126 text Force solution:  0.000  s. Mechanical estimates; electrical consumption is not modeled.
+				127 button (collapsed) Robot joint state, Secondary Actions: Expand
+					128 text Robot joint state
+
+The focused UI element is 19 checkbox Research, Value: 1

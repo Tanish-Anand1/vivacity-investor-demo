@@ -1,0 +1,205 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\Tanish Anand\\.codex\\worktrees\\physical-truth-runtime\\DEMO-\\frontend\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "playwright.factory.config.ts",
+      "lab-journey.spec.ts"
+    ],
+    "configFile": "C:\\Users\\Tanish Anand\\.codex\\worktrees\\physical-truth-runtime\\DEMO-\\frontend\\playwright.factory.config.ts",
+    "rootDir": "C:/Users/Tanish Anand/.codex/worktrees/physical-truth-runtime/DEMO-/frontend/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/Tanish Anand/.codex/worktrees/physical-truth-runtime/DEMO-/frontend/test-results/frontend-release-20261025",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/Tanish Anand/.codex/worktrees/physical-truth-runtime/DEMO-/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "factory-configurator.spec.ts",
+          "lab-journey.spec.ts",
+          "isabella-accessibility.spec.ts",
+          "science-journey.spec.ts",
+          "physical-work.spec.ts"
+        ],
+        "timeout": 900000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\Tanish Anand\\.codex\\worktrees\\physical-truth-runtime\\DEMO-\\frontend\\test-results\\frontend-release-20261025",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "C:\\Users\\Tanish Anand\\.codex\\worktrees\\physical-truth-runtime\\DEMO-\\frontend\\e2e",
+        "snapshotDir": "C:\\Users\\Tanish Anand\\.codex\\worktrees\\physical-truth-runtime\\DEMO-\\frontend\\e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "factory-configurator.spec.ts",
+          "lab-journey.spec.ts",
+          "isabella-accessibility.spec.ts",
+          "science-journey.spec.ts",
+          "physical-work.spec.ts"
+        ],
+        "timeout": 900000,
+        "use": {
+          "baseURL": "https://demo.tryvivacity.com",
+          "channel": "chrome",
+          "viewport": {
+            "width": 1440,
+            "height": 1000
+          },
+          "headless": true,
+          "launchOptions": {
+            "args": []
+          },
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results\\frontend-release-20261025\\report.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "lab-journey.spec.ts",
+      "file": "lab-journey.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "homepage starts a real failure and six matched MuJoCo trials, then Research replays a saved run",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 1800000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 756456,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "LAB_E2E_BENCHMARK {\"id\":\"e02a8a3f-cec5-40a7-8816-b29ec0c4f334\",\"wall_time_s\":673.7997561851516,\"training\":{\"baseline\":{\"trials\":2,\"successes\":0,\"success_rate\":0,\"successful_duration_mean_s\":null,\"successful_duration_variance_s2\":null,\"failures\":{\"dropped_object\":2}},\"candidate\":{\"trials\":2,\"successes\":2,\"success_rate\":1,\"successful_duration_mean_s\":34.15999999999578,\"successful_duration_variance_s2\":0,\"failures\":{}}},\"held_out\":{\"baseline\":{\"trials\":1,\"successes\":0,\"success_rate\":0,\"successful_duration_mean_s\":null,\"successful_duration_variance_s2\":null,\"failures\":{\"dropped_object\":1}},\"candidate\":{\"trials\":1,\"successes\":1,\"success_rate\":1,\"successful_duration_mean_s\":34.1759999999958,\"successful_duration_variance_s2\":null,\"failures\":{}}},\"steps\":[4147,17080,4147,17080,4149,17088]}\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T06:00:26.086Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "daabc7b5bb6553e3d0af-fe7aca3f2f2b625e29f0",
+          "file": "lab-journey.spec.ts",
+          "line": 9,
+          "column": 1
+        },
+        {
+          "title": "reduced motion enters directly and the narrow layout has no horizontal overflow",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 900000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 9960,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T06:13:03.729Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "daabc7b5bb6553e3d0af-c0895e10154d32aaee50",
+          "file": "lab-journey.spec.ts",
+          "line": 93,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-25T06:00:24.624Z",
+    "duration": 776099.066,
+    "expected": 2,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

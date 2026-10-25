@@ -1,0 +1,25 @@
+{
+  "source": "d2519c390962ed6aa5b3cbb68d192db82cf968c7",
+  "executed_at": "2026-10-25T06:41:08.946400+00:00",
+  "checks": [
+    {
+      "command": "npm run test:api",
+      "passed": 20,
+      "failed": 0,
+      "duration_ms": 478.3199
+    },
+    {
+      "command": "npm run test:templates",
+      "passed": 5,
+      "failed": 0,
+      "duration_ms": 22.2942
+    },
+    {
+      "command": "npm run test:factory-settings",
+      "passed": 4,
+      "failed": 0,
+      "duration_ms": 13.4234
+    }
+  ],
+  "note": "Actual Node test runner results. These are separate from native physics and public browser acceptance."
+}

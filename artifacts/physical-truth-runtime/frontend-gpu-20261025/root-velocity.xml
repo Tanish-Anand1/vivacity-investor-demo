@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="8" skipped="0" tests="8" time="8.184" timestamp="2026-10-25T11:15:52.322050+05:30" hostname="DESKTOP-THSIQ49"><testcase classname="training.native_tests.test_root_velocity" name="test_free_root_sensor_velocity_matches_native_object_velocity[0]" time="1.557"><failure message="AssertionError: &#10;Not equal to tolerance rtol=1e-07, atol=1e-12&#10;&#10;Mismatched elements: 3 / 3 (100%)&#10;Mismatch at indices:&#10; [0]: -1.111943132868574 (ACTUAL), -1.0807794097417063 (DESIRED)&#10; [1]: 1.1958466505957255 (ACTUAL), 1.1335192043419902 (DESIRED)&#10; [2]: -0.24831977303793729 (ACTUAL), -0.15696438772368182 (DESIRED)&#10;Max absolute difference among violations: 0.09135539&#10;Max relative difference among violations: 0.58201345&#10; ACTUAL: array([-1.111943,  1.195847, -0.24832 ])&#10; DESIRED: array([-1.080779,  1.133519, -0.156964])">seed = 0
+
+    @pytest.mark.parametrize('seed',range(8))
+    def test_free_root_sensor_velocity_matches_native_object_velocity(seed):
+        model=mj.MjModel.from_xml_string('''&lt;mujoco&gt;&lt;compiler alignfree="false"/&gt;
+          &lt;worldbody&gt;&lt;body name="base" pos="0 0 1"&gt;&lt;freejoint/&gt;
+            &lt;geom type="box" size=".1 .2 .3" mass="2" pos=".1 .05 0"/&gt;
+            &lt;body pos=".2 0 .1"&gt;&lt;joint type="hinge" axis="0 1 0"/&gt;
+              &lt;geom type="capsule" size=".03 .1" mass=".5"/&gt;
+            &lt;/body&gt;
+          &lt;/body&gt;&lt;/worldbody&gt;&lt;/mujoco&gt;''')
+        rng=np.random.default_rng(seed)
+        data=mj.MjData(model)
+        quaternion=rng.normal(size=4)
+        data.qpos[3:7]=quaternion/np.linalg.norm(quaternion)
+        data.qpos[7]=rng.normal()
+        data.qvel[:]=rng.normal(size=model.nv)
+        mj.mj_forward(model,data)
+        expected=np.zeros(6)
+        mj.mj_objectVelocity(model,data,mj.mjtObj.mjOBJ_BODY,model.body('base').id,expected,1)
+        angular,linear=free_root_velocity(data.qvel[:6],data.body('base').xmat)
+        np.testing.assert_allclose(angular,expected[:3],atol=1e-12)
+&gt;       np.testing.assert_allclose(linear,expected[3:],atol=1e-12)
+E       AssertionError: 
+E       Not equal to tolerance rtol=1e-07, atol=1e-12
+E       
+E       Mismatched elements: 3 / 3 (100%)
+E       Mismatch at indices:
+E        [0]: -1.111943132868574 (ACTUAL), -1.0807794097417063 (DESIRED)
+E        [1]: 1.1958466505957255 (ACTUAL), 1.1335192043419902 (DESIRED)
+E        [2]: -0.24831977303793729 (ACTUAL), -0.15696438772368182 (DESIRED)
+E       Max absolute difference among violations: 0.09135539
+E       Max relative difference among violations: 0.58201345
+E        ACTUAL: array([-1.111943,  1.195847, -0.24832 ])
+E        DESIRED: array([-1.080779,  1.133519, -0.156964])
+
+training\native_tests\test_root_velocity.py:29: AssertionError</failure></testcase><testcase classname="training.native_tests.test_root_velocity" name="test_free_root_sensor_velocity_matches_native_object_velocity[1]" time="0.006"><failure message="AssertionError: &#10;Not equal to tolerance rtol=1e-07, atol=1e-12&#10;&#10;Mismatched elements: 3 / 3 (100%)&#10;Mismatch at indices:&#10; [0]: -0.6292307062853925 (ACTUAL), -0.6306518183511823 (DESIRED)&#10; [1]: 0.6247520215073625 (ACTUAL), 0.6275942456389422 (DESIRED)&#10; [2]: 0.19753712747695074 (ACTUAL), 0.18635249762070194 (DESIRED)&#10;Max absolute difference among violations: 0.01118463&#10;Max relative difference among violations: 0.06001867&#10; ACTUAL: array([-0.629231,  0.624752,  0.197537])&#10; DESIRED: array([-0.630652,  0.627594,  0.186352])">seed = 1
+
+    @pytest.mark.parametrize('seed',range(8))
+    def test_free_root_sensor_velocity_matches_native_object_velocity(seed):
+        model=mj.MjModel.from_xml_string('''&lt;mujoco&gt;&lt;compiler alignfree="false"/&gt;
+          &lt;worldbody&gt;&lt;body name="base" pos="0 0 1"&gt;&lt;freejoint/&gt;
+            &lt;geom type="box" size=".1 .2 .3" mass="2" pos=".1 .05 0"/&gt;
+            &lt;body pos=".2 0 .1"&gt;&lt;joint type="hinge" axis="0 1 0"/&gt;
+              &lt;geom type="capsule" size=".03 .1" mass=".5"/&gt;
+            &lt;/body&gt;
+          &lt;/body&gt;&lt;/worldbody&gt;&lt;/mujoco&gt;''')
+        rng=np.random.default_rng(seed)
+        data=mj.MjData(model)
+        quaternion=rng.normal(size=4)
+        data.qpos[3:7]=quaternion/np.linalg.norm(quaternion)
+        data.qpos[7]=rng.normal()
+        data.qvel[:]=rng.normal(size=model.nv)
+        mj.mj_forward(model,data)
+        expected=np.zeros(6)
+        mj.mj_objectVelocity(model,data,mj.mjtObj.mjOBJ_BODY,model.body('base').id,expected,1)
+        angular,linear=free_root_velocity(data.qvel[:6],data.body('base').xmat)
+        np.testing.assert_allclose(angular,expected[:3],atol=1e-12)
+&gt;       np.testing.assert_allclose(linear,expected[3:],atol=1e-12)
+E       AssertionError: 
+E       Not equal to tolerance rtol=1e-07, atol=1e-12
+E       
+E       Mismatched elements: 3 / 3 (100%)
+E       Mismatch at indices:
+E        [0]: -0.6292307062853925 (ACTUAL), -0.6306518183511823 (DESIRED)
+E        [1]: 0.6247520215073625 (ACTUAL), 0.6275942456389422 (DESIRED)
+E        [2]: 0.19753712747695074 (ACTUAL), 0.18635249762070194 (DESIRED)
+E       Max absolute difference among violations: 0.01118463
+E       Max relative difference among violations: 0.06001867
+E        ACTUAL: array([-0.629231,  0.624752,  0.197537])
+E        DESIRED: array([-0.630652,  0.627594,  0.186352])
+
+training\native_tests\test_root_velocity.py:29: AssertionError</failure></testcase><testcase classname="training.native_tests.test_root_velocity" name="test_free_root_sensor_velocity_matches_native_object_velocity[2]" time="0.005"><failure message="AssertionError: &#10;Not equal to tolerance rtol=1e-07, atol=1e-12&#10;&#10;Mismatched elements: 3 / 3 (100%)&#10;Mismatch at indices:&#10; [0]: -0.6840981681897422 (ACTUAL), -0.732976540746044 (DESIRED)&#10; [1]: 0.763877161178469 (ACTUAL), 0.8616339062910726 (DESIRED)&#10; [2]: 0.9809656355154805 (ACTUAL), 1.0504084526477682 (DESIRED)&#10;Max absolute difference among violations: 0.09775675&#10;Max relative difference among violations: 0.11345508&#10; ACTUAL: array([-0.684098,  0.763877,  0.980966])&#10; DESIRED: array([-0.732977,  0.861634,  1.050408])">seed = 2
+
+    @pytest.mark.parametrize('seed',range(8))
+    def test_free_root_sensor_velocity_matches_native_object_velocity(seed):
+        model=mj.MjModel.from_xml_string('''&lt;mujoco&gt;&lt;compiler alignfree="false"/&gt;
+          &lt;worldbody&gt;&lt;body name="base" pos="0 0 1"&gt;&lt;freejoint/&gt;
+            &lt;geom type="box" size=".1 .2 .3" mass="2" pos=".1 .05 0"/&gt;
+            &lt;body pos=".2 0 .1"&gt;&lt;joint type="hinge" axis="0 1 0"/&gt;
+              &lt;geom type="capsule" size=".03 .1" mass=".5"/&gt;
+            &lt;/body&gt;
+          &lt;/body&gt;&lt;/worldbody&gt;&lt;/mujoco&gt;''')
+        rng=np.random.default_rng(seed)
+        data=mj.MjData(model)
+        quaternion=rng.normal(size=4)
+        data.qpos[3:7]=quaternion/np.linalg.norm(quaternion)
+        data.qpos[7]=rng.normal()
+        data.qvel[:]=rng.normal(size=model.nv)
+        mj.mj_forward(model,data)
+        expected=np.zeros(6)
+        mj.mj_objectVelocity(model,data,mj.mjtObj.mjOBJ_BODY,model.body('base').id,expected,1)
+        angular,linear=free_root_velocity(data.qvel[:6],data.body('base').xmat)
+        np.testing.assert_allclose(angular,expected[:3],atol=1e-12)
+&gt;       np.testing.assert_allclose(linear,expected[3:],atol=1e-12)
+E       AssertionError: 
+E       Not equal to tolerance rtol=1e-07, atol=1e-12
+E       
+E       Mismatched elements: 3 / 3 (100%)
+E       Mismatch at indices:
+E        [0]: -0.6840981681897422 (ACTUAL), -0.732976540746044 (DESIRED)
+E        [1]: 0.763877161178469 (ACTUAL), 0.8616339062910726 (DESIRED)
+E        [2]: 0.9809656355154805 (ACTUAL), 1.0504084526477682 (DESIRED)
+E       Max absolute difference among violations: 0.09775675
+E       Max relative difference among violations: 0.11345508
+E        ACTUAL: array([-0.684098,  0.763877,  0.980966])
+E        DESIRED: array([-0.732977,  0.861634,  1.050408])
+
+training\native_tests\test_root_velocity.py:29: AssertionError</failure></testcase><testcase classname="training.native_tests.test_root_velocity" name="test_free_root_sensor_velocity_matches_native_object_velocity[3]" time="0.006"><failure message="AssertionError: &#10;Not equal to tolerance rtol=1e-07, atol=1e-12&#10;&#10;Mismatched elements: 3 / 3 (100%)&#10;Mismatch at indices:&#10; [0]: 0.5826303285512963 (ACTUAL), 0.5713409978899001 (DESIRED)&#10; [1]: 0.676094867225834 (ACTUAL), 0.6986735285486262 (DESIRED)&#10; [2]: -1.8395804840349954 (ACTUAL), -2.2151410895132306 (DESIRED)&#10;Max absolute difference among violations: 0.37556061&#10;Max relative difference among violations: 0.16954252&#10; ACTUAL: array([ 0.58263 ,  0.676095, -1.83958 ])&#10; DESIRED: array([ 0.571341,  0.698674, -2.215141])">seed = 3
+
+    @pytest.mark.parametrize('seed',range(8))
+    def test_free_root_sensor_velocity_matches_native_object_velocity(seed):
+        model=mj.MjModel.from_xml_string('''&lt;mujoco&gt;&lt;compiler alignfree="false"/&gt;
+          &lt;worldbody&gt;&lt;body name="base" pos="0 0 1"&gt;&lt;freejoint/&gt;
+            &lt;geom type="box" size=".1 .2 .3" mass="2" pos=".1 .05 0"/&gt;
+            &lt;body pos=".2 0 .1"&gt;&lt;joint type="hinge" axis="0 1 0"/&gt;
+              &lt;geom type="capsule" size=".03 .1" mass=".5"/&gt;
+            &lt;/body&gt;
+          &lt;/body&gt;&lt;/worldbody&gt;&lt;/mujoco&gt;''')
+        rng=np.random.default_rng(seed)
+        data=mj.MjData(model)
+        quaternion=rng.normal(size=4)
+        data.qpos[3:7]=quaternion/np.linalg.norm(quaternion)
+        data.qpos[7]=rng.normal()
+        data.qvel[:]=rng.normal(size=model.nv)
+        mj.mj_forward(model,data)
+        expected=np.zeros(6)
+        mj.mj_objectVelocity(model,data,mj.mjtObj.mjOBJ_BODY,model.body('base').id,expected,1)
+        angular,linear=free_root_velocity(data.qvel[:6],data.body('base').xmat)
+        np.testing.assert_allclose(angular,expected[:3],atol=1e-12)
+&gt;       np.testing.assert_allclose(linear,expected[3:],atol=1e-12)
+E       AssertionError: 
+E       Not equal to tolerance rtol=1e-07, atol=1e-12
+E       
+E       Mismatched elements: 3 / 3 (100%)
+E       Mismatch at indices:
+E        [0]: 0.5826303285512963 (ACTUAL), 0.5713409978899001 (DESIRED)
+E        [1]: 0.676094867225834 (ACTUAL), 0.6986735285486262 (DESIRED)
+E        [2]: -1.8395804840349954 (ACTUAL), -2.2151410895132306 (DESIRED)
+E       Max absolute difference among violations: 0.37556061
+E       Max relative difference among violations: 0.16954252
+E        ACTUAL: array([ 0.58263 ,  0.676095, -1.83958 ])
+E        DESIRED: array([ 0.571341,  0.698674, -2.215141])
+
+training\native_tests\test_root_velocity.py:29: AssertionError</failure></testcase><testcase classname="training.native_tests.test_root_velocity" name="test_free_root_sensor_velocity_matches_native_object_velocity[4]" time="0.005"><failure message="AssertionError: &#10;Not equal to tolerance rtol=1e-07, atol=1e-12&#10;&#10;Mismatched elements: 3 / 3 (100%)&#10;Mismatch at indices:&#10; [0]: 0.32822465699230136 (ACTUAL), 0.31645561105542863 (DESIRED)&#10; [1]: -0.366965998312182 (ACTUAL), -0.34342790643843646 (DESIRED)&#10; [2]: -0.41040220590846355 (ACTUAL), -0.5149887828054681 (DESIRED)&#10;Max absolute difference among violations: 0.10458658&#10;Max relative difference among violations: 0.20308516&#10; ACTUAL: array([ 0.328225, -0.366966, -0.410402])&#10; DESIRED: array([ 0.316456, -0.343428, -0.514989])">seed = 4
+
+    @pytest.mark.parametrize('seed',range(8))
+    def test_free_root_sensor_velocity_matches_native_object_velocity(seed):
+        model=mj.MjModel.from_xml_string('''&lt;mujoco&gt;&lt;compiler alignfree="false"/&gt;
+          &lt;worldbody&gt;&lt;body name="base" pos="0 0 1"&gt;&lt;freejoint/&gt;
+            &lt;geom type="box" size=".1 .2 .3" mass="2" pos=".1 .05 0"/&gt;
+            &lt;body pos=".2 0 .1"&gt;&lt;joint type="hinge" axis="0 1 0"/&gt;
+              &lt;geom type="capsule" size=".03 .1" mass=".5"/&gt;
+            &lt;/body&gt;
+          &lt;/body&gt;&lt;/worldbody&gt;&lt;/mujoco&gt;''')
+        rng=np.random.default_rng(seed)
+        data=mj.MjData(model)
+        quaternion=rng.normal(size=4)
+        data.qpos[3:7]=quaternion/np.linalg.norm(quaternion)
+        data.qpos[7]=rng.normal()
+        data.qvel[:]=rng.normal(size=model.nv)
+        mj.mj_forward(model,data)
+        expected=np.zeros(6)
+        mj.mj_objectVelocity(model,data,mj.mjtObj.mjOBJ_BODY,model.body('base').id,expected,1)
+        angular,linear=free_root_velocity(data.qvel[:6],data.body('base').xmat)
+        np.testing.assert_allclose(angular,expected[:3],atol=1e-12)
+&gt;       np.testing.assert_allclose(linear,expected[3:],atol=1e-12)
+E       AssertionError: 
+E       Not equal to tolerance rtol=1e-07, atol=1e-12
+E       
+E       Mismatched elements: 3 / 3 (100%)
+E       Mismatch at indices:
+E        [0]: 0.32822465699230136 (ACTUAL), 0.31645561105542863 (DESIRED)
+E        [1]: -0.366965998312182 (ACTUAL), -0.34342790643843646 (DESIRED)
+E        [2]: -0.41040220590846355 (ACTUAL), -0.5149887828054681 (DESIRED)
+E       Max absolute difference among violations: 0.10458658
+E       Max relative difference among violations: 0.20308516
+E        ACTUAL: array([ 0.328225, -0.366966, -0.410402])
+E        DESIRED: array([ 0.316456, -0.343428, -0.514989])
+
+training\native_tests\test_root_velocity.py:29: AssertionError</failure></testcase><testcase classname="training.native_tests.test_root_velocity" name="test_free_root_sensor_velocity_matches_native_object_velocity[5]" time="0.005"><failure message="AssertionError: &#10;Not equal to tolerance rtol=1e-07, atol=1e-12&#10;&#10;Mismatched elements: 3 / 3 (100%)&#10;Mismatch at indices:&#10; [0]: 0.5435431573812655 (ACTUAL), 0.5299047185890294 (DESIRED)&#10; [1]: -0.25778821410745084 (ACTUAL), -0.23051133652297867 (DESIRED)&#10; [2]: 0.7559370567802727 (ACTUAL), 0.6298960410211446 (DESIRED)&#10;Max absolute difference among violations: 0.12604102&#10;Max relative difference among violations: 0.20009812&#10; ACTUAL: array([ 0.543543, -0.257788,  0.755937])&#10; DESIRED: array([ 0.529905, -0.230511,  0.629896])">seed = 5
+
+    @pytest.mark.parametrize('seed',range(8))
+    def test_free_root_sensor_velocity_matches_native_object_velocity(seed):
+        model=mj.MjModel.from_xml_string('''&lt;mujoco&gt;&lt;compiler alignfree="false"/&gt;
+          &lt;worldbody&gt;&lt;body name="base" pos="0 0 1"&gt;&lt;freejoint/&gt;
+            &lt;geom type="box" size=".1 .2 .3" mass="2" pos=".1 .05 0"/&gt;
+            &lt;body pos=".2 0 .1"&gt;&lt;joint type="hinge" axis="0 1 0"/&gt;
+              &lt;geom type="capsule" size=".03 .1" mass=".5"/&gt;
+            &lt;/body&gt;
+          &lt;/body&gt;&lt;/worldbody&gt;&lt;/mujoco&gt;''')
+        rng=np.random.default_rng(seed)
+        data=mj.MjData(model)
+        quaternion=rng.normal(size=4)
+        data.qpos[3:7]=quaternion/np.linalg.norm(quaternion)
+        data.qpos[7]=rng.normal()
+        data.qvel[:]=rng.normal(size=model.nv)
+        mj.mj_forward(model,data)
+        expected=np.zeros(6)
+        mj.mj_objectVelocity(model,data,mj.mjtObj.mjOBJ_BODY,model.body('base').id,expected,1)
+        angular,linear=free_root_velocity(data.qvel[:6],data.body('base').xmat)
+        np.testing.assert_allclose(angular,expected[:3],atol=1e-12)
+&gt;       np.testing.assert_allclose(linear,expected[3:],atol=1e-12)
+E       AssertionError: 
+E       Not equal to tolerance rtol=1e-07, atol=1e-12
+E       
+E       Mismatched elements: 3 / 3 (100%)
+E       Mismatch at indices:
+E        [0]: 0.5435431573812655 (ACTUAL), 0.5299047185890294 (DESIRED)
+E        [1]: -0.25778821410745084 (ACTUAL), -0.23051133652297867 (DESIRED)
+E        [2]: 0.7559370567802727 (ACTUAL), 0.6298960410211446 (DESIRED)
+E       Max absolute difference among violations: 0.12604102
+E       Max relative difference among violations: 0.20009812
+E        ACTUAL: array([ 0.543543, -0.257788,  0.755937])
+E        DESIRED: array([ 0.529905, -0.230511,  0.629896])
+
+training\native_tests\test_root_velocity.py:29: AssertionError</failure></testcase><testcase classname="training.native_tests.test_root_velocity" name="test_free_root_sensor_velocity_matches_native_object_velocity[6]" time="0.008"><failure message="AssertionError: &#10;Not equal to tolerance rtol=1e-07, atol=1e-12&#10;&#10;Mismatched elements: 3 / 3 (100%)&#10;Mismatch at indices:&#10; [0]: -0.17379466946019265 (ACTUAL), -0.18273155383871775 (DESIRED)&#10; [1]: -0.21339168664169503 (ACTUAL), -0.19551791788464457 (DESIRED)&#10; [2]: -2.102700176682722 (ACTUAL), -2.1433290102912457 (DESIRED)&#10;Max absolute difference among violations: 0.04062883&#10;Max relative difference among violations: 0.09141755&#10; ACTUAL: array([-0.173795, -0.213392, -2.1027  ])&#10; DESIRED: array([-0.182732, -0.195518, -2.143329])">seed = 6
+
+    @pytest.mark.parametrize('seed',range(8))
+    def test_free_root_sensor_velocity_matches_native_object_velocity(seed):
+        model=mj.MjModel.from_xml_string('''&lt;mujoco&gt;&lt;compiler alignfree="false"/&gt;
+          &lt;worldbody&gt;&lt;body name="base" pos="0 0 1"&gt;&lt;freejoint/&gt;
+            &lt;geom type="box" size=".1 .2 .3" mass="2" pos=".1 .05 0"/&gt;
+            &lt;body pos=".2 0 .1"&gt;&lt;joint type="hinge" axis="0 1 0"/&gt;
+              &lt;geom type="capsule" size=".03 .1" mass=".5"/&gt;
+            &lt;/body&gt;
+          &lt;/body&gt;&lt;/worldbody&gt;&lt;/mujoco&gt;''')
+        rng=np.random.default_rng(seed)
+        data=mj.MjData(model)
+        quaternion=rng.normal(size=4)
+        data.qpos[3:7]=quaternion/np.linalg.norm(quaternion)
+        data.qpos[7]=rng.normal()
+        data.qvel[:]=rng.normal(size=model.nv)
+        mj.mj_forward(model,data)
+        expected=np.zeros(6)
+        mj.mj_objectVelocity(model,data,mj.mjtObj.mjOBJ_BODY,model.body('base').id,expected,1)
+        angular,linear=free_root_velocity(data.qvel[:6],data.body('base').xmat)
+        np.testing.assert_allclose(angular,expected[:3],atol=1e-12)
+&gt;       np.testing.assert_allclose(linear,expected[3:],atol=1e-12)
+E       AssertionError: 
+E       Not equal to tolerance rtol=1e-07, atol=1e-12
+E       
+E       Mismatched elements: 3 / 3 (100%)
+E       Mismatch at indices:
+E        [0]: -0.17379466946019265 (ACTUAL), -0.18273155383871775 (DESIRED)
+E        [1]: -0.21339168664169503 (ACTUAL), -0.19551791788464457 (DESIRED)
+E        [2]: -2.102700176682722 (ACTUAL), -2.1433290102912457 (DESIRED)
+E       Max absolute difference among violations: 0.04062883
+E       Max relative difference among violations: 0.09141755
+E        ACTUAL: array([-0.173795, -0.213392, -2.1027  ])
+E        DESIRED: array([-0.182732, -0.195518, -2.143329])
+
+training\native_tests\test_root_velocity.py:29: AssertionError</failure></testcase><testcase classname="training.native_tests.test_root_velocity" name="test_free_root_sensor_velocity_matches_native_object_velocity[7]" time="0.005"><failure message="AssertionError: &#10;Not equal to tolerance rtol=1e-07, atol=1e-12&#10;&#10;Mismatched elements: 3 / 3 (100%)&#10;Mismatch at indices:&#10; [0]: 0.05254197228827094 (ACTUAL), 0.028049869779011027 (DESIRED)&#10; [1]: 0.8011037517365467 (ACTUAL), 0.8500879567550663 (DESIRED)&#10; [2]: 1.4624052678680548 (ACTUAL), 1.4998424319224823 (DESIRED)&#10;Max absolute difference among violations: 0.04898421&#10;Max relative difference among violations: 0.87316279&#10; ACTUAL: array([0.052542, 0.801104, 1.462405])&#10; DESIRED: array([0.02805 , 0.850088, 1.499842])">seed = 7
+
+    @pytest.mark.parametrize('seed',range(8))
+    def test_free_root_sensor_velocity_matches_native_object_velocity(seed):
+        model=mj.MjModel.from_xml_string('''&lt;mujoco&gt;&lt;compiler alignfree="false"/&gt;
+          &lt;worldbody&gt;&lt;body name="base" pos="0 0 1"&gt;&lt;freejoint/&gt;
+            &lt;geom type="box" size=".1 .2 .3" mass="2" pos=".1 .05 0"/&gt;
+            &lt;body pos=".2 0 .1"&gt;&lt;joint type="hinge" axis="0 1 0"/&gt;
+              &lt;geom type="capsule" size=".03 .1" mass=".5"/&gt;
+            &lt;/body&gt;
+          &lt;/body&gt;&lt;/worldbody&gt;&lt;/mujoco&gt;''')
+        rng=np.random.default_rng(seed)
+        data=mj.MjData(model)
+        quaternion=rng.normal(size=4)
+        data.qpos[3:7]=quaternion/np.linalg.norm(quaternion)
+        data.qpos[7]=rng.normal()
+        data.qvel[:]=rng.normal(size=model.nv)
+        mj.mj_forward(model,data)
+        expected=np.zeros(6)
+        mj.mj_objectVelocity(model,data,mj.mjtObj.mjOBJ_BODY,model.body('base').id,expected,1)
+        angular,linear=free_root_velocity(data.qvel[:6],data.body('base').xmat)
+        np.testing.assert_allclose(angular,expected[:3],atol=1e-12)
+&gt;       np.testing.assert_allclose(linear,expected[3:],atol=1e-12)
+E       AssertionError: 
+E       Not equal to tolerance rtol=1e-07, atol=1e-12
+E       
+E       Mismatched elements: 3 / 3 (100%)
+E       Mismatch at indices:
+E        [0]: 0.05254197228827094 (ACTUAL), 0.028049869779011027 (DESIRED)
+E        [1]: 0.8011037517365467 (ACTUAL), 0.8500879567550663 (DESIRED)
+E        [2]: 1.4624052678680548 (ACTUAL), 1.4998424319224823 (DESIRED)
+E       Max absolute difference among violations: 0.04898421
+E       Max relative difference among violations: 0.87316279
+E        ACTUAL: array([0.052542, 0.801104, 1.462405])
+E        DESIRED: array([0.02805 , 0.850088, 1.499842])
+
+training\native_tests\test_root_velocity.py:29: AssertionError</failure></testcase></testsuite></testsuites>

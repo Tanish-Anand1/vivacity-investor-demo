@@ -1,0 +1,320 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\Tanish Anand\\.codex\\worktrees\\physical-truth-runtime\\DEMO-\\frontend\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "playwright.contact.config.ts",
+      "--grep",
+      "older production"
+    ],
+    "configFile": "C:\\Users\\Tanish Anand\\.codex\\worktrees\\physical-truth-runtime\\DEMO-\\frontend\\playwright.contact.config.ts",
+    "rootDir": "C:/Users/Tanish Anand/.codex/worktrees/physical-truth-runtime/DEMO-/frontend/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/Tanish Anand/.codex/worktrees/physical-truth-runtime/DEMO-/data/contact-browser-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "C:/Users/Tanish Anand/.codex/worktrees/physical-truth-runtime/DEMO-/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "contact-lab.spec.ts"
+        ],
+        "timeout": 600000
+      },
+      {
+        "outputDir": "C:/Users/Tanish Anand/.codex/worktrees/physical-truth-runtime/DEMO-/data/contact-browser-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "C:/Users/Tanish Anand/.codex/worktrees/physical-truth-runtime/DEMO-/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "contact-lab.spec.ts"
+        ],
+        "timeout": 600000
+      },
+      {
+        "outputDir": "C:/Users/Tanish Anand/.codex/worktrees/physical-truth-runtime/DEMO-/data/contact-browser-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "C:/Users/Tanish Anand/.codex/worktrees/physical-truth-runtime/DEMO-/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "contact-lab.spec.ts"
+        ],
+        "timeout": 600000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\Tanish Anand\\.codex\\worktrees\\physical-truth-runtime\\DEMO-\\data\\contact-browser-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "chromium",
+        "testDir": "C:\\Users\\Tanish Anand\\.codex\\worktrees\\physical-truth-runtime\\DEMO-\\frontend\\e2e",
+        "snapshotDir": "C:\\Users\\Tanish Anand\\.codex\\worktrees\\physical-truth-runtime\\DEMO-\\frontend\\e2e",
+        "testIgnore": [],
+        "testMatch": "contact-lab.spec.ts",
+        "timeout": 600000,
+        "use": {
+          "baseURL": "http://127.0.0.1:5186",
+          "headless": true,
+          "viewport": {
+            "width": 1440,
+            "height": 1050
+          },
+          "screenshot": "only-on-failure",
+          "trace": "off",
+          "browserName": "chromium"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chromium"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\Tanish Anand\\.codex\\worktrees\\physical-truth-runtime\\DEMO-\\data\\contact-browser-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "firefox",
+        "testDir": "C:\\Users\\Tanish Anand\\.codex\\worktrees\\physical-truth-runtime\\DEMO-\\frontend\\e2e",
+        "snapshotDir": "C:\\Users\\Tanish Anand\\.codex\\worktrees\\physical-truth-runtime\\DEMO-\\frontend\\e2e",
+        "testIgnore": [],
+        "testMatch": "contact-lab.spec.ts",
+        "timeout": 600000,
+        "use": {
+          "baseURL": "http://127.0.0.1:5186",
+          "headless": true,
+          "viewport": {
+            "width": 1440,
+            "height": 1050
+          },
+          "screenshot": "only-on-failure",
+          "trace": "off",
+          "browserName": "firefox",
+          "launchOptions": {
+            "firefoxUserPrefs": {
+              "webgl.force-enabled": true
+            }
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "firefox"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\Tanish Anand\\.codex\\worktrees\\physical-truth-runtime\\DEMO-\\data\\contact-browser-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "webkit",
+        "testDir": "C:\\Users\\Tanish Anand\\.codex\\worktrees\\physical-truth-runtime\\DEMO-\\frontend\\e2e",
+        "snapshotDir": "C:\\Users\\Tanish Anand\\.codex\\worktrees\\physical-truth-runtime\\DEMO-\\frontend\\e2e",
+        "testIgnore": [],
+        "testMatch": "contact-lab.spec.ts",
+        "timeout": 600000,
+        "use": {
+          "baseURL": "http://127.0.0.1:5186",
+          "headless": true,
+          "viewport": {
+            "width": 1440,
+            "height": 1050
+          },
+          "screenshot": "only-on-failure",
+          "trace": "off",
+          "browserName": "webkit"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "webkit"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "../artifacts/physical-truth-runtime/contact-browser-tests.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "contact-lab.spec.ts",
+      "file": "contact-lab.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "older production runtime keeps contact research unavailable and renders the native preview",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 600000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 26688,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T05:33:02.815Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "7aead4b882d457d000fb-9be1eb2aa7dd4981247d",
+          "file": "contact-lab.spec.ts",
+          "line": 9,
+          "column": 1
+        },
+        {
+          "title": "older production runtime keeps contact research unavailable and renders the native preview",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 600000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 15078,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T05:33:39.961Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "7aead4b882d457d000fb-3056e3537fc1c393fbc5",
+          "file": "contact-lab.spec.ts",
+          "line": 9,
+          "column": 1
+        },
+        {
+          "title": "older production runtime keeps contact research unavailable and renders the native preview",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 600000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit",
+              "projectName": "webkit",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 11499,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T05:34:11.638Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "7aead4b882d457d000fb-dbd63d2659fbf5bfa1db",
+          "file": "contact-lab.spec.ts",
+          "line": 9,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-25T05:33:01.980Z",
+    "duration": 98724.638,
+    "expected": 3,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

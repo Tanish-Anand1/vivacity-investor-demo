@@ -1,0 +1,780 @@
+{
+  "config": {
+    "argv": [
+      "/opt/hostedtoolcache/node/22.23.3/x64/bin/node",
+      "/home/runner/work/vivacity-investor-demo/vivacity-investor-demo/frontend/node_modules/.bin/playwright",
+      "test",
+      "--config",
+      "playwright.opening.config.ts"
+    ],
+    "configFile": "/home/runner/work/vivacity-investor-demo/vivacity-investor-demo/frontend/playwright.opening.config.ts",
+    "rootDir": "/home/runner/work/vivacity-investor-demo/vivacity-investor-demo/frontend/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "ci": {
+        "commitHref": "https://github.com/Tanish-Anand1/vivacity-investor-demo/commit/fd864aed68263ff50efb3b6d00949a59ea0bf749",
+        "commitHash": "fd864aed68263ff50efb3b6d00949a59ea0bf749",
+        "buildHref": "https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40168131922"
+      },
+      "gitCommit": {
+        "shortHash": "fd864ae",
+        "hash": "fd864aed68263ff50efb3b6d00949a59ea0bf749",
+        "subject": "test: register the bounded public release verification job",
+        "body": "test: register the bounded public release verification job\n",
+        "author": {
+          "name": "Ttanish K Anand",
+          "email": "atanish920@gmail.com",
+          "time": 1792908592000
+        },
+        "committer": {
+          "name": "Ttanish K Anand",
+          "email": "atanish920@gmail.com",
+          "time": 1792908592000
+        },
+        "branch": "codex/physical-truth-runtime"
+      },
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/runner/work/vivacity-investor-demo/vivacity-investor-demo/frontend/test-results/the-one-opening",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/Tanish-Anand1/vivacity-investor-demo/commit/fd864aed68263ff50efb3b6d00949a59ea0bf749",
+            "commitHash": "fd864aed68263ff50efb3b6d00949a59ea0bf749",
+            "buildHref": "https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40168131922"
+          },
+          "gitCommit": {
+            "shortHash": "fd864ae",
+            "hash": "fd864aed68263ff50efb3b6d00949a59ea0bf749",
+            "subject": "test: register the bounded public release verification job",
+            "body": "test: register the bounded public release verification job\n",
+            "author": {
+              "name": "Ttanish K Anand",
+              "email": "atanish920@gmail.com",
+              "time": 1792908592000
+            },
+            "committer": {
+              "name": "Ttanish K Anand",
+              "email": "atanish920@gmail.com",
+              "time": 1792908592000
+            },
+            "branch": "codex/physical-truth-runtime"
+          },
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/home/runner/work/vivacity-investor-demo/vivacity-investor-demo/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "isabella-opening.spec.ts"
+        ],
+        "timeout": 45000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/home/runner/work/vivacity-investor-demo/vivacity-investor-demo/frontend/test-results/the-one-opening",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/Tanish-Anand1/vivacity-investor-demo/commit/fd864aed68263ff50efb3b6d00949a59ea0bf749",
+            "commitHash": "fd864aed68263ff50efb3b6d00949a59ea0bf749",
+            "buildHref": "https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40168131922"
+          },
+          "gitCommit": {
+            "shortHash": "fd864ae",
+            "hash": "fd864aed68263ff50efb3b6d00949a59ea0bf749",
+            "subject": "test: register the bounded public release verification job",
+            "body": "test: register the bounded public release verification job\n",
+            "author": {
+              "name": "Ttanish K Anand",
+              "email": "atanish920@gmail.com",
+              "time": 1792908592000
+            },
+            "committer": {
+              "name": "Ttanish K Anand",
+              "email": "atanish920@gmail.com",
+              "time": 1792908592000
+            },
+            "branch": "codex/physical-truth-runtime"
+          },
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "/home/runner/work/vivacity-investor-demo/vivacity-investor-demo/frontend/e2e",
+        "snapshotDir": "/home/runner/work/vivacity-investor-demo/vivacity-investor-demo/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": "isabella-opening.spec.ts",
+        "timeout": 45000,
+        "use": {
+          "baseURL": "https://demo.tryvivacity.com",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "headless": true,
+          "launchOptions": {
+            "args": [
+              "--use-angle=swiftshader",
+              "--enable-unsafe-swiftshader"
+            ]
+          },
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "../artifacts/the-one-browser-tests.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "isabella-opening.spec.ts",
+      "file": "isabella-opening.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "the actual film plays 7.5 seconds, hands off to the homepage, and starts no physics",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 21229,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T06:10:41.304Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "playback-metrics",
+                      "contentType": "application/json",
+                      "body": "ewogICJkdXJhdGlvbiI6IDcuNSwKICAibXV0ZWQiOiB0cnVlLAogICJyYXRlIjogMSwKICAid2lkdGgiOiA5NjAsCiAgImhlaWdodCI6IDU0MCwKICAibWVkaWFFbmQiOiA3LjUsCiAgImVsYXBzZWRNcyI6IDc1NDIuNSwKICAicGh5c2ljc1N0YXJ0cyI6IDAKfQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d712e32cc241d49c3697-8ec968a5e5b62d00fff3",
+          "file": "isabella-opening.spec.ts",
+          "line": 34,
+          "column": 1
+        },
+        {
+          "title": "skip is immediate and a refreshed homepage starts the opening again",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3526,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T06:11:02.789Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d712e32cc241d49c3697-5e2a7c96e28c2a5e25d1",
+          "file": "isabella-opening.spec.ts",
+          "line": 77,
+          "column": 1
+        },
+        {
+          "title": "sound needs a gesture and keyboard focus stays inside the opening until Escape",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4422,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T06:11:06.346Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d712e32cc241d49c3697-1bff2ee16032fec78e3c",
+          "file": "isabella-opening.spec.ts",
+          "line": 89,
+          "column": 1
+        },
+        {
+          "title": "unavailable browser storage cannot prevent skip or homepage use",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2305,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T06:11:10.793Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d712e32cc241d49c3697-484e76f6b225ca462159",
+          "file": "isabella-opening.spec.ts",
+          "line": 102,
+          "column": 1
+        },
+        {
+          "title": "reduced motion bypasses even explicit replay without downloading a film",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 524,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T06:11:13.130Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d712e32cc241d49c3697-a4ca7dfba90daa1bfb1e",
+          "file": "isabella-opening.spec.ts",
+          "line": 116,
+          "column": 1
+        },
+        {
+          "title": "changing the motion preference during playback exits safely",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1505,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T06:11:13.675Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d712e32cc241d49c3697-871283592a5e9e5ebcd7",
+          "file": "isabella-opening.spec.ts",
+          "line": 125,
+          "column": 1
+        },
+        {
+          "title": "portrait framing keeps the full film and controls at 390px",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2216,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T06:11:15.197Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d712e32cc241d49c3697-cc3250d3aa50dda3fb6a",
+          "file": "isabella-opening.spec.ts",
+          "line": 131,
+          "column": 30
+        },
+        {
+          "title": "portrait framing keeps the full film and controls at 320px",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1084,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T06:11:17.430Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d712e32cc241d49c3697-5fe443ae9163d3683fc9",
+          "file": "isabella-opening.spec.ts",
+          "line": 131,
+          "column": 30
+        },
+        {
+          "title": "resizing within the frame orientation preserves the film; rotation exits without a restart",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2736,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T06:11:18.529Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d712e32cc241d49c3697-11416fda9f9e2eeadb58",
+          "file": "isabella-opening.spec.ts",
+          "line": 144,
+          "column": 1
+        },
+        {
+          "title": "a failed media request leaves an interactive homepage",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 780,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T06:11:21.283Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d712e32cc241d49c3697-352fb1c9c9e946df1a91",
+          "file": "isabella-opening.spec.ts",
+          "line": 155,
+          "column": 1
+        },
+        {
+          "title": "a stalled download falls through promptly without input or scroll traps",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2861,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T06:11:22.086Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d712e32cc241d49c3697-5ddd941130e96659f7ae",
+          "file": "isabella-opening.spec.ts",
+          "line": 162,
+          "column": 1
+        },
+        {
+          "title": "autoplay rejection reveals the usable homepage",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1443,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T06:11:24.962Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d712e32cc241d49c3697-18c15526a5f24d0c594f",
+          "file": "isabella-opening.spec.ts",
+          "line": 170,
+          "column": 1
+        },
+        {
+          "title": "cold HTTP delivery serves a playable portrait film or a clean network fallback",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2171,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T06:11:26.422Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d712e32cc241d49c3697-68b4877942bde6fde22e",
+          "file": "isabella-opening.spec.ts",
+          "line": 179,
+          "column": 1
+        },
+        {
+          "title": "normal portrait playback uses the 60 fps film and reports presented frames",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 13074,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T06:11:28.613Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "portrait-playback-quality",
+                      "contentType": "application/json",
+                      "body": "ewogICJkdXJhdGlvbl9zIjogNy41LAogICJ3aWR0aCI6IDcyMCwKICAiaGVpZ2h0IjogMTI4MCwKICAidG90YWxfZnJhbWVzIjogNDUwLAogICJkcm9wcGVkX2ZyYW1lcyI6IDEKfQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d712e32cc241d49c3697-896d51fb4b91ded5ccd1",
+          "file": "isabella-opening.spec.ts",
+          "line": 195,
+          "column": 1
+        },
+        {
+          "title": "a data-saver desktop selects the smaller landscape rendition",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1663,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T06:11:41.704Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d712e32cc241d49c3697-783e26e4f596d461e1dd",
+          "file": "isabella-opening.spec.ts",
+          "line": 219,
+          "column": 1
+        },
+        {
+          "title": "metadata initiates real playback even when a canplay notification is delayed",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 16351,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T06:11:43.394Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d712e32cc241d49c3697-5961a58b7140e0f80151",
+          "file": "isabella-opening.spec.ts",
+          "line": 225,
+          "column": 1
+        },
+        {
+          "title": "a decoder with metadata gets bounded startup time and cannot trap the homepage",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7273,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T06:11:59.774Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d712e32cc241d49c3697-ad84f57758ae293e7cd3",
+          "file": "isabella-opening.spec.ts",
+          "line": 245,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-25T06:10:40.665Z",
+    "duration": 86470.429,
+    "expected": 17,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

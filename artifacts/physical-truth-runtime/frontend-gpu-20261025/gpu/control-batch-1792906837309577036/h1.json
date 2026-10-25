@@ -1,0 +1,453 @@
+{
+  "schema_version": "vivacity.mjx-control-batch-probe/1",
+  "passed": false,
+  "scope": "Control parity and batch independence; not locomotion acceptance",
+  "trained_policy": null,
+  "task_success": false,
+  "robot": "h1",
+  "implementation": "warp",
+  "model_sha256": "e82a5440102ed81cd7f8cf126e303362e9cd5401b6a623ec92b4040d6a13498c",
+  "contract": {
+    "schema_version": "vivacity.complete-locomotion-contract/1-experimental",
+    "model_sha256": "e82a5440102ed81cd7f8cf126e303362e9cd5401b6a623ec92b4040d6a13498c",
+    "embodiment": "vivacity.h1-complete/1-experimental",
+    "simulator_version": "3.15.0",
+    "trained_policy": null,
+    "hardware_validation": false,
+    "actor_fields": [
+      {
+        "name": "body_angular_velocity_rad_s",
+        "width": 3,
+        "scale": 0.25
+      },
+      {
+        "name": "projected_gravity_unit_vector",
+        "width": 3,
+        "scale": 1.0
+      },
+      {
+        "name": "command_vx_vy_yawrate",
+        "width": 3,
+        "scale": 1.0
+      },
+      {
+        "name": "joint_position_delta",
+        "width": 23,
+        "scale": 1.0
+      },
+      {
+        "name": "joint_velocity",
+        "width": 23,
+        "scale": 0.05
+      },
+      {
+        "name": "previous_normalized_action",
+        "width": 23,
+        "scale": 1.0
+      }
+    ],
+    "coordinate_convention": "right-handed body frame; x forward, y left, z up; SI units",
+    "action_names": [
+      "left_hip_yaw",
+      "left_hip_roll",
+      "left_hip_pitch",
+      "left_knee",
+      "left_ankle",
+      "right_hip_yaw",
+      "right_hip_roll",
+      "right_hip_pitch",
+      "right_knee",
+      "right_ankle",
+      "torso",
+      "left_shoulder_pitch",
+      "left_shoulder_roll",
+      "left_shoulder_yaw",
+      "left_elbow",
+      "right_shoulder_pitch",
+      "right_shoulder_roll",
+      "right_shoulder_yaw",
+      "right_elbow",
+      "left_service_positive_slide",
+      "left_service_negative_slide",
+      "right_service_positive_slide",
+      "right_service_negative_slide"
+    ],
+    "action_size": 23,
+    "observation_size": 78,
+    "action_bounds": [
+      -1.0,
+      1.0
+    ],
+    "action_offset_scale": [
+      0.215,
+      0.215,
+      0.25,
+      0.25,
+      0.25,
+      0.215,
+      0.215,
+      0.25,
+      0.25,
+      0.25,
+      0.25,
+      0.25,
+      0.25,
+      0.25,
+      0.25,
+      0.25,
+      0.25,
+      0.25,
+      0.25,
+      0.015,
+      0.015,
+      0.015,
+      0.015
+    ],
+    "joint_home": [
+      0.0,
+      0.0,
+      -0.2,
+      0.4,
+      -0.2,
+      0.0,
+      0.0,
+      -0.2,
+      0.4,
+      -0.2,
+      0.0,
+      0.0,
+      0.2,
+      0.0,
+      0.4,
+      0.0,
+      -0.2,
+      0.0,
+      0.4,
+      0.09,
+      0.09,
+      0.09,
+      0.09
+    ],
+    "joint_low": [
+      -0.43,
+      -0.43,
+      -1.57,
+      -0.26,
+      -0.87,
+      -0.43,
+      -0.43,
+      -1.57,
+      -0.26,
+      -0.87,
+      -2.35,
+      -2.87,
+      -0.34,
+      -1.3,
+      -1.25,
+      -2.87,
+      -3.11,
+      -4.45,
+      -1.25,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "joint_high": [
+      0.43,
+      0.43,
+      1.57,
+      2.05,
+      0.52,
+      0.43,
+      0.43,
+      1.57,
+      2.05,
+      0.52,
+      2.35,
+      2.87,
+      3.11,
+      4.45,
+      2.61,
+      2.87,
+      0.34,
+      1.3,
+      2.61,
+      0.105,
+      0.105,
+      0.105,
+      0.105
+    ],
+    "native_position_servo": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true
+    ],
+    "motor_kp": [
+      100.0,
+      100.0,
+      100.0,
+      100.0,
+      40.0,
+      100.0,
+      100.0,
+      100.0,
+      100.0,
+      40.0,
+      100.0,
+      50.0,
+      50.0,
+      50.0,
+      50.0,
+      50.0,
+      50.0,
+      50.0,
+      50.0,
+      100.0,
+      100.0,
+      100.0,
+      100.0
+    ],
+    "motor_kd": [
+      3.0,
+      3.0,
+      3.0,
+      3.0,
+      1.8973665961010275,
+      3.0,
+      3.0,
+      3.0,
+      3.0,
+      1.8973665961010275,
+      3.0,
+      2.1213203435596424,
+      2.1213203435596424,
+      2.1213203435596424,
+      2.1213203435596424,
+      2.1213203435596424,
+      2.1213203435596424,
+      2.1213203435596424,
+      2.1213203435596424,
+      3.0,
+      3.0,
+      3.0,
+      3.0
+    ],
+    "actuator_gain": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      800.0,
+      800.0,
+      800.0,
+      800.0
+    ],
+    "force_limits": [
+      200.0,
+      200.0,
+      200.0,
+      300.0,
+      40.0,
+      200.0,
+      200.0,
+      200.0,
+      300.0,
+      40.0,
+      200.0,
+      40.0,
+      40.0,
+      18.0,
+      18.0,
+      40.0,
+      40.0,
+      18.0,
+      18.0,
+      40.0,
+      40.0,
+      40.0,
+      40.0
+    ],
+    "command_ranges": [
+      [
+        -200.0,
+        200.0
+      ],
+      [
+        -200.0,
+        200.0
+      ],
+      [
+        -200.0,
+        200.0
+      ],
+      [
+        -300.0,
+        300.0
+      ],
+      [
+        -40.0,
+        40.0
+      ],
+      [
+        -200.0,
+        200.0
+      ],
+      [
+        -200.0,
+        200.0
+      ],
+      [
+        -200.0,
+        200.0
+      ],
+      [
+        -300.0,
+        300.0
+      ],
+      [
+        -40.0,
+        40.0
+      ],
+      [
+        -200.0,
+        200.0
+      ],
+      [
+        -40.0,
+        40.0
+      ],
+      [
+        -40.0,
+        40.0
+      ],
+      [
+        -18.0,
+        18.0
+      ],
+      [
+        -18.0,
+        18.0
+      ],
+      [
+        -40.0,
+        40.0
+      ],
+      [
+        -40.0,
+        40.0
+      ],
+      [
+        -18.0,
+        18.0
+      ],
+      [
+        -18.0,
+        18.0
+      ],
+      [
+        0.0,
+        0.105
+      ],
+      [
+        0.0,
+        0.105
+      ],
+      [
+        0.0,
+        0.105
+      ],
+      [
+        0.0,
+        0.105
+      ]
+    ]
+  },
+  "contract_sha256": "6e4653dbc954fa405641c0c32bf1ce455742abcb747918ce9d1f5be3fd84a0ec",
+  "source_hashes": {
+    "mjx_locomotion.py": "8b3818c0505b0b5d057851812cfa6db10d8d7f42421f91105eba9a3b027e6007",
+    "mjx_probe.py": "cc74fd038f2e213ed3959f736355aca92b424360324e6f99ddef2ebd9d5306d3",
+    "locomotion_contract.py": "1f3d2f511a8738a0281fa55f08bfcf9c16519a55d5459b25220affb27f827311",
+    "native_locomotion.py": "3be769e765fe53379c823ab4ce6b4d92accccaf55b0ac403f9c2348cee3494a3"
+  },
+  "batch_size": 2,
+  "requested_transitions": 10,
+  "contact_buffer_capacities": {
+    "naconmax": 2048,
+    "njmax": 8192
+  },
+  "seed": 7,
+  "parity": [
+    {
+      "transition": 1,
+      "qpos_max_abs": 1.7513995476114985e-07,
+      "qvel_max_abs": 1.1463831955715875e-05,
+      "observation_max_abs": 0.0176185682867794,
+      "reward_abs": 0.0030193323117918246,
+      "native_failure": null,
+      "gpu_failure": "none"
+    },
+    {
+      "transition": 2,
+      "qpos_max_abs": 2.3436222940098617e-07,
+      "qvel_max_abs": 1.0521740728686169e-05,
+      "observation_max_abs": 0.06043447267460326,
+      "reward_abs": 0.005552171227026639,
+      "native_failure": null,
+      "gpu_failure": "none"
+    },
+    {
+      "transition": 3,
+      "qpos_max_abs": 2.6404980352223717e-07,
+      "qvel_max_abs": 4.1676482651631375e-06,
+      "observation_max_abs": 0.10387587013663296,
+      "reward_abs": 0.008988960560537402,
+      "native_failure": null,
+      "gpu_failure": "none"
+    }
+  ],
+  "parity_bounds": {
+    "qpos_max_abs": 0.005,
+    "qvel_max_abs": 0.1,
+    "observation_max_abs": 0.01,
+    "reward_abs": 0.001
+  },
+  "parity_passed": false,
+  "initialization_and_parity_wall_s": 146.17706631200008,
+  "wall_s": 149.72041290899983
+}

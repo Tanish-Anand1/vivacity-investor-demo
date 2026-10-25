@@ -1,0 +1,1 @@
+{"robot": "h1", "passed": false, "failure": "Command '['/content/vivacity-physical-truth-venv/bin/python', '-u', '-m', 'training.mjx_probe', '--robot', 'h1', '--batch-size', '2', '--transitions', '10', '--output', '/content/vivacity-physical-truth-pilot/data/free-gpu-pilot/deterministic-batch-1792908178230921329/h1.json']' timed out after 350 seconds", "trained_policy": null}

@@ -1,0 +1,32 @@
+{
+  "checked_at": "2026-10-25T06:39:58.388947+00:00",
+  "url": "https://demo.tryvivacity.com",
+  "html_status": 200,
+  "entry_asset": "assets/index-CYFmzZ_g.js",
+  "health_status": 200,
+  "health_type": "application/json",
+  "health": {
+    "status": "ok",
+    "schema_version": "1.0",
+    "backends": {
+      "mujoco": "3.15.0",
+      "scipy": "1.18.1",
+      "cloth": "3.15.0"
+    },
+    "limits": {
+      "max_physics_trials": 5000,
+      "physics_trial_workers": 1
+    }
+  },
+  "frontend_commit": "d2519c390962ed6aa5b3cbb68d192db82cf968c7",
+  "browser_observation": {
+    "route": "https://demo.tryvivacity.com/lab",
+    "state_file": "production-lab-state.txt",
+    "screenshot": "production-lab.png",
+    "saved_mass_kg": 0.09,
+    "simulation_time_s": 0.0,
+    "new_console_errors_after_reload": 0,
+    "prior_stale_chunk_error_at": "2026-10-25T06:07:57.026Z",
+    "note": "Existing stale-chunk error recovered by page reload; no new error after final-build reload."
+  }
+}

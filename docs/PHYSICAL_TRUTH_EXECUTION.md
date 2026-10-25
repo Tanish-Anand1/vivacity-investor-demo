@@ -49,6 +49,23 @@ checks. Hardware execution is outside the completion claim.
 | Production deployment and 24-hour soak | Not started for this release | Open |
 | Break the Frame cinematic release | Deliberately deferred until physics release passes | Deferred |
 
+## Frontend release and GPU contract update — 2026-10-25
+
+The existing production backend is preserved while frontend `d2519c3` is deployed
+at demo.tryvivacity.com. It repairs missing-capability handling and selected-run
+replay/export identity. Real factory comparison results and the release's exact
+test revisions are archived in
+`artifacts/physical-truth-runtime/frontend-gpu-20261025/README.md`.
+Final production verification at `d2519c3` passed 17 opening and two live
+journey/mobile checks, including selected-run replay and measurement exports.
+This is a separate stable frontend update, not the full Physical Truth release.
+
+An available free T4 supplied real complete-model GPU evidence. Body-axis sensor
+parity and Warp state selection were corrected; the native contract passes 31
+checks. Short two-world H1/Apollo probes pass, but exact GPU repeatability fails
+at larger batches; untrained H1 falls at 0.9 s. No model-matched mobility policy
+has been trained or validated. The learning and native acceptance gates stay open.
+
 ## Active slice
 
 ### Independent tray geometry and grip investigation — 2026-10-25

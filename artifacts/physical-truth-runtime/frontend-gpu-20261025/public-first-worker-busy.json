@@ -1,0 +1,309 @@
+{
+  "config": {
+    "argv": [
+      "/opt/hostedtoolcache/node/22.23.3/x64/bin/node",
+      "/home/runner/work/vivacity-investor-demo/vivacity-investor-demo/frontend/node_modules/.bin/playwright",
+      "test",
+      "--config",
+      "playwright.factory.config.ts",
+      "lab-journey.spec.ts"
+    ],
+    "configFile": "/home/runner/work/vivacity-investor-demo/vivacity-investor-demo/frontend/playwright.factory.config.ts",
+    "rootDir": "/home/runner/work/vivacity-investor-demo/vivacity-investor-demo/frontend/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "ci": {
+        "commitHref": "https://github.com/Tanish-Anand1/vivacity-investor-demo/commit/fd864aed68263ff50efb3b6d00949a59ea0bf749",
+        "commitHash": "fd864aed68263ff50efb3b6d00949a59ea0bf749",
+        "buildHref": "https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40168131922"
+      },
+      "gitCommit": {
+        "shortHash": "fd864ae",
+        "hash": "fd864aed68263ff50efb3b6d00949a59ea0bf749",
+        "subject": "test: register the bounded public release verification job",
+        "body": "test: register the bounded public release verification job\n",
+        "author": {
+          "name": "Ttanish K Anand",
+          "email": "atanish920@gmail.com",
+          "time": 1792908592000
+        },
+        "committer": {
+          "name": "Ttanish K Anand",
+          "email": "atanish920@gmail.com",
+          "time": 1792908592000
+        },
+        "branch": "codex/physical-truth-runtime"
+      },
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/runner/work/vivacity-investor-demo/vivacity-investor-demo/frontend/test-results/public-release",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/Tanish-Anand1/vivacity-investor-demo/commit/fd864aed68263ff50efb3b6d00949a59ea0bf749",
+            "commitHash": "fd864aed68263ff50efb3b6d00949a59ea0bf749",
+            "buildHref": "https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40168131922"
+          },
+          "gitCommit": {
+            "shortHash": "fd864ae",
+            "hash": "fd864aed68263ff50efb3b6d00949a59ea0bf749",
+            "subject": "test: register the bounded public release verification job",
+            "body": "test: register the bounded public release verification job\n",
+            "author": {
+              "name": "Ttanish K Anand",
+              "email": "atanish920@gmail.com",
+              "time": 1792908592000
+            },
+            "committer": {
+              "name": "Ttanish K Anand",
+              "email": "atanish920@gmail.com",
+              "time": 1792908592000
+            },
+            "branch": "codex/physical-truth-runtime"
+          },
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/home/runner/work/vivacity-investor-demo/vivacity-investor-demo/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "factory-configurator.spec.ts",
+          "lab-journey.spec.ts",
+          "isabella-accessibility.spec.ts",
+          "science-journey.spec.ts",
+          "physical-work.spec.ts"
+        ],
+        "timeout": 900000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/home/runner/work/vivacity-investor-demo/vivacity-investor-demo/frontend/test-results/public-release",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/Tanish-Anand1/vivacity-investor-demo/commit/fd864aed68263ff50efb3b6d00949a59ea0bf749",
+            "commitHash": "fd864aed68263ff50efb3b6d00949a59ea0bf749",
+            "buildHref": "https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40168131922"
+          },
+          "gitCommit": {
+            "shortHash": "fd864ae",
+            "hash": "fd864aed68263ff50efb3b6d00949a59ea0bf749",
+            "subject": "test: register the bounded public release verification job",
+            "body": "test: register the bounded public release verification job\n",
+            "author": {
+              "name": "Ttanish K Anand",
+              "email": "atanish920@gmail.com",
+              "time": 1792908592000
+            },
+            "committer": {
+              "name": "Ttanish K Anand",
+              "email": "atanish920@gmail.com",
+              "time": 1792908592000
+            },
+            "branch": "codex/physical-truth-runtime"
+          },
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "/home/runner/work/vivacity-investor-demo/vivacity-investor-demo/frontend/e2e",
+        "snapshotDir": "/home/runner/work/vivacity-investor-demo/vivacity-investor-demo/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "factory-configurator.spec.ts",
+          "lab-journey.spec.ts",
+          "isabella-accessibility.spec.ts",
+          "science-journey.spec.ts",
+          "physical-work.spec.ts"
+        ],
+        "timeout": 900000,
+        "use": {
+          "baseURL": "https://demo.tryvivacity.com",
+          "viewport": {
+            "width": 1440,
+            "height": 1000
+          },
+          "headless": true,
+          "launchOptions": {
+            "args": [
+              "--use-angle=swiftshader",
+              "--enable-unsafe-swiftshader"
+            ]
+          },
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results/public-release/report.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "lab-journey.spec.ts",
+      "file": "lab-journey.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "homepage starts a real failure and six matched MuJoCo trials, then Research replays a saved run",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 1800000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 318339,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.lab-guide .lab-outcome').first()\nExpected substring: \u001b[32m\"failed\"\u001b[39m\nTimeout: 300000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" locator('.lab-guide .lab-outcome').first() with timeout 300000ms\u001b[22m\n\u001b[2m  - waiting for locator('.lab-guide .lab-outcome').first()\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.lab-guide .lab-outcome').first()\nExpected substring: \u001b[32m\"failed\"\u001b[39m\nTimeout: 300000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" locator('.lab-guide .lab-outcome').first() with timeout 300000ms\u001b[22m\n\u001b[2m  - waiting for locator('.lab-guide .lab-outcome').first()\u001b[22m\n\n    at /home/runner/work/vivacity-investor-demo/vivacity-investor-demo/frontend/e2e/lab-journey.spec.ts:32:64",
+                    "location": {
+                      "file": "/home/runner/work/vivacity-investor-demo/vivacity-investor-demo/frontend/e2e/lab-journey.spec.ts",
+                      "column": 64,
+                      "line": 32
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 30 |\u001b[39m  \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'combobox'\u001b[39m\u001b[33m,\u001b[39m{name\u001b[33m:\u001b[39m\u001b[32m'View'\u001b[39m\u001b[33m,\u001b[39mexact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m})\u001b[33m.\u001b[39mselectOption(\u001b[32m'performance'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 31 |\u001b[39m  \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m{name\u001b[33m:\u001b[39m\u001b[32m'Explore'\u001b[39m\u001b[33m,\u001b[39mexact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m})\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 32 |\u001b[39m  \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'.lab-guide .lab-outcome'\u001b[39m)\u001b[33m.\u001b[39mfirst())\u001b[33m.\u001b[39mtoContainText(\u001b[32m'failed'\u001b[39m\u001b[33m,\u001b[39m{timeout\u001b[33m:\u001b[39m\u001b[35m300\u001b[39m_000})\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 33 |\u001b[39m  \u001b[36mconst\u001b[39m cellId\u001b[33m=\u001b[39m\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mevaluate(()\u001b[33m=>\u001b[39mlocalStorage\u001b[33m.\u001b[39mgetItem(\u001b[32m'vivacity:factory-cell'\u001b[39m))\u001b[33m;\u001b[39m\n \u001b[90m 34 |\u001b[39m  \u001b[36mconst\u001b[39m token\u001b[33m=\u001b[39m\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mevaluate(()\u001b[33m=>\u001b[39mlocalStorage\u001b[33m.\u001b[39mgetItem(\u001b[32m'vivacity:workspace-capability'\u001b[39m))\u001b[33m;\u001b[39m\n \u001b[90m 35 |\u001b[39m  expect(cellId)\u001b[33m.\u001b[39mtoBeTruthy()\u001b[33m;\u001b[39mexpect(token)\u001b[33m.\u001b[39mtoBeTruthy()\u001b[33m;\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/home/runner/work/vivacity-investor-demo/vivacity-investor-demo/frontend/e2e/lab-journey.spec.ts",
+                        "column": 64,
+                        "line": 32
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.lab-guide .lab-outcome').first()\nExpected substring: \u001b[32m\"failed\"\u001b[39m\nTimeout: 300000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" locator('.lab-guide .lab-outcome').first() with timeout 300000ms\u001b[22m\n\u001b[2m  - waiting for locator('.lab-guide .lab-outcome').first()\u001b[22m\n\n\n  30 |  await page.getByRole('combobox',{name:'View',exact:true}).selectOption('performance');\n  31 |  await page.getByRole('button',{name:'Explore',exact:true}).click();\n> 32 |  await expect(page.locator('.lab-guide .lab-outcome').first()).toContainText('failed',{timeout:300_000});\n     |                                                                ^\n  33 |  const cellId=await page.evaluate(()=>localStorage.getItem('vivacity:factory-cell'));\n  34 |  const token=await page.evaluate(()=>localStorage.getItem('vivacity:workspace-capability'));\n  35 |  expect(cellId).toBeTruthy();expect(token).toBeTruthy();\n    at /home/runner/work/vivacity-investor-demo/vivacity-investor-demo/frontend/e2e/lab-journey.spec.ts:32:64"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T06:12:08.624Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/home/runner/work/vivacity-investor-demo/vivacity-investor-demo/frontend/test-results/public-release/lab-journey-homepage-start-a604d-esearch-replays-a-saved-run/test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/runner/work/vivacity-investor-demo/vivacity-investor-demo/frontend/test-results/public-release/lab-journey-homepage-start-a604d-esearch-replays-a-saved-run/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/home/runner/work/vivacity-investor-demo/vivacity-investor-demo/frontend/test-results/public-release/lab-journey-homepage-start-a604d-esearch-replays-a-saved-run/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/home/runner/work/vivacity-investor-demo/vivacity-investor-demo/frontend/e2e/lab-journey.spec.ts",
+                    "column": 64,
+                    "line": 32
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "daabc7b5bb6553e3d0af-fe7aca3f2f2b625e29f0",
+          "file": "lab-journey.spec.ts",
+          "line": 9,
+          "column": 1
+        },
+        {
+          "title": "reduced motion enters directly and the narrow layout has no horizontal overflow",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 900000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4275,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T06:17:27.805Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "daabc7b5bb6553e3d0af-c0895e10154d32aaee50",
+          "file": "lab-journey.spec.ts",
+          "line": 104,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-25T06:12:08.053Z",
+    "duration": 324181.556,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

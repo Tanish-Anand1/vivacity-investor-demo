@@ -1,0 +1,152 @@
+{
+  "schema_version": "vivacity.release-evidence/1.0",
+  "recorded_at": "2026-10-25T06:54:58.056915+00:00",
+  "frontend_source": "d2519c390962ed6aa5b3cbb68d192db82cf968c7",
+  "deployment": "dpl_2ddoDynjdVt58puBYK4KGTw7wh9w",
+  "public_url": "https://demo.tryvivacity.com",
+  "public_verification_run": 40169825355,
+  "scope": "Verified frontend repairs and experimental GPU control probes; not the complete Physical Truth release",
+  "files": {
+    "ci/backend-linux-0.xml": {
+      "sha256": "e4b44b73d7332c51007e93d2bb9ef4d44bd21b735a2d36448ebbd0bcab4538c3",
+      "bytes": 34689
+    },
+    "ci/backend-linux-1.xml": {
+      "sha256": "f093f3955fb6a856a89f667eef68e35647814d84971d338e42fce26a6286c1fc",
+      "bytes": 21085
+    },
+    "ci/backend-linux-2.xml": {
+      "sha256": "5d90dd8297957e973f574f836e0ba643f0531ba3aa03afb6ac17c01ead10776a",
+      "bytes": 27318
+    },
+    "ci/contact-tests.xml": {
+      "sha256": "6a0507d03b863926f6cb8b70e972c218ba9c4e03002bfd579765360f386db0a3",
+      "bytes": 16281
+    },
+    "ci/native-contract.xml": {
+      "sha256": "2719c024b304c1430307acbbaa157c31ae5c20512d6d2eb407c1fca9a091bdd2",
+      "bytes": 4822
+    },
+    "compatibility-browsers.json": {
+      "sha256": "819570ece56bc3a038e19f9b85fb1e444f3df91f59ba4c90c82ba2bc07351f4c",
+      "bytes": 9847
+    },
+    "frontend-checks.json": {
+      "sha256": "5ab34cad58432dadfe3cc7e8fa235995d9c16a1440658f4cd10a7738ee3e0348",
+      "bytes": 618
+    },
+    "gpu/control-batch-1792906837309577036/apollo.json": {
+      "sha256": "3522f35cb9aa309388d69e0316ef73b1094d25052ab550a3011b7a9b0f6a399a",
+      "bytes": 10524
+    },
+    "gpu/control-batch-1792906837309577036/g1.json": {
+      "sha256": "c46274c1dece9814d336095c4296792b35301d3a5973d3754d0f00a308231387",
+      "bytes": 13931
+    },
+    "gpu/control-batch-1792906837309577036/h1.json": {
+      "sha256": "dad4fe696ee47e74d4e44175c9b9689c5c4b03e690822cd8f4198ab05a2cbaa2",
+      "bytes": 7853
+    },
+    "gpu/control-batch-v2-1792907551140552540/apollo.json": {
+      "sha256": "4d7d439891a33a1e07b4d57e804ae814d3c4f7f37bbe6bdc3e7a9b25d8772ca1",
+      "bytes": 11143
+    },
+    "gpu/control-batch-v2-1792907551140552540/g1.json": {
+      "sha256": "6e46851842521d02328b6118ae8bd876e6aa75023a785caf5b2aa066ec81d327",
+      "bytes": 12715
+    },
+    "gpu/control-batch-v2-1792907551140552540/h1.json": {
+      "sha256": "5cff867ed311eb719751f5280e35d4529d852bf4824b02756def82afbb5415f6",
+      "bytes": 8478
+    },
+    "gpu/deterministic-batch-1792908178230921329/g1.json": {
+      "sha256": "a8277cdcb1a9e2b628d4ec58b1845d16b28808d981ecb482c6309b2cca9e43e5",
+      "bytes": 378
+    },
+    "gpu/deterministic-batch-1792908178230921329/h1.json": {
+      "sha256": "5ed4eb8fa43656eaad6a5983c3f0fc488c9fb47f0b865fc211326ad91749e1fc",
+      "bytes": 378
+    },
+    "gpu/eight-world-capacity-1792908944754806952/g1.json": {
+      "sha256": "f09122afd452177308e529a31c5ee108cc545e32af7518bc5ecb357578d882e4",
+      "bytes": 13139
+    },
+    "gpu/eight-world-capacity-1792908944754806952/h1.json": {
+      "sha256": "7901b04dce61a799d6b214ada16a6eee7478a03176f52634511d9fa871c68944",
+      "bytes": 8919
+    },
+    "gpu/export-manifest.json": {
+      "sha256": "4eea96cce9cce57d1b85fb265f5bc98b4efe7b180cbcd9bb6479f1a4369e5357",
+      "bytes": 325
+    },
+    "opening-final.json": {
+      "sha256": "93b3dce55a356f6cb38d5d1fd456747724a1593ad20d7da7f43230ca7e2ea143",
+      "bytes": 25265
+    },
+    "opening-hosted.json": {
+      "sha256": "9c9c96f2fdd017e85e847dc67e2b6d765b1febf2f83b38b574439c8c499444fe",
+      "bytes": 25152
+    },
+    "opening-initial.json": {
+      "sha256": "8bf0b90de3dc78b389466d55142b16798b720e9f852a3c5ed93b483a4aad6b89",
+      "bytes": 27281
+    },
+    "opening-repeat.json": {
+      "sha256": "674ab7671a06d6768b924c8362e9dcb0759858987855324f678b293ce1bfe0a1",
+      "bytes": 7875
+    },
+    "opening-second.json": {
+      "sha256": "fcfe57cdfed27dcd94b743f47f1bcec257c4ae3bdd25cc379a6de3084a5bfa59",
+      "bytes": 25485
+    },
+    "production-before-replay-fix-test.json": {
+      "sha256": "bcc008758ed8b82f847e9cbae201eb35a1917da9ea403d6aea6afa12a763bcb7",
+      "bytes": 6836
+    },
+    "production-final.json": {
+      "sha256": "ebd23e663442128d4fef627ff64a73b22610d74f0e6747109f708246aed85c56",
+      "bytes": 9890
+    },
+    "production-http.json": {
+      "sha256": "28ac2690f7d8551e7eabb12d5d4bd4740fea690ae78c3a75bf939af179df8950",
+      "bytes": 980
+    },
+    "production-lab-state.txt": {
+      "sha256": "5909fdff305186f814b0a329adb36c5f6412c61a1e85c060fe74df848e0e722a",
+      "bytes": 5595
+    },
+    "production-lab.png": {
+      "sha256": "95464cd6528dd1d2eda57a62e91c336d03dc84b4e7a88f03b0311af654bd74a1",
+      "bytes": 70525
+    },
+    "production-mobile.png": {
+      "sha256": "a594d5fa30ad6ebe8ee9b554a055b20365bfcef2e91ee56e024953813be68156",
+      "bytes": 41998
+    },
+    "public-ci-final-run.json": {
+      "sha256": "581e2ad839a228ddd66d5a213751bf54175f4e6d05beab611224f8ce5ae08781",
+      "bytes": 283
+    },
+    "public-first-worker-busy.json": {
+      "sha256": "d0a1f25363ea91f60c5d7b02ec2befe636e70573ed69112ebc256dbf1a734540",
+      "bytes": 15290
+    },
+    "public-pagination-failure.json": {
+      "sha256": "c338dd8fa893bdeb5352b223317c54f99838b82b26361a09c7570d777241c2f9",
+      "bytes": 15037
+    },
+    "README.md": {
+      "sha256": "f89020f0b86968eabf3a446e53d5a341ba1a2d4d1d82ccf4d24cd27ab38abd90",
+      "bytes": 11342
+    },
+    "root-velocity-fixed.xml": {
+      "sha256": "fd94ace59b3686ad4ee96f124f9e231e8a4a102ee11c059a756289633d54d0e1",
+      "bytes": 1451
+    },
+    "root-velocity.xml": {
+      "sha256": "db074ba6d9cce77456d0dbd9b15e594572cb8c1370b1acb5c42b5f8c47412e85",
+      "bytes": 21681
+    }
+  },
+  "hash_basis": "SHA-256 of Git index blob bytes; working-tree line-ending conversion can differ"
+}

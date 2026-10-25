@@ -1,0 +1,743 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\Tanish Anand\\.codex\\worktrees\\physical-truth-runtime\\DEMO-\\frontend\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "playwright.opening.config.ts"
+    ],
+    "configFile": "C:\\Users\\Tanish Anand\\.codex\\worktrees\\physical-truth-runtime\\DEMO-\\frontend\\playwright.opening.config.ts",
+    "rootDir": "C:/Users/Tanish Anand/.codex/worktrees/physical-truth-runtime/DEMO-/frontend/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/Tanish Anand/.codex/worktrees/physical-truth-runtime/DEMO-/frontend/test-results/the-one-opening",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/Tanish Anand/.codex/worktrees/physical-truth-runtime/DEMO-/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "isabella-opening.spec.ts"
+        ],
+        "timeout": 45000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\Tanish Anand\\.codex\\worktrees\\physical-truth-runtime\\DEMO-\\frontend\\test-results\\the-one-opening",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "C:\\Users\\Tanish Anand\\.codex\\worktrees\\physical-truth-runtime\\DEMO-\\frontend\\e2e",
+        "snapshotDir": "C:\\Users\\Tanish Anand\\.codex\\worktrees\\physical-truth-runtime\\DEMO-\\frontend\\e2e",
+        "testIgnore": [],
+        "testMatch": "isabella-opening.spec.ts",
+        "timeout": 45000,
+        "use": {
+          "baseURL": "http://127.0.0.1:5186",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "channel": "chrome",
+          "headless": true,
+          "launchOptions": {
+            "args": []
+          },
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "../artifacts/the-one-browser-tests.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "isabella-opening.spec.ts",
+      "file": "isabella-opening.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "the actual film plays 7.5 seconds, hands off to the homepage, and starts no physics",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "timedOut",
+                  "duration": 45705,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 45000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 45000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 45000ms exceeded.\u001b[39m"
+                    },
+                    {
+                      "location": {
+                        "file": "C:\\Users\\Tanish Anand\\.codex\\worktrees\\physical-truth-runtime\\DEMO-\\frontend\\e2e\\isabella-opening.spec.ts",
+                        "column": 91,
+                        "line": 73
+                      },
+                      "message": "Error: locator.click: Test timeout of 45000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.isabella-hero-actions').getByRole('button', { name: /Enter the lab/i })\u001b[22m\n\u001b[2m    - locator resolved to <button class=\"isabella-primary\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m    - element is visible, enabled and stable\u001b[22m\n\u001b[2m    - scrolling into view if needed\u001b[22m\n\u001b[2m    - done scrolling\u001b[22m\n\u001b[2m    - element is not visible\u001b[22m\n\u001b[2m  - retrying click action\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m  - element was detached from the DOM, retrying\u001b[22m\n\n\n  71 |  await testInfo.attach('playback-metrics',{body:JSON.stringify({...source,...playback,physicsStarts},null,2),contentType:'application/json'});\n  72 |  await page.screenshot({path:testInfo.outputPath('homepage-after-opening.png')});\n> 73 |  await page.locator('.isabella-hero-actions').getByRole('button',{name:/Enter the lab/i}).click();\n     |                                                                                           ^\n  74 |  await expect(page).toHaveURL(/\\/laboratory$/);\n  75 | });\n  76 |\n    at C:\\Users\\Tanish Anand\\.codex\\worktrees\\physical-truth-runtime\\DEMO-\\frontend\\e2e\\isabella-opening.spec.ts:73:91"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T05:53:08.379Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "playback-metrics",
+                      "contentType": "application/json",
+                      "body": "ewogICJkdXJhdGlvbiI6IDcuNSwKICAibXV0ZWQiOiB0cnVlLAogICJyYXRlIjogMSwKICAid2lkdGgiOiA5NjAsCiAgImhlaWdodCI6IDU0MCwKICAibWVkaWFFbmQiOiA3LjUsCiAgImVsYXBzZWRNcyI6IDc2NDYuMTk5OTk5OTg4MDc5LAogICJwaHlzaWNzU3RhcnRzIjogMAp9"
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\Tanish Anand\\.codex\\worktrees\\physical-truth-runtime\\DEMO-\\frontend\\test-results\\the-one-opening\\isabella-opening-the-actua-5c398-epage-and-starts-no-physics\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\Tanish Anand\\.codex\\worktrees\\physical-truth-runtime\\DEMO-\\frontend\\test-results\\the-one-opening\\isabella-opening-the-actua-5c398-epage-and-starts-no-physics\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\Tanish Anand\\.codex\\worktrees\\physical-truth-runtime\\DEMO-\\frontend\\test-results\\the-one-opening\\isabella-opening-the-actua-5c398-epage-and-starts-no-physics\\trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "d712e32cc241d49c3697-8ec968a5e5b62d00fff3",
+          "file": "isabella-opening.spec.ts",
+          "line": 34,
+          "column": 1
+        },
+        {
+          "title": "skip is immediate and a refreshed homepage starts the opening again",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 10456,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T05:54:03.121Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d712e32cc241d49c3697-5e2a7c96e28c2a5e25d1",
+          "file": "isabella-opening.spec.ts",
+          "line": 77,
+          "column": 1
+        },
+        {
+          "title": "sound needs a gesture and keyboard focus stays inside the opening until Escape",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 8501,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T05:54:15.056Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d712e32cc241d49c3697-1bff2ee16032fec78e3c",
+          "file": "isabella-opening.spec.ts",
+          "line": 89,
+          "column": 1
+        },
+        {
+          "title": "unavailable browser storage cannot prevent skip or homepage use",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6620,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T05:54:23.598Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d712e32cc241d49c3697-484e76f6b225ca462159",
+          "file": "isabella-opening.spec.ts",
+          "line": 102,
+          "column": 1
+        },
+        {
+          "title": "reduced motion bypasses even explicit replay without downloading a film",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2674,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T05:54:30.251Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d712e32cc241d49c3697-a4ca7dfba90daa1bfb1e",
+          "file": "isabella-opening.spec.ts",
+          "line": 116,
+          "column": 1
+        },
+        {
+          "title": "changing the motion preference during playback exits safely",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 8318,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T05:54:32.970Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d712e32cc241d49c3697-871283592a5e9e5ebcd7",
+          "file": "isabella-opening.spec.ts",
+          "line": 125,
+          "column": 1
+        },
+        {
+          "title": "portrait framing keeps the full film and controls at 390px",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5717,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T05:54:41.322Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d712e32cc241d49c3697-cc3250d3aa50dda3fb6a",
+          "file": "isabella-opening.spec.ts",
+          "line": 131,
+          "column": 30
+        },
+        {
+          "title": "portrait framing keeps the full film and controls at 320px",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 12961,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T05:54:47.086Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d712e32cc241d49c3697-5fe443ae9163d3683fc9",
+          "file": "isabella-opening.spec.ts",
+          "line": 131,
+          "column": 30
+        },
+        {
+          "title": "resizing within the frame orientation preserves the film; rotation exits without a restart",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3858,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T05:55:00.087Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d712e32cc241d49c3697-11416fda9f9e2eeadb58",
+          "file": "isabella-opening.spec.ts",
+          "line": 144,
+          "column": 1
+        },
+        {
+          "title": "a failed media request leaves an interactive homepage",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5622,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T05:55:03.989Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d712e32cc241d49c3697-352fb1c9c9e946df1a91",
+          "file": "isabella-opening.spec.ts",
+          "line": 155,
+          "column": 1
+        },
+        {
+          "title": "a stalled download falls through promptly without input or scroll traps",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6728,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T05:55:09.660Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d712e32cc241d49c3697-5ddd941130e96659f7ae",
+          "file": "isabella-opening.spec.ts",
+          "line": 162,
+          "column": 1
+        },
+        {
+          "title": "autoplay rejection reveals the usable homepage",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3029,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T05:55:16.435Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d712e32cc241d49c3697-18c15526a5f24d0c594f",
+          "file": "isabella-opening.spec.ts",
+          "line": 170,
+          "column": 1
+        },
+        {
+          "title": "cold HTTP delivery serves a playable portrait film or a clean network fallback",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4336,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T05:55:19.489Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d712e32cc241d49c3697-68b4877942bde6fde22e",
+          "file": "isabella-opening.spec.ts",
+          "line": 179,
+          "column": 1
+        },
+        {
+          "title": "normal portrait playback uses the 60 fps film and reports presented frames",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 10021,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T05:55:23.860Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "portrait-playback-quality",
+                      "contentType": "application/json",
+                      "body": "ewogICJkdXJhdGlvbl9zIjogNy41LAogICJ3aWR0aCI6IDcyMCwKICAiaGVpZ2h0IjogMTI4MCwKICAidG90YWxfZnJhbWVzIjogNDUwLAogICJkcm9wcGVkX2ZyYW1lcyI6IDAKfQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d712e32cc241d49c3697-896d51fb4b91ded5ccd1",
+          "file": "isabella-opening.spec.ts",
+          "line": 195,
+          "column": 1
+        },
+        {
+          "title": "a data-saver desktop selects the smaller landscape rendition",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3567,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T05:55:33.921Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d712e32cc241d49c3697-783e26e4f596d461e1dd",
+          "file": "isabella-opening.spec.ts",
+          "line": 219,
+          "column": 1
+        },
+        {
+          "title": "metadata initiates real playback even when a canplay notification is delayed",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 13166,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T05:55:37.531Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d712e32cc241d49c3697-5961a58b7140e0f80151",
+          "file": "isabella-opening.spec.ts",
+          "line": 225,
+          "column": 1
+        },
+        {
+          "title": "a decoder with metadata gets bounded startup time and cannot trap the homepage",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 9146,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-25T05:55:50.731Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d712e32cc241d49c3697-ad84f57758ae293e7cd3",
+          "file": "isabella-opening.spec.ts",
+          "line": 245,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-25T05:53:06.899Z",
+    "duration": 177596.59100000001,
+    "expected": 16,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

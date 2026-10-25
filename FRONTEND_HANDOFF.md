@@ -1,8 +1,32 @@
-## Experimental Physical Truth contact interface
+## Deployed frontend contract — 2026-10-25
 
-The new opt-in `/contact-lab` route and exact scene/mesh/history contract are documented in `docs/CONTACT_EXECUTION_HANDOFF.md`. Production remains unchanged. The new complete browser journey must pass Chromium, Firefox and WebKit before release.
+Frontend `d2519c3` is deployed at <https://demo.tryvivacity.com>. The production
+backend remains the existing Render service. The native contact scene, history,
+checkpoint and comparison contracts are documented in
+[CONTACT_EXECUTION_HANDOFF.md](docs/CONTACT_EXECUTION_HANDOFF.md). The opt-in
+contact journey passes Chromium, Firefox and WebKit against its enabled test
+runtime; contact execution remains disabled on production.
 
-# Physical Truth research update — 2026-10-24
+An older runtime's capabilities HTTP 404 displays the native initial model and
+explicitly disables contact execution. HTTP 403 and transport failures remain
+errors. Do not replace unavailable measurements with invented values or start an
+experiment automatically.
+
+Factory sample-panel initialization/cleanup does not exit trial inspection.
+Only the explicit Return to latest action clears the chosen trial. Scene state,
+status, charts, sampled exports and complete-record exports must refer to the
+same trial ID; the original comparison and cell selection remain intact.
+CSV, sampled JSON and Discovery snapshots stay disabled until sample pagination
+has caught up; a loading count remains visible. Never interpret the first page
+as the entire completed experiment. The production journey checks selected-run
+identity and final recorded time through exported backend records.
+The final production journey passed in CI 40169825355 (17 opening + 2 live
+journey/mobile checks). No REST schema changed in these frontend repairs.
+
+Exact source, tests, failures, runtime limits and rollback:
+[release evidence](artifacts/physical-truth-runtime/frontend-gpu-20261025/README.md).
+
+# Historical Physical Truth research update — 2026-10-24
 
 An opt-in contact-only G1 execution API has been implemented locally. It is not
 the full Physical Truth release and is disabled by default. The existing frontend
