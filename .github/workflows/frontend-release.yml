@@ -1,0 +1,53 @@
+name: Public frontend release verification
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: public-frontend-release
+  cancel-in-progress: false
+
+jobs:
+  public-browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/data/playwright
+      FACTORY_E2E_EXTERNAL: '1'
+      FACTORY_E2E_BASE_URL: https://demo.tryvivacity.com
+      FACTORY_E2E_API_BASE_URL: https://isabella-labs-runtime.onrender.com
+      FACTORY_E2E_OUTPUT_DIR: test-results/public-release
+      VIVACITY_OPENING_BASE_URL: https://demo.tryvivacity.com
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Existing opening, accessible exit and real page handoff
+        run: npx playwright test --config playwright.opening.config.ts
+      - name: Native production experiment, six trials, measured replay and exports
+        if: '!cancelled()'
+        run: npx playwright test --config playwright.factory.config.ts lab-journey.spec.ts
+      - name: Retain results without workspace authorization headers
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: public-frontend-release-evidence
+          path: |
+            artifacts/the-one-browser-tests.json
+            frontend/test-results/public-release/report.json
+            frontend/test-results/public-release/**/test-failed-*.png
+            frontend/test-results/the-one-opening/**/homepage-after-opening.png
+            frontend/test-results/the-one-opening/**/test-failed-*.png
+            frontend/test-results/isabella-home/mobile.png
+          retention-days: 14
