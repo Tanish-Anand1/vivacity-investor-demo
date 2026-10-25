@@ -97,6 +97,13 @@ test('homepage starts a real failure and six matched MuJoCo trials, then Researc
  const samples=JSON.parse(fs.readFileSync((await samplesFile.path())!,'utf8'));
  expect(samples.run_id).toBe(selectedTrial.run_id);
  expect(samples.frames.at(-1).time).toBeGreaterThan(30);
+ await page.locator('.factory-exchange > summary').click();
+ const completeDownload=page.waitForEvent('download');
+ await page.getByRole('button',{name:'Download complete run',exact:true}).click();
+ const completeFile=await completeDownload;
+ const complete=JSON.parse(fs.readFileSync((await completeFile.path())!,'utf8'));
+ expect(complete.record.id).toBe(selectedTrial.run_id);
+ expect(complete.record.status).toBe('completed');
  await page.getByRole('button',{name:'Return to latest'}).click();
  await expect(page.getByText(`Inspecting recorded trial ${selectedTrial.run_id}.`,{exact:false})).toHaveCount(0);
 });
