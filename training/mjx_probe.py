@@ -30,6 +30,7 @@ def run(robot, batch_size, transitions, report):
                   source_hashes={name:hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
                                  for name in ('mjx_locomotion.py','mjx_probe.py','locomotion_contract.py','native_locomotion.py')},
                   batch_size=batch_size, requested_transitions=transitions,
+                  deterministic_mode=env.deterministic_mode,
                   contact_buffer_capacities=env.capacities, seed=7)
     step = jax.jit(env.step)
     state = env.reset(jax.random.PRNGKey(7),jp.asarray(native.settings.command))
@@ -68,11 +69,15 @@ def run(robot, batch_size, transitions, report):
     changed.obs.block_until_ready()
     report['independent_rows_unchanged'] = bool(np.array_equal(
         np.asarray(compiled.data.qpos)[1:],np.asarray(changed.data.qpos)[1:]))
+    report['independent_rows_qpos_max_abs'] = float(np.max(np.abs(
+        np.asarray(compiled.data.qpos)[1:]-np.asarray(changed.data.qpos)[1:])))
     report['changed_row_diverged'] = bool(not np.array_equal(
         np.asarray(compiled.data.qpos)[0],np.asarray(changed.data.qpos)[0]))
     replayed = step_batch(states,zeros)
     replayed.obs.block_until_ready()
     report['repeat_deterministic'] = bool(np.array_equal(np.asarray(replayed.data.qpos),np.asarray(compiled.data.qpos)))
+    report['repeat_qpos_max_abs'] = float(np.max(np.abs(
+        np.asarray(replayed.data.qpos)-np.asarray(compiled.data.qpos))))
     stopped = compiled.replace(terminated=compiled.terminated.at[0].set(True))
     frozen = step_batch(stopped,zeros)
     frozen.obs.block_until_ready()

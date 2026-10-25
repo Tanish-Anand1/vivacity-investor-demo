@@ -8,6 +8,11 @@ from flax import struct
 import jax
 import jax.numpy as jp
 import mujoco as mj
+import warp as wp
+
+# Set this before MJX creates Warp modules. Float atomic ordering otherwise
+# makes identical contact-rich GPU trials differ on the same GPU architecture.
+wp.config.deterministic = wp.DeterministicMode.RUN_TO_RUN
 from mujoco import mjx
 import numpy as np
 
@@ -48,6 +53,7 @@ class CompleteLocomotion:
         self.model, self.native, self.embodiment = compile_embodiment(robot)
         self.contract = build_contract(self.model, self.embodiment)
         self.implementation = implementation or ('jax' if robot == 'apollo' else 'warp')
+        self.deterministic_mode = wp.config.deterministic.name if self.implementation == 'warp' else 'jax'
         self.control_steps = control_steps
         self.duration_s = duration_s
         self.root = self.model.body(ROOTS[robot]).id
