@@ -6,6 +6,35 @@ const backend=process.env.VIVACITY_CONTACT_API??'http://127.0.0.1:8192';
 const prefix=backend+'/v1/robotics/contact';
 const route='/v1/robotics/contact';
 
+test('older production runtime keeps contact research unavailable and renders the native preview',async({page},testInfo)=>{
+  const writes:string[]=[];
+  const errors:string[]=[];
+  page.on('pageerror',error=>errors.push(error.message));
+  page.on('request',request=>{if(request.method()==='POST')writes.push(request.url());});
+  await page.route('**/v1/robotics/contact/capabilities',request=>request.fulfill({
+    status:404,contentType:'application/json',body:JSON.stringify({detail:'Not Found'})}));
+  await page.goto('/contact-lab');
+  await expect(page.getByText('Contact research is disabled on this runtime. No simulation will start.')).toBeVisible();
+  await expect(page.getByRole('button',{name:'Run physical trial',exact:true})).toBeDisabled();
+  await expect(page.locator('[data-model-hash]')).toHaveAttribute('data-model-hash',/^[a-f0-9]{64}$/);
+  await expect(page.locator('.contact-lab canvas')).toBeVisible();
+  await expect(page.getByRole('alert')).toHaveCount(0);
+  await page.setViewportSize({width:390,height:844});
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+  await page.screenshot({path:testInfo.outputPath('unavailable-contact-mobile.png'),fullPage:true});
+  expect(writes).toEqual([]);
+  expect(errors).toEqual([]);
+  // An authorization failure must never be disguised as an absent capability.
+  await page.unroute('**/v1/robotics/contact/capabilities');
+  await page.route('**/v1/robotics/contact/capabilities',request=>request.fulfill({
+    status:403,contentType:'application/json',body:JSON.stringify({detail:'Workspace access denied'})}));
+  await page.reload();
+  await expect(page.getByRole('alert')).toContainText('Workspace access denied');
+  await expect(page.getByRole('button',{name:'Reconnect',exact:true})).toBeVisible();
+  await expect(page.getByRole('button',{name:'Run physical trial',exact:true})).toBeDisabled();
+  expect(writes).toEqual([]);
+});
+
 test('real contact task: live state, pause, fork, compare, replay, changed geometry and reload',async({page,request,browserName},testInfo)=>{
   const errors:string[]=[];
   page.on('pageerror',error=>errors.push(error.message));

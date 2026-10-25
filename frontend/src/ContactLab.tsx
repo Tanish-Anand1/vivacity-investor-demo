@@ -3,7 +3,7 @@ import {Canvas} from '@react-three/fiber';
 import {PCFShadowMap} from 'three';
 import {API,errorMessage} from './api';
 import {fetchRuntime} from './apiTransport';
-import {readAPIResponse} from './apiResponse';
+import {APIError,readAPIResponse} from './apiResponse';
 import {workspaceToken} from './workspaceApi';
 import {buildAssets,type Assets,type Manifest} from './RobotAssets';
 import {ModelScene,type Frame} from './HumanoidLab';
@@ -66,7 +66,14 @@ export default function ContactLab(){
   useEffect(()=>{const controller=new AbortController();let cancelled=false;
     async function load(){try{
       setLoading(true);
-      const caps=await request<{enabled:boolean;task_parameters:ParameterDefinitions}>('/capabilities','GET',undefined,controller.signal);
+      const caps=await request<{enabled:boolean;task_parameters:ParameterDefinitions|null}>('/capabilities','GET',undefined,controller.signal)
+        .catch((failure:unknown)=>{
+          // Production can legitimately predate this experimental API. A missing
+          // capability is unavailable; authentication and transport errors still
+          // surface with their original diagnostics and reconnect action.
+          if(failure instanceof APIError&&failure.status===404)return {enabled:false,task_parameters:null};
+          throw failure;
+        });
       if(cancelled)return;setEnabled(caps.enabled);setDefinitions(caps.task_parameters);
       if(caps.enabled){
         const items=await request<Job[]>('/experiments','GET',undefined,controller.signal);
