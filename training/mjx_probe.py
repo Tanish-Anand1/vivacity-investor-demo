@@ -6,6 +6,7 @@ in the report. Run as a bounded subprocess from the free-GPU notebook.
 import argparse
 import hashlib
 import json
+import os
 from pathlib import Path
 import resource
 import time
@@ -106,7 +107,10 @@ def main():
     parser.add_argument('--batch-size',type=int,choices=range(2,17),default=2)
     parser.add_argument('--transitions',type=int,choices=range(1,101),default=10)
     parser.add_argument('--output',type=Path,required=True)
+    parser.add_argument('--warp-deterministic',action='store_true',
+                        help='Enable opt-in deterministic Warp compilation before importing MJX')
     args=parser.parse_args()
+    os.environ['VIVACITY_WARP_DETERMINISTIC'] = '1' if args.warp_deterministic else '0'
     report={'schema_version':'vivacity.mjx-control-batch-probe/1','passed':False,
             'scope':'Control parity and batch independence; not locomotion acceptance',
             'trained_policy':None,'task_success':False}

@@ -4,6 +4,7 @@ This module belongs to the isolated GPU environment, never the API image. It
 uses the CPU reference's sensor/action contract and recomputes torque commands
 on every physics step. Rewards are learning objectives, not task acceptance.
 """
+import os
 from flax import struct
 import jax
 import jax.numpy as jp
@@ -12,7 +13,9 @@ import warp as wp
 
 # Set this before MJX creates Warp modules. Float atomic ordering otherwise
 # makes identical contact-rich GPU trials differ on the same GPU architecture.
-wp.config.deterministic = wp.DeterministicMode.RUN_TO_RUN
+wp.config.deterministic = (wp.DeterministicMode.RUN_TO_RUN
+    if os.environ.get('VIVACITY_WARP_DETERMINISTIC') == '1'
+    else wp.DeterministicMode.NOT_GUARANTEED)
 from mujoco import mjx
 import numpy as np
 
