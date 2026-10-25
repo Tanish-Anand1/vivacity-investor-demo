@@ -72,6 +72,8 @@ test('homepage starts a real failure and six matched MuJoCo trials, then Researc
  await page.locator('.factory-benchmark > summary').click();
  const candidate=page.locator('.factory-benchmark-result .factory-trial-list li').filter({hasText:'training / candidate'}).first();
  await candidate.getByRole('button',{name:'Inspect trial'}).click();
+ const selectedTrial=benchmark.trials.find((trial:{partition:string;condition:string})=>trial.partition==='training'&&trial.condition==='candidate');
+ await expect(page.getByText(`Inspecting recorded trial ${selectedTrial.run_id}.`,{exact:false})).toBeVisible();
  const slider=page.getByRole('slider',{name:'Recorded sample'});
  await expect(slider).toBeVisible({timeout:90_000});
  await slider.focus();await slider.press('Home');
@@ -79,6 +81,7 @@ test('homepage starts a real failure and six matched MuJoCo trials, then Researc
  const csvPromise=page.waitForEvent('download');
  await page.getByRole('button',{name:'Export CSV'}).click();
  const csv=await csvPromise;
+ expect(csv.suggestedFilename()).toContain(selectedTrial.run_id);
  expect(csv.suggestedFilename()).toMatch(/\.csv$/);
  const csvPath=await csv.path();
  expect(csvPath).toBeTruthy();
@@ -88,6 +91,14 @@ test('homepage starts a real failure and six matched MuJoCo trials, then Researc
  const exported=await exportResponse.json();
  expect(exported.schema_version).toBe('vivacity.factory-exchange/1.0');
  expect(exported.kind).toBe('benchmark');
+ const samplesDownload=page.waitForEvent('download');
+ await page.getByRole('button',{name:'Export sampled JSON',exact:true}).click();
+ const samplesFile=await samplesDownload;
+ const samples=JSON.parse(fs.readFileSync((await samplesFile.path())!,'utf8'));
+ expect(samples.run_id).toBe(selectedTrial.run_id);
+ expect(samples.frames.at(-1).time).toBeGreaterThan(30);
+ await page.getByRole('button',{name:'Return to latest'}).click();
+ await expect(page.getByText(`Inspecting recorded trial ${selectedTrial.run_id}.`,{exact:false})).toHaveCount(0);
 });
 
 test('reduced motion enters directly and the narrow layout has no horizontal overflow',async({page})=>{
