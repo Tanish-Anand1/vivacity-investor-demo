@@ -1,4 +1,47 @@
-## Physical Truth development verification — 2026-10-25
+## Cabinet clearance update and current verification — 2026-10-25
+
+Verified application source: `b49552c64aced96b972ee8eba4d410e29fc8a8a1`.
+Cabinet old/replacement trays now have independent, bounded physical heights.
+Each setting changes native support geometry and the corresponding initial or
+evaluation state. Defaults preserve the historical fixture. Invalid values are
+rejected before execution. OpenAPI and generated frontend types match.
+
+Actual checks for this revision (overlapping suites are not additive):
+
+- Linux deployment image: **536 passed, 3 skipped, zero failures/errors**.
+- Apollo components: **67 passed**, 229.721 s.
+- Contact integration: **110 passed**, 114.602 s.
+- Chromium, Firefox and WebKit contact journeys passed. The actual WebKit
+  mobile screenshot was inspected; the recorded G1 placement error is 5.882 mm.
+- Local native cabinet mechanism tests: **21 passed**, 10.397 s.
+- Separate 512 MB probes: **4 + 1 passed**; ARM64 preflight passed. These do not
+  establish full-warehouse capacity, persistence or continuous availability.
+
+Research executed **2 fresh trials and 18 independent continuations**, totaling
+**82,540 newly executed native steps**. All failed and remain development evidence.
+The fresh trial with only the old tray lowered reached **0.934328 rad**, then lost
+grip (41.335 N / 0 N pad loads). A contact-force continuation reached **0.978423
+rad**, then correctly failed a prohibited crossbar collision at **16.084 N**.
+The requested opening is 1.1 rad. Two early path variants also exposed an invalid
+swivel command, retained in the archive alongside corrected bounded variants.
+No controller candidate passed, and none was promoted to the application.
+
+Sources, model/checkpoint/report hashes, measured frames, failed-state render,
+test reports and exact reproduction commands are retained in
+`artifacts/physical-truth-runtime/apollo-tray-research-20261025/README.md`.
+The height API is deployed to the free preview:
+<https://vivacity-physical-truth-preview.onrender.com/docs>.
+Real health and OpenAPI GETs returned HTTP 200; both new bounded fields were
+verified in the served schema. This does not claim a cabinet execution on the
+512 MB preview or qualifying durable hosting. Production remains unchanged.
+
+**Physical Truth is not complete.** Remaining gates include full cabinet service,
+complete-embodiment mobility/carrying and H1 running, the eight-stage warehouse,
+perception-driven control, complete parameter/acceptance coverage, and durable
+hosting with restart recovery and a 24-hour soak. Opening work stays deferred.
+No new charges or Fireworks calls were made.
+
+## Earlier Physical Truth development verification — 2026-10-25
 
 The isolated `codex/physical-truth-runtime` branch now plans and physically
 executes Apollo's right-hand release, collision-checked withdrawal and parked

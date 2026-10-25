@@ -1,0 +1,1070 @@
+{
+  "scope": "Development evidence only; no full cabinet-service successes.",
+  "verified_application_commit": "b49552c64aced96b972ee8eba4d410e29fc8a8a1",
+  "model_binaries_included": false,
+  "trials": [
+    {
+      "name": "lower-tray-swing/measured-open-continuation",
+      "kind": "continuation",
+      "report_file": "lower-tray-swing-measured-open-continuation.json.gz",
+      "report_sha256": "677cdebdc5d9ce7489efbdb04979fb78028f5dbeb0b98f50b16e995c1750e557",
+      "research_source_file": "probe_feedback_swing.py",
+      "research_source_sha256": "2a6ee1e2d97f22697b4ef391ede42b931cfe6ec6ac8bffcebdbab85d0986d184",
+      "runtime_sources_file": "lower-tray-swing-runtime-sources.json.gz",
+      "checkpoint_archive": "lower-tray-swing-checkpoints.json.gz",
+      "parent_checkpoint_sha256": "059f67f0fb2bc562b5cc57237acdb9e97e56a5e98d021733d3fcc86b5ece1739",
+      "model_sha256": "0e608ab91e6b7f48cfb4a7d30cc691726f4a26dfef3d2831d42cdd1c7eb0209c",
+      "status": "failed",
+      "success": false,
+      "failure": "door_opening_timeout",
+      "failure_detail": null,
+      "steps_completed": 14180,
+      "steps_executed_in_this_trial": 4502,
+      "simulator_time_s": 28.35999999999516,
+      "wall_s": 46.63027249998413,
+      "planning_s": null,
+      "door_angle_rad": 0.11889317329491474,
+      "grip_forces_n": {
+        "l": {
+          "positive": 40.53330563070719,
+          "negative": 38.80156726538599
+        },
+        "r": {
+          "positive": 37.410312411095525,
+          "negative": 21.886424183586804
+        }
+      },
+      "root_tilt_rad": 0.004174638184675946,
+      "recorded_frames": 91,
+      "full_cabinet_service": false,
+      "equality_constraints": 0,
+      "mocap_bodies": 0
+    },
+    {
+      "name": "lower-tray-swing/report",
+      "kind": "fresh",
+      "report_file": "lower-tray-swing-report.json.gz",
+      "report_sha256": "a7615e4bb4d2f14a96b0ef100c173dd79cb597b1f56c3cc679a207fffb36d0a0",
+      "research_source_file": "lower-tray-swing-source.py",
+      "research_source_sha256": "d4454aa01681b4421cf249b821d8db34f15313add012ef870ec8d44206bf68f2",
+      "runtime_sources_file": "lower-tray-swing-runtime-sources.json.gz",
+      "checkpoint_archive": "lower-tray-swing-checkpoints.json.gz",
+      "parent_checkpoint_sha256": null,
+      "model_sha256": "0e608ab91e6b7f48cfb4a7d30cc691726f4a26dfef3d2831d42cdd1c7eb0209c",
+      "status": "failed",
+      "success": false,
+      "failure": "door_opening_timeout",
+      "failure_detail": null,
+      "steps_completed": 14180,
+      "steps_executed_in_this_trial": 14180,
+      "simulator_time_s": 28.35999999999516,
+      "wall_s": 128.03264750004746,
+      "planning_s": null,
+      "door_angle_rad": 0.3068922402637018,
+      "grip_forces_n": {
+        "l": {
+          "positive": 11.684422326507757,
+          "negative": 0.9732230897345782
+        },
+        "r": {
+          "positive": 41.056187579782744,
+          "negative": 18.87311736933447
+        }
+      },
+      "root_tilt_rad": 0.02180840096501534,
+      "recorded_frames": 284,
+      "full_cabinet_service": false,
+      "equality_constraints": 0,
+      "mocap_bodies": 0
+    },
+    {
+      "name": "old-tray-swing/bounded-0.35-0.08",
+      "kind": "continuation",
+      "report_file": "old-tray-swing-bounded-0.35-0.08.json.gz",
+      "report_sha256": "5237004150dc0180ab0b4ae2061e1c8599ffad4520b8737dd94771e29da3a0a7",
+      "research_source_file": "probe_bounded_lead.py",
+      "research_source_sha256": "073e2f8a7871b6cc4ee2d12381bf33f3cdd5440a63a5b905cf7d4e99401651fb",
+      "runtime_sources_file": "old-tray-swing-runtime-sources.json.gz",
+      "checkpoint_archive": "old-tray-swing-checkpoints.json.gz",
+      "parent_checkpoint_sha256": "955d5696bae64c9b31c4670c53d72352dde5fd129e4cec312d9524f693b81a61",
+      "model_sha256": "d27720e671eb77ded821938c7538b9c84ff5cb7cc9fcbf1bf1e978f7474ce453",
+      "status": "failed",
+      "success": false,
+      "failure": "lost_door_grip",
+      "failure_detail": {
+        "door_angle_rad": 0.7636288066503475,
+        "holding_hand": "l",
+        "grip_forces_n": {
+          "l": {
+            "positive": 0.0,
+            "negative": 35.336648391225694
+          },
+          "r": {
+            "positive": 0.0,
+            "negative": 0.0
+          }
+        }
+      },
+      "steps_completed": 20457,
+      "steps_executed_in_this_trial": 2694,
+      "simulator_time_s": 40.91400000000404,
+      "wall_s": 24.809789499966428,
+      "planning_s": null,
+      "door_angle_rad": 0.7636288066503475,
+      "grip_forces_n": {
+        "l": {
+          "positive": 0.0,
+          "negative": 35.336648391225694
+        },
+        "r": {
+          "positive": 0.0,
+          "negative": 0.0
+        }
+      },
+      "root_tilt_rad": 0.024980701332176496,
+      "recorded_frames": 55,
+      "full_cabinet_service": false,
+      "equality_constraints": 0,
+      "mocap_bodies": 0
+    },
+    {
+      "name": "old-tray-swing/bounded-0.5-0.08",
+      "kind": "continuation",
+      "report_file": "old-tray-swing-bounded-0.5-0.08.json.gz",
+      "report_sha256": "82de59518f12e58cd1959da9b06730e08fb38a1934ed93d8f77e5a13029cd1c1",
+      "research_source_file": "probe_bounded_lead.py",
+      "research_source_sha256": "073e2f8a7871b6cc4ee2d12381bf33f3cdd5440a63a5b905cf7d4e99401651fb",
+      "runtime_sources_file": "old-tray-swing-runtime-sources.json.gz",
+      "checkpoint_archive": "old-tray-swing-checkpoints.json.gz",
+      "parent_checkpoint_sha256": "955d5696bae64c9b31c4670c53d72352dde5fd129e4cec312d9524f693b81a61",
+      "model_sha256": "d27720e671eb77ded821938c7538b9c84ff5cb7cc9fcbf1bf1e978f7474ce453",
+      "status": "failed",
+      "success": false,
+      "failure": "lost_door_grip",
+      "failure_detail": {
+        "door_angle_rad": 0.7585415633430276,
+        "holding_hand": "l",
+        "grip_forces_n": {
+          "l": {
+            "positive": 0.0,
+            "negative": 34.73963519796111
+          },
+          "r": {
+            "positive": 0.0,
+            "negative": 0.0
+          }
+        }
+      },
+      "steps_completed": 20059,
+      "steps_executed_in_this_trial": 2296,
+      "simulator_time_s": 40.118000000003065,
+      "wall_s": 21.699973999988288,
+      "planning_s": null,
+      "door_angle_rad": 0.7585415633430276,
+      "grip_forces_n": {
+        "l": {
+          "positive": 0.0,
+          "negative": 34.73963519796111
+        },
+        "r": {
+          "positive": 0.0,
+          "negative": 0.0
+        }
+      },
+      "root_tilt_rad": 0.023854606462996468,
+      "recorded_frames": 47,
+      "full_cabinet_service": false,
+      "equality_constraints": 0,
+      "mocap_bodies": 0
+    },
+    {
+      "name": "old-tray-swing/bounded-0.65-0.1",
+      "kind": "continuation",
+      "report_file": "old-tray-swing-bounded-0.65-0.1.json.gz",
+      "report_sha256": "07d304aa43b34782004733e04c0827a533ecce54f20d47be4e87ae1ee3de8843",
+      "research_source_file": "probe_bounded_lead.py",
+      "research_source_sha256": "073e2f8a7871b6cc4ee2d12381bf33f3cdd5440a63a5b905cf7d4e99401651fb",
+      "runtime_sources_file": "old-tray-swing-runtime-sources.json.gz",
+      "checkpoint_archive": "old-tray-swing-checkpoints.json.gz",
+      "parent_checkpoint_sha256": "955d5696bae64c9b31c4670c53d72352dde5fd129e4cec312d9524f693b81a61",
+      "model_sha256": "d27720e671eb77ded821938c7538b9c84ff5cb7cc9fcbf1bf1e978f7474ce453",
+      "status": "failed",
+      "success": false,
+      "failure": "prohibited_collision",
+      "failure_detail": {
+        "geoms": [
+          "l_service_positive_pad",
+          "service_latch_crossbar"
+        ],
+        "normal_force_n": 19.126200897436103
+      },
+      "steps_completed": 21576,
+      "steps_executed_in_this_trial": 3813,
+      "simulator_time_s": 43.15200000000677,
+      "wall_s": 36.35124019999057,
+      "planning_s": null,
+      "door_angle_rad": 0.73644051490116,
+      "grip_forces_n": {
+        "l": {
+          "positive": 25.380519263269203,
+          "negative": 0.0
+        },
+        "r": {
+          "positive": 0.0,
+          "negative": 0.0
+        }
+      },
+      "root_tilt_rad": 0.0033218481394031826,
+      "recorded_frames": 77,
+      "full_cabinet_service": false,
+      "equality_constraints": 0,
+      "mocap_bodies": 0
+    },
+    {
+      "name": "old-tray-swing/consistent-0.5-0.1",
+      "kind": "continuation",
+      "report_file": "old-tray-swing-consistent-0.5-0.1.json.gz",
+      "report_sha256": "523f256dcc2d8bc313d9054e3a0a960f115e0e8425bf8d91a16657557ae6b530",
+      "research_source_file": "probe_consistent_grasp.py",
+      "research_source_sha256": "b88ef19bada9b0048cf5b8d3387e80e4997834f6f59ecac072ad3c0b84ddcf0d",
+      "runtime_sources_file": "old-tray-swing-runtime-sources.json.gz",
+      "checkpoint_archive": "old-tray-swing-checkpoints.json.gz",
+      "parent_checkpoint_sha256": "955d5696bae64c9b31c4670c53d72352dde5fd129e4cec312d9524f693b81a61",
+      "model_sha256": "d27720e671eb77ded821938c7538b9c84ff5cb7cc9fcbf1bf1e978f7474ce453",
+      "status": "failed",
+      "success": false,
+      "failure": "lost_door_grip",
+      "failure_detail": {
+        "door_angle_rad": 0.943278932123028,
+        "holding_hand": "l",
+        "grip_forces_n": {
+          "l": {
+            "positive": 0.0,
+            "negative": 39.13000102630626
+          },
+          "r": {
+            "positive": 0.0,
+            "negative": 0.0
+          }
+        }
+      },
+      "steps_completed": 20660,
+      "steps_executed_in_this_trial": 2897,
+      "simulator_time_s": 41.32000000000453,
+      "wall_s": 26.47740039997734,
+      "planning_s": null,
+      "door_angle_rad": 0.943278932123028,
+      "grip_forces_n": {
+        "l": {
+          "positive": 0.0,
+          "negative": 39.13000102630626
+        },
+        "r": {
+          "positive": 0.0,
+          "negative": 0.0
+        }
+      },
+      "root_tilt_rad": 0.02796289324453597,
+      "recorded_frames": 59,
+      "full_cabinet_service": false,
+      "equality_constraints": 0,
+      "mocap_bodies": 0
+    },
+    {
+      "name": "old-tray-swing/consistent-0.5-1.0",
+      "kind": "continuation",
+      "report_file": "old-tray-swing-consistent-0.5-1.0.json.gz",
+      "report_sha256": "3cea1b19d0cc618a67c5d7019d2ae5a033054707cd58aa9237aa1b0950f17081",
+      "research_source_file": "probe_consistent_grasp.py",
+      "research_source_sha256": "b88ef19bada9b0048cf5b8d3387e80e4997834f6f59ecac072ad3c0b84ddcf0d",
+      "runtime_sources_file": "old-tray-swing-runtime-sources.json.gz",
+      "checkpoint_archive": "old-tray-swing-checkpoints.json.gz",
+      "parent_checkpoint_sha256": "955d5696bae64c9b31c4670c53d72352dde5fd129e4cec312d9524f693b81a61",
+      "model_sha256": "d27720e671eb77ded821938c7538b9c84ff5cb7cc9fcbf1bf1e978f7474ce453",
+      "status": "failed",
+      "success": false,
+      "failure": "lost_door_grip",
+      "failure_detail": {
+        "door_angle_rad": 0.945980335074707,
+        "holding_hand": "l",
+        "grip_forces_n": {
+          "l": {
+            "positive": 41.34617344395756,
+            "negative": 0.0
+          },
+          "r": {
+            "positive": 0.0,
+            "negative": 0.0
+          }
+        }
+      },
+      "steps_completed": 21919,
+      "steps_executed_in_this_trial": 4156,
+      "simulator_time_s": 43.83800000000761,
+      "wall_s": 39.628043599950615,
+      "planning_s": null,
+      "door_angle_rad": 0.945980335074707,
+      "grip_forces_n": {
+        "l": {
+          "positive": 41.34617344395756,
+          "negative": 0.0
+        },
+        "r": {
+          "positive": 0.0,
+          "negative": 0.0
+        }
+      },
+      "root_tilt_rad": 0.009199151948312891,
+      "recorded_frames": 84,
+      "full_cabinet_service": false,
+      "equality_constraints": 0,
+      "mocap_bodies": 0
+    },
+    {
+      "name": "old-tray-swing/consistent-0.65-1.0",
+      "kind": "continuation",
+      "report_file": "old-tray-swing-consistent-0.65-1.0.json.gz",
+      "report_sha256": "b0360b31f78180cbabf7def1ebc61ed466ae59511977254d9a3e4b261a221684",
+      "research_source_file": "probe_consistent_grasp.py",
+      "research_source_sha256": "b88ef19bada9b0048cf5b8d3387e80e4997834f6f59ecac072ad3c0b84ddcf0d",
+      "runtime_sources_file": "old-tray-swing-runtime-sources.json.gz",
+      "checkpoint_archive": "old-tray-swing-checkpoints.json.gz",
+      "parent_checkpoint_sha256": "955d5696bae64c9b31c4670c53d72352dde5fd129e4cec312d9524f693b81a61",
+      "model_sha256": "d27720e671eb77ded821938c7538b9c84ff5cb7cc9fcbf1bf1e978f7474ce453",
+      "status": "failed",
+      "success": false,
+      "failure": "door_opening_timeout",
+      "failure_detail": null,
+      "steps_completed": 23764,
+      "steps_executed_in_this_trial": 6001,
+      "simulator_time_s": 47.52800000001212,
+      "wall_s": 59.2455868999823,
+      "planning_s": null,
+      "door_angle_rad": 0.8926200339219054,
+      "grip_forces_n": {
+        "l": {
+          "positive": 41.125818235589655,
+          "negative": 26.84869899133776
+        },
+        "r": {
+          "positive": 0.0,
+          "negative": 0.0
+        }
+      },
+      "root_tilt_rad": 0.01005047093636889,
+      "recorded_frames": 121,
+      "full_cabinet_service": false,
+      "equality_constraints": 0,
+      "mocap_bodies": 0
+    },
+    {
+      "name": "old-tray-swing/grip-feedback-finger_priority",
+      "kind": "continuation",
+      "report_file": "old-tray-swing-grip-feedback-finger_priority.json.gz",
+      "report_sha256": "573be1cf28aabcfdfb142bc68bb6faab5aec08e3a0d9f193b3faea746fda21a6",
+      "research_source_file": "probe_grip_feedback.py",
+      "research_source_sha256": "552e50024d977592c06f002a3b084c06080d8e770073b1401a3500982a7691d1",
+      "runtime_sources_file": "old-tray-swing-runtime-sources.json.gz",
+      "checkpoint_archive": "old-tray-swing-checkpoints.json.gz",
+      "parent_checkpoint_sha256": "955d5696bae64c9b31c4670c53d72352dde5fd129e4cec312d9524f693b81a61",
+      "model_sha256": "d27720e671eb77ded821938c7538b9c84ff5cb7cc9fcbf1bf1e978f7474ce453",
+      "status": "failed",
+      "success": false,
+      "failure": "lost_door_grip",
+      "failure_detail": {
+        "door_angle_rad": 0.9388191961906763,
+        "holding_hand": "l",
+        "grip_forces_n": {
+          "l": {
+            "positive": 41.365121939413534,
+            "negative": 0.0
+          },
+          "r": {
+            "positive": 0.0,
+            "negative": 0.0
+          }
+        }
+      },
+      "steps_completed": 22049,
+      "steps_executed_in_this_trial": 4286,
+      "simulator_time_s": 44.09800000000793,
+      "wall_s": 41.64695440005744,
+      "planning_s": null,
+      "door_angle_rad": 0.9388191961906763,
+      "grip_forces_n": {
+        "l": {
+          "positive": 41.365121939413534,
+          "negative": 0.0
+        },
+        "r": {
+          "positive": 0.0,
+          "negative": 0.0
+        }
+      },
+      "root_tilt_rad": 0.007479350069292089,
+      "recorded_frames": 86,
+      "full_cabinet_service": false,
+      "equality_constraints": 0,
+      "mocap_bodies": 0
+    },
+    {
+      "name": "old-tray-swing/grip-feedback-force_tracking",
+      "kind": "continuation",
+      "report_file": "old-tray-swing-grip-feedback-force_tracking.json.gz",
+      "report_sha256": "4d24e37bb85b0dae9154fcc6383e475f2a9a0750a23d7eb71e93bcba340d8bac",
+      "research_source_file": "probe_grip_feedback.py",
+      "research_source_sha256": "552e50024d977592c06f002a3b084c06080d8e770073b1401a3500982a7691d1",
+      "runtime_sources_file": "old-tray-swing-runtime-sources.json.gz",
+      "checkpoint_archive": "old-tray-swing-checkpoints.json.gz",
+      "parent_checkpoint_sha256": "955d5696bae64c9b31c4670c53d72352dde5fd129e4cec312d9524f693b81a61",
+      "model_sha256": "d27720e671eb77ded821938c7538b9c84ff5cb7cc9fcbf1bf1e978f7474ce453",
+      "status": "failed",
+      "success": false,
+      "failure": "prohibited_collision",
+      "failure_detail": {
+        "geoms": [
+          "l_service_negative_pad",
+          "service_latch_crossbar"
+        ],
+        "normal_force_n": 16.08380009545494
+      },
+      "steps_completed": 20775,
+      "steps_executed_in_this_trial": 3012,
+      "simulator_time_s": 41.550000000004815,
+      "wall_s": 29.553666199964937,
+      "planning_s": null,
+      "door_angle_rad": 0.9784228507041051,
+      "grip_forces_n": {
+        "l": {
+          "positive": 0.0,
+          "negative": 24.945014867448215
+        },
+        "r": {
+          "positive": 0.0,
+          "negative": 0.0
+        }
+      },
+      "root_tilt_rad": 0.022157513096418346,
+      "recorded_frames": 61,
+      "full_cabinet_service": false,
+      "equality_constraints": 0,
+      "mocap_bodies": 0
+    },
+    {
+      "name": "old-tray-swing/grip-feedback-servo_memory",
+      "kind": "continuation",
+      "report_file": "old-tray-swing-grip-feedback-servo_memory.json.gz",
+      "report_sha256": "c71350e0e307195703155fc85523bf0416017ae24d7a1d14fba0049a957a95d9",
+      "research_source_file": "probe_grip_feedback.py",
+      "research_source_sha256": "552e50024d977592c06f002a3b084c06080d8e770073b1401a3500982a7691d1",
+      "runtime_sources_file": "old-tray-swing-runtime-sources.json.gz",
+      "checkpoint_archive": "old-tray-swing-checkpoints.json.gz",
+      "parent_checkpoint_sha256": "955d5696bae64c9b31c4670c53d72352dde5fd129e4cec312d9524f693b81a61",
+      "model_sha256": "d27720e671eb77ded821938c7538b9c84ff5cb7cc9fcbf1bf1e978f7474ce453",
+      "status": "failed",
+      "success": false,
+      "failure": "lost_door_grip",
+      "failure_detail": {
+        "door_angle_rad": 0.9517256498244435,
+        "holding_hand": "l",
+        "grip_forces_n": {
+          "l": {
+            "positive": 41.34483835737395,
+            "negative": 0.0
+          },
+          "r": {
+            "positive": 0.0,
+            "negative": 0.0
+          }
+        }
+      },
+      "steps_completed": 21905,
+      "steps_executed_in_this_trial": 4142,
+      "simulator_time_s": 43.81000000000758,
+      "wall_s": 40.98496920004254,
+      "planning_s": null,
+      "door_angle_rad": 0.9517256498244435,
+      "grip_forces_n": {
+        "l": {
+          "positive": 41.34483835737395,
+          "negative": 0.0
+        },
+        "r": {
+          "positive": 0.0,
+          "negative": 0.0
+        }
+      },
+      "root_tilt_rad": 0.010534492764075644,
+      "recorded_frames": 84,
+      "full_cabinet_service": false,
+      "equality_constraints": 0,
+      "mocap_bodies": 0
+    },
+    {
+      "name": "old-tray-swing/loaded-path-0.65",
+      "kind": "continuation",
+      "report_file": "old-tray-swing-loaded-path-0.65.json.gz",
+      "report_sha256": "2321ddb82655d11e53afb61642ad994e8aa643e1dd4feb819c4334516462911d",
+      "research_source_file": "probe_loaded_path.py",
+      "research_source_sha256": "4cd2d5f323a954e8f6ecd3742ef6f7a0a58ef4e9c89ed4b7a1471fcfa206afa1",
+      "runtime_sources_file": "old-tray-swing-runtime-sources.json.gz",
+      "checkpoint_archive": "old-tray-swing-checkpoints.json.gz",
+      "parent_checkpoint_sha256": "955d5696bae64c9b31c4670c53d72352dde5fd129e4cec312d9524f693b81a61",
+      "model_sha256": "d27720e671eb77ded821938c7538b9c84ff5cb7cc9fcbf1bf1e978f7474ce453",
+      "status": "failed",
+      "success": false,
+      "failure": "lost_door_grip",
+      "failure_detail": {
+        "door_angle_rad": 0.3985209458907551,
+        "holding_hand": "l",
+        "grip_forces_n": {
+          "l": {
+            "positive": 31.666688249743697,
+            "negative": 0.0
+          },
+          "r": {
+            "positive": 0.0,
+            "negative": 0.0
+          }
+        }
+      },
+      "steps_completed": 18481,
+      "steps_executed_in_this_trial": 718,
+      "simulator_time_s": 36.96199999999921,
+      "wall_s": 6.782298100006301,
+      "planning_s": 9.55642269999953,
+      "door_angle_rad": 0.3985209458907551,
+      "grip_forces_n": {
+        "l": {
+          "positive": 31.666688249743697,
+          "negative": 0.0
+        },
+        "r": {
+          "positive": 0.0,
+          "negative": 0.0
+        }
+      },
+      "root_tilt_rad": 0.014892493829011956,
+      "recorded_frames": 15,
+      "full_cabinet_service": false,
+      "equality_constraints": 0,
+      "mocap_bodies": 0
+    },
+    {
+      "name": "old-tray-swing/loaded-path-1.0",
+      "kind": "continuation",
+      "report_file": "old-tray-swing-loaded-path-1.0.json.gz",
+      "report_sha256": "6411fffd0275f6069d354c79f3662b5be361367342cce0adbd673cac0c98d4c2",
+      "research_source_file": "probe_loaded_path.py",
+      "research_source_sha256": "4cd2d5f323a954e8f6ecd3742ef6f7a0a58ef4e9c89ed4b7a1471fcfa206afa1",
+      "runtime_sources_file": "old-tray-swing-runtime-sources.json.gz",
+      "checkpoint_archive": "old-tray-swing-checkpoints.json.gz",
+      "parent_checkpoint_sha256": "955d5696bae64c9b31c4670c53d72352dde5fd129e4cec312d9524f693b81a61",
+      "model_sha256": "d27720e671eb77ded821938c7538b9c84ff5cb7cc9fcbf1bf1e978f7474ce453",
+      "status": "failed",
+      "success": false,
+      "failure": "lost_door_grip",
+      "failure_detail": {
+        "door_angle_rad": 0.38749704097161314,
+        "holding_hand": "l",
+        "grip_forces_n": {
+          "l": {
+            "positive": 32.24844318832798,
+            "negative": 0.0
+          },
+          "r": {
+            "positive": 0.0,
+            "negative": 0.0
+          }
+        }
+      },
+      "steps_completed": 18372,
+      "steps_executed_in_this_trial": 609,
+      "simulator_time_s": 36.74399999999894,
+      "wall_s": 5.933927100035362,
+      "planning_s": 9.274655300017912,
+      "door_angle_rad": 0.38749704097161314,
+      "grip_forces_n": {
+        "l": {
+          "positive": 32.24844318832798,
+          "negative": 0.0
+        },
+        "r": {
+          "positive": 0.0,
+          "negative": 0.0
+        }
+      },
+      "root_tilt_rad": 0.02359663886826559,
+      "recorded_frames": 13,
+      "full_cabinet_service": false,
+      "equality_constraints": 0,
+      "mocap_bodies": 0
+    },
+    {
+      "name": "old-tray-swing/manifold-0.5",
+      "kind": "continuation",
+      "report_file": "old-tray-swing-manifold-0.5.json.gz",
+      "report_sha256": "f7c05a0b289bc8185e2e45f2d5d068dcf70d99ea763de4077cc731bcdf03e104",
+      "research_source_file": "probe_manifold_swing.py",
+      "research_source_sha256": "cc4fcb16678bb9e19056da271902d899ae87e6f1178690cef56f4fae12e4d4c8",
+      "runtime_sources_file": "old-tray-swing-runtime-sources.json.gz",
+      "checkpoint_archive": "old-tray-swing-checkpoints.json.gz",
+      "parent_checkpoint_sha256": "955d5696bae64c9b31c4670c53d72352dde5fd129e4cec312d9524f693b81a61",
+      "model_sha256": "d27720e671eb77ded821938c7538b9c84ff5cb7cc9fcbf1bf1e978f7474ce453",
+      "status": "failed",
+      "success": false,
+      "failure": "controller_infeasible",
+      "failure_detail": "joint task must target a bounded actuator-driven joint",
+      "steps_completed": 17765,
+      "steps_executed_in_this_trial": 2,
+      "simulator_time_s": 35.52999999999746,
+      "wall_s": 0.012511699984315783,
+      "planning_s": 7.389104200003203,
+      "door_angle_rad": 0.2888023025446348,
+      "grip_forces_n": {
+        "l": {
+          "positive": 41.13907658410377,
+          "negative": 27.151883222340846
+        },
+        "r": {
+          "positive": 0.0,
+          "negative": 0.0
+        }
+      },
+      "root_tilt_rad": 0.01741653992491163,
+      "recorded_frames": 1,
+      "full_cabinet_service": false,
+      "equality_constraints": 0,
+      "mocap_bodies": 0
+    },
+    {
+      "name": "old-tray-swing/manifold-0.65",
+      "kind": "continuation",
+      "report_file": "old-tray-swing-manifold-0.65.json.gz",
+      "report_sha256": "3021e490853aaec73474fddce99e5a3ac189b7a62bc5ea3c72aa46e9fd208a1c",
+      "research_source_file": "probe_manifold_swing.py",
+      "research_source_sha256": "cc4fcb16678bb9e19056da271902d899ae87e6f1178690cef56f4fae12e4d4c8",
+      "runtime_sources_file": "old-tray-swing-runtime-sources.json.gz",
+      "checkpoint_archive": "old-tray-swing-checkpoints.json.gz",
+      "parent_checkpoint_sha256": "955d5696bae64c9b31c4670c53d72352dde5fd129e4cec312d9524f693b81a61",
+      "model_sha256": "d27720e671eb77ded821938c7538b9c84ff5cb7cc9fcbf1bf1e978f7474ce453",
+      "status": "failed",
+      "success": false,
+      "failure": "controller_infeasible",
+      "failure_detail": "joint task must target a bounded actuator-driven joint",
+      "steps_completed": 17765,
+      "steps_executed_in_this_trial": 2,
+      "simulator_time_s": 35.52999999999746,
+      "wall_s": 0.07235229999059811,
+      "planning_s": 8.745486999978311,
+      "door_angle_rad": 0.2888023025446348,
+      "grip_forces_n": {
+        "l": {
+          "positive": 41.13907658410377,
+          "negative": 27.151883222340846
+        },
+        "r": {
+          "positive": 0.0,
+          "negative": 0.0
+        }
+      },
+      "root_tilt_rad": 0.01741653992491163,
+      "recorded_frames": 1,
+      "full_cabinet_service": false,
+      "equality_constraints": 0,
+      "mocap_bodies": 0
+    },
+    {
+      "name": "old-tray-swing/manifold-bounded-0.5",
+      "kind": "continuation",
+      "report_file": "old-tray-swing-manifold-bounded-0.5.json.gz",
+      "report_sha256": "765120dd8e8d89f122c8085e3e84173919de1a322197f25ee4b16f0fc8547f5b",
+      "research_source_file": "probe_manifold_bounded.py",
+      "research_source_sha256": "bc26e683f5e5e4ee2e0ea7554de93fea5fea80c560f40f501f256a37540c690f",
+      "runtime_sources_file": "old-tray-swing-runtime-sources.json.gz",
+      "checkpoint_archive": "old-tray-swing-checkpoints.json.gz",
+      "parent_checkpoint_sha256": "955d5696bae64c9b31c4670c53d72352dde5fd129e4cec312d9524f693b81a61",
+      "model_sha256": "d27720e671eb77ded821938c7538b9c84ff5cb7cc9fcbf1bf1e978f7474ce453",
+      "status": "failed",
+      "success": false,
+      "failure": "lost_door_grip",
+      "failure_detail": {
+        "door_angle_rad": 0.6358858334021347,
+        "holding_hand": "l",
+        "grip_forces_n": {
+          "l": {
+            "positive": 33.5232714243109,
+            "negative": 0.0
+          },
+          "r": {
+            "positive": 0.0,
+            "negative": 0.0
+          }
+        }
+      },
+      "steps_completed": 19064,
+      "steps_executed_in_this_trial": 1301,
+      "simulator_time_s": 38.12800000000063,
+      "wall_s": 12.178789900033735,
+      "planning_s": 7.884908200008795,
+      "door_angle_rad": 0.6358858334021347,
+      "grip_forces_n": {
+        "l": {
+          "positive": 33.5232714243109,
+          "negative": 0.0
+        },
+        "r": {
+          "positive": 0.0,
+          "negative": 0.0
+        }
+      },
+      "root_tilt_rad": 0.008490595237928009,
+      "recorded_frames": 27,
+      "full_cabinet_service": false,
+      "equality_constraints": 0,
+      "mocap_bodies": 0
+    },
+    {
+      "name": "old-tray-swing/manifold-bounded-0.65",
+      "kind": "continuation",
+      "report_file": "old-tray-swing-manifold-bounded-0.65.json.gz",
+      "report_sha256": "f8765b9fb04ed30f4a513fe3571f0548760c4a8cf70f0f0e24c19c6f1e5da078",
+      "research_source_file": "probe_manifold_bounded.py",
+      "research_source_sha256": "bc26e683f5e5e4ee2e0ea7554de93fea5fea80c560f40f501f256a37540c690f",
+      "runtime_sources_file": "old-tray-swing-runtime-sources.json.gz",
+      "checkpoint_archive": "old-tray-swing-checkpoints.json.gz",
+      "parent_checkpoint_sha256": "955d5696bae64c9b31c4670c53d72352dde5fd129e4cec312d9524f693b81a61",
+      "model_sha256": "d27720e671eb77ded821938c7538b9c84ff5cb7cc9fcbf1bf1e978f7474ce453",
+      "status": "failed",
+      "success": false,
+      "failure": "lost_door_grip",
+      "failure_detail": {
+        "door_angle_rad": 0.9308197718047355,
+        "holding_hand": "l",
+        "grip_forces_n": {
+          "l": {
+            "positive": 0.0,
+            "negative": 17.2635158888047
+          },
+          "r": {
+            "positive": 0.0,
+            "negative": 0.0
+          }
+        }
+      },
+      "steps_completed": 20209,
+      "steps_executed_in_this_trial": 2446,
+      "simulator_time_s": 40.41800000000343,
+      "wall_s": 25.17467190005118,
+      "planning_s": 8.59212549997028,
+      "door_angle_rad": 0.9308197718047355,
+      "grip_forces_n": {
+        "l": {
+          "positive": 0.0,
+          "negative": 17.2635158888047
+        },
+        "r": {
+          "positive": 0.0,
+          "negative": 0.0
+        }
+      },
+      "root_tilt_rad": 0.029386644140975016,
+      "recorded_frames": 50,
+      "full_cabinet_service": false,
+      "equality_constraints": 0,
+      "mocap_bodies": 0
+    },
+    {
+      "name": "old-tray-swing/report",
+      "kind": "fresh",
+      "report_file": "old-tray-swing-report.json.gz",
+      "report_sha256": "4835e3d472deaf8b4576a40731f71de879ab1c89c5ee36571e2c16a474d19d12",
+      "research_source_file": "old-tray-swing-source.py",
+      "research_source_sha256": "b9fdb1078e81533ab9fa7e404e16409d1596a0b8bb088d6c1f911714526428ad",
+      "runtime_sources_file": "old-tray-swing-runtime-sources.json.gz",
+      "checkpoint_archive": "old-tray-swing-checkpoints.json.gz",
+      "parent_checkpoint_sha256": null,
+      "model_sha256": "d27720e671eb77ded821938c7538b9c84ff5cb7cc9fcbf1bf1e978f7474ce453",
+      "status": "failed",
+      "success": false,
+      "failure": "lost_door_grip",
+      "failure_detail": {
+        "door_angle_rad": 0.9343283623907612,
+        "holding_hand": "l",
+        "grip_forces_n": {
+          "l": {
+            "positive": 41.33473452008987,
+            "negative": 0.0
+          },
+          "r": {
+            "positive": 0.0,
+            "negative": 0.0
+          }
+        }
+      },
+      "steps_completed": 22064,
+      "steps_executed_in_this_trial": 22064,
+      "simulator_time_s": 44.128000000007965,
+      "wall_s": 220.85087189998012,
+      "planning_s": null,
+      "door_angle_rad": 0.9343283623907612,
+      "grip_forces_n": {
+        "l": {
+          "positive": 41.33473452008987,
+          "negative": 0.0
+        },
+        "r": {
+          "positive": 0.0,
+          "negative": 0.0
+        }
+      },
+      "root_tilt_rad": 0.012598680706586768,
+      "recorded_frames": 442,
+      "full_cabinet_service": false,
+      "equality_constraints": 0,
+      "mocap_bodies": 0
+    },
+    {
+      "name": "old-tray-swing/torso-path-0.85",
+      "kind": "continuation",
+      "report_file": "old-tray-swing-torso-path-0.85.json.gz",
+      "report_sha256": "f733daf1e581fe0f35fe57a005c6b884e5747129908a368a7e33720b1d44bf58",
+      "research_source_file": "probe_torso_path.py",
+      "research_source_sha256": "0929f00118405abc79944f339a7587acf8fcd9ff7d028a19dcc79a0c48f05175",
+      "runtime_sources_file": "old-tray-swing-runtime-sources.json.gz",
+      "checkpoint_archive": "old-tray-swing-checkpoints.json.gz",
+      "parent_checkpoint_sha256": "955d5696bae64c9b31c4670c53d72352dde5fd129e4cec312d9524f693b81a61",
+      "model_sha256": "d27720e671eb77ded821938c7538b9c84ff5cb7cc9fcbf1bf1e978f7474ce453",
+      "status": "failed",
+      "success": false,
+      "failure": "lost_door_grip",
+      "failure_detail": {
+        "door_angle_rad": 0.9371966011337477,
+        "holding_hand": "l",
+        "grip_forces_n": {
+          "l": {
+            "positive": 0.0,
+            "negative": 22.98938644029269
+          },
+          "r": {
+            "positive": 0.0,
+            "negative": 0.0
+          }
+        }
+      },
+      "steps_completed": 20205,
+      "steps_executed_in_this_trial": 2442,
+      "simulator_time_s": 40.41000000000342,
+      "wall_s": 24.610454400011804,
+      "planning_s": 11.14707389997784,
+      "door_angle_rad": 0.9371966011337477,
+      "grip_forces_n": {
+        "l": {
+          "positive": 0.0,
+          "negative": 22.98938644029269
+        },
+        "r": {
+          "positive": 0.0,
+          "negative": 0.0
+        }
+      },
+      "root_tilt_rad": 0.026552086800554524,
+      "recorded_frames": 50,
+      "full_cabinet_service": false,
+      "equality_constraints": 0,
+      "mocap_bodies": 0
+    },
+    {
+      "name": "old-tray-swing/torso-path-1.0",
+      "kind": "continuation",
+      "report_file": "old-tray-swing-torso-path-1.0.json.gz",
+      "report_sha256": "c581ceb96a15da57da928cbcdbd0b88f62ca8a828a4fdff8ecd168d1f170998c",
+      "research_source_file": "probe_torso_path.py",
+      "research_source_sha256": "0929f00118405abc79944f339a7587acf8fcd9ff7d028a19dcc79a0c48f05175",
+      "runtime_sources_file": "old-tray-swing-runtime-sources.json.gz",
+      "checkpoint_archive": "old-tray-swing-checkpoints.json.gz",
+      "parent_checkpoint_sha256": "955d5696bae64c9b31c4670c53d72352dde5fd129e4cec312d9524f693b81a61",
+      "model_sha256": "d27720e671eb77ded821938c7538b9c84ff5cb7cc9fcbf1bf1e978f7474ce453",
+      "status": "failed",
+      "success": false,
+      "failure": "lost_door_grip",
+      "failure_detail": {
+        "door_angle_rad": 0.4781327432536355,
+        "holding_hand": "l",
+        "grip_forces_n": {
+          "l": {
+            "positive": 34.085439655880684,
+            "negative": 0.0
+          },
+          "r": {
+            "positive": 0.0,
+            "negative": 0.0
+          }
+        }
+      },
+      "steps_completed": 18740,
+      "steps_executed_in_this_trial": 977,
+      "simulator_time_s": 37.47999999999984,
+      "wall_s": 8.74392269999953,
+      "planning_s": 9.738808699999936,
+      "door_angle_rad": 0.4781327432536355,
+      "grip_forces_n": {
+        "l": {
+          "positive": 34.085439655880684,
+          "negative": 0.0
+        },
+        "r": {
+          "positive": 0.0,
+          "negative": 0.0
+        }
+      },
+      "root_tilt_rad": 0.008382420679901963,
+      "recorded_frames": 20,
+      "full_cabinet_service": false,
+      "equality_constraints": 0,
+      "mocap_bodies": 0
+    }
+  ],
+  "files": {
+    "lower-tray-swing-runtime-sources.json.gz": {
+      "sha256": "1e99e289cb81bbb56a72e365a3a35d846ced1f95ff0f6f2b6552675cff733d74",
+      "bytes": 31317
+    },
+    "lower-tray-swing-checkpoints.json.gz": {
+      "sha256": "ef3b376a2a8a645920678239f7f1f8b8c828c77c2adef3d49257265192ecfd49",
+      "bytes": 46088
+    },
+    "probe_feedback_swing.py": {
+      "sha256": "2a6ee1e2d97f22697b4ef391ede42b931cfe6ec6ac8bffcebdbab85d0986d184",
+      "bytes": 3862
+    },
+    "lower-tray-swing-measured-open-continuation.json.gz": {
+      "sha256": "fb38229d0c2972a2b5dfff7ae29c86bac27bd0f7150dcc0339b8fa837f379ff0",
+      "bytes": 346269
+    },
+    "lower-tray-swing-source.py": {
+      "sha256": "d4454aa01681b4421cf249b821d8db34f15313add012ef870ec8d44206bf68f2",
+      "bytes": 3889
+    },
+    "lower-tray-swing-report.json.gz": {
+      "sha256": "ced716e3b06cb851264936c33c8a7d36be7a6f02b0aa150b5921ebc5c84c2dfe",
+      "bytes": 1047717
+    },
+    "old-tray-swing-runtime-sources.json.gz": {
+      "sha256": "f184a06d4b90e7e7ddb8d2e9356e25195162f880361818a75e8902346aeb5ec3",
+      "bytes": 31342
+    },
+    "old-tray-swing-checkpoints.json.gz": {
+      "sha256": "d66f2d41ef5d1c0c2f3df738f71f6d79b17f62721a2a3e7b9ebf316a9918e6f5",
+      "bytes": 88281
+    },
+    "probe_bounded_lead.py": {
+      "sha256": "073e2f8a7871b6cc4ee2d12381bf33f3cdd5440a63a5b905cf7d4e99401651fb",
+      "bytes": 4165
+    },
+    "old-tray-swing-bounded-0.35-0.08.json.gz": {
+      "sha256": "44631772933f8da409b0a256003ab22a63bfeac5a88eaad486ffa923be0ef936",
+      "bytes": 212573
+    },
+    "old-tray-swing-bounded-0.5-0.08.json.gz": {
+      "sha256": "a02ab8a4fa6c439e291c6cf7421e97dc760b6656651ed2080eedbbcc02f88067",
+      "bytes": 183148
+    },
+    "old-tray-swing-bounded-0.65-0.1.json.gz": {
+      "sha256": "9699334a7d1d3647806e8e85e8ddd66bf9908f684a33706454026297fd4f9c47",
+      "bytes": 293667
+    },
+    "probe_consistent_grasp.py": {
+      "sha256": "b88ef19bada9b0048cf5b8d3387e80e4997834f6f59ecac072ad3c0b84ddcf0d",
+      "bytes": 4181
+    },
+    "old-tray-swing-consistent-0.5-0.1.json.gz": {
+      "sha256": "e7925e7b484b1c6dbea35d0e709f7f985b03deb11e8eb69ef60c6a8ed07a1634",
+      "bytes": 227489
+    },
+    "old-tray-swing-consistent-0.5-1.0.json.gz": {
+      "sha256": "712be6e8ef00bfac05b0ca0e3ba325ce59f4a2002e2d4e6c63b804294773bb7d",
+      "bytes": 318856
+    },
+    "old-tray-swing-consistent-0.65-1.0.json.gz": {
+      "sha256": "9e66dc21274c47447c3e86dc7945c5e02795c239e0a1e7039e44eb9bdbcb7025",
+      "bytes": 452808
+    },
+    "probe_grip_feedback.py": {
+      "sha256": "552e50024d977592c06f002a3b084c06080d8e770073b1401a3500982a7691d1",
+      "bytes": 6517
+    },
+    "old-tray-swing-grip-feedback-finger_priority.json.gz": {
+      "sha256": "f027848de9630a297f329e2f9c2ecf35cba1ba5bf054f7a2e0f45804100007c9",
+      "bytes": 343857
+    },
+    "old-tray-swing-grip-feedback-force_tracking.json.gz": {
+      "sha256": "d4d44c5e8624f5a6ab2cb242bd244899d868cd43f35bccdb3be7ce6f0dd3b7e4",
+      "bytes": 249005
+    },
+    "old-tray-swing-grip-feedback-servo_memory.json.gz": {
+      "sha256": "aa3dd9f858ae83f1b6846fb466cea79271b5f571a0c3864ca5b1b74e18114cea",
+      "bytes": 337309
+    },
+    "probe_loaded_path.py": {
+      "sha256": "4cd2d5f323a954e8f6ecd3742ef6f7a0a58ef4e9c89ed4b7a1471fcfa206afa1",
+      "bytes": 5899
+    },
+    "old-tray-swing-loaded-path-0.65.json.gz": {
+      "sha256": "b4f6b7c0bb0f0d414778b59dad357a6977b750be2703408556cbfe2fbe3e0ba6",
+      "bytes": 72325
+    },
+    "old-tray-swing-loaded-path-1.0.json.gz": {
+      "sha256": "7e489bb9fdf864b26a84499d4a464d0db20e1cf5f2c37a79a96abc32d547fe43",
+      "bytes": 64814
+    },
+    "probe_manifold_swing.py": {
+      "sha256": "cc4fcb16678bb9e19056da271902d899ae87e6f1178690cef56f4fae12e4d4c8",
+      "bytes": 5737
+    },
+    "old-tray-swing-manifold-0.5.json.gz": {
+      "sha256": "1a2183b00e211a62371c299fa104e00a969f6498fd97ac6133050f259ebaa5e5",
+      "bytes": 19446
+    },
+    "old-tray-swing-manifold-0.65.json.gz": {
+      "sha256": "6cbbb28cb58945e9b650d77ee115483fc7fec471369750b06ace87e0edcada08",
+      "bytes": 19425
+    },
+    "probe_manifold_bounded.py": {
+      "sha256": "bc26e683f5e5e4ee2e0ea7554de93fea5fea80c560f40f501f256a37540c690f",
+      "bytes": 5803
+    },
+    "old-tray-swing-manifold-bounded-0.5.json.gz": {
+      "sha256": "eed2ef994acbfc609f31220aadb0a123c8fa8412d51a0328a4cd73de86430b70",
+      "bytes": 115680
+    },
+    "old-tray-swing-manifold-bounded-0.65.json.gz": {
+      "sha256": "a364f963150d91be648baa0727934e3b645cf36b0c45b424a1729c48099ea125",
+      "bytes": 200533
+    },
+    "old-tray-swing-source.py": {
+      "sha256": "b9fdb1078e81533ab9fa7e404e16409d1596a0b8bb088d6c1f911714526428ad",
+      "bytes": 3893
+    },
+    "old-tray-swing-report.json.gz": {
+      "sha256": "fe0f44bd646e4ac27d458aabd6d2ec71602a1edad56de7e2f01b8d914b867da0",
+      "bytes": 1628950
+    },
+    "probe_torso_path.py": {
+      "sha256": "0929f00118405abc79944f339a7587acf8fcd9ff7d028a19dcc79a0c48f05175",
+      "bytes": 5813
+    },
+    "old-tray-swing-torso-path-0.85.json.gz": {
+      "sha256": "23b4794737b4e1f94bb515d69c1ef640689455bd6513e398807fc9d9761d5635",
+      "bytes": 201319
+    },
+    "old-tray-swing-torso-path-1.0.json.gz": {
+      "sha256": "c3b931803ed47842d303e32bd3a051a568fa2ca7d7cc273df08253318b94fe07",
+      "bytes": 90778
+    },
+    "archive_source.py": {
+      "sha256": "20a15ddcd08c0d2bbb438fdda8b3d1345ca73c900a4226e0d7bb5cc73911655f",
+      "bytes": 4874
+    }
+  }
+}

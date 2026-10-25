@@ -38,7 +38,7 @@ checks. Hardware execution is outside the completion claim.
 | Whole-body stabilization and constraints | Wrench kernel v4 includes contact unloading. Complete G1, Apollo and H1 each pass 20/20 nominal, 100/100 held-out and deliberate instability in the bounded six-second stationary probe at cedf837. General reach, collision audit and mobility remain open | Bounded stance verified; broader gate partial |
 | Contact-only manipulation and G1 bilateral load sharing | Native-servo baseline and corrected wrench controllers v3/v4 each pass 20/20 nominal and 100/100 held-out stationary trials with zero equality constraints. V4 source hashes match the current implementation; locomotion is not covered | Partial |
 | G1/Apollo/H1 model-matched mobility, turns, terrain, carry | H1 short walk only; complete embodiments need training | Open |
-| Apollo cabinet, latch, old/replacement cartridge cycle | At a14c619, native release, withdrawal and right-arm parking pass in one development trial. The wide swing loses left-pad grip at 0.560305 rad against a 1.1 rad target. Cartridge exchange, retention and closure are still not implemented as a complete task | Partial |
+| Apollo cabinet, latch, old/replacement cartridge cycle | At b49552c, independent tray heights pass native causality tests. A fresh research swing reaches 0.934328 rad before losing grip; the furthest continuation reaches 0.978423 rad before a prohibited collision, against a 1.1 rad target. No research controller was promoted. Complete cartridge exchange, retention and closure remain open | Partial |
 | Shared-world SORT through DISPATCH | Sorting ledger only | Open |
 | Independent H1 running at 2 m/s | No validated running controller | Open |
 | RGB-D pose estimation without privileged controller inputs | Separate image/depth estimator passes five rendered-image tests; not driving robot control or validated over the complete envelope | Partial |
@@ -50,6 +50,47 @@ checks. Hardware execution is outside the completion claim.
 | Break the Frame cinematic release | Deliberately deferred until physics release passes | Deferred |
 
 ## Active slice
+
+### Independent tray geometry and grip investigation — 2026-10-25
+
+Application source `b49552c` adds independent old/replacement tray surface heights
+(0.75–1.05 m, default 0.99 m). Native supports, retaining walls, initial replacement
+height and old-cartridge destination measurements follow their corresponding
+field. Each setting is validated before model construction. Historical defaults
+remain unchanged. OpenAPI and generated frontend types were regenerated together.
+
+The new native investigation contains 2 fresh trials plus 18 independent
+continuations and 82,540 newly executed steps. All failed. Lowering only the old
+tray clears the previously observed palm/tray path conflict: the fresh rotating
+wrist trial reaches 0.934328 rad before `lost_door_grip`. Its loads are 41.335 N
+and 0 N; root tilt is 0.012599 rad. A contact-normal-force continuation reaches
+0.978423 rad, then `prohibited_collision` on the broad crossbar at 16.084 N.
+Continuous IK, torso participation, command preload and finger-priority variants
+do not pass. Two initial IK-path variants stop with invalid swivel commands;
+their bounded replacements also fail the physical task. Failure predicates and
+the 1.1-radian goal were not relaxed. No candidate was promoted.
+
+Verification for `b49552c`, with actual downloaded JUnit reports:
+
+- [Backend Linux](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40163889334): **536 passed, 3 skipped**, no failures/errors. Separate 512 MB probes: 4 + 1 passed.
+- [Apollo components](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40163889325): **67 passed**, 229.721 s.
+- [Contact and browser suites](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40163889319): **110 passed**, 114.602 s; Chromium, Firefox and WebKit passed. Actual WebKit mobile capture inspected; measured G1 placement error 5.882 mm.
+- [ARM64 preflight](https://github.com/Tanish-Anand1/vivacity-investor-demo/actions/runs/40163889262): passed; no new host provisioned.
+- Local cabinet mechanism: **21 passed in 10.397 s**. Overlapping suites must not be summed.
+
+Evidence is in `artifacts/physical-truth-runtime/apollo-tray-research-20261025/`:
+all measured reports, exact source archives, phase checkpoints, failed-state
+render, hashes, test reports and reproduction commands. The earlier shared-height
+prototype has its own archived source; it must not be relabeled as `b49552c`.
+Fresh-run loop wall times exclude model initialization; continuation wall times
+also exclude initial IK/restore. They are not complete hosting cost benchmarks.
+
+The free preview serves both new fields at
+<https://vivacity-physical-truth-preview.onrender.com/openapi.json> (HTTP 200);
+its health GET also returned HTTP 200. No new controller is enabled by this
+schema check, and no cabinet-host execution or durability is inferred. Production
+is unchanged. Full cabinet, mobility, warehouse, perception, acceptance and
+hosting gates remain open. No new charges or Fireworks calls were made.
 
 ### Apollo withdrawal and measured grasp — 2026-10-25
 

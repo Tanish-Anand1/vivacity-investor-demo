@@ -1,0 +1,3 @@
+# Immutable research snapshots retain original newline bytes for source hashes.
+# Production source formatting is governed by the repository root attributes.
+*.py -text whitespace=cr-at-eol,-blank-at-eof
