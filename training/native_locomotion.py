@@ -85,7 +85,9 @@ class NativeLocomotion:
 
     def observe(self):
         velocity=np.zeros(6)
-        mj.mj_objectVelocity(self.model,self.data,mj.mjtObj.mjOBJ_BODY,
+        # XBODY refers to the body frame; BODY refers to its inertia frame.
+        # The IMU rate and projected gravity must use the same body axes.
+        mj.mj_objectVelocity(self.model,self.data,mj.mjtObj.mjOBJ_XBODY,
                             self.model.body(ROOTS[self.identity]).id,velocity,1)
         return observation(self.contract,self.data.qpos[self.contract.qadr],
             self.data.qvel[self.contract.dofs],self.data.body(ROOTS[self.identity]).xmat.reshape(3,3),
@@ -95,7 +97,7 @@ class NativeLocomotion:
         model,data=self.model,self.data
         root=model.body(ROOTS[self.identity]).id
         velocity=np.zeros(6)
-        mj.mj_objectVelocity(model,data,mj.mjtObj.mjOBJ_BODY,root,velocity,1)
+        mj.mj_objectVelocity(model,data,mj.mjtObj.mjOBJ_XBODY,root,velocity,1)
         gravity=data.xmat[root].reshape(3,3).T @ np.array([0.,0.,-1.])
         tilt=float(np.arccos(np.clip(-gravity[2],-1.,1.)))
         joint_violation=float(max(0.,np.max(self.contract.joint_low-data.qpos[self.contract.qadr]),

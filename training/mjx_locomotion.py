@@ -7,10 +7,11 @@ on every physics step. Rewards are learning objectives, not task acceptance.
 from flax import struct
 import jax
 import jax.numpy as jp
+import mujoco as mj
 from mujoco import mjx
 import numpy as np
 
-from training.locomotion_contract import build_contract, commands, observation
+from training.locomotion_contract import build_contract, commands, observation, free_root_velocity
 from vivacity.humanoid_embodiments import compile_embodiment, ROOTS
 
 
@@ -50,7 +51,11 @@ class CompleteLocomotion:
         self.control_steps = control_steps
         self.duration_s = duration_s
         self.root = self.model.body(ROOTS[robot]).id
-        self.tree_root = int(self.model.body_rootid[self.root])
+        root_joint = int(self.model.body_jntadr[self.root])
+        if (self.model.body_parentid[self.root] != 0 or self.model.body_jntnum[self.root] != 1
+                or self.model.jnt_type[root_joint] != int(mj.mjtJoint.mjJNT_FREE)):
+            raise ValueError('the observation adapter requires a world-parented free root')
+        self.root_dof = int(self.model.jnt_dofadr[root_joint])
         self.initial_height = float(self.native.xpos[self.root, 2])
         self.capacities = {'naconmax':2048, 'njmax':8192} if self.implementation == 'warp' else {}
         # Do not use the older Playground wrapper, which suppresses overflow
@@ -60,12 +65,7 @@ class CompleteLocomotion:
             impl=self.implementation, **self.capacities)
 
     def body_velocity(self, data):
-        rotation = data.xmat[self.root].reshape(3, 3)
-        velocity = data.cvel[self.root]
-        # cvel is world-oriented and referred to the kinematic tree's COM.
-        linear = velocity[3:] + jp.cross(velocity[:3],
-            data.xpos[self.root] - data.subtree_com[self.tree_root])
-        return rotation.T @ velocity[:3], rotation.T @ linear
+        return free_root_velocity(data.qvel[self.root_dof:self.root_dof+6],data.xmat[self.root],xp=jp)
 
     def observe(self, data, command, previous_action):
         angular, _ = self.body_velocity(data)

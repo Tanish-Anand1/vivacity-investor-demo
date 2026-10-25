@@ -13,7 +13,7 @@ import mujoco as mj
 import numpy as np
 
 
-VERSION = 'vivacity.complete-locomotion-contract/1-experimental'
+VERSION = 'vivacity.complete-locomotion-contract/2-experimental'
 
 
 @dataclass(frozen=True)
@@ -116,6 +116,18 @@ def observation(contract, joint_position, joint_velocity, body_rotation,
     return xp.concatenate((.25*xp.asarray(body_angular_velocity), gravity,
         xp.asarray(command), xp.asarray(joint_position)-xp.asarray(contract.home),
         .05*xp.asarray(joint_velocity), xp.asarray(previous_action)))
+
+
+def free_root_velocity(free_joint_velocity, body_rotation, *, xp=np):
+    """IMU-frame velocity for a world-parented free root, in native conventions.
+
+    Free-joint angular velocity is already local; its translation is global.
+    Do not depend on optional GPU derived-field exports such as ``cvel``.
+    The caller must verify that this body owns the root free joint.
+    """
+    velocity=xp.asarray(free_joint_velocity)
+    rotation=xp.asarray(body_rotation).reshape(3,3)
+    return velocity[3:6], rotation.T @ velocity[:3]
 
 
 def commands(contract, normalized_action, joint_position, joint_velocity, *, xp=np):
