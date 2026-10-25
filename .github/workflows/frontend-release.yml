@@ -1,6 +1,9 @@
 name: Public frontend release verification
 
 on:
+  push:
+    branches: [codex/physical-truth-runtime]
+    paths: [.github/workflows/frontend-release.yml]
   workflow_dispatch:
 
 permissions:
