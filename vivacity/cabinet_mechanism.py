@@ -23,6 +23,8 @@ class CabinetConfig(BaseModel):
     latch_stiffness_n_m: float = Field(default=300., ge=50., le=4000.)
     retention_stiffness_n_m: float = Field(default=500., ge=50., le=4000.)
     contact_friction: float = Field(default=.6, ge=.05, le=1.5)
+    old_tray_surface_height_m: float = Field(default=.99, ge=.75, le=1.05)
+    replacement_tray_surface_height_m: float = Field(default=.99, ge=.75, le=1.05)
 
     @model_validator(mode='after')
     def fits_fixed_guides(self):
@@ -122,18 +124,21 @@ def append_cabinet(root: ET.Element, config: CabinetConfig):
          rgba='.77 .51 .19 1')
 
     for name, center in (('old', (x-.22, y+.45)), ('replacement', (x-.22, y-.45))):
-        _box(world,f'service_{name}_tray_pedestal',(*center,.48),(.035,.035,.48))
+        tray_top = getattr(config, f'{name}_tray_surface_height_m')
+        pedestal_half_height = (tray_top-.03)/2
+        _box(world,f'service_{name}_tray_pedestal',(*center,pedestal_half_height),
+             (.035,.035,pedestal_half_height))
         _box(world,f'service_{name}_tray_foot',(*center,.015),(.15,.13,.015))
-        _box(world, f'service_{name}_tray', (*center, .975), (.15, .13, .015),
+        _box(world, f'service_{name}_tray', (*center, tray_top-.015), (.15, .13, .015),
              rgba='.40 .42 .42 1', friction=config.contact_friction)
         # Physical side walls retain a released cartridge, not an invisible region.
         for sign in (-1, 1):
             _box(world, f'service_{name}_tray_wall_{sign}',
-                 (center[0], center[1]+sign*.135, 1.02), (.15, .005, .03))
+                 (center[0], center[1]+sign*.135, tray_top+.03), (.15, .005, .03))
     half = np.asarray(config.cartridge_dimensions_m)/2
     for identity, position in (
         ('old', (x+.20, y, .99+half[2])),
-        ('replacement', (x-.22, y-.45, .99+half[2])),
+        ('replacement', (x-.22, y-.45, config.replacement_tray_surface_height_m+half[2])),
     ):
         body = ET.SubElement(world, 'body', name=f'service_{identity}_cartridge', pos=_values(position))
         ET.SubElement(body, 'freejoint', name=f'service_{identity}_free')
@@ -170,7 +175,8 @@ def measure(model, data, config: CabinetConfig):
     old = data.body('service_old_cartridge').xpos.copy()
     new = data.body('service_replacement_cartridge').xpos.copy()
     seated = np.array([config.front_x_m+.20, config.center_y_m, .99+config.cartridge_dimensions_m[2]/2])
-    goal_tray = np.array([config.front_x_m-.22, config.center_y_m+.45, seated[2]])
+    goal_tray = np.array([config.front_x_m-.22, config.center_y_m+.45,
+                         config.old_tray_surface_height_m+config.cartridge_dimensions_m[2]/2])
     rotation = data.body('service_replacement_cartridge').xmat.reshape(3, 3)
     angular_error = float(np.arccos(np.clip((np.trace(rotation)-1)/2, -1, 1)))
     contacts = {}

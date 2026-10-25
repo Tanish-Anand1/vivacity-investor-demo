@@ -73,6 +73,42 @@ def test_latched_door_resists_external_pull_through_measured_strike_contact():
     assert values['contact_normal_forces_n']['service_latch_bolt|service_strike'] > 1.
 
 
+@pytest.mark.parametrize('height', [.75, .89, 1.05])
+@pytest.mark.parametrize('changed_side', ['old', 'replacement'])
+def test_tray_height_rebuilds_supports_initial_cartridge_and_measured_destination(height, changed_side):
+    config = CabinetConfig(**{f'{changed_side}_tray_surface_height_m': height})
+    model = compile_fixture(config)
+    data = mj.MjData(model)
+    mj.mj_forward(model, data)
+    assert model.neq == model.nmocap == 0
+    for side in ('old', 'replacement'):
+        top = height if side == changed_side else .99
+        tray = model.geom(f'service_{side}_tray')
+        assert data.geom(tray.id).xpos[2]+tray.size[2] == pytest.approx(top)
+        pedestal = model.geom(f'service_{side}_tray_pedestal')
+        assert data.geom(pedestal.id).xpos[2]-pedestal.size[2] == pytest.approx(0.)
+        assert data.geom(pedestal.id).xpos[2]+pedestal.size[2] == pytest.approx(top-.03)
+    step(model, data, 1.)
+    measured = measure(model, data, config)
+    assert measured['replacement_position_m'][2] == pytest.approx(
+        config.replacement_tray_surface_height_m+.06, abs=1e-4)
+    assert measured['old_cartridge_position_m'][2] == pytest.approx(1.05, abs=1e-4)
+    destination = np.array([config.front_x_m-.22, config.center_y_m+.45,
+                            config.old_tray_surface_height_m+.06])
+    assert measured['old_tray_error_m'] == pytest.approx(
+        np.linalg.norm(np.array(measured['old_cartridge_position_m'])-destination))
+    support = sum(force for pair, force in measured['contact_normal_forces_n'].items()
+                  if 'service_replacement_shell' in pair and 'service_replacement_tray' in pair)
+    assert support == pytest.approx(config.cartridge_mass_kg*9.81, abs=.01)
+
+
+@pytest.mark.parametrize('height', [.749, 1.051, float('nan')])
+@pytest.mark.parametrize('side', ['old', 'replacement'])
+def test_invalid_tray_height_is_rejected(height, side):
+    with pytest.raises(ValidationError):
+        CabinetConfig(**{f'{side}_tray_surface_height_m': height})
+
+
 @pytest.mark.parametrize('stiffness,opens', [(300., True), (4000., False)])
 def test_contact_ram_releases_latch_but_excessive_spring_resistance_prevents_release(stiffness, opens):
     config = CabinetConfig(latch_stiffness_n_m=stiffness)

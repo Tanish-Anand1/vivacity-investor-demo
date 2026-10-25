@@ -214,3 +214,20 @@ Backups use SQLite's online backup API; restore verifies checksum and integrity
 and refuses to overwrite an existing database. Persistent disk, production
 capacity, maintenance draining across all legacy services, and 24-hour soak remain
 release gates. No new paid resources or production deployment are implied here.
+
+## Experimental cabinet layout parameters
+
+`POST /v1/robotics/contact/apollo-door-experiments` accepts independently bounded
+`config.cabinet.old_tray_surface_height_m` and
+`config.cabinet.replacement_tray_surface_height_m`, in metres, from 0.75 to 1.05
+(both default to 0.99). Each height rebuilds that tray's pedestal, support slab
+and collision walls before execution. The replacement cartridge starts on its
+configured support; the old-cartridge destination measurement follows its tray.
+The cartridge seat inside the cabinet remains at its original height.
+
+These parameters describe physical layout, not a promise that the controller
+can service every layout. Invalid values return 422 before a job is queued.
+The configuration, compiled model hash and source identity are retained with
+the experiment. A layout change requires a new world; neither tray can move
+during task execution. Native causality coverage is in
+`test_tray_height_rebuilds_supports_initial_cartridge_and_measured_destination`.

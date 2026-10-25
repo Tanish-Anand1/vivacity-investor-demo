@@ -61,6 +61,10 @@ def test_apollo_http_frames_pause_fork_cancel_and_replay_are_owner_scoped(monkey
         invalid = client.post(BASE+'/apollo-door-experiments', headers=OWNER,
                               json={'config': {'opening_angle_rad': 1.7}})
         assert invalid.status_code == 422
+        for field in ('old_tray_surface_height_m', 'replacement_tray_surface_height_m'):
+            invalid_layout = client.post(BASE+'/apollo-door-experiments', headers=OWNER,
+                json={'config': {'cabinet': {field: .6}}})
+            assert invalid_layout.status_code == 422
         created = client.post(BASE+'/apollo-door-experiments', headers=OWNER, json={})
         assert created.status_code == 202, created.text
         identifier = created.json()['id']

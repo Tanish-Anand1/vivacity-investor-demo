@@ -7331,6 +7331,20 @@
             "minimum": 0.05,
             "title": "Contact Friction",
             "default": 0.6
+          },
+          "old_tray_surface_height_m": {
+            "type": "number",
+            "maximum": 1.05,
+            "minimum": 0.75,
+            "title": "Old Tray Surface Height M",
+            "default": 0.99
+          },
+          "replacement_tray_surface_height_m": {
+            "type": "number",
+            "maximum": 1.05,
+            "minimum": 0.75,
+            "title": "Replacement Tray Surface Height M",
+            "default": 0.99
           }
         },
         "additionalProperties": false,

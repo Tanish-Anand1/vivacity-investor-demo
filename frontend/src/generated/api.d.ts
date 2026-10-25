@@ -2311,6 +2311,16 @@ export interface components {
              * @default 0.6
              */
             contact_friction: number;
+            /**
+             * Old Tray Surface Height M
+             * @default 0.99
+             */
+            old_tray_surface_height_m: number;
+            /**
+             * Replacement Tray Surface Height M
+             * @default 0.99
+             */
+            replacement_tray_surface_height_m: number;
         };
         /** CaptureReference */
         CaptureReference: {
