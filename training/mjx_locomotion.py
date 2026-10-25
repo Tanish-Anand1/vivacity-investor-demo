@@ -123,7 +123,13 @@ class CompleteLocomotion:
                         steps, reward, terminated, truncated, failure, metrics)
         # Explicitly absorbing terminal state: no integration after a failed or
         # timed-out episode. The trainer must reset it and retain the terminal flag.
-        return jax.tree.map(lambda old,new:jp.where(state.terminated|state.truncated,old,new), state,updated)
+        done = state.terminated | state.truncated
+        # Warp contact workspaces are shared across worlds. Data.where is the
+        # engine's supported per-world selector; a generic tree-map incorrectly
+        # batches those workspaces and leaks a JAX tracer (upstream issue #3377).
+        selected = jax.tree.map(lambda old,new:jp.where(done,old,new),
+                                state.replace(data=None),updated.replace(data=None))
+        return selected.replace(data=data.where(done,state.data))
 
     def batched(self):
         return jax.jit(jax.vmap(self.reset)), jax.jit(jax.vmap(self.step))

@@ -73,6 +73,12 @@ def run(robot, batch_size, transitions, report):
     replayed = step_batch(states,zeros)
     replayed.obs.block_until_ready()
     report['repeat_deterministic'] = bool(np.array_equal(np.asarray(replayed.data.qpos),np.asarray(compiled.data.qpos)))
+    stopped = compiled.replace(terminated=compiled.terminated.at[0].set(True))
+    frozen = step_batch(stopped,zeros)
+    frozen.obs.block_until_ready()
+    report['terminal_integration_frozen'] = all(np.array_equal(np.asarray(getattr(stopped.data,name))[0],
+        np.asarray(getattr(frozen.data,name))[0]) for name in ('qpos','qvel','ctrl','time','act','qacc_warmstart'))
+    report['other_world_continued'] = int(np.asarray(frozen.steps)[1]) == int(np.asarray(stopped.steps)[1])+env.control_steps
     timed = time.perf_counter()
     for _ in range(transitions):
         states = step_batch(states,zeros)
@@ -86,7 +92,7 @@ def run(robot, batch_size, transitions, report):
     report['model_unchanged'] = hashlib.sha256(model_bytes(env.model)).hexdigest()==report['model_sha256']
     report['max_resident_memory_bytes'] = int(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)*1024
     report['passed'] = all(report[key] for key in ('parity_passed','independent_rows_unchanged',
-        'changed_row_diverged','repeat_deterministic','model_unchanged'))
+        'changed_row_diverged','repeat_deterministic','terminal_integration_frozen','other_world_continued','model_unchanged'))
 
 
 def main():
